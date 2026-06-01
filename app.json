@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "tamagotchi",
-    "slug": "tamagotchi",
+    "name": "project-software-engineering",
+    "slug": "project-software-engineering",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "tamagotchi",
+    "scheme": "projectsoftwareengineering",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
