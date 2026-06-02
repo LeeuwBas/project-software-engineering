@@ -50,3 +50,6 @@ example
 __pycache__/
 *.pyc
 .venv/**
+
+# Keys, passwords, and enviornment variables
+**/.env
