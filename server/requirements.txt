@@ -1,1 +1,7 @@
 django
+
+# for importing from .env
+python-decouple
+
+# for database
+psycopg2
