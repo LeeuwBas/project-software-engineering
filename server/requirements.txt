@@ -8,4 +8,3 @@ python-decouple
 
 # for database
 psycopg2
-python-decouple
