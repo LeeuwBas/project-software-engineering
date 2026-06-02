@@ -9,6 +9,11 @@ Also install pnpm v9 using:
 npm install -g pnpm@9
 ```
 
+Install the modules using:
+```bash
+pnpm install
+```
+
 On your phone, install Expo Go v54 from the App store or Play store
 
 To run the app, run:
