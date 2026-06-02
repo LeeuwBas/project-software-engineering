@@ -18,15 +18,15 @@ from django.contrib import admin
 from django.urls import path
 
 from django.urls import path, include
-from django.contrib.auth.models import User
+from server.models.models import User
 from rest_framework import routers, serializers, viewsets
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ["url", "username", "email", "is_staff"]
+        fields = ["url", "email", "is_staff", "settings"]
 
 
 # ViewSets define the view behavior.
@@ -44,9 +44,7 @@ router.register(r"users", UserViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
