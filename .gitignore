@@ -45,3 +45,8 @@ example
 # IDE stuff
 .idea
 .vscode
+
+# Python
+__pycache__/
+*.pyc
+.venv/**
