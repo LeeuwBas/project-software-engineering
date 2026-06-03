@@ -1,0 +1,10 @@
+import { Image } from "expo-image";
+import { View } from "react-native";
+
+export default function Tamagotchi() {
+    return (
+        <View className="w-full">
+            <Image style={{width: "100%", aspectRatio: 1}} contentFit="cover" source={require("@/../assets/placeholders/placeholder_tama.webp")}/>
+        </View>
+    );
+}
