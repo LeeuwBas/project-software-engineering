@@ -17,11 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from .views import RandomQuoteAPIView, get_quote
+from .views import get_quote
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/quote/', RandomQuoteAPIView.as_view(), name='random-quote'),
     path('api/get-quote/', get_quote, name='get_quote'),
 ]
