@@ -1,6 +1,7 @@
 django
 drf-spectacular
 django-rest-framework
+djangorestframework-simplejwt
 
 
 # for importing from .env
