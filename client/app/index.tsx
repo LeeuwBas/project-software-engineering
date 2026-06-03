@@ -1,11 +1,20 @@
 import Main from '@/components/widgets/mainview';
 import ProfilePopup from '@/components/widgets/ProfilePopup';
 import Toolbar from '@/components/widgets/toolbar';
+<<<<<<< HEAD
 import Topbar from '@/components/widgets/topbar';
 import * as storage from '@/lib/storage';
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+=======
+import { useState, useEffect } from 'react'
+import { Text, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Tamagotchi from '@/components/widgets/Tamagotchi';
+import { BlurView } from 'expo-blur'
+import { Heart } from 'lucide-react-native';
+>>>>>>> 5422130 (homepage additions: happiness hearts and day of the week)
 
 import '../global.css';
 
