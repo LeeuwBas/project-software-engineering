@@ -2,7 +2,7 @@ import PopupMenu from '@/components/widgets/PopupMenu';
 import Toolbar from '@/components/widgets/toolbar';
 import * as storage from '@/lib/storage';
 import { BlurView } from 'expo-blur';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ImageBackground, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,22 +13,13 @@ const image = {uri: "https://images.ctfassets.net/h6goo9gw1hh6/3aOPP8aNhZJm1X7iO
 
 
 export default function App() {
-  let init_water = 10;
-
   const [menuOpen, setOpen] = useState(false);
-  const [water, setWater] = useState(init_water);
+  const {water, setWater} = storage.useWater(menuOpen);
 
   function changeMenu() {
     setOpen(!menuOpen)
   };
 
-  // Send water data to storage when popupmenu is closed.
-  useEffect(() => {
-    if (!menuOpen) {
-      console.log('saved water ' + water);
-      storage.setWaterData(water);
-    }
-  }, [menuOpen, water]);
 
   return (
     <SafeAreaProvider>
