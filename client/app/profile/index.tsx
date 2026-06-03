@@ -47,7 +47,7 @@ export default function ProfilePage() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="h-full">
+      <SafeAreaView className="flex-1">
         <View className="mt-auto items-center">
           <Button variant="outline" onPress={() => setOpen(true)}>
             <Text>Profile</Text>
@@ -56,6 +56,7 @@ export default function ProfilePage() {
         {open && <Pressable className="absolute inset-0" onPress={() => setOpen(false)} />}
 
         <Animated.View
+          className="p-10"
           style={[
             animatedStyle,
             {
@@ -69,19 +70,17 @@ export default function ProfilePage() {
               borderTopRightRadius: 24,
             },
           ]}>
-          <View style={{ flex: 1, paddingBottom: '20%' }}>
+          <View className="flex-1">
             {ITEMS.map((item) => (
               <Pressable
+                className='p-10 justify-center items-center'
                 key={item.label}
                 onPress={() => setActiveItem(item)}
                 style={({ pressed }) => ({
                   flex: 1,
                   backgroundColor: pressed ? '#b0b7c3' : 'transparent',
-                  padding: 20,
-                  alignItems: 'center',
-                  justifyContent: 'center',
                 })}>
-                <Text style={{ fontSize: 72 }}>{item.label}</Text>
+                <Text style={{ fontSize: 28 }}>{item.label}</Text>
               </Pressable>
             ))}
           </View>
@@ -107,7 +106,7 @@ export default function ProfilePage() {
               borderTopRightRadius: 24,
             },
           ]}>
-          <View style={{ flex: 1, padding: 32, gap: 16 }}>
+          <View style={{ flex: 1, padding: 16, gap: 16 }}>
             <Text className="font-normal">Verander Gebruikersnaam</Text>
             <Input
               placeholder="Naam"
