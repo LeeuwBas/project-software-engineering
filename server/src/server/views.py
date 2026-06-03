@@ -1,6 +1,3 @@
-from django.shortcuts import render
-from .models import Quote
-from .serializers import QuoteSerializer
 import random
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,16 +9,15 @@ class RandomQuoteAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, format=None):
-        quote_ids = Quote.objects.values_list('id', flat=True)
-
-        if not quote_ids:
+        try:
+            with open('resources/quotes.txt', 'r') as f:
+                lines = f.readlines()
+            # Select and format a random quote.
+            selected_quote = random.choice(lines).strip('\n')
+            return Response({'text': selected_quote})
+        except FileNotFoundError:
+            # Handle if file does not exist
             return Response(
                 {'error': 'No quotes found in the database.'},
                 status=status.HTTP_404_NOT_FOUND,
             )
-
-        random_id = random.choice(quote_ids)
-        quote = Quote.objects.get(id=random_id)
-
-        serializer = QuoteSerializer(quote)
-        return Response(serializer.data)
