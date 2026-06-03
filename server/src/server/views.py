@@ -11,6 +11,7 @@ from .serializers import QuoteRequestSerializer
 def get_quote(request):
     serializer = QuoteRequestSerializer(data=request.data)
 
+<<<<<<< HEAD
     if serializer.is_valid():
         mood = serializer.validated_data['mood']
         action = serializer.validated_data['action']
@@ -35,3 +36,19 @@ def get_quote(request):
             {'status': 'success', 'quote': quote}, status=status.HTTP_200_OK
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+=======
+    def get(self, request, format=None):
+        quote_ids = Quote.objects.values_list('id', flat=True)
+
+        if not quote_ids:
+            return Response(
+                {'error': 'No quotes found in the database.'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        random_id = random.choice(quote_ids)
+        quote = Quote.objects.get(id=random_id)
+
+        serializer = QuoteSerializer(quote)
+        return Response(serializer.data)
+>>>>>>> b9087bf (single quote style)
