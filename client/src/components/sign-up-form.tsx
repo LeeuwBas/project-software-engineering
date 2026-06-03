@@ -29,6 +29,13 @@ export function SignUpForm() {
   }
 
   async function onSubmit() {
+    // This function sends the form data to the server as JSON.
+    //
+    // On success, the server shows a toast (a popup) and redirects the user.
+    //
+    // If the server returns an error, we 'catch' it (using the try/catch JS syntax)
+    // and update the error state. As soon as the error state is updated,
+    // the page is 'reloaded' and the error message is displayed to the user.
     try {
       const response = await fetch(`${API_URL}/users/`, {
         method: 'POST',
