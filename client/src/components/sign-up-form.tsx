@@ -13,14 +13,13 @@ import { toast } from 'sonner-native';
 export function SignUpForm() {
   const router = useRouter();
 
-  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT;
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
-
   const passwordInputRef = React.useRef<TextInput>(null);
+
+  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
