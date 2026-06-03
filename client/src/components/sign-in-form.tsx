@@ -57,7 +57,7 @@ export function SignInForm() {
         </CardHeader>
         <CardContent className="gap-6">
           <View className="gap-6">
-            {errors.detail && <Text className="text-sm text-destructive">{errors.detail[0]}</Text>}
+            {errors.detail && <Text className="text-sm text-destructive">{errors.detail}</Text>}
             <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
