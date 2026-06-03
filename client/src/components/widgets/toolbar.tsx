@@ -16,7 +16,7 @@ export default function Toolbar( {setMenuOpen} : {setMenuOpen: Function } ) {
                     Modules
                 </Text>
             </Button>
-            <Button variant='outline' className='flex-1' onPress={() => router.push('/login')}>
+            <Button variant='outline' className='flex-1' onPress={() => router.push('/profile')}>
                 <Text>
                     Account
                 </Text>
