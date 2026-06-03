@@ -10,7 +10,7 @@
 ---
 
 #### 1. Install [Node.js](https://nodejs.org/en/download)
-Install the prebuilt, not the docker version.
+Install the **prebuilt**, not the docker version.
 <br>
 
 
@@ -19,6 +19,7 @@ Install the prebuilt, not the docker version.
 npm install -g pnpm@9
 ```
  - **If you are on Windows use powershell, not wsl.**
+      - apparently wsl does work but I have not tested it
  - **Make sure its version 9**.
 
 On Windows you may first need to run:
@@ -36,7 +37,7 @@ pnpm install
 
 #### 5. To run the app:
 ```bash
-pnpm expo start
+pnpm expo start --clear
 ```
  - you may need to approve builds with
  ```
@@ -52,6 +53,7 @@ On your phone, install Expo Go v54 from the App store or Play store.
 
  - Make sure you are on the same network on both devices
  - scan the qr code after running expo start.
+ - If things don't update try closing the app.
 <br>
 
 ### Android Emulator
@@ -73,9 +75,27 @@ Let it load untill youare at the homescreen.
 <br>
 
 #### 4. Press `a` in the expo terminal to connect to the emulator.
+
+### Expo tips
+ - If the app isnt updating, close the expo app on your phone/emulator, close expo, and run `expo install`` in the client folder again
+ - If you get "cannot find andriodSDK" or something like that try restarting, otherwise you may have to add the Andriod SDK to PATH manually
 <br>
 
-## Sqlite / .env
+
+## .env
 ---
 Make sure you have a `.env` file, copy `.enc.example` and rename it to `.env`.
 Fill in any values that need to be changed.
+
+## Backend python enviornment
+---
+```
+# in root directory:
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r server/requirements.txt
+
+# in server/src
+python3 manage.py migrate
+# everything should say OK
+```

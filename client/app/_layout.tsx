@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Toaster } from 'sonner-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { configureReanimatedLogger } from 'react-native-reanimated';
 
 export default function RootLayout() {
   return (
@@ -12,3 +13,7 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+configureReanimatedLogger({
+  strict: false,
+});
