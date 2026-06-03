@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 
+# TODO Make new tests
 class RandomQuoteAPITests(APITestCase):
     def setUp(self):
         self.url = reverse('random-quote')
