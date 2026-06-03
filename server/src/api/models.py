@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -60,3 +61,18 @@ class User(AbstractUser):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+class Stats(models.Model):
+    """
+        Simple stats model.
+        Contains one line per user per day which holds the accumulated stats of
+        the day.
+        data held:
+            user: holds the user id for identification
+            date: holds date of the statistic
+
+            water_amount: glasses of water drank on the given day
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(default=timezone.now)
+    water_amount = models.IntegerField(default=0)
