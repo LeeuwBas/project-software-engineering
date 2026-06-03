@@ -1,3 +1,10 @@
 django
 drf-spectacular
 django-rest-framework
+
+
+# for importing from .env
+python-decouple
+
+# for database
+psycopg2
