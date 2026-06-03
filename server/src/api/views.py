@@ -1,15 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from django.db.models import Sum, Max, Min, Count, Avg
+from django.db.models import Sum, Max, Min, Avg, F
 
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
 
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiParameter,\
+                                  OpenApiResponse
 from drf_spectacular.types import OpenApiTypes
 
 from .serializers import UserSerializer, StatsSerializer
@@ -52,7 +53,7 @@ class StatInsertView(CreateAPIView):
         serializer.save(user=self.request.user, date=date)
 
 
-class StatRequestAverage(APIView):
+class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
 
     @extend_schema(
@@ -96,5 +97,59 @@ class StatRequestAverage(APIView):
                                         minimum_water=Min('water_amount'),
                                         maximum_water=Max('water_amount'))
 
-
         return Response(response)
+
+
+class StatsWaterUpdate(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+
+    @extend_schema(
+            summary="Update or insert the water usage at a given date",
+            description="""Update the amount of water that is stored by
+                           amount. If the line does not yet exist, makes a new
+                           entry.""",
+            parameters=[
+                OpenApiParameter(
+                    name="amount",
+                    description="Amount of glasses of water to add.",
+                    type=OpenApiTypes.INT,
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'new_value': {'type': 'integer', 'example': 5},
+                        'inserted_value': {'type': 'boolean', 'example': False}
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def post(self, request):
+        amount = request.query_params.get('amount', None)
+        print(request.query_params)
+
+        if amount is None:
+            return Response(
+                {'error': 'Amount of glasses drank needs to be set.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        line, created = Stats.objects.get_or_create(
+            user = request.user,
+            date = timezone.now().date(),
+            defaults={'water_amount': amount}
+        )
+
+        if not created:
+            line.water_amount = F("water_amount") + amount
+            line.save()
+            line.refresh_from_db()
+
+        return Response({
+            'new_value': line.water_amount,
+            'inserted_line': created,
+        })
