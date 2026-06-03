@@ -13,6 +13,9 @@ import { toast } from 'sonner-native';
 export function SignUpForm() {
   const router = useRouter();
 
+  // These are 'states', think of them like variables that re-render the page
+  // when they are changed. We use them to keep track of the user's input and
+  // errors in this case. In React, this is the single most used pattern.
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
@@ -58,9 +61,20 @@ export function SignUpForm() {
         </CardHeader>
         <CardContent className="gap-6">
           <View className="gap-6">
-            {errors.general && (
-              <Text className="text-sm text-destructive">{errors.general[0]}</Text>
-            )}
+            {
+              // This is generally confusing syntax! What it basically means is:
+              // 'if errors.general: render the text'
+              // And this is the basic syntax:
+              // '<condition> && <expression>'
+              // This is a TypeScript shorthand that is very often used in React.
+              errors.general && (
+                <Text className="text-sm text-destructive">{errors.general[0]}</Text>
+
+                // There is also another short-hand that's often used, which is the
+                // ternary operator. This is formatted as follows:
+                // '<condition> ? <expression> : <else-expression>'
+              )
+            }
             <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -72,6 +86,13 @@ export function SignUpForm() {
                 onSubmitEditing={onEmailSubmitEditing}
                 returnKeyType="next"
                 submitBehavior="submit"
+                // These 'onChangeText' handlers make these input fields 'controlled'
+                // inputs, meaning the value is controlled by React state rather than
+                // the native input value.
+                // If we don't add this, react doesn't really 'know' the current input
+                // value. This is standard practice in React forms. If we didn't do this,
+                // we would have to add something like a function when the user hits 'submit' that
+                // manually updates the state with the input value, which is not ideal.
                 onChangeText={setEmail}
               />
               {errors.email && <Text className="text-sm text-destructive">{errors.email[0]}</Text>}
