@@ -14,7 +14,7 @@ const WaterWidget = ({ startValue }: { startValue: number}) => {
     }
 
     function resetWater() {
-    setWater(0);
+        setWater(0);
     }
 
 
