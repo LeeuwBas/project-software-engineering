@@ -19,6 +19,7 @@ Install the prebuilt, not the docker version.
 npm install -g pnpm@9
 ```
  - **If you are on Windows use powershell, not wsl.**
+      - apparently wsl does work but I have not tested it
  - **Make sure its version 9**.
 
 On Windows you may first need to run:
