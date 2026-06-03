@@ -13,7 +13,7 @@ import { toast } from 'sonner-native';
 export function SignUpForm() {
   const router = useRouter();
 
-  const API_URL = process.env.SERVER_ENDPOINT;
+  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT;
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -43,13 +43,14 @@ export function SignUpForm() {
       toast.success('Account created successfully!');
       router.replace('/login');
     } catch (err) {
+      console.error('Sign up request failed:', err);
       setErrors({ general: ['Could not reach the server.'] });
     }
   }
 
   return (
     <View className="gap-6">
-      <Card className="border-border/0 sm:border-border shadow-none sm:shadow-sm sm:shadow-black/5">
+      <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
         <CardHeader>
           <CardTitle className="text-center text-xl sm:text-left">Create your account</CardTitle>
           <CardDescription className="text-center sm:text-left">
@@ -59,7 +60,7 @@ export function SignUpForm() {
         <CardContent className="gap-6">
           <View className="gap-6">
             {errors.general && (
-              <Text className="text-destructive text-sm">{errors.general[0]}</Text>
+              <Text className="text-sm text-destructive">{errors.general[0]}</Text>
             )}
             <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
@@ -74,7 +75,7 @@ export function SignUpForm() {
                 submitBehavior="submit"
                 onChangeText={setEmail}
               />
-              {errors.email && <Text className="text-destructive text-sm">{errors.email[0]}</Text>}
+              {errors.email && <Text className="text-sm text-destructive">{errors.email[0]}</Text>}
             </View>
             <View className="gap-1.5">
               <Label htmlFor="username">Username</Label>
@@ -88,7 +89,7 @@ export function SignUpForm() {
                 onChangeText={setUsername}
               />
               {errors.username && (
-                <Text className="text-destructive text-sm">{errors.username[0]}</Text>
+                <Text className="text-sm text-destructive">{errors.username[0]}</Text>
               )}
             </View>
             <View className="gap-1.5">
@@ -106,7 +107,7 @@ export function SignUpForm() {
                 textContentType="newPassword"
               />
               {errors.password && (
-                <Text className="text-destructive text-sm">{errors.password[0]}</Text>
+                <Text className="text-sm text-destructive">{errors.password[0]}</Text>
               )}
             </View>
             <Button className="w-full" onPress={onSubmit}>
@@ -124,7 +125,7 @@ export function SignUpForm() {
           </Text>
           <View className="flex-row items-center">
             <Separator className="flex-1" />
-            <Text className="text-muted-foreground px-4 text-sm">or</Text>
+            <Text className="px-4 text-sm text-muted-foreground">or</Text>
             <Separator className="flex-1" />
           </View>
           <SocialConnections />
