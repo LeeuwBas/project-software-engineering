@@ -21,8 +21,6 @@ export default function Toolbar({ menuOpen, changeMenu } : {menuOpen : boolean, 
 
     return (
         <View className='w-full mt-auto'>
-            {/* The blur that appears when popup menu is opened */}
-            
             <View className='mt-auto left-0 right-0 items-center' >
                 <View className='relative items-center w-full'>
                     <View className={`transition-opacity duration-300 ${ menuOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
