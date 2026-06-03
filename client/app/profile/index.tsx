@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { Dimensions, Pressable, Text, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '@/components/ui/input';
+import { Text } from '@/components/ui/text';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const PEEK_TOP = 160;
