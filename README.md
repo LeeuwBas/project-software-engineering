@@ -37,7 +37,7 @@ pnpm install
 
 #### 5. To run the app:
 ```bash
-pnpm expo start
+pnpm expo start --clear
 ```
  - you may need to approve builds with
  ```
