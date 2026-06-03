@@ -1,7 +1,7 @@
 import { Text } from 'react-native';
-import { Button } from '@/components/reusables/button';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { Card } from '../reusables/card';
+import { Card } from '../ui/card';
 
 
 const WaterWidget = ({ startValue }: { startValue: number}) => {
