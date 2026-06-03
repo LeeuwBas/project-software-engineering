@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { Dimensions, Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Input } from '@/components/ui/input';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const PEEK_TOP = 80;
+const PEEK_TOP = 160;
+const SUB_PEEK_TOP = PEEK_TOP + 480;
 
 export default function ProfilePage() {
   const [open, setOpen] = useState(false);
@@ -16,16 +18,27 @@ export default function ProfilePage() {
   };
 
   const ITEMS: SettingItem[] = [
-    { label: 'Notificaties' },
-    { label: 'Weergave' },
-    { label: 'Privacy' },
+    { label: 'Verander Pet' },
+    { label: 'Verander Gebruikersnaam' },
+    { label: 'Meer' },
   ];
+
+  const translateYSub = useSharedValue(SCREEN_HEIGHT);
+  const animatedStyleSub = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateYSub.value }],
+  }));
 
   const [activeItem, setActiveItem] = useState<SettingItem | null>(null);
 
   useEffect(() => {
     translateY.value = withSpring(open ? 0 : SCREEN_HEIGHT);
   }, [open, translateY]);
+
+  useEffect(() => {
+    translateYSub.value = withSpring(
+      activeItem?.label === 'Verander Gebruikersnaam' ? 0 : SCREEN_HEIGHT
+    );
+  }, [activeItem, translateYSub]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -55,18 +68,53 @@ export default function ProfilePage() {
               borderTopRightRadius: 24,
             },
           ]}>
+          <View style={{ flex: 1, paddingBottom: '20%' }}>
             {ITEMS.map((item) => (
-                <Pressable
+              <Pressable
                 key={item.label}
                 onPress={() => setActiveItem(item)}
                 style={({ pressed }) => ({
-                    backgroundColor: pressed ? '#b0b7c3' : 'transparent',
-                    padding: 20,
-                    alignItems: 'center',
+                  flex: 1,
+                  backgroundColor: pressed ? '#b0b7c3' : 'transparent',
+                  padding: 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 })}>
-                <Text style={{ fontSize: 24, fontWeight: '600' }}>{item.label}</Text>
-                </Pressable>
+                <Text style={{ fontSize: 72 }}>{item.label}</Text>
+              </Pressable>
             ))}
+          </View>
+        </Animated.View>
+
+        {activeItem && (
+          <Pressable
+            style={{ position: 'absolute', inset: 0 }}
+            onPress={() => setActiveItem(null)}
+          />
+        )}
+        <Animated.View
+          style={[
+            animatedStyleSub,
+            {
+              position: 'absolute',
+              top: SUB_PEEK_TOP,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: '#b0b7c3',
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+            },
+          ]}>
+          <View style={{ flex: 1, padding: 32, gap: 16 }}>
+            <Text className="font-normal">Verander Gebruikersnaam</Text>
+            <Input
+              placeholder="Naam"
+              autoComplete="name"
+              textContentType="name"
+              returnKeyType="done"
+            />
+          </View>
         </Animated.View>
       </SafeAreaView>
     </SafeAreaProvider>
