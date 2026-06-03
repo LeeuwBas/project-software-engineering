@@ -11,10 +11,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
+import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 
+
 export function SignUpForm() {
+  const router = useRouter()
+
   const passwordInputRef = React.useRef<TextInput>(null);
 
   function onEmailSubmitEditing() {
@@ -69,7 +73,7 @@ export function SignUpForm() {
             Already have an account?{' '}
             <Pressable
               onPress={() => {
-                // TODO: Navigate to sign in screen
+                router.push('/login')
               }}>
               <Text className="text-sm underline underline-offset-4">Sign in</Text>
             </Pressable>
