@@ -21,6 +21,6 @@ from .views import RandomQuoteAPIView
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/quote/", RandomQuoteAPIView.as_view(), name="random-quote"),
+    path('admin/', admin.site.urls),
+    path('api/quote/', RandomQuoteAPIView.as_view(), name='random-quote'),
 ]

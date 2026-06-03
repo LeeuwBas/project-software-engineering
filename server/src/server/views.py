@@ -12,15 +12,16 @@ class RandomQuoteAPIView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, format=None):
-        quote_ids = Quote.objects.values_list("id", flat=True)
+        quote_ids = Quote.objects.values_list('id', flat=True)
 
         if not quote_ids:
             return Response(
-                {"error": "No quotes found in the database."},
+                {'error': 'No quotes found in the database.'},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
         random_id = random.choice(quote_ids)
         quote = Quote.objects.get(id=random_id)
+
         serializer = QuoteSerializer(quote)
         return Response(serializer.data)

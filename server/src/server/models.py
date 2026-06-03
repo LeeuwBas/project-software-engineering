@@ -8,4 +8,4 @@ class Quote(models.Model):
         return self.text[:50]
 
     class Meta:
-        app_label = "server"
+        app_label = 'server'
