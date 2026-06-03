@@ -1,11 +1,9 @@
-import Toolbar from '@/components/widgets/toolbar';
-import { PortalHost } from '@rn-primitives/portal';
-import { ImageBackground, Text, View } from 'react-native';
-import { Button } from '@/components/ui/button';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
 import PopupMenu from '@/components/widgets/PopupMenu';
+import Toolbar from '@/components/widgets/toolbar';
 import { BlurView } from 'expo-blur';
+import { useState } from 'react';
+import { ImageBackground, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 
 import '../global.css';
