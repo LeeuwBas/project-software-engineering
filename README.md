@@ -10,7 +10,7 @@
 ---
 
 #### 1. Install [Node.js](https://nodejs.org/en/download)
-Install the prebuilt, not the docker version.
+Install the **prebuilt**, not the docker version.
 <br>
 
 
