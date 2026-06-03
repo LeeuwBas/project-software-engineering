@@ -10,7 +10,7 @@
 ---
 
 #### 1. Install [Node.js](https://nodejs.org/en/download)
-Install the prebuilt, not the docker version.
+Install the **prebuilt**, not the docker version.
 <br>
 
 
@@ -19,6 +19,7 @@ Install the prebuilt, not the docker version.
 npm install -g pnpm@9
 ```
  - **If you are on Windows use powershell, not wsl.**
+      - apparently wsl does work but I have not tested it
  - **Make sure its version 9**.
 
 On Windows you may first need to run:
@@ -36,7 +37,7 @@ pnpm install
 
 #### 5. To run the app:
 ```bash
-pnpm expo start
+pnpm expo start --clear
 ```
  - you may need to approve builds with
  ```
