@@ -9,4 +9,4 @@ django-cors-headers
 python-decouple
 
 # for database
-psycopg2
+psycopg2-binary
