@@ -54,7 +54,7 @@ __pycache__/
 .venv/**
 
 # Django
-db.sqlite3
+*.sqlite3
 
 # Keys, passwords, and enviornment variables
 **/.env
