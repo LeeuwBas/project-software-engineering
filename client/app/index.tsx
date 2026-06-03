@@ -21,7 +21,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className='size-full'>
+      <SafeAreaView className='flex flex-col size-full'>
     
         <View className="flex flex-row items-center">
           <View className='ml-5'>
@@ -41,7 +41,9 @@ export default function App() {
 
         {/* The blur that appears when popup menu is opened */}
         <BlurView className={`absolute w-full h-full transition-opacity duration-300 ${ menuOpen ? 'opacity-100' : 'opacity-0' }`} intensity={60} tint='regular' experimentalBlurMethod='dimezisBlurView'/>
-        <Toolbar menuOpen={menuOpen} changeMenu={changeMenu} />
+        <View className="w-full mt-auto z-20">
+          <Toolbar menuOpen={menuOpen} changeMenu={changeMenu} />
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
