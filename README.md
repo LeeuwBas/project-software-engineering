@@ -9,7 +9,7 @@ Also install pnpm v9 using:
 npm install -g pnpm@9
 ```
 
-Install the modules using:
+Switch to the client directory, and install the node modules using:
 ```bash
 pnpm install
 ```
@@ -20,4 +20,3 @@ To run the app, run:
 ```bash
 pnpm expo start
 ```
-from the client directory.

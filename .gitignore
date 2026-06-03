@@ -50,5 +50,11 @@ example
 __pycache__/
 *.pyc
 .venv/**
+<<<<<<< HEAD
 **/db.sqlite3
 **/migrations/**
+=======
+
+# Keys, passwords, and enviornment variables
+**/.env
+>>>>>>> dev
