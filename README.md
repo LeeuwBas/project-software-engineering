@@ -52,6 +52,7 @@ On your phone, install Expo Go v54 from the App store or Play store.
 
  - Make sure you are on the same network on both devices
  - scan the qr code after running expo start.
+ - If things don't update try closing the app.
 <br>
 
 ### Android Emulator
@@ -80,7 +81,7 @@ Let it load untill youare at the homescreen.
 <br>
 
 
-## Sqlite / .env
+## .env
 ---
 Make sure you have a `.env` file, copy `.enc.example` and rename it to `.env`.
 Fill in any values that need to be changed.
