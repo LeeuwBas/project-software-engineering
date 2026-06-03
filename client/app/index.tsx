@@ -7,10 +7,10 @@ import '../global.css';
 export default function App() {
   return (
     <SafeAreaProvider>
-      <SafeAreaView className={styles.container}>
+      <SafeAreaView className="flex-1 items-center justify-center">
         <Text>Hello World!</Text>
       </SafeAreaView>
-    <PortalHost />
+      <PortalHost />
     </SafeAreaProvider>
   );
 }
