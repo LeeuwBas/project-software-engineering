@@ -75,6 +75,11 @@ Let it load untill youare at the homescreen.
 #### 4. Press `a` in the expo terminal to connect to the emulator.
 <br>
 
+### Expo tips
+ - If the app isnt updating, close the expo app on your phone/emulator, close expo, and run `expo install`` in the client folder again
+
+ 
+
 ## Sqlite / .env
 ---
 Make sure you have a `.env` file, copy `.enc.example` and rename it to `.env`.
