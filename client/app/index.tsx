@@ -1,11 +1,11 @@
 import Sidebar from '@/components/widgets/Sidebar';
 import Tamagotchi from '@/components/widgets/Tamagotchi';
 import Toolbar from '@/components/widgets/toolbar';
+import Topbar from '@/components/widgets/topbar';
 import * as storage from '@/lib/storage';
 import { BlurView } from 'expo-blur';
-import { Heart } from 'lucide-react-native';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import '../global.css';
@@ -26,17 +26,7 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView className='flex flex-col size-full'>
 
-        <View className="flex flex-row items-center">
-          <View className='ml-5'>
-            <Text className=' text-2xl font-bold'>{day}</Text>
-          </View>
-
-          <View className='ml-auto flex-row gap-2 mr-10'>
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Heart key={index} fill={"#FF0000"} />
-            ))}
-          </View>
-        </View>
+        <Topbar />
 
         <View className="flex-row flex-1">
           <View className="w-5">
