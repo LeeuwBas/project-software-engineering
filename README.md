@@ -98,4 +98,7 @@ pip install -r server/requirements.txt
 # in server/src
 python3 manage.py migrate
 # everything should say OK
+
+# to run (also in server/src):
+python3 manage.py runserver
 ```
