@@ -2,10 +2,10 @@ django
 drf-spectacular
 django-rest-framework
 djangorestframework-simplejwt
-
+django-cors-headers
 
 # for importing from .env
 python-decouple
 
 # for database
-psycopg2
+psycopg2-binary

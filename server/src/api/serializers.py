@@ -10,7 +10,5 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "email", "username", "settings", "password")
         read_only_fields = ("id",)
 
-class StatsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Stats
-        fields = "__all__"
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
