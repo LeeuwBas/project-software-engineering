@@ -9,10 +9,12 @@ import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { toast } from 'sonner-native';
+import {useAuth} from "@/auth/AuthManager";
 
 
 export function SignInForm() {
   const router = useRouter();
+  const auth = useAuth();
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -28,17 +30,7 @@ export function SignInForm() {
 
   async function onSubmit() {
     try {
-      const response = await fetch(`${API_URL}/auth/token/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        setErrors(data);
-        return;
-      }
+      auth?.signIn(email, password);
 
       toast.success('Signed in successfully!');
       router.replace('/');
