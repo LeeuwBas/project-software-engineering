@@ -6,7 +6,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const PEEK_TOP = 160;
-const SUB_PEEK_TOP = PEEK_TOP + 480;
+const SUB_PEEK_TOP = PEEK_TOP + 320;
 
 export default function ProfilePopup(
     {
@@ -72,7 +72,7 @@ export default function ProfilePopup(
                 <View className="flex-1">
                     {ITEMS.map((item) => (
                     <Pressable
-                        className='p-10 justify-center items-center'
+                        className='p-10 justify-center'
                         key={item.label}
                         onPress={() => setActiveItem(item)}
                         style={({ pressed }) => ({
