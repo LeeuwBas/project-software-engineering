@@ -54,7 +54,7 @@ export default function ProfilePopup({
             {open && <Pressable className="absolute inset-0" onPress={() => setOpen(false)} />}
 
       <Animated.View
-        className="p-10"
+        className="p-10 bg-slate-100"
         style={[
           animatedStyle,
           {
@@ -63,7 +63,6 @@ export default function ProfilePopup({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: '#d1d5db',
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
           },
@@ -84,6 +83,7 @@ export default function ProfilePopup({
         <Pressable style={{ position: 'absolute', inset: 0 }} onPress={() => setActiveItem(null)} />
       )}
       <Animated.View
+        className="bg-slate-200"
         style={[
           animatedStyleSub,
           {
@@ -92,7 +92,6 @@ export default function ProfilePopup({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: '#b0b7c3',
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
           },
