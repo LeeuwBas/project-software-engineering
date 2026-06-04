@@ -1,5 +1,4 @@
 import {
-  Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
@@ -30,31 +29,29 @@ export function StatisticCard({ stat }: StatisticCardProps) {
     values.length;
 
   return (
-    <Accordion type="single" collapsible>
-      <AccordionItem value={stat.id}>
-        <Card>
-          <CardHeader>
-            <AccordionTrigger>
-              <View>
-                <CardTitle>{stat.title}</CardTitle>
-                <CardDescription>
-                  Today: {stat.current} {stat.unit}
-                </CardDescription>
-              </View>
-            </AccordionTrigger>
-          </CardHeader>
+    <AccordionItem value={stat.id}>
+      <Card>
+        <CardHeader>
+          <AccordionTrigger>
+            <View>
+              <CardTitle>{stat.title}</CardTitle>
+              <CardDescription>
+                Today: {stat.current} {stat.unit}
+              </CardDescription>
+            </View>
+          </AccordionTrigger>
+        </CardHeader>
 
-          <AccordionContent>
-            <CardContent>
-              <View className="mt-4 gap-2">
-                <Text>Highest: {highest} {stat.unit}</Text>
-                <Text>Lowest: {lowest} {stat.unit}</Text>
-                <Text>Average: {average.toFixed(1)} {stat.unit}</Text>
-              </View>
-            </CardContent>
-          </AccordionContent>
-        </Card>
-      </AccordionItem>
-    </Accordion>
+        <AccordionContent>
+          <CardContent>
+            <View className="mt-4 gap-2">
+              <Text>Highest: {highest} {stat.unit}</Text>
+              <Text>Lowest: {lowest} {stat.unit}</Text>
+              <Text>Average: {average.toFixed(1)} {stat.unit}</Text>
+            </View>
+          </CardContent>
+        </AccordionContent>
+      </Card>
+    </AccordionItem>
   );
 }

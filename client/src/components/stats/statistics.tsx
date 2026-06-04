@@ -1,5 +1,7 @@
 import { StatisticCard } from '@/components/stats/statistic-card'
 import { StatisticData } from '@/components/stats/statistics-types';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Accordion } from '@/components/ui/accordion'
 
 export function Statistics() {
   const statistics: StatisticData[] = [
@@ -36,10 +38,14 @@ export function Statistics() {
   ];
 
   return (
-    <>
-      {statistics.map(stat => (
-        <StatisticCard key={stat.id} stat={stat} />
-      ))}
-    </>
+    <SafeAreaProvider>
+      <SafeAreaView className='h-full'>
+        <Accordion type="single" collapsible>
+          {statistics.map(stat => (
+            <StatisticCard key={stat.id} stat={stat} />
+          ))}
+        </Accordion>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }

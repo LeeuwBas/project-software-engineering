@@ -13,7 +13,7 @@ export default function Toolbar(
     const router = useRouter()
     return (
         <View className='flex flex-row border-2 bg-slate-200 border-slate-200 p-2 mt-auto justify-between'>
-            <Button variant='outline' className='flex-1'>
+            <Button variant='outline' className='flex-1' onPress={() => router.push('/stats')}>
                 <Text>
                     Stats
                 </Text>
