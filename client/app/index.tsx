@@ -35,7 +35,7 @@ export default function App() {
               <View className={`transition-opacity duration-300 ${ menuOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
                 <PopupMenu isOpen={menuOpen} water={water} setWater={setWater}></PopupMenu>
               </View>
-              <Toolbar setMenuOpen={changeMenu} onProfileOpen={() => setProfileOpen(true)}></Toolbar>
+              <Toolbar setMenuOpen={changeMenu} menuOpen={menuOpen} onProfileOpen={() => setProfileOpen(true)}></Toolbar>
             </View>
           </View>
         </ImageBackground>

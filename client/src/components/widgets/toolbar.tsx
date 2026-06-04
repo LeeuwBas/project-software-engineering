@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 
 export default function Toolbar(
@@ -12,8 +11,7 @@ export default function Toolbar(
         menuOpen: boolean
         onProfileOpen: () => void;
     }) {
-    const router = useRouter()
-    
+
     return (
         <View className='flex flex-row border-2 bg-slate-200 border-slate-200 p-2 mt-auto justify-between'>
             <Button variant='outline' className='flex-1'>
