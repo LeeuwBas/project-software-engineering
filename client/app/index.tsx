@@ -4,6 +4,8 @@ import { BlurView } from 'expo-blur';
 import { useState } from 'react';
 import { ImageBackground, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
+import { Button } from '@/components/ui/button';
 
 
 import '../global.css';
