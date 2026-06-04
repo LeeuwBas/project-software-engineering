@@ -1,7 +1,31 @@
+<<<<<<< HEAD
 import { Button } from '@/components/ui/button';
 import PopupMenu from '@/components/widgets/PopupMenu';
 import { ChartNoAxesCombined, Check, Plus, User } from 'lucide-react-native';
 import { View } from 'react-native';
+=======
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Text, View } from 'react-native'
+import { Plus, Check, User, ChartNoAxesCombined } from 'lucide-react-native'
+
+import PopupMenu from '@/components/widgets/PopupMenu'
+import * as storage from '@/lib/storage';
+import { BlurView } from 'expo-blur'
+
+export default function Toolbar({ menuOpen, changeMenu } : {menuOpen : boolean, changeMenu: Function}) {
+    let init_water = 10;
+    const [water, setWater] = useState(init_water);
+
+
+    // Send water data to storage when popupmenu is closed.
+    useEffect(() => {
+        if (!menuOpen) {
+          console.log('saved water ' + water);
+          storage.setWaterData(water);
+        }
+      }, [menuOpen, water]);
+>>>>>>> 90f35d0 (Hide other buttons while viewing popup menu. (small commit for consistency on thursday))
 
 export default function Toolbar(
     {
@@ -46,11 +70,15 @@ export default function Toolbar(
                                 </Plus>
                             )}
                         </Button>
+<<<<<<< HEAD
                         <Button
                         disabled={menuOpen}
                         className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`}
                         variant='outline'
                         onPress={() => onProfileOpen()}>
+=======
+                        <Button className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`} variant='outline'>
+>>>>>>> 90f35d0 (Hide other buttons while viewing popup menu. (small commit for consistency on thursday))
                             <User size={28} />
                         </Button>
                     </View>
