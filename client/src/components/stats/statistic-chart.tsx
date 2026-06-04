@@ -4,15 +4,13 @@ import { BarChart } from 'react-native-chart-kit';
 interface StatisticChartProps {
   values: number[];
   labels: string[];
-  unit: string;
 }
 
 const screenWidth = Dimensions.get('window').width;
 
 export function StatisticChart({
   values,
-  labels,
-  unit
+  labels
 }: StatisticChartProps) {
   const chartWidth = Math.max(
     screenWidth,
@@ -36,7 +34,7 @@ export function StatisticChart({
         width={chartWidth}
         height={220}
         yAxisLabel=""
-        yAxisSuffix={` ${unit}`}
+        yAxisSuffix=""
         chartConfig={{
           decimalPlaces: 1,
           backgroundGradientFrom: '#ffffff',
@@ -48,6 +46,7 @@ export function StatisticChart({
         }}
         fromZero
         showValuesOnTopOfBars
+        withHorizontalLabels={false}
       />
     </ScrollView>
   );
