@@ -5,10 +5,6 @@ import Topbar from '@/components/widgets/topbar';
 import * as storage from '@/lib/storage';
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
-<<<<<<< HEAD
-=======
-import { View } from 'react-native';
->>>>>>> d93e88a (moved topbar to separate file)
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import '../global.css';
