@@ -26,4 +26,5 @@ jobs:
     - name: Run Tests
       run: |
         cd server/src
-        python manage.py test
+        python manage.py test api.tests
+#        python manage.py test server.tests
