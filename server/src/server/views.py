@@ -39,7 +39,7 @@ def get_quote(request):
                 )
 
         return Response(
-            QuoteResponseSerializer(quote),
+            {'quote': quote},
             status=status.HTTP_200_OK
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
