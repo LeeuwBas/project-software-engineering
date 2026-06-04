@@ -21,7 +21,7 @@ from .views import get_quote
 from django.urls import path, include
 from rest_framework import routers
 from api.views import UserViewSet, StatInsertView
-from api.statistic_views.water_views import StatsWaterRequestAverage,\
+from api.statistics.statistic_views import StatsWaterRequestAverage,\
                     StatsWaterUpdate, StatsWaterBarChart
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -45,4 +45,9 @@ urlpatterns = [
     ),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path('api/stats/admin_insert', StatInsertView.as_view(), name='stat_insert_view'),
+    path('api/stats/metrics', StatsWaterRequestAverage.as_view(), name='water_metrics'),
+    path('api/stats/addwater', StatsWaterUpdate.as_view(), name='update_water'),
+    path('api/stats/waterchart', StatsWaterBarChart.as_view(), name='water_chart'),
 ]
