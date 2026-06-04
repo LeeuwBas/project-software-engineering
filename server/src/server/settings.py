@@ -30,8 +30,10 @@ SECRET_KEY = config(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
+DOMAINS = [d.strip() for d in config("DOMAIN", default="127.0.0.1,localhost").split(",")]
+BEHIND_PROXY = config('BEHIND_PROXY', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = DOMAINS
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -84,6 +86,12 @@ REST_FRAMEWORK = {
         "burst": "100/minute",
     },
 }
+
+# Only JSON api in production
+if not DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
+        "rest_framework.renderers.JSONRenderer",
+    ]
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
@@ -188,3 +196,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8081",
     "http://127.0.0.1:8081",
 ]
+
+if BEHIND_PROXY:
+    STATIC_ROOT = config("STATIC_ROOT", default=BASE_DIR / "staticfiles")
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    CSRF_TRUSTED_ORIGINS = []
+
+    for DOMAIN in DOMAINS:
+        CORS_ALLOWED_ORIGINS += [f"https://{DOMAIN}"]
+        CSRF_TRUSTED_ORIGINS += [f"https://{DOMAIN}"]
