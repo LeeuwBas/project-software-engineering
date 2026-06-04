@@ -13,12 +13,15 @@ import {
 import { Text } from '@/components/ui/text';
 import { StatisticData } from '@/components/stats/statistics-types';
 import { View } from 'react-native';
+import { StatisticChart } from '@/components/stats/statistic-chart';
 
 interface StatisticCardProps {
   stat: StatisticData;
 }
 
-export function StatisticCard({ stat }: StatisticCardProps) {
+export function StatisticCard({
+  stat 
+}: StatisticCardProps) {
   const values = stat.history.map(d => d.value);
 
   const highest = Math.max(...values);
@@ -44,6 +47,11 @@ export function StatisticCard({ stat }: StatisticCardProps) {
 
         <AccordionContent>
           <CardContent>
+            <View className="mt-4 gap-2">
+              <StatisticChart
+                data={stat.history}
+              />
+            </View>
             <View className="mt-4 gap-2">
               <Text>Highest: {highest} {stat.unit}</Text>
               <Text>Lowest: {lowest} {stat.unit}</Text>
