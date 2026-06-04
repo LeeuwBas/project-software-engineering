@@ -1,13 +1,19 @@
 import random
+
+from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-# from server.src.api.views import IsAuthenticated
-from .serializers import QuoteRequestSerializer
+from .serializers import QuoteRequestSerializer, QuoteResponseSerializer
 
-
+@extend_schema(
+    request=QuoteRequestSerializer,
+    responses={
+        200: QuoteResponseSerializer,
+    },
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_quote(request):
@@ -24,8 +30,7 @@ def get_quote(request):
                 with open('resources/quotes.txt', 'r') as f:
                     lines = f.readlines()
                 # Select and format a random quote.
-                selected_quote = random.choice(lines).strip('\n')
-                return Response({'text': selected_quote})
+                quote = random.choice(lines).strip('\n')
             except FileNotFoundError:
                 # Handle if file does not exist
                 return Response(
@@ -34,6 +39,7 @@ def get_quote(request):
                 )
 
         return Response(
-            {'status': 'success', 'quote': quote}, status=status.HTTP_200_OK
+            QuoteResponseSerializer(quote),
+            status=status.HTTP_200_OK
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
