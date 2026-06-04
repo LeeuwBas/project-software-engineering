@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from api.views import UserViewSet, StatInsertView, StatsWaterRequestAverage, StatsWaterUpdate
+from api.views import UserViewSet, StatInsertView, StatsWaterRequestAverage,\
+                      StatsWaterUpdate, StatsWaterBarChart
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -38,5 +39,6 @@ urlpatterns = [
 
     path("api/stats/admin_insert", StatInsertView.as_view(), name="stat_insert_view"),
     path("api/stats/totalwater", StatsWaterRequestAverage.as_view(), name="water_total"),
-    path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water")
+    path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water"),
+    path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
 ]

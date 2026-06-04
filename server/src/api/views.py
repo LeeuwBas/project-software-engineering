@@ -102,6 +102,7 @@ class StatsWaterRequestAverage(APIView):
 
 class StatsWaterUpdate(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
 
     @extend_schema(
             summary="Update or insert the water usage at a given date",
@@ -152,4 +153,92 @@ class StatsWaterUpdate(APIView):
         return Response({
             'new_value': line.water_amount,
             'inserted_line': created,
+        })
+
+
+class StatsWaterBarChart(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+            summary="Calculates and returns a set of bins to display water " \
+                    "stats in a bar chart.",
+            description="Calculates and returns a set of bins to display " \
+                        "water statistics in a bar chart. Calculates the " \
+                        "average value per day for every bin. The amount of " \
+                        "days must be a multiple of the bin count.",
+            parameters=[
+                OpenApiParameter(
+                    name='days',
+                    type=OpenApiTypes.INT,
+                    description="Amount of days to look back.",
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name='bin_count',
+                    type=OpenApiTypes.INT,
+                    description="Amount of bins to include in the graph.",
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'days_per_bin': {
+                            'type': 'integer',
+                            'example': 5,
+                        },
+                        'bins': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                '0': 5,
+                                '1': 8,
+                                '2': 3
+                            }
+                        }
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input."),
+            }
+    )
+    def get(self, request):
+        days = int(request.query_params.get('days', 0))
+        bins = int(request.query_params.get('bin_count', 0))
+
+        if days == 0 or bins == 0 or days % bins != 0:
+            return Response(
+                {'error': 'Invalid input.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        days_per_bin = days//bins
+
+        bin_dict = {}
+        lower_date = timezone.now() - timedelta(days)
+        filter = {
+            'user': request.user,
+            'date__gt': lower_date,
+            'date__lte': lower_date + timedelta(days_per_bin)
+        }
+
+        for i in range(bins):
+            bin_dict[i] = Stats.objects.filter(**filter).aggregate(
+                total=Sum('water_amount')
+            )['total']
+
+            if bin_dict[i] is None:
+                bin_dict[i] = 0
+
+            bin_dict[i] /= days_per_bin
+
+            filter['date__gt'] = filter['date__lte']
+            filter['date__lte'] += timedelta(days_per_bin)
+
+        print(bin_dict)
+        return Response({
+            'days_per_bin': days_per_bin,
+            'bins': bin_dict
         })
