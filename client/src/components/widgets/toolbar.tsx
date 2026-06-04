@@ -21,7 +21,7 @@ export default function Toolbar(
     const router = useRouter()
 
     return (
-        <View className='w-full'>
+        <View className='w-full mt-auto z-20'>
             <View className='left-0 right-0 items-center' >
                 <View className='relative items-center w-full'>
                     <View className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
