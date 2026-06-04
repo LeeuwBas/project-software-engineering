@@ -8,7 +8,6 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { toast } from 'sonner-native';
 
 

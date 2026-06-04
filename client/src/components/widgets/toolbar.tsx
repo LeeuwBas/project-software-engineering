@@ -2,7 +2,14 @@ import { Button } from '@/components/ui/button'
 import { useRouter } from 'expo-router'
 import { Text, View } from 'react-native'
 
-export default function Toolbar( {setMenuOpen} : {setMenuOpen: Function } ) {
+export default function Toolbar(
+    {
+        setMenuOpen,
+        menuOpen
+    }: {
+        setMenuOpen: Function
+        menuOpen: boolean
+    }) {
     const router = useRouter()
     return (
         <View className='flex flex-row border-2 bg-slate-200 border-slate-200 p-2 mt-auto justify-between'>
@@ -13,7 +20,7 @@ export default function Toolbar( {setMenuOpen} : {setMenuOpen: Function } ) {
             </Button>
             <Button variant='outline' className='flex-1 mx-2' onPress={() => setMenuOpen()}>
                 <Text>
-                    Modules
+                    {!menuOpen ? 'Modules' : 'Close'}
                 </Text>
             </Button>
             <Button variant='outline' className='flex-1' onPress={() => router.push('/login')}>
