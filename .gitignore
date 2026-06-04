@@ -52,6 +52,8 @@ example
 __pycache__/
 *.pyc
 .venv/**
+**/db.sqlite3
+**/migrations/**
 
 # Django
 *.sqlite3
