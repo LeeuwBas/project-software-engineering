@@ -23,9 +23,9 @@ export default function ProfilePopup({
   };
 
   const ITEMS: SettingItem[] = [
-    { label: 'Verander Pet' },
-    { label: 'Verander Gebruikersnaam' },
-    { label: 'Meer' },
+    { label: 'Change Pet' },
+    { label: 'Change Username' },
+    { label: 'More' },
   ];
 
   const translateYSub = useSharedValue(SCREEN_HEIGHT);
@@ -41,7 +41,7 @@ export default function ProfilePopup({
 
   useEffect(() => {
     translateYSub.value = withSpring(
-      activeItem?.label === 'Verander Gebruikersnaam' ? 0 : SCREEN_HEIGHT
+      activeItem?.label === 'Change Username' ? 0 : SCREEN_HEIGHT
     );
   }, [activeItem, translateYSub]);
 
@@ -97,9 +97,9 @@ export default function ProfilePopup({
           },
         ]}>
         <View style={{ flex: 1, padding: 16, gap: 16 }}>
-          <Text className="font-normal">Verander Gebruikersnaam</Text>
+          <Text className="font-normal">Change Username</Text>
           <Input
-            placeholder="Naam"
+            placeholder="Name"
             autoComplete="name"
             textContentType="name"
             returnKeyType="done"
