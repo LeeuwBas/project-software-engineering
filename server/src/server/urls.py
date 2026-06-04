@@ -21,7 +21,7 @@ from .views import get_quote
 from django.urls import path, include
 from rest_framework import routers
 from api.views import UserViewSet, StatInsertView
-from api.statistic_views.water_views import StatsWaterRequestAverage,\
+from api.statistics.statistic_views import StatsWaterRequestAverage,\
                     StatsWaterUpdate, StatsWaterBarChart
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
