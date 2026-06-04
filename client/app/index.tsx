@@ -22,8 +22,6 @@ export default function App() {
     setOpen(!menuOpen)
   };
 
-  console.log(profileOpen)
-
   return (
     <SafeAreaProvider>
       <SafeAreaView className='flex flex-col size-full'>
