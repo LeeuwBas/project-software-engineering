@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from api.views import UserViewSet, StatInsertView, StatsWaterRequestAverage,\
-                      StatsWaterUpdate, StatsWaterBarChart
+from api.views import UserViewSet, StatInsertView
+from api.statistic_views.water_views import StatsWaterRequestAverage,\
+                    StatsWaterUpdate, StatsWaterBarChart
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
