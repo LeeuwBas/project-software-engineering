@@ -29,7 +29,10 @@ export default function Toolbar(
                     </View>
                     {/* The toolbar itself */}
                     <View className='w-full flex flex-row border-2 bg-slate-200 border-slate-200 p-1 justify-evenly'>
-                        <Button variant='outline' className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`}>
+                        <Button
+                        disabled={menuOpen}
+                        className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`}
+                        variant='outline'>
                             <ChartNoAxesCombined size={"28"} />
                         </Button>
                         <Button variant='outline' size="icon" className='rounded-full' onPress={() => changeMenu()}>
@@ -46,6 +49,7 @@ export default function Toolbar(
                             )}
                         </Button>
                         <Button
+                        disabled={menuOpen}
                         className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`}
                         variant='outline'
                         onPress={() => router.push('/login')}>
