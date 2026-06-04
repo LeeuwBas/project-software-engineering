@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
   AccordionContent,
   AccordionItem,
@@ -10,36 +12,82 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { StatisticData } from '@/components/stats/statistics-types';
-import { View } from 'react-native';
 import { StatisticChart } from '@/components/stats/statistic-chart';
+import {
+  HistoryPeriod,
+  PERIOD_CONFIG,
+  StatisticMetadata,
+  StatisticResponse,
+} from '@/components/stats/statistics-types';
+import { getChartLabels } from '@/components/stats/chart-labels';
+import { fetchStatistic } from '@/components/stats/statistics-api';
 
 interface StatisticCardProps {
-  stat: StatisticData;
+  metadata: StatisticMetadata;
 }
 
 export function StatisticCard({
-  stat 
+  metadata,
 }: StatisticCardProps) {
-  const values = stat.history.map(d => d.value);
+  const [period, setPeriod] =
+    useState<HistoryPeriod>('week');
 
-  const highest = Math.max(...values);
-  const lowest = Math.min(...values);
+  const [response, setResponse] =
+    useState<StatisticResponse | null>(null);
 
-  const average =
-    values.reduce((sum, value) => sum + value, 0) /
-    values.length;
+  useEffect(() => {
+    async function load() {
+      const config =
+        PERIOD_CONFIG[period];
+
+      const data =
+        await fetchStatistic(
+          metadata.id,
+          config.days,
+          config.bins,
+        );
+
+      setResponse(data);
+    }
+
+    load();
+  }, [metadata.id, period]);
+
+  if (!response) {
+    return (
+      <AccordionItem value={metadata.id}>
+        <Card>
+          <CardContent>
+            <Text>Loading...</Text>
+          </CardContent>
+        </Card>
+      </AccordionItem>
+    );
+  }
+
+  const values =
+    Object.values(response.bins);
+
+  const labels = getChartLabels(
+    period,
+    values.length,
+  );
 
   return (
-    <AccordionItem value={stat.id}>
+    <AccordionItem value={metadata.id}>
       <Card>
         <CardHeader>
           <AccordionTrigger>
             <View>
-              <CardTitle>{stat.title}</CardTitle>
+              <CardTitle>
+                {metadata.title}
+              </CardTitle>
+
               <CardDescription>
-                Today: {stat.current} {stat.unit}
+                Today: {response.today}{' '}
+                {metadata.unit}
               </CardDescription>
             </View>
           </AccordionTrigger>
@@ -47,15 +95,68 @@ export function StatisticCard({
 
         <AccordionContent>
           <CardContent>
-            <View className="mt-4 gap-2">
-              <StatisticChart
-                data={stat.history}
-              />
+            <View className="mb-4 flex-row gap-2">
+              <Button
+                variant={
+                  period === 'week'
+                    ? 'default'
+                    : 'outline'
+                }
+                onPress={() =>
+                  setPeriod('week')
+                }
+              >
+                <Text>Week</Text>
+              </Button>
+
+              <Button
+                variant={
+                  period === 'month'
+                    ? 'default'
+                    : 'outline'
+                }
+                onPress={() =>
+                  setPeriod('month')
+                }
+              >
+                <Text>Month</Text>
+              </Button>
+
+              <Button
+                variant={
+                  period === 'year'
+                    ? 'default'
+                    : 'outline'
+                }
+                onPress={() =>
+                  setPeriod('year')
+                }
+              >
+                <Text>Year</Text>
+              </Button>
             </View>
+
+            <StatisticChart
+              values={values}
+              labels={labels}
+              unit={metadata.unit}
+            />
+
             <View className="mt-4 gap-2">
-              <Text>Highest: {highest} {stat.unit}</Text>
-              <Text>Lowest: {lowest} {stat.unit}</Text>
-              <Text>Average: {average.toFixed(1)} {stat.unit}</Text>
+              <Text>
+                Highest: {response.high}{' '}
+                {metadata.unit}
+              </Text>
+
+              <Text>
+                Lowest: {response.low}{' '}
+                {metadata.unit}
+              </Text>
+
+              <Text>
+                Average: {response.average}{' '}
+                {metadata.unit}
+              </Text>
             </View>
           </CardContent>
         </AccordionContent>
