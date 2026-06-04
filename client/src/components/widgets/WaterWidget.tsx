@@ -12,13 +12,8 @@ export default function WaterWidget(
     }) {
 
     function alterWaterValue(value: number) {
-<<<<<<< HEAD
         const new_water = Math.max(Math.min(water+value, 100), 0);
         setWater(new_water);
-=======
-        const new_water = Math.max(Math.min(water+value, 100), 0)
-        setWater(new_water)
->>>>>>> dev
     }
 
     return (
