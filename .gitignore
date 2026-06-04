@@ -2,6 +2,9 @@
 
 # dependencies
 node_modules/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 
 # Expo
 .expo/
@@ -50,3 +53,11 @@ example
 __pycache__/
 *.pyc
 .venv/**
+**/db.sqlite3
+**/migrations/**
+
+# Django
+*.sqlite3
+
+# Keys, passwords, and enviornment variables
+**/.env
