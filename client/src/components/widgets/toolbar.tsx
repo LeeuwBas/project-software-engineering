@@ -1,9 +1,15 @@
-import { Button } from '@/components/ui/button'
-import { useRouter } from 'expo-router'
-import { Text, View } from 'react-native'
+import { Button } from '@/components/ui/button';
+import { Text, View } from 'react-native';
 
-export default function Toolbar( {setMenuOpen} : {setMenuOpen: Function } ) {
-    const router = useRouter()
+export default function Toolbar(
+    {
+        setMenuOpen,
+        onProfileOpen
+    }: {
+        setMenuOpen: Function
+        onProfileOpen: () => void;
+    }) {
+
     return (
         <View className='flex flex-row border-2 bg-slate-200 border-slate-200 p-2 mt-auto justify-between'>
             <Button variant='outline' className='flex-1'>
@@ -16,7 +22,7 @@ export default function Toolbar( {setMenuOpen} : {setMenuOpen: Function } ) {
                     Modules
                 </Text>
             </Button>
-            <Button variant='outline' className='flex-1' onPress={() => router.push('/profile')}>
+            <Button variant='outline' className='flex-1' onPress={() => onProfileOpen()}>
                 <Text>
                     Account
                 </Text>

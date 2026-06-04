@@ -1,11 +1,10 @@
 import PopupMenu from '@/components/widgets/PopupMenu';
+import ProfilePopup from '@/components/widgets/ProfilePopup';
 import Toolbar from '@/components/widgets/toolbar';
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
 import { ImageBackground, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { Button } from '@/components/ui/button';
 
 
 import '../global.css';
@@ -15,10 +14,13 @@ const image = {uri: "https://images.ctfassets.net/h6goo9gw1hh6/3aOPP8aNhZJm1X7iO
 
 
 export default function App() {
-  const [menuOpen, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  console.log(profileOpen)
 
   function changeMenu() {
-    setOpen(!menuOpen)
+    setMenuOpen(!menuOpen)
   }
 
   return (
@@ -27,6 +29,7 @@ export default function App() {
       <ImageBackground className='h-full bg-contain' source={image}>
           <BlurView className={`absolute h-full w-full transition-opacity duration-300 ${ menuOpen ? 'opacity-100' : 'opacity-0' }`} intensity={60} tint='default' experimentalBlurMethod='dimezisBlurView'/>
 
+          <ProfilePopup open={profileOpen} setOpen={setProfileOpen} />
           <View className='mt-auto left-0 right-0 items-center z-50' >
 
 
@@ -35,7 +38,7 @@ export default function App() {
                 <PopupMenu isOpen={menuOpen}></PopupMenu>
               </View>
 
-              <Toolbar setMenuOpen={changeMenu}></Toolbar>
+              <Toolbar setMenuOpen={changeMenu} onProfileOpen={() => setProfileOpen(true)}></Toolbar>
             </View>
           </View>
       </ImageBackground>
