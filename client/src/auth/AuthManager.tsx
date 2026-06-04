@@ -1,10 +1,10 @@
 import { tokenStorage} from "@/auth/TokenStorage";
-import {createContext, ReactNode, useContext, useEffect, useState} from "react";
+import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
+import {Redirect} from "expo-router";
 
 type Auth = {
     accessToken: string | null;
     refreshToken: string | null;
-    isAuthenticated: boolean;
     isLoading: boolean;
 
     renewToken: () => Promise<void>;
@@ -18,8 +18,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isLoading, setLoading] = useState(true);
-
-    const isAuthenticated = !!accessToken;
 
     useEffect(() => {
         async function init(){
@@ -87,7 +85,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             value={{
                 accessToken,
                 refreshToken,
-                isAuthenticated,
                 isLoading,
                 renewToken,
                 signIn,
@@ -98,6 +95,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         </AuthContext.Provider>
     );
 };
+
+export function requireNoAuth(element: JSX.Element) {
+    const auth = useAuth();
+    if (auth?.isLoading) return element;
+
+    if (auth?.accessToken) {
+        return <Redirect href="/"/>;
+    }
+
+    return element;
+}
+
+export function requireAuth(element: JSX.Element) {
+    const auth = useAuth();
+    if (auth?.isLoading) return element;
+
+    if (!auth?.accessToken) {
+        return <Redirect href="/login"/>;
+    }
+
+    return element;
+}
 
 export function useAuth(){
     return useContext(AuthContext)

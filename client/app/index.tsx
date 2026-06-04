@@ -9,6 +9,7 @@ import { router } from 'expo-router';
 import { Button } from '@/components/ui/button';
 
 import '../global.css';
+import {requireAuth} from "@/auth/AuthManager";
 
 
 const image = {uri: "https://images.ctfassets.net/h6goo9gw1hh6/3aOPP8aNhZJm1X7iOUhMhb/143b0bacfff198cad9c7f11915cb94e5/Iwan_Nature.jpeg?w=564&h=1002&fl=progressive&q=70&fm=jpg"}
@@ -20,10 +21,10 @@ export default function App() {
 
   function changeMenu() {
     setOpen(!menuOpen)
-  };
+  }
 
 
-  return (
+  return requireAuth(
     <SafeAreaProvider>
       <SafeAreaView className='h-full'>
         <ImageBackground className='h-full bg-contain' source={image}>
