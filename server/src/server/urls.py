@@ -39,7 +39,7 @@ urlpatterns = [
     path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 
     path("api/stats/admin_insert", StatInsertView.as_view(), name="stat_insert_view"),
-    path("api/stats/totalwater", StatsWaterRequestAverage.as_view(), name="water_total"),
+    path("api/stats/metrics", StatsWaterRequestAverage.as_view(), name="water_metrics"),
     path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water"),
     path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
 ]
