@@ -139,7 +139,6 @@ export function StatisticCard({
             <StatisticChart
               values={values}
               labels={labels}
-              unit={metadata.unit}
             />
 
             <View className="mt-4 gap-2">
