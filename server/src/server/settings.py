@@ -87,7 +87,8 @@ REST_FRAMEWORK = {
     },
 }
 
-if DEBUG:
+# Only JSON api in production
+if not DEBUG:
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = [
         "rest_framework.renderers.JSONRenderer",
     ]
