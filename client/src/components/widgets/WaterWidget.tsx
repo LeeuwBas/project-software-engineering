@@ -12,7 +12,7 @@ export default function WaterWidget(
     }) {
 
     function alterWaterValue(value: number) {
-        if (water+value <= 100 && water+value >= 0) {
+        if (water+value >= 0) {
             setWater(water+value);
         }
     }
@@ -22,16 +22,16 @@ export default function WaterWidget(
             <View className='flex flex-row items-center w-full p-2 justify-between'>
                 <View className='flex flex-row items-center gap-2'>
                     <GlassWater size={30}/>
-                    <Text className='min-w-10'>
+                    <Text className='text-base font-bold min-w-10'>
                         {water}
                     </Text>
                 </View>
 
                 <View className='flex flex-row items-center gap-2'>
-                    <Button className="bg-white" size="icon" onPress={() => alterWaterValue(1)}>
+                    <Button className="bg-white active:bg-slate-200" onPress={() => alterWaterValue(1)}>
                         <Plus size={35} color={"#1F51FF"}/>
                     </Button>
-                    <Button className='bg-white' onPress={() => alterWaterValue(-1)}>
+                    <Button className='bg-white active:bg-slate-200' onPress={() => alterWaterValue(-1)}>
                         <Minus size={35} color={"#FF0000"}/>
                     </Button>
                 </View>
