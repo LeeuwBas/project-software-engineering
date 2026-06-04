@@ -1,6 +1,6 @@
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
-import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { Dimensions, Pressable, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -49,9 +49,9 @@ export default function ProfilePopup({
     transform: [{ translateY: translateY.value }],
   }));
 
-  return (
-    <View className="flex-1">
-      {open && <Pressable className="absolute inset-0" onPress={() => setOpen(false)} />}
+    return (
+        <View className='absolute inset-0'>
+            {open && <Pressable className="absolute inset-0" onPress={() => setOpen(false)} />}
 
       <Animated.View
         className="p-10"
