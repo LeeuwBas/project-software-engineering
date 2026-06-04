@@ -1,6 +1,7 @@
 import Sidebar from '@/components/widgets/Sidebar';
 import Tamagotchi from '@/components/widgets/Tamagotchi';
 import Toolbar from '@/components/widgets/toolbar';
+import * as storage from '@/lib/storage';
 import { BlurView } from 'expo-blur';
 import { Heart } from 'lucide-react-native';
 import { useState } from 'react';
@@ -14,6 +15,7 @@ export default function App() {
   const day = date.toLocaleDateString('en-US', { weekday: 'short' })
 
   const [menuOpen, setOpen] = useState(false)
+  const {water, setWater} = storage.useWater(menuOpen);
 
   // Show or hide menu depending on if menu is already open
   function changeMenu() {

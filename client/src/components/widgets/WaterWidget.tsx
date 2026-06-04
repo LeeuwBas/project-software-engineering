@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
+import { GlassWater, Minus, Plus } from 'lucide-react-native';
 import { Text, View } from 'react-native';
-import { GlassWater, Plus, Minus } from 'lucide-react-native';
 
 export default function WaterWidget(
     {
@@ -12,9 +12,8 @@ export default function WaterWidget(
     }) {
 
     function alterWaterValue(value: number) {
-        if (water+value >= 0) {
-            setWater(water+value);
-        }
+        const new_water = Math.max(Math.min(water+value, 100), 0)
+        setWater(new_water)
     }
 
     return (
