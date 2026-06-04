@@ -26,21 +26,21 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 router = routers.DefaultRouter()
-router.register(r"users", UserViewSet)
+router.register(r'users', UserViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path("api/get-quote/", get_quote, name="get_quote"),
-    path("", include(router.urls)),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path('api/get-quote/', get_quote, name='get_quote'),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
     path(
-        "api/schema/swagger-ui/",
-        SpectacularSwaggerView.as_view(url_name="schema"),
-        name="swagger-ui",
+        'api/schema/swagger-ui/',
+        SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger-ui',
     ),
-    path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
