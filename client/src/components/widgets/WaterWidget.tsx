@@ -27,10 +27,10 @@ export default function WaterWidget(
                 </View>
 
                 <View className='flex flex-row items-center gap-2'>
-                    <Button className="bg-white active:bg-slate-200" onPress={() => alterWaterValue(1)}>
+                    <Button className="bg-white active:bg-slate-200" onPress={() => alterWaterValue(10)}>
                         <Plus size={35} color={"#1F51FF"}/>
                     </Button>
-                    <Button className='bg-white active:bg-slate-200' onPress={() => alterWaterValue(-1)}>
+                    <Button className='bg-white active:bg-slate-200' onPress={() => alterWaterValue(-10)}>
                         <Minus size={35} color={"#FF0000"}/>
                     </Button>
                 </View>

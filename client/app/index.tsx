@@ -26,7 +26,7 @@ export default function App() {
 
         <Topbar />
 
-        <Main />
+        <Main leftSideStat='water' leftSideValue={water} rightSideStat='none' rightSideValue={0}/>
 
         {/* The blur that appears when popup menu is opened */}
         <BlurView className={`absolute w-full h-full transition-opacity duration-300 ${ menuOpen ? 'opacity-100' : 'opacity-0' }`} intensity={40} tint='regular' experimentalBlurMethod='dimezisBlurView'/>
@@ -36,5 +36,3 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-
-
