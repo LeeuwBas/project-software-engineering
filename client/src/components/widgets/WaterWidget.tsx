@@ -1,22 +1,19 @@
-import { Text, View } from 'react-native';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { Card } from '../ui/card';
+import { Text, View } from 'react-native';
 
-
-const WaterWidget = ({ startValue }: { startValue: number}) => {
-    const [water, setWater] = useState(startValue)
+export default function WaterWidget(
+    {
+        water,
+        setWater
+    }: {
+        water: number,
+        setWater: (value: number) => void
+    }) {
 
     function alterWaterValue(value: number) {
-    if (water+value <= 100 && water+value >= 0) {
-        setWater(water+value);
+        const new_water = Math.max(Math.min(water+value, 100), 0)
+        setWater(new_water)
     }
-    }
-
-    function resetWater() {
-        setWater(0);
-    }
-
 
     return (
         <>
@@ -29,7 +26,7 @@ const WaterWidget = ({ startValue }: { startValue: number}) => {
                     +
                     </Text>
                 </Button>
-                <Button className='bg-white' onPress={() => alterWaterValue(-10)}>
+                <Button className='bg-white' onPress={() => alterWaterValue(-20)}>
                     <Text className='text-red-600'>
                     -
                     </Text>
@@ -39,5 +36,3 @@ const WaterWidget = ({ startValue }: { startValue: number}) => {
         </>
     );
 }
-
-export default WaterWidget;

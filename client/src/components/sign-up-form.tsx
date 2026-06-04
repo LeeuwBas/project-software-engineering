@@ -5,10 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
+import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { toast } from 'sonner-native';
+
 
 export function SignUpForm() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export function SignUpForm() {
   const [password, setPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
+
   const passwordInputRef = React.useRef<TextInput>(null);
 
   const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
