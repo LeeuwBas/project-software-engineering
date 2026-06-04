@@ -30,12 +30,10 @@ SECRET_KEY = config(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
-DOMAIN = config('DOMAIN', default="127.0.0.1")
+DOMAINS = [d.strip() for d in config("DOMAIN", default="127.0.0.1,localhost").split(",")]
 BEHIND_PROXY = config('BEHIND_PROXY', default=False, cast=bool)
 
-ALLOWED_HOSTS = [
-    DOMAIN
-]
+ALLOWED_HOSTS = DOMAINS
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -200,8 +198,8 @@ if BEHIND_PROXY:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-    CSRF_TRUSTED_ORIGINS = [
-        f"https://{DOMAIN}",
-    ]
+    CSRF_TRUSTED_ORIGINS = []
 
-    CORS_ALLOWED_ORIGINS += [f"https://{DOMAIN}"]
+    for DOMAIN in DOMAINS:
+        CORS_ALLOWED_ORIGINS += [f"https://{DOMAIN}"]
+        CSRF_TRUSTED_ORIGINS += [f"https://{DOMAIN}"]
