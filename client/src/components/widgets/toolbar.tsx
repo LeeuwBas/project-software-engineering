@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'expo-router'
 import { ChartNoAxesCombined, Check, Plus, User } from 'lucide-react-native'
-import { useState } from 'react'
 import { View } from 'react-native'
 
 import PopupMenu from '@/components/widgets/PopupMenu'
@@ -9,16 +8,17 @@ import PopupMenu from '@/components/widgets/PopupMenu'
 export default function Toolbar(
     {
         menuOpen,
-        changeMenu
+        changeMenu,
+        water,
+        setWater
     } : {
         menuOpen : boolean,
-        changeMenu: Function}
-    ) {
+        changeMenu: Function,
+        water: number,
+        setWater: {(value: number): void}
+    }) {
 
     const router = useRouter()
-
-    let init_water = 10;
-    const [water, setWater] = useState(init_water);
 
     return (
         <View className='w-full'>
