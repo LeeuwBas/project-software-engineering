@@ -23,14 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default= 'django-insecure-h($q19xmct^2=19ivb_$62r978h9)ltrnc*6$@=_0f0q=-okd2')
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default='django-insecure-h($q19xmct^2=19ivb_$62r978h9)ltrnc*6$@=_0f0q=-okd2',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = "api.User"
+AUTH_USER_MODEL = 'api.User'
 
 # Application definition
 
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "api",
+    "server",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
 ]
@@ -63,8 +67,8 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
