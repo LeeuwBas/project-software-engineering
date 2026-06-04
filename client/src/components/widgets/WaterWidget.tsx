@@ -11,9 +11,8 @@ export default function WaterWidget(
     }) {
 
     function alterWaterValue(value: number) {
-        if (water+value <= 100 && water+value >= 0) {
-            setWater(water+value);
-        }
+        const new_water = Math.max(Math.min(water+value, 100), 0)
+        setWater(new_water)
     }
 
     return (
@@ -27,7 +26,7 @@ export default function WaterWidget(
                     +
                     </Text>
                 </Button>
-                <Button className='bg-white' onPress={() => alterWaterValue(-10)}>
+                <Button className='bg-white' onPress={() => alterWaterValue(-20)}>
                     <Text className='text-red-600'>
                     -
                     </Text>
