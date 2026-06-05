@@ -14,43 +14,47 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.contrib import admin
-from .views import get_quote
 
 from django.urls import path, include
 from rest_framework import routers
 from api.views import UserViewSet, StatInsertView
-from api.statistics.statistic_views import StatsWaterRequestAverage,\
-                    StatsWaterUpdate, StatsWaterBarChart, StatisticsView
+from api.statistics.statistic_views import (
+    StatsWaterRequestAverage,
+    StatsWaterUpdate,
+    StatsWaterBarChart,
+    StatisticsView,
+)
+from api.quotes.quotes_views import RequestQuote
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(r"users", UserViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('api/get-quote/', get_quote, name='get_quote'),
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    path('api/stats/admin_insert', StatInsertView.as_view(), name='stat_insert_view'),
-    path('api/stats/metrics', StatsWaterRequestAverage.as_view(), name='water_metrics'),
-    path('api/stats/addwater', StatsWaterUpdate.as_view(), name='update_water'),
-    path('api/stats/waterchart', StatsWaterBarChart.as_view(), name='water_chart'),
-    path('api/stats/view', StatisticsView.as_view(), name='statview'),
+    path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
+    path("", include(router.urls)),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/stats/admin_insert", StatInsertView.as_view(), name="stat_insert_view"),
+    path("api/stats/metrics", StatsWaterRequestAverage.as_view(), name="water_metrics"),
+    path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water"),
+    path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
+    path("api/stats/view", StatisticsView.as_view(), name="statview"),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
         path(
-            'api/schema/swagger-ui/',
-            SpectacularSwaggerView.as_view(url_name='schema'),
-            name='swagger-ui',
+            "api/schema/swagger-ui/",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui",
         ),
     ]
