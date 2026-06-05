@@ -1,5 +1,5 @@
+import Pet from '@/components/widgets/Pet';
 import Statbar from '@/components/widgets/Statbar';
-import Tamagotchi from '@/components/widgets/Tamagotchi';
 import { View } from 'react-native';
 
 export default function Main(
@@ -22,7 +22,7 @@ export default function Main(
             </View>
 
             <View className="flex-1 justify-center">
-                <Tamagotchi />
+                <Pet />
             </View>
 
             <View className="w-5">

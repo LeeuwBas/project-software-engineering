@@ -1,56 +1,59 @@
 import { Button } from '@/components/ui/button';
-import PopupMenu from '@/components/widgets/PopupMenu';
+import Menu from '@/components/widgets/Menu';
+import { PopupConfigs } from '@/lib/types';
 import { ChartNoAxesCombined, Check, Plus, User } from 'lucide-react-native';
 import { View } from 'react-native';
+import Settings from './Settings';
 
 export default function Toolbar(
     {
-        menuOpen,
-        changeMenu,
-        onProfileOpen,
+        popup,
         water,
         setWater
     } : {
-        menuOpen : boolean,
-        changeMenu: Function,
-        onProfileOpen: () => void;
+        popup: PopupConfigs,
         water: number,
         setWater: {(value: number): void}
     }) {
+
+    const popupOpen: boolean = popup.menuOpen || popup.settingsOpen
 
     return (
         <View className='w-full mt-auto z-20'>
             <View className='left-0 right-0 items-center' >
                 <View className='relative items-center w-full'>
-                    <View className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
-                        <PopupMenu isOpen={menuOpen} water={water} setWater={setWater} />
-                    </View>
+                    <Menu isOpen={popup.menuOpen} water={water} setWater={setWater} />
+                    <Settings isOpen={popup.settingsOpen} />
+
                     {/* The toolbar itself */}
                     <View className='w-full flex flex-row border-2 bg-slate-200 border-slate-200 p-1 justify-evenly'>
                         <Button
-                        disabled={menuOpen}
-                        className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`}
+                        disabled={popupOpen}
+                        className={`transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}
                         variant='outline'>
                             <ChartNoAxesCombined size={"28"} />
                         </Button>
-                        <Button variant='outline' size="icon" className='rounded-full' onPress={() => changeMenu()}>
-                            {menuOpen && (
-                                <Check size={32} color={"#008000"}>
 
-                                </Check>
+                        <Button
+                        disabled={popup.settingsOpen}
+                        variant='outline'
+                        size="icon"
+                        className={`rounded-full transition-opacity duration-200 ${ popup.settingsOpen ? 'opacity-0' : 'opacity-100' }`}
+                        onPress={() => popup.changeMenu()}>
+                            {popup.menuOpen && (
+                                <Check size={32} color={"#008000"} />
                             )}
 
-                            {!menuOpen && (
-                                <Plus size={35}>
-
-                                </Plus>
+                            {!popup.menuOpen && (
+                                <Plus size={35} />
                             )}
                         </Button>
+
                         <Button
-                        disabled={menuOpen}
-                        className={`transition-opacity duration-200 ${ menuOpen ? 'opacity-0' : 'opacity-100' }`}
+                        disabled={popup.menuOpen}
+                        className={`transition-opacity duration-200 ${ popup.menuOpen ? 'opacity-0' : 'opacity-100' }`}
                         variant='outline'
-                        onPress={() => onProfileOpen()}>
+                        onPress={() => popup.changeSettings()}>
                             <User size={28} />
                         </Button>
                     </View>
