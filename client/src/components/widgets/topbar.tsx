@@ -1,5 +1,6 @@
 import { Heart } from 'lucide-react-native';
 import { Text, View } from 'react-native';
+import { AppText } from '../AppText';
 
 export default function Topbar() {
     const date = new Date();
@@ -8,7 +9,7 @@ export default function Topbar() {
     return (
         <View className="flex flex-row items-center">
             <View className='ml-5'>
-                <Text className=' text-2xl font-bold'>{day}</Text>
+                <AppText className=' text-2xl font-bold'>{day}</AppText>
             </View>
 
             <View className='ml-auto flex-row gap-2 mr-10'>
