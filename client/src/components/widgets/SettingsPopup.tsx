@@ -9,7 +9,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 const PEEK_TOP = 320;
 const SUB_PEEK_TOP = PEEK_TOP + 160;
 
-export default function ProfilePopup({
+export default function SettingsPopup({
   open,
   setOpen,
 }: {

@@ -1,5 +1,5 @@
 import Main from '@/components/widgets/mainview';
-import ProfilePopup from '@/components/widgets/ProfilePopup';
+import SettingsPopup from '@/components/widgets/SettingsPopup';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import * as storage from '@/lib/storage';
@@ -10,9 +10,6 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import '../global.css';
 
 export default function App() {
-  const date = new Date();
-  const day = date.toLocaleDateString('en-US', { weekday: 'short' })
-
   const [menuOpen, setOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false);
   const {water, setWater} = storage.useWater(menuOpen);
@@ -33,7 +30,7 @@ export default function App() {
         <BlurView className={`absolute w-full h-full transition-opacity duration-300 ${ menuOpen ? 'opacity-100' : 'opacity-0' }`} intensity={40} tint='regular' experimentalBlurMethod='dimezisBlurView'/>
 
         <Toolbar menuOpen={menuOpen} changeMenu={changeMenu} onProfileOpen={() => setProfileOpen(true)} water={water} setWater={setWater}/>
-      <ProfilePopup open={profileOpen} setOpen={setProfileOpen} />
+      <SettingsPopup open={profileOpen} setOpen={setProfileOpen} />
 
       </SafeAreaView>
     </SafeAreaProvider>
