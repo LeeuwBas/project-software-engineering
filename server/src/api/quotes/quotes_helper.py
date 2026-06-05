@@ -6,5 +6,6 @@ class QuoteRequestSerializer(serializers.Serializer):
     mood = serializers.CharField(max_length=100)
     action = serializers.CharField(max_length=100)
 
+
 class QuoteResponseSerializer(serializers.Serializer):
     quote = serializers.CharField()
