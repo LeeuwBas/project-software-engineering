@@ -1,0 +1,16 @@
+De hexvalues voor het kleurenpalet
+Iedere kleur heeft een donkere, medium en lichte versie
+
+Rood:   f67788  f99295  fcada3
+Oranje: ffae6c  ffc284  ffd49b
+Geel:   ffd568  ffe181  ffea9b
+Groen:  c1d568  d2dd83  e1e49c
+Cyan:   74c6b6  94d4bc  b4e1c2
+blauw:  93aaac  adbeb4  c7d0bd
+violet: bf9ca0  cbaba8  d7bbb1
+
+Bruin 1:856a54  9a806c  ae9581
+Bruin 2:a39572  b1a380  c0b28f
+
+Grijs tinten:
+393939  555555  717171  8e8e8e  aaaaaa  c6c6c6  e3e3e3  ffffff
