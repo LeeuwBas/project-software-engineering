@@ -16,6 +16,7 @@ from ..serializers import StatsSerializer
 from ..permissions import IsSelf
 from ..models import Stats
 
+from .statistics_helper import getBarChart, getSummary
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -49,17 +50,7 @@ class StatsWaterRequestAverage(APIView):
     def get(self, request):
         days = int(request.query_params.get('days', 0))
 
-        filter_dict = {"user": request.user}
-        if days > 0:
-            oldest = timezone.now() - timedelta(days)
-            filter_dict["date__gte"] = oldest
-
-        lines = Stats.objects.filter(**filter_dict)
-
-        response:dict = lines.aggregate(total_water=Sum('water_amount'),
-                                        average_water=Avg('water_amount'),
-                                        minimum_water=Min('water_amount'),
-                                        maximum_water=Max('water_amount'))
+        response = getSummary(days, request.user, 'water')
 
         return Response(response)
 
@@ -106,11 +97,11 @@ class StatsWaterUpdate(APIView):
         line, created = Stats.objects.get_or_create(
             user = request.user,
             date = timezone.now().date(),
-            defaults={'water_amount': amount}
+            defaults={'water': amount}
         )
 
         if not created:
-            line.water_amount = F("water_amount") + amount
+            line.water_amount = F("water") + amount
             line.save()
             line.refresh_from_db()
 
@@ -178,31 +169,99 @@ class StatsWaterBarChart(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        days_per_bin = days//bins
-
-        bin_dict = {}
-        lower_date = timezone.now() - timedelta(days)
-        filter = {
-            'user': request.user,
-            'date__gt': lower_date,
-            'date__lte': lower_date + timedelta(days_per_bin)
-        }
-
-        for i in range(bins):
-            bin_dict[i] = Stats.objects.filter(**filter).aggregate(
-                total=Sum('water_amount')
-            )['total']
-
-            if bin_dict[i] is None:
-                bin_dict[i] = 0
-
-            bin_dict[i] /= days_per_bin
-
-            filter['date__gt'] = filter['date__lte']
-            filter['date__lte'] += timedelta(days_per_bin)
+        bin_dict = getBarChart(days, bins, request.user, "water")
 
         print(bin_dict)
         return Response({
-            'days_per_bin': days_per_bin,
+            'days_per_bin': days//bins,
             'bins': bin_dict
         })
+
+class StatisticsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+            summary="Endpoint to request statistics for barcharts and averages.",
+            parameters=[
+                OpenApiParameter(
+                    name='days',
+                    type=OpenApiTypes.INT,
+                    description="Amount of days to look back.",
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name='bin_count',
+                    type=OpenApiTypes.INT,
+                    description="Amount of bins to include in the graph.",
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name='statistic',
+                    type=OpenApiTypes.STR,
+                    description="statistic to view",
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'days_per_bin': {
+                            'type': 'integer',
+                            'example': 5
+                        },
+                        'bins': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                '0': 5,
+                                '1': 8,
+                                '2': 3
+                            }
+                        },
+                        'today': {
+                            'type': 'integer',
+                            'example': 5
+                        },
+                        'properties': {
+                            'total_water':   {
+                                'type': 'integer',
+                                'example': 5
+                            },
+                            'average_water': {
+                                'type': 'number',
+                                'example': 5
+                            },
+                            'minimum_water': {
+                                'type': 'integer',
+                                'example': 5
+                            },
+                            'maximum_water': {
+                                'type': 'integer',
+                                'example': 5
+                            },
+                        }
+                    }
+                }
+            }
+    )
+    def get(self, request):
+        days = int(request.query_params.get('days'))
+        bin_count = int(request.query_params.get('bin_count'))
+        statistic = request.query_params.get('statistic')
+
+        print(statistic)
+
+        summary = getSummary(days, request.user, statistic)
+        bar_chart = getBarChart(days, bin_count, request.user, statistic)
+
+        response = {
+            'days_per_bin': days//bin_count,
+            'bins': bar_chart
+        }
+        response.update(summary)
+
+        return Response(response)

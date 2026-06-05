@@ -75,4 +75,4 @@ class Stats(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
-    water_amount = models.IntegerField(default=0)
+    water = models.IntegerField(default=0)

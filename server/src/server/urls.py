@@ -22,7 +22,7 @@ from django.urls import path, include
 from rest_framework import routers
 from api.views import UserViewSet, StatInsertView
 from api.statistics.statistic_views import StatsWaterRequestAverage,\
-                    StatsWaterUpdate, StatsWaterBarChart
+                    StatsWaterUpdate, StatsWaterBarChart, StatisticsView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -50,4 +50,5 @@ urlpatterns = [
     path('api/stats/metrics', StatsWaterRequestAverage.as_view(), name='water_metrics'),
     path('api/stats/addwater', StatsWaterUpdate.as_view(), name='update_water'),
     path('api/stats/waterchart', StatsWaterBarChart.as_view(), name='water_chart'),
+    path('api/stats/view', StatisticsView.as_view(), name='statview'),
 ]
