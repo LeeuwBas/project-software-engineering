@@ -24,7 +24,7 @@ export default function App() {
   }
 
 
-  return requireAuth(
+  return (
     <SafeAreaProvider>
       <SafeAreaView className='h-full'>
         <ImageBackground className='h-full bg-contain' source={image}>

@@ -1,5 +1,8 @@
 import {useAuth} from "@/auth/AuthManager";
 
+
+export const API_ENDPOINT: string = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
+
 /**
  * Make a request to the API which requires authentication.
  * If the access token is expired, it will automatically try to renew the token and retry the request.
@@ -10,7 +13,7 @@ import {useAuth} from "@/auth/AuthManager";
  */
 export async function queryApi(endpoint: string, init: RequestInit = {}) {
     const auth = useAuth()
-    const ENDPOINT = `${process.env.EXPO_PUBLIC_SERVER_ENDPOINT}${endpoint}`;
+    const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 
     const res = await fetch(ENDPOINT, {
         ...init,

@@ -1,4 +1,4 @@
-import { tokenStorage} from "@/auth/TokenStorage";
+import {tokenStorage} from "@/auth/TokenStorage";
 import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
 import {Redirect} from "expo-router";
 
@@ -8,19 +8,21 @@ type Auth = {
     isLoading: boolean;
 
     renewToken: () => Promise<void>;
-    signIn: (email: string, password: string) => Promise<void>;
+    signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<Auth | null>(null)
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isLoading, setLoading] = useState(true);
 
+    const API_ENDPOINT = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
+
     useEffect(() => {
-        async function init(){
+        async function init() {
             const storedAccessToken = await tokenStorage.getAccessToken();
             const storedRefreshToken = await tokenStorage.getRefreshToken();
 
@@ -28,10 +30,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setAccessToken(storedAccessToken);
                 setRefreshToken(storedRefreshToken);
             }
-
             setLoading(false);
-                console.log("Successfully loaded tokens from storage")
-            }
+            console.log("Successfully loaded tokens from storage")
+        }
 
         init();
     }, []);
@@ -41,8 +42,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             throw new Error("No refresh token available");
         }
 
-        const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_ENDPOINT}/auth/token/refresh`, {
+        const res = await fetch(`${API_ENDPOINT}/auth/token/refresh`, {
             method: "POST",
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({"refresh": refreshToken}),
         });
 
@@ -58,23 +60,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     async function signIn(email: string, password: string) {
-        const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_ENDPOINT}/auth/token`, {
+        let res;
+        res = await fetch(`${API_ENDPOINT}/auth/token/`, {
             method: "POST",
-            body: JSON.stringify({ email, password }),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email, password}),
         });
 
         if (!res.ok) {
-            throw new Error("Login failed");
+            return false;
         }
 
         const data = await res.json();
 
-        await tokenStorage.setTokens(data.accessToken, data.refreshToken);
-        setAccessToken(data.accessToken);
-        setRefreshToken(data.refreshToken);
+        const receivedAccessToken = data.access;
+        const receivedRefreshToken = data.refresh;
+
+        await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
+        setAccessToken(receivedAccessToken);
+        setRefreshToken(receivedRefreshToken);
+
+        return true;
     }
 
-    async function signOut()  {
+    async function signOut() {
         await tokenStorage.clear();
         setAccessToken(null);
         setRefreshToken(null);
@@ -98,7 +107,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export function requireNoAuth(element: JSX.Element) {
     const auth = useAuth();
-    if (auth?.isLoading) return element;
+    if (auth?.isLoading) return null;
 
     if (auth?.accessToken) {
         return <Redirect href="/"/>;
@@ -109,7 +118,7 @@ export function requireNoAuth(element: JSX.Element) {
 
 export function requireAuth(element: JSX.Element) {
     const auth = useAuth();
-    if (auth?.isLoading) return element;
+    if (auth?.isLoading) return null;
 
     if (!auth?.accessToken) {
         return <Redirect href="/login"/>;
@@ -118,6 +127,6 @@ export function requireAuth(element: JSX.Element) {
     return element;
 }
 
-export function useAuth(){
+export function useAuth() {
     return useContext(AuthContext)
 }

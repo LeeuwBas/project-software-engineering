@@ -8,7 +8,6 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import { toast } from 'sonner-native';
 import {useAuth} from "@/auth/AuthManager";
 
 
@@ -22,20 +21,21 @@ export function SignInForm() {
   
   const passwordInputRef = React.useRef<TextInput>(null);
 
-  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
-
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
   }
 
   async function onSubmit() {
     try {
-      auth?.signIn(email, password);
+      const success = await auth?.signIn(email, password);
 
-      toast.success('Signed in successfully!');
-      router.replace('/');
+      if (success) {
+        router.replace('/');
+      } else {
+        setErrors({ detail: ['Wrong login credentials.'] });
+      }
     } catch (err) {
-      console.error('Sign in request failed:', err);
+      console.error('Sign in request failed:');
       setErrors({ detail: ['Could not reach the server.'] });
     }
   }
