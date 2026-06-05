@@ -36,6 +36,7 @@
     --sidebar-accent-foreground: 240 1.9608% 10%;
     --sidebar-border: 0 0% 85.4902%;
     --sidebar-ring: 0 0% 60%;
+    --font-sans: Iosevka Charon, ui-monospace, monospace;
     --font-serif: Iosevka Charon, ui-monospace, monospace;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --radius: 0.625rem;
