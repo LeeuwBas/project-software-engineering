@@ -11,4 +11,14 @@ export const STATISTICS: StatisticMetadata[] = [
     title: 'Kilometers Ran',
     unit: 'km',
   },
+  {
+    id: 'math',
+    title: 'Hours of math',
+    unit: 'hours',
+  },
+  {
+    id: 'sleep',
+    title: 'Hours of sleep',
+    unit: 'hours',
+  }
 ];

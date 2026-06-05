@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+from django.conf import settings
 from django.contrib import admin
 from .views import get_quote
 
@@ -26,7 +26,6 @@ from api.statistics.statistic_views import StatsWaterRequestAverage,\
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 
@@ -36,13 +35,6 @@ urlpatterns = [
     path('api/get-quote/', get_quote, name='get_quote'),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    # Optional UI:
-    path(
-        'api/schema/swagger-ui/',
-        SpectacularSwaggerView.as_view(url_name='schema'),
-        name='swagger-ui',
-    ),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
@@ -52,3 +44,13 @@ urlpatterns = [
     path('api/stats/waterchart', StatsWaterBarChart.as_view(), name='water_chart'),
     path('api/stats/view', StatisticsView.as_view(), name='statview'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+        path(
+            'api/schema/swagger-ui/',
+            SpectacularSwaggerView.as_view(url_name='schema'),
+            name='swagger-ui',
+        ),
+    ]

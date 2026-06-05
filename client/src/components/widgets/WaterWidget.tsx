@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { GlassWater, Minus, Plus } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 
 export default function WaterWidget(
@@ -7,31 +8,32 @@ export default function WaterWidget(
         setWater
     }: {
         water: number,
-        setWater: (value: number) => void
+        setWater: {(value: number): void}
     }) {
 
     function alterWaterValue(value: number) {
-        const new_water = Math.max(Math.min(water+value, 100), 0)
-        setWater(new_water)
+        const new_water = Math.max(Math.min(water+value, 100), 0);
+        setWater(new_water);
     }
 
     return (
         <>
-            <View className='flex flex-row items-center w-3/5 p-4 gap-2'>
-                <Text className='min-w-10 flex-1'>
-                    {water}
-                </Text>
-                <Button className="bg-white" size="icon" onPress={() => alterWaterValue(10)}>
-                    <Text className="text-blue-500 font-bold">
-                    +
+            <View className='flex flex-row items-center w-full p-2 justify-between'>
+                <View className='flex flex-row items-center gap-2'>
+                    <GlassWater size={30}/>
+                    <Text className='text-base font-bold min-w-10'>
+                        {water}
                     </Text>
-                </Button>
-                <Button className='bg-white' onPress={() => alterWaterValue(-20)}>
-                    <Text className='text-red-600'>
-                    -
-                    </Text>
-                </Button>
+                </View>
 
+                <View className='flex flex-row items-center gap-2'>
+                    <Button className="bg-white active:bg-slate-200" onPress={() => alterWaterValue(10)}>
+                        <Plus size={35} color={"#1F51FF"}/>
+                    </Button>
+                    <Button className='bg-white active:bg-slate-200' onPress={() => alterWaterValue(-10)}>
+                        <Minus size={35} color={"#FF0000"}/>
+                    </Button>
+                </View>
             </View>
         </>
     );
