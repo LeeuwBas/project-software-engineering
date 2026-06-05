@@ -14,7 +14,7 @@ export default function PopUpmenu (
     if (isOpen) {
         return (
             <View className='absolute bottom-full mb-2 items-center w-full'>
-                <View className="w-3/4 h-1/2 bg-grey flex-1 justify-center items-center bg-white rounded-3xl">
+                <View className="w-3/4 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
                     <WaterWidget water={water} setWater={setWater}>
 
                     </WaterWidget>
