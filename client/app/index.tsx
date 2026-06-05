@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import '../global.css';
+import {requireAuth} from "@/auth/AuthManager";
 
 export default function App() {
   const [menuOpen, setOpen] = useState(false)
@@ -17,7 +18,7 @@ export default function App() {
   // Show or hide menu depending on if menu is already open
   function changeMenu() {
     setOpen(!menuOpen)
-  };
+  }
 
   return (
     <SafeAreaProvider>
