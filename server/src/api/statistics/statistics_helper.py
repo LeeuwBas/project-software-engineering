@@ -46,3 +46,13 @@ def getBarChart(days: int, bins: int, user: str, statistic: str):
         filter['date__lte'] += timedelta(days_per_bin)
 
     return bin_dict
+
+def getToday(user: str, statistic: str):
+
+    filter = {
+        'user': user,
+        'date': timezone.now()
+    }
+    amount = getattr(Stats.objects.filter(**filter).first(), statistic)
+
+    return amount

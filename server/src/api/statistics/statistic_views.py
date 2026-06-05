@@ -16,7 +16,7 @@ from ..serializers import StatsSerializer
 from ..permissions import IsSelf
 from ..models import Stats
 
-from .statistics_helper import getBarChart, getSummary
+from .statistics_helper import getBarChart, getSummary, getToday
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -101,12 +101,12 @@ class StatsWaterUpdate(APIView):
         )
 
         if not created:
-            line.water_amount = F("water") + amount
+            line.water = F("water") + amount
             line.save()
             line.refresh_from_db()
 
         return Response({
-            'new_value': line.water_amount,
+            'new_value': line.water,
             'inserted_line': created,
         })
 
@@ -255,12 +255,14 @@ class StatisticsView(APIView):
 
         print(statistic)
 
+        today = getToday(request.user, statistic)
         summary = getSummary(days, request.user, statistic)
         bar_chart = getBarChart(days, bin_count, request.user, statistic)
 
         response = {
             'days_per_bin': days//bin_count,
-            'bins': bar_chart
+            'bins': bar_chart,
+            'today': today,
         }
         response.update(summary)
 
