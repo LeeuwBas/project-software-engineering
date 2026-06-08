@@ -1,11 +1,6 @@
-<<<<<<< Updated upstream
 import { LinearGradient } from 'expo-linear-gradient';
 import { Sun } from 'lucide-react-native';
 import { View } from 'react-native';
-=======
-import { Heart } from 'lucide-react-native';
-import { AppRegistry, Text, View } from 'react-native';
->>>>>>> Stashed changes
 import { AppText } from '../AppText';
 import { getWeatherStatus } from "@/lib/weather";
 import { useEffect, useState } from 'react';
