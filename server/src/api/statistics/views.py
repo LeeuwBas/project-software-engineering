@@ -14,7 +14,7 @@ from ..serializers import StatsSerializer
 from ..permissions import IsSelf
 from ..models import Stats
 
-from .statistics_helper import getBarChart, getSummary, getToday
+from .helpers import getBarChart, getSummary, getToday
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
