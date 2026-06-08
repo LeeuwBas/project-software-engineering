@@ -1,7 +1,15 @@
+<<<<<<< Updated upstream
 import { LinearGradient } from 'expo-linear-gradient';
 import { Sun } from 'lucide-react-native';
 import { View } from 'react-native';
+=======
+import { Heart } from 'lucide-react-native';
+import { AppRegistry, Text, View } from 'react-native';
+>>>>>>> Stashed changes
 import { AppText } from '../AppText';
+import { getWeatherStatus } from "@/lib/weather";
+import { useEffect, useState } from 'react';
+
 
 function Mood(happiness: number) {
     switch (true) {
@@ -24,12 +32,29 @@ export default function Topbar() {
     const happiness = 40
     const mood = Mood(happiness)
 
+    const [weather, setWeather] = useState<{status: string; temp: number} | null>(null);
+
+    useEffect(() => {
+        async function fetchWeather() {
+            try {
+                const data = await getWeatherStatus();
+                setWeather(data);
+            } catch (error) {
+                console.error("Error loading weather:", error);
+            }
+        }
+
+        fetchWeather();
+    }, []);
+
+
     return (
         <View className="flex flex-row items-center">
             <View className='ml-5 w-1/2 flex-row gap-2'>
                 {/* TODO: Add logic with weather API */}
                     <Sun size={30}/>
                     <AppText className=' text-2xl font-bold'>{day}</AppText>
+                     <AppText>{weather ? weather.status + " " + weather.temp + "°K" : "Unavailable"}</AppText>
             </View>
 
             <View className='mx-auto w-1/3'>

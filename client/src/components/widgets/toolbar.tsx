@@ -33,14 +33,14 @@ export default function Toolbar(
 
                 <Pressable
                 disabled={popup.settingsOpen}
-                className={`absolute justify-center items-center bg-slate-200 -top-[25px] size-16 rounded-full transition-opacity duration-200 ${ popup.settingsOpen ? 'opacity-0' : 'opacity-100' }`}
+                className={`absolute justify-center items-center bg-[#f67788] shadow-black shadow-lg -top-[25px] size-16 rounded-full transition-opacity duration-200 ${ popup.settingsOpen ? 'opacity-0' : 'opacity-100' }`}
                 onPress={() => popup.changeMenu()}>
                     {popup.menuOpen && (
                         <Check size={32} color={"#c1d568"} />
                     )}
 
                     {!popup.menuOpen && (
-                        <Plus size={50} />
+                        <Plus size={50} color={"white"} />
                     )}
                 </Pressable>
 
