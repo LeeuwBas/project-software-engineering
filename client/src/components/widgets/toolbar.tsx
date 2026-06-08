@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import Menu from '@/components/widgets/Menu';
 import { PopupConfigs } from '@/lib/types';
+import { useRouter } from 'expo-router';
 import { ChartNoAxesCombined, Check, Plus, User } from 'lucide-react-native';
 import { View } from 'react-native';
 import Settings from './Settings';
@@ -16,8 +17,10 @@ export default function Toolbar(
         setWater: {(value: number): void}
     }) {
 
+    const router = useRouter()
+    
     const popupOpen: boolean = popup.menuOpen || popup.settingsOpen
-
+    
     return (
         <View className='w-full mt-auto z-20'>
             <View className='left-0 right-0 items-center' >
@@ -30,7 +33,7 @@ export default function Toolbar(
                         <Button
                         disabled={popupOpen}
                         className={`transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}
-                        variant='outline'>
+                        variant='outline'
                         onPress={() => router.push('/stats')}>
                             <ChartNoAxesCombined size={"28"} />
                         </Button>
