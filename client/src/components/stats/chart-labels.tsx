@@ -1,6 +1,6 @@
 import { HistoryPeriod } from '@/components/stats/statistics-types';
 
-/*
+/**
 Returns lables (string list) for a BarChart element,
 based on the history period selected consisting of:
 - week (day per bin)
@@ -11,6 +11,10 @@ Bins are sorted from oldest to newest data.
 Last and second to last bin are automatically labeled
 in the unit of the bins (eg. Today/Yesterday).
 Other bins are kept implicit (no label).
+
+@param {HistoryPeriod} period - time period to label for
+@param {number} binCount - amount of bins to label
+@return {string[]} list of strings containing labels
 */
 export function getChartLabels(
   period: HistoryPeriod,
