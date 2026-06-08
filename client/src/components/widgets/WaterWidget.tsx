@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { GlassWater, Minus, Plus } from 'lucide-react-native';
 import { Text, View } from 'react-native';
-
+import { AppText } from '../AppText';
 export default function WaterWidget(
     {
         water,
@@ -21,9 +21,9 @@ export default function WaterWidget(
             <View className='flex flex-row items-center w-full p-2 justify-between'>
                 <View className='flex flex-row items-center gap-2'>
                     <GlassWater size={30}/>
-                    <Text className='text-base font-bold min-w-10'>
+                    <AppText className='text-base font-bold min-w-10'>
                         {water}
-                    </Text>
+                    </AppText>
                 </View>
 
                 <View className='flex flex-row items-center gap-2'>
