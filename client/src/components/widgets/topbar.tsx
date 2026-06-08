@@ -25,12 +25,10 @@ export default function Topbar() {
 
     return (
         <View className="flex flex-row items-center">
-            <View className='ml-5 w-1/2 flex-col gap-2'>
+            <View className='ml-5 w-1/2 flex-row gap-2'>
                 {/* TODO: Add logic with weather API */}
-                <View className='flex-row'>
                     <Sun size={30}/>
                     <AppText className=' text-2xl font-bold'>{day}</AppText>
-                </View>
             </View>
 
             <View className='mx-auto w-1/3'>
