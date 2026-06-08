@@ -28,6 +28,20 @@ interface StatisticCardProps {
   metadata: StatisticMetadata;
 }
 
+/**
+Builds the statistics card for a single module.
+Displays the module name and today's stats by default.
+If extended, displays stats in barchart and summary based
+on history period consisting of (and accessible by buttons):
+- week
+- month
+- year
+
+This function is also responsible for API/storage call using the
+metadata parameter.
+@param {StatisticCardProps} metadata - required metadata for a module
+@return {TSX.element} 
+*/
 export function StatisticCard({
   metadata,
 }: StatisticCardProps) {
