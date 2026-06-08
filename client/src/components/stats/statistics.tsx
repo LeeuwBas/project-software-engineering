@@ -8,6 +8,14 @@ import { StatisticCard } from '@/components/stats/statistic-card';
 import { STATISTICS } from '@/components/stats/statistics-metadata';
 import { ScrollView } from 'react-native';
 
+/**
+The parent function of the statistics page builder,
+thus also owns the Reusables Accordion element.
+Maps all modules defined in STATISTICS to their own separate
+card widget.
+
+@return {TSX.element} The page frame holding all other widgets
+*/
 export function Statistics() {
   return (
     <SafeAreaProvider>
