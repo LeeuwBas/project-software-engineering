@@ -8,11 +8,12 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import { toast } from 'sonner-native';
+import {useAuth} from "@/auth/AuthManager";
 
 
 export function SignInForm() {
   const router = useRouter();
+  const auth = useAuth();
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -20,30 +21,21 @@ export function SignInForm() {
   
   const passwordInputRef = React.useRef<TextInput>(null);
 
-  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
-
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
   }
 
   async function onSubmit() {
     try {
-      const response = await fetch(`${API_URL}/auth/token/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const success = await auth?.signIn(email, password);
 
-      if (!response.ok) {
-        const data = await response.json();
-        setErrors(data);
-        return;
+      if (success) {
+        router.replace('/');
+      } else {
+        setErrors({ detail: ['Wrong login credentials.'] });
       }
-
-      toast.success('Signed in successfully!');
-      router.replace('/');
     } catch (err) {
-      console.error('Sign in request failed:', err);
+      console.error('Sign in request failed:');
       setErrors({ detail: ['Could not reach the server.'] });
     }
   }
