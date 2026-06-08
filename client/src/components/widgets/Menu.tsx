@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import WaterWidget from "./WaterWidget";
+import StepsWidget from "./StepsWidget";
 
 export default function Menu (
     {
@@ -17,6 +18,7 @@ export default function Menu (
                 <View className='absolute bottom-full mb-2 items-center w-full'>
                     <View className="w-3/4 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
                         <WaterWidget water={water} setWater={setWater}/>
+                        <StepsWidget/>
                     </View>
                 </View>
             </View>
