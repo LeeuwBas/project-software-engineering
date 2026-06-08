@@ -103,6 +103,7 @@ SIMPLE_JWT = {
     "VERIFYING_KEY": None,
     "AUTH_HEADER_TYPES": ("Bearer",),
     "TOKEN_OBTAIN_SERIALIZER": "api.auth.serializers.SingleSessionTokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "api.auth.serializers.SingleSessionTokenRefreshSerializer",
 }
 
 SPECTACULAR_SETTINGS = {
