@@ -5,6 +5,7 @@ import * as storage from '@/lib/storage';
 import { PopupConfigs } from '@/lib/types';
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
+import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import '../global.css';
@@ -34,8 +35,9 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className='flex flex-col size-full'>
-        <Topbar />
+      <SafeAreaView className='bg-[#74c6b6]/85'>
+        <View className='flex flex-col size-full bg-[#74c6b6]/30'>
+                  <Topbar />
 
         <Main leftSideStat='water' leftSideValue={water} rightSideStat='none' rightSideValue={0}/>
 
@@ -43,6 +45,7 @@ export default function App() {
         <BlurView className={`absolute w-full h-full transition-opacity duration-300 ${ popupOpen ? 'opacity-100' : 'opacity-0' }`} intensity={40} tint='regular' experimentalBlurMethod='dimezisBlurView'/>
 
         <Toolbar popup={popup} water={water} setWater={setWater} />
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
