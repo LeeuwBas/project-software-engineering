@@ -21,7 +21,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from api.views import UserViewSet, StatInsertView
-from api.statistics.statistic_views import (
+from api.statistics.statistics_views import (
     StatsWaterRequestAverage,
     StatsWaterUpdate,
     StatsWaterBarChart,
