@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Text } from '@/components/ui/text';
+import { AppText } from '@/components/AppText';
 import { getChartLabels } from '@/lib/stats/chart-labels';
 import { fetchStatistic } from '@/lib/stats/statistics-api';
 import {
@@ -40,7 +40,7 @@ on history period consisting of (and accessible by buttons):
 This function is also responsible for API/storage call using the
 metadata parameter.
 @param {StatisticCardProps} metadata - required metadata for a module
-@return {TSX.element} 
+@return {TSX.element} the card of a built module
 */
 export function StatisticCard({
   metadata,
@@ -51,38 +51,48 @@ export function StatisticCard({
   const [response, setResponse] =
     useState<StatisticResponse | null>(null);
 
+  const [loading, setLoading] =
+    useState<boolean>(true);
+
+  const [error, setError] =
+    useState<string | null>(null);
+
   useEffect(() => {
     async function load() {
-      const config =
-        PERIOD_CONFIG[period];
+      try {
+        setLoading(true);
+        setError(null);
 
-      const data =
-        await fetchStatistic(
-          metadata.id,
-          config.days,
-          config.bins,
+        const config =
+          PERIOD_CONFIG[period];
+
+        const data =
+          await fetchStatistic(
+            metadata.id,
+            config.days,
+            config.bins,
+          );
+
+        setResponse(data);
+      } catch (err) {
+        console.error(err);
+
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Unknown error occurred',
         );
-
-      setResponse(data);
+      } finally {
+        setLoading(false);
+      }
     }
 
     load();
-  }, [metadata.id, period]);
+  }, [period]);
 
-  if (!response) {
-    return (
-      <AccordionItem value={metadata.id}>
-        <Card>
-          <CardContent>
-            <Text>Loading...</Text>
-          </CardContent>
-        </Card>
-      </AccordionItem>
-    );
-  }
-
-  const values =
-    Object.values(response.bins);
+  const values = response
+    ? Object.values(response.bins)
+    : [0];  // Placeholder for when fetching data fails
 
   const labels = getChartLabels(
     period,
@@ -100,8 +110,11 @@ export function StatisticCard({
               </CardTitle>
 
               <CardDescription>
-                Today: {response.today}{' '}
-                {metadata.unit}
+                Today:{' '}
+                {loading
+                  ? 'Loading...'
+                  : `${response?.today} ${metadata.unit}`
+                }
               </CardDescription>
             </View>
           </AccordionTrigger>
@@ -120,7 +133,7 @@ export function StatisticCard({
                   setPeriod('week')
                 }
               >
-                <Text>Week</Text>
+                <AppText>Week</AppText>
               </Button>
 
               <Button
@@ -133,7 +146,7 @@ export function StatisticCard({
                   setPeriod('month')
                 }
               >
-                <Text>Month</Text>
+                <AppText>Month</AppText>
               </Button>
 
               <Button
@@ -146,7 +159,7 @@ export function StatisticCard({
                   setPeriod('year')
                 }
               >
-                <Text>Year</Text>
+                <AppText>Year</AppText>
               </Button>
             </View>
 
@@ -156,20 +169,35 @@ export function StatisticCard({
             />
 
             <View className="mt-4 gap-2">
-              <Text>
-                Highest: {response.high}{' '}
-                {metadata.unit}
-              </Text>
+              <AppText>
+                Highest:{' '}
+                {loading
+                  ? 'Loading...'
+                  : `${response?.high} ${metadata.unit}`
+                }
+              </AppText>
 
-              <Text>
-                Lowest: {response.low}{' '}
-                {metadata.unit}
-              </Text>
+              <AppText>
+                Lowest:{' '}
+                {loading
+                  ? 'Loading...'
+                  : `${response?.low} ${metadata.unit}`
+                }
+              </AppText>
 
-              <Text>
-                Average: {response.average}{' '}
-                {metadata.unit}
-              </Text>
+              <AppText>
+                Average:{' '}
+                {loading
+                  ? 'Loading...'
+                  : `${response?.average} ${metadata.unit}`
+                }
+              </AppText>
+
+              {error && (
+                <AppText className="text-red-500">
+                  Failed to load statistics: {error}
+                </AppText>
+              )}
             </View>
           </CardContent>
         </AccordionContent>

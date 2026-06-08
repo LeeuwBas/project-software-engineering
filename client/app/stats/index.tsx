@@ -3,6 +3,8 @@ import { Accordion } from '@/components/ui/accordion';
 import { STATISTICS } from '@/lib/stats/statistics-metadata';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Suspense} from 'react';
+import { AppText } from '@/components/AppText'
 
 /**
 The parent function of the statistics page builder,
@@ -22,16 +24,21 @@ export default function Statistics() {
           type="single"
           collapsible
         >
-          {STATISTICS.map(stat => (
-            <View
-              key={stat.id}
-              className="mb-4"
-            >
-              <StatisticCard
-                metadata={stat}
-              />
-            </View>
-          ))}
+          <Suspense fallback= {
+                <AppText> Building page... </AppText>
+              }
+          >
+            {STATISTICS.map(stat => (
+              <View
+                key={stat.id}
+                className="mb-4"
+              >
+                <StatisticCard
+                  metadata={stat}
+                />
+              </View>
+            ))}
+          </Suspense>
         </Accordion>
       </ScrollView>
     </SafeAreaView>

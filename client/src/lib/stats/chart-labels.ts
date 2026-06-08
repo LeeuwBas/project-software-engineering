@@ -23,21 +23,21 @@ export function getChartLabels(
   const labels = Array(binCount).fill('');
 
   switch (period) {
-    case 'week':  // Weekly view
+    case 'week':
       if (binCount >= 2) {
         labels[binCount - 2] = 'Yesterday';
         labels[binCount - 1] = 'Today';
       }
       break;
 
-    case 'month':  // Monthly view
+    case 'month':
       if (binCount >= 2) {
         labels[binCount - 2] = 'Last Week';
         labels[binCount - 1] = 'This Week';
       }
       break;
 
-    case 'year':  // Yearly view
+    case 'year':
       if (binCount >= 2) {
         labels[binCount - 2] = 'Last Month';
         labels[binCount - 1] = 'This Month';
