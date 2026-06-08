@@ -2,6 +2,7 @@ name: Require dev as PR source branch
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
     branches:
       - main
 
