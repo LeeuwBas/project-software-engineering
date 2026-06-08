@@ -21,13 +21,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from api.views import UserViewSet, StatInsertView
-from server.src.api.statistics.views import (
+from api.statistics.views import (
     StatsWaterRequestAverage,
     StatsWaterUpdate,
     StatsWaterBarChart,
     StatisticsView,
 )
-from server.src.api.quotes.views import RequestQuote
+from api.quotes.views import RequestQuote
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
