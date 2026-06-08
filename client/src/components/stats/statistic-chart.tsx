@@ -8,6 +8,15 @@ interface StatisticChartProps {
 
 const screenWidth = Dimensions.get('window').width;
 
+/**
+Builds a barchart based on the values and labels given.
+Each bar in the chart represents a bin which consists of a
+certain amount of days.
+
+@param {number[]} values - datapoint values per bin
+@param {string[]} labels - labels for each bin
+@return {TSX.element} barchart element
+*/
 export function StatisticChart({
   values,
   labels
