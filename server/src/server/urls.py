@@ -15,7 +15,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.contrib import admin
 from .views import get_quote
 
 from django.urls import path, include
@@ -23,6 +22,7 @@ from rest_framework import routers
 from api.views import UserViewSet
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from drf_spectacular.contrib.rest_framework_simplejwt import SimpleJWTScheme
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -38,6 +38,11 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    # Provides the authentication button in the swagger-ui
+    class VersionedJWTScheme(SimpleJWTScheme):
+        target_class = "api.auth.authentication.MarkedJWTAuthentication"
+
+    # Enables the schema and swagger-ui views
     urlpatterns += [
         path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
         path(
