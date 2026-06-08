@@ -25,7 +25,7 @@ export default function Settings(
   const [activeItem, setActiveItem] = useState<SettingItem | null>(null);
 
   return (
-    <View className={`transition-opacity duration-200 ${ isOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
+    <View className={`-top-6 transition-opacity duration-200 ${ isOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
       <View className='absolute bottom-full mb-2 items-center w-full'>
           <View className="w-3/4 p-2 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
               {ITEMS.map((item) => (
