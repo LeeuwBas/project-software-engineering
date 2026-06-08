@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { Sun } from 'lucide-react-native';
 import { View } from 'react-native';
 import { AppText } from '../AppText';
@@ -20,7 +21,7 @@ export default function Topbar() {
     const date = new Date();
     const day = date.toLocaleDateString('en-US', { weekday: 'short' })
 
-    const happiness = 30
+    const happiness = 40
     const mood = Mood(happiness)
 
     return (
@@ -34,11 +35,15 @@ export default function Topbar() {
             <View className='mx-auto w-1/3'>
                 <AppText className='mx-auto'>Mood: {mood}</AppText>
                 <View className='h-5 border-4 border-gray-500 bg-white'>
+                    <LinearGradient
+                        colors={['#397cf7', '#c5c981', '#f0f00e']}
+                        start={[0, 1]}
+                        end={[1, 0]}
+                        className='mr-auto h-full w-full'
+                        />
                     <View
-                        className='mr-auto bg-[#ffd568] h-full'
-                        style={{
-                            width: `${happiness}%`,
-                        }}
+                        className='absolute right-0 top-0 bottom-0 bg-white'
+                        style={{width: `${100-happiness}%`}}
                         />
                 </View>
             </View>
