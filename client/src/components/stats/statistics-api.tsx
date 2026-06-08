@@ -1,5 +1,14 @@
 import { StatisticResponse } from '@/components/stats/statistics-types';
 
+/**
+Fetches data from local storage/API call to server to display
+on the statistics page.
+
+@param {string} id - id used to call module in API
+@param {number} days - amount of days to ask data for
+@param {number} bins - amount of bins to average data over
+@return {StatisticResponse} return format for API response
+*/
 export async function fetchStatistic(
   id: string,
   days: number,
