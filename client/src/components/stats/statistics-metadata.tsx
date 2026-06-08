@@ -1,5 +1,12 @@
 import { StatisticMetadata } from '@/components/stats/statistics-types';
 
+/**
+Holds all module metadata used to call API using the
+'id' field and for display purposes using both 'title'
+and 'unit' fields.
+
+Add entries for new modules here (hardcoded for now).
+*/
 export const STATISTICS: StatisticMetadata[] = [
   {
     id: 'water',
