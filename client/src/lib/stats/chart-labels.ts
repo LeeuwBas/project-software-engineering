@@ -1,4 +1,4 @@
-import { HistoryPeriod } from '@/components/stats/statistics-types';
+import { HistoryPeriod } from '@/lib/stats/statistics-types';
 
 /**
 Returns lables (string list) for a BarChart element,

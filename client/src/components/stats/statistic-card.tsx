@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { StatisticChart } from '@/components/stats/statistic-chart';
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -12,17 +12,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { StatisticChart } from '@/components/stats/statistic-chart';
+import { getChartLabels } from '@/lib/stats/chart-labels';
+import { fetchStatistic } from '@/lib/stats/statistics-api';
 import {
   HistoryPeriod,
   PERIOD_CONFIG,
   StatisticMetadata,
   StatisticResponse,
-} from '@/components/stats/statistics-types';
-import { getChartLabels } from '@/components/stats/chart-labels';
-import { fetchStatistic } from '@/components/stats/statistics-api';
+} from '@/lib/stats/statistics-types';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 
 interface StatisticCardProps {
   metadata: StatisticMetadata;

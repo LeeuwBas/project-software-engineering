@@ -1,4 +1,4 @@
-import { StatisticResponse } from '@/components/stats/statistics-types';
+import { StatisticResponse } from '@/lib/stats/statistics-types';
 
 /**
 Fetches data from local storage/API call to server to display

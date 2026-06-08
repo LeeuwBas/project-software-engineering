@@ -1,4 +1,4 @@
-import { StatisticMetadata } from '@/components/stats/statistics-types';
+import { StatisticMetadata } from '@/lib/stats/statistics-types';
 
 /**
 Holds all module metadata used to call API using the
