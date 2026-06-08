@@ -1,12 +1,10 @@
 from django.utils import timezone
-from django.db.models import Sum, Max, Min, Avg, F
+from django.db.models import F
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
-from datetime import timedelta
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter,\
                                   OpenApiResponse
