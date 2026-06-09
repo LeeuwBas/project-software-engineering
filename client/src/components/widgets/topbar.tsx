@@ -1,10 +1,8 @@
+import { AppText } from '@/components/AppText';
+import Weather from '@/components/widgets/Weather';
 import getMood from '@/lib/mood';
-import { getWeatherStatus } from "@/lib/weather";
 import { LinearGradient } from 'expo-linear-gradient';
-import { Sun } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { AppText } from '../AppText';
 
 export default function Topbar() {
     const date = new Date();
@@ -14,29 +12,11 @@ export default function Topbar() {
     const happiness = 40
     const mood = getMood(happiness)
 
-    const [weather, setWeather] = useState<{status: string; temp: number} | null>(null);
-
-    useEffect(() => {
-        async function fetchWeather() {
-            try {
-                const data = await getWeatherStatus();
-                setWeather(data);
-            } catch (error) {
-                console.error("Error loading weather:", error);
-            }
-        }
-
-        fetchWeather();
-    }, []);
-
-
     return (
         <View className="flex flex-row items-center">
-            <View className='ml-5 w-1/2 flex-row gap-2'>
-                {/* TODO: Add logic with weather API */}
-                    <Sun size={30}/>
-                    <AppText className=' text-2xl font-bold'>{day}</AppText>
-                     <AppText>{weather ? weather.status + " " + weather.temp + "°K" : "Unavailable"}</AppText>
+            <View className='pl-5 pt-2 w-1/2 flex-row gap-2'>
+                <Weather/>
+                <AppText className=' text-2xl font-bold'>{day}</AppText>
             </View>
 
             <View className='mx-auto w-1/3'>
