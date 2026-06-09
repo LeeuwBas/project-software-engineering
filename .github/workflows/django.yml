@@ -25,6 +25,5 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        cd server/src
-        python manage.py test api.tests
-#        python manage.py test server.tests
+        cd server
+        python src/manage.py test api
