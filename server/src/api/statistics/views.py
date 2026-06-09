@@ -10,9 +10,9 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter,\
                                   OpenApiResponse
 from drf_spectacular.types import OpenApiTypes
 
-from ..serializers import StatsSerializer
-from ..permissions import IsSelf
-from ..models import Stats
+from .serializers import StatsSerializer
+from ..authentication.permissions import IsSelf
+from .models import Stats
 
 from .helpers import getBarChart, getSummary, getToday
 

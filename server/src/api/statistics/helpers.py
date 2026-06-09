@@ -3,7 +3,7 @@ from django.db.models import Sum, Max, Min, Avg, F
 
 from datetime import timedelta
 
-from ..models import Stats
+from .models import Stats
 
 
 def getSummary(days: int, user: str, statistic: str):
