@@ -28,6 +28,7 @@ export default function Toolbar(
         }
     }
 
+    // Refresh value in popup when retrieved from storage
     useEffect(() => {
         if (popup.menuOpen) {
             setDraftWater(water);

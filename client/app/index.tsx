@@ -15,7 +15,6 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const {water, saveWater} = storage.useWater(menuOpen);
 
-  // Show or hide menu depending on if menu is already open
   function changeMenu() {
     setMenuOpen(!menuOpen)
   };
@@ -23,6 +22,11 @@ export default function App() {
   function changeSettings() {
     setSettingsOpen(!settingsOpen)
   };
+
+  function closePopup() {
+    if (popup.menuOpen) setMenuOpen(false)
+    if (popup.settingsOpen) setSettingsOpen(false)
+  }
 
   const popup: PopupConfigs = {
     menuOpen: menuOpen,
@@ -32,11 +36,6 @@ export default function App() {
   }
 
   const popupOpen = menuOpen || settingsOpen
-
-  function closePopup() {
-    if (popup.menuOpen) setMenuOpen(false)
-    if (popup.settingsOpen) setSettingsOpen(false)
-  }
 
   return (
     <SafeAreaProvider>
