@@ -51,6 +51,7 @@ class User(AbstractUser):
     last_name = None
 
     settings = models.IntegerField(default=0)
+    token_id = models.IntegerField(default=0)
     objects = UserManager()
 
     USERNAME_FIELD = "email"
