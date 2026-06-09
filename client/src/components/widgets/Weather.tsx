@@ -5,9 +5,9 @@ import { View } from "react-native"
 
 export default function Weather() {
     const weather = getWeather()
+    if (!weather) return
 
-    function weatherIcon(weather: WeatherData | null) {
-        if (!weather) return
+    function weatherIcon(weather: WeatherData) {
         if (weather.id < 299) return <CloudLightning size={30}/>
         if (weather.id < 599) return <CloudRain size={30}/>
         if (weather.id < 699) return <Snowflake size={30}/>
@@ -19,7 +19,7 @@ export default function Weather() {
     return (
         <View className='items-center'>
             {weatherIcon(weather)}
-            <AppText>{weather ? Math.round(weather.temp) + "°C" : "Unavailable"}</AppText>
+            <AppText>{Math.round(weather.temp) + "°C"}</AppText>
         </View>
     )
 }
