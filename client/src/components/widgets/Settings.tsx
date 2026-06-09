@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
 
 export default function Settings(
@@ -12,17 +12,19 @@ export default function Settings(
   if (!isOpen) {
     return
   }
-    type SettingItem = {
+
+  const router = useRouter()
+
+  type SettingItem = {
     label: string;
+    effect: (() => void) | null
   };
 
   const ITEMS: SettingItem[] = [
-    { label: 'Change Pet' },
-    { label: 'Change Username' },
-    { label: 'More' },
+    { label: 'Change Pet', effect: () => router.push('/pet-select')},
+    { label: 'Change Username', effect: null },
+    { label: 'More', effect: null },
   ];
-
-  const [activeItem, setActiveItem] = useState<SettingItem | null>(null);
 
   return (
     <View className={`transition-opacity duration-200 ${ isOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
@@ -33,7 +35,7 @@ export default function Settings(
                   className='my-2'
                   key={item.label}
                   variant="default"
-                  onPress={() => setActiveItem(item)}>
+                  onPress={item.effect}>
                   <Text>{item.label}</Text>
                 </Button>
               ))}

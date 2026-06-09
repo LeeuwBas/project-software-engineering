@@ -22,7 +22,7 @@ export default function Main(
             </View>
 
             <View className="flex-1 justify-center">
-                <Pet />
+                <Pet id={0}/>
             </View>
 
             <View className="w-5">
