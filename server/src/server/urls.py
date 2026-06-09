@@ -39,7 +39,7 @@ urlpatterns = [
 if settings.DEBUG:
     # Provides the authentication button in the swagger-ui
     class VersionedJWTScheme(SimpleJWTScheme):
-        target_class = "api.auth.authentication.MarkedJWTAuthentication"
+        target_class = "api.authentication.authentication.MarkedJWTAuthentication"
 
     # Enables the schema and swagger-ui views
     urlpatterns += [
