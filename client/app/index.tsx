@@ -5,7 +5,7 @@ import * as storage from '@/lib/storage';
 import { PopupConfigs } from '@/lib/types';
 import { BlurView } from 'expo-blur';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import '../global.css';
@@ -33,10 +33,17 @@ export default function App() {
 
   const popupOpen = menuOpen || settingsOpen
 
+  function closePopup() {
+    if (popup.menuOpen) setMenuOpen(false)
+    if (popup.settingsOpen) setSettingsOpen(false)
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView className='bg-[#74c6b6]/85'>
         <View className='flex flex-col size-full bg-[#74c6b6]/30'>
+          <Pressable className='absolute inset-0 size-full z-10' onPress={closePopup}/>
+          
           <Topbar />
 
           <Main leftSideStat='water' leftSideValue={water} rightSideStat='none' rightSideValue={0}/>
