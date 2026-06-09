@@ -21,4 +21,3 @@ async function addWater(value: number) {
     useWater(false).setWater(new_water);
     return new_water;
 }
-
