@@ -1,12 +1,11 @@
 import Menu from '@/components/widgets/Menu';
 import { PopupConfigs } from '@/lib/types';
 import { useRouter } from 'expo-router';
-import { Check, Plus } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import ChartIcon from '@assets/icons/chart.svg';
 import PersonIcon from '@assets/icons/person.svg';
-import PlusIcon from '@assets/icons/plus_square.svg';
-import CheckIcon from '@assets/icons/check_square.svg';
+import PlusIcon from '@assets/icons/plus.svg';
+import CheckIcon from '@assets/icons/check.svg';
 import { Pressable, View } from 'react-native';
 import Settings from './Settings';
 
@@ -45,17 +44,17 @@ export default function Toolbar({
       <Settings isOpen={popup.settingsOpen} />
 
       {/* The toolbar itself */}
-      <View className="flex w-full flex-row justify-center gap-32 border-2 border-[#856a54] bg-[#9a806c] p-1">
+      <View className="flex w-full flex-row justify-center gap-32 border-t-4 border-border bg-white p-1">
         <Pressable
           disabled={popupOpen}
           className={`p-2 transition-opacity duration-200 ${popupOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => router.push('/stats')}>
-          <ChartIcon width={28} height={28} color={'#ffffff'} />
+          <ChartIcon width={28} height={28} />
         </Pressable>
 
         <Pressable
           disabled={popup.settingsOpen}
-          className={`absolute -top-[25px] size-16 items-center justify-center bg-[#74c6b6] shadow-lg shadow-black transition-opacity duration-200 ${popup.settingsOpen ? 'opacity-0' : 'opacity-100'}`}
+          className={`shadow-block border-primary-dark absolute -top-[25px] size-16 items-center justify-center border-4 bg-primary transition-opacity duration-200 ${popup.settingsOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => close()}>
           {popup.menuOpen && <CheckIcon width={50} height={50} color={'white'} />}
 
@@ -66,7 +65,7 @@ export default function Toolbar({
           disabled={popup.menuOpen}
           className={`p-2 transition-opacity  duration-200 ${popup.menuOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => popup.changeSettings()}>
-          <PersonIcon width={28} height={28} color={'#ffffff'} />
+          <PersonIcon width={28} height={28} />
         </Pressable>
       </View>
     </View>

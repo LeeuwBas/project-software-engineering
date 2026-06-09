@@ -8,80 +8,9 @@ import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import '../global.css';
-
-export default function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const { water, saveWater } = storage.useWater(menuOpen);
-  const appState = useRef(AppState.currentState);
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (nextAppState === 'background') {
-        triggerBackup();
-      }
-
-      appState.current = nextAppState;
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  const triggerBackup = async () => {
-    //Backup logic
-  };
-
-  function changeMenu() {
-    setMenuOpen(!menuOpen);
-  }
-
-  function changeSettings() {
-    setSettingsOpen(!settingsOpen);
-  }
-
-  function closePopup() {
-    if (popup.menuOpen) setMenuOpen(false);
-    if (popup.settingsOpen) setSettingsOpen(false);
-  }
-
-  const popup: PopupConfigs = {
-    menuOpen: menuOpen,
-    changeMenu: changeMenu,
-    settingsOpen: settingsOpen,
-    changeSettings: changeSettings,
-  };
-
-  const popupOpen = menuOpen || settingsOpen;
-
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView className="h-full bg-[#74c6b6]/85">
-        <View className="flex size-full flex-col bg-[#74c6b6]/30">
-          <Pressable className="absolute inset-0 z-10 size-full" onPress={closePopup} />
-
-          <Topbar />
-
-          <Main
-            leftSideStat="water"
-            leftSideValue={water}
-            rightSideStat="none"
-            rightSideValue={0}
-          />
-
-          {/* The blur that appears when popup menu is opened */}
-          <BlurView
-            className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
-            intensity={40}
-            tint="regular"
-            experimentalBlurMethod="dimezisBlurView"
-          />
-
-          <Toolbar popup={popup} water={water} saveWater={saveWater} />
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
+export default function Index() {
+  const auth = useAuth();
+  if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return <Redirect href="/(protected)" />;
+  if (auth?.isLoading) return null;
+  return <Redirect href={auth?.accessToken ? '/(protected)' : '/login'} />;
 }
