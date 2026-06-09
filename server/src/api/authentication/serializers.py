@@ -4,7 +4,21 @@ from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.settings import api_settings
 
-from api.auth.authentication import IDMarkedRefreshToken
+from .authentication import IDMarkedRefreshToken
+from rest_framework import serializers
+from .models import User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, min_length=8)
+
+    class Meta:
+        model = User
+        fields = ("id", "email", "username", "settings", "password")
+        read_only_fields = ("id",)
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
 
 
 class SingleSessionTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -24,6 +38,7 @@ class SingleSessionTokenObtainPairSerializer(TokenObtainPairSerializer):
             update_last_login(None, self.user)
 
         return data
+
 
 class SingleSessionTokenRefreshSerializer(TokenRefreshSerializer):
     token_class = IDMarkedRefreshToken

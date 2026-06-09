@@ -35,7 +35,7 @@ BEHIND_PROXY = config('BEHIND_PROXY', default=False, cast=bool)
 
 ALLOWED_HOSTS = DOMAINS
 
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'authentication.User'
 
 # Application definition
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "server",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
+    "api.authentication",
 ]
 
 MIDDLEWARE = [
@@ -74,7 +75,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "api.auth.authentication.MarkedJWTAuthentication",
+        "api.authentication.authentication.MarkedJWTAuthentication",
     ],
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
@@ -102,8 +103,8 @@ SIMPLE_JWT = {
     "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": None,
     "AUTH_HEADER_TYPES": ("Bearer",),
-    "TOKEN_OBTAIN_SERIALIZER": "api.auth.serializers.SingleSessionTokenObtainPairSerializer",
-    "TOKEN_REFRESH_SERIALIZER": "api.auth.serializers.SingleSessionTokenRefreshSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "api.authentication.serializers.SingleSessionTokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "api.authentication.serializers.SingleSessionTokenRefreshSerializer",
 }
 
 SPECTACULAR_SETTINGS = {
