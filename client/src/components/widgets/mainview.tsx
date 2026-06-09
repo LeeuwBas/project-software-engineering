@@ -1,7 +1,7 @@
 import Pet from '@/components/widgets/Pet';
 import Statbar from '@/components/widgets/Statbar';
 import { View } from 'react-native';
-import { usePet } from '../contexts/PetContext';
+import { usePetId } from '../contexts/PetContext';
 
 export default function Main(
     {
@@ -16,7 +16,7 @@ export default function Main(
         rightSideValue: number
     }
 ) {
-    const {id} = usePet()
+    const {id} = usePetId()
 
     return (
         <View className="flex-row flex-1">

@@ -1,7 +1,8 @@
 import { AppText } from '@/components/AppText';
-import { usePet } from '@/components/contexts/PetContext';
+import { usePetId } from '@/components/contexts/PetContext';
 import Pet from '@/components/widgets/Pet';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,10 +10,12 @@ const NUM_PETS = 3
 
 export default function PetSelection() {
     const router = useRouter()
-    const {id, setId, saveId} = usePet()
+    const {id, setId, saveId} = usePetId()
+    const [draftId, setDraftId] = useState(id)
 
     function confirm() {
-        saveId(id)
+        setId(draftId)
+        saveId(draftId)
         router.back()
     }
 
@@ -22,18 +25,18 @@ export default function PetSelection() {
                 <View className='flex-col gap-12'>
                     <View className='flex-row'>
                         <View className='w-1/5'>
-                            {id !== 0 &&
-                                <Pressable className='bg-slate-300' onPress={() => setId(id-1)}>
+                            {draftId !== 0 &&
+                                <Pressable className='bg-slate-300' onPress={() => setDraftId(draftId-1)}>
                                     <AppText>Left</AppText>
                                 </Pressable>
                             }
                         </View>
 
-                        <Pet id={id}/>
+                        <Pet id={draftId}/>
 
                         <View className='w-1/5'>
-                            {id !== NUM_PETS-1 &&
-                                <Pressable className='bg-slate-300' onPress={() => setId(id+1)}>
+                            {draftId !== NUM_PETS-1 &&
+                                <Pressable className='bg-slate-300' onPress={() => setDraftId(draftId+1)}>
                                     <AppText>Right</AppText>
                                 </Pressable>
                             }

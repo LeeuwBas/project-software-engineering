@@ -12,7 +12,7 @@ export function PetProvider({children}: {children: ReactNode}) {
     )
 }
 
-export function usePet() {
+export function usePetId() {
     const context = useContext(petContext)
 
     if (!context) {
