@@ -1,4 +1,5 @@
 import Main from '@/components/widgets/mainview';
+import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { useAppContext } from '@/lib/AppContext';
 import { BlurView } from 'expo-blur';
@@ -8,7 +9,7 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
-  const { popup, water, popupOpen } = useAppContext();
+  const { popup, water, saveWater, popupOpen } = useAppContext();
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function App() {
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
+        <Toolbar popup={popup} water={water} saveWater={saveWater} />
       </LinearGradient>
     </SafeAreaView>
   );
