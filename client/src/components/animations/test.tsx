@@ -9,7 +9,7 @@ import Animated, {
 const FRAME_WIDTH = 256;
 const FRAME_HEIGHT = 256;
 const FRAME_COUNT = 8;
-const FPS = 12;
+const FPS = 10;
 
 export function SpriteAnimation() {
   const frame = useSharedValue(0);
