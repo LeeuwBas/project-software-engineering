@@ -11,12 +11,6 @@ export default function PetSelection() {
     const router = useRouter()
     const {id, setId, saveId} = usePet()
 
-    function alterId(value: number) {
-        const new_id = id+value
-        if (new_id < 0 || new_id >= NUM_PETS) return
-        setId(id+value)
-    }
-
     function confirm() {
         saveId(id)
         router.back()
@@ -27,14 +21,25 @@ export default function PetSelection() {
             <SafeAreaView className='size-full justify-center'>
                 <View className='flex-col gap-12'>
                     <View className='flex-row'>
-                        <Pressable className='w-1/5 bg-slate-300' onPress={() => alterId(-1)}>
-                            <AppText>Left</AppText>
-                        </Pressable>
+                        <View className='w-1/5'>
+                            {id !== 0 &&
+                                <Pressable className='bg-slate-300' onPress={() => setId(id-1)}>
+                                    <AppText>Left</AppText>
+                                </Pressable>
+                            }
+                        </View>
+
                         <Pet id={id}/>
-                        <Pressable className='w-1/5 bg-slate-300' onPress={() => alterId(+1)}>
-                            <AppText>Right</AppText>
-                        </Pressable>
+
+                        <View className='w-1/5'>
+                            {id !== NUM_PETS-1 &&
+                                <Pressable className='bg-slate-300' onPress={() => setId(id+1)}>
+                                    <AppText>Right</AppText>
+                                </Pressable>
+                            }
+                        </View>
                     </View>
+                    
                     <View className='items-center'>
                         <Pressable className='w-1/2 bg-slate-400' onPress={() => confirm()}>
                             <AppText>Confirm</AppText>
