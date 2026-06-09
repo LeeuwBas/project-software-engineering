@@ -6,9 +6,16 @@ module.exports = {
   content: ['./app/**/*.{js,ts,tsx}', './components/**/*.{js,ts,tsx}', './src/**/*.{js,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
+    borderColor: ({ theme }: { theme: (key: string) => string }) => ({
+      ...theme('colors'),
+      DEFAULT: theme('colors.border'),
+    }),
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
+        border: {
+          DEFAULT: 'hsl(var(--border))',
+          dark: 'hsl(var(--border-dark))',
+        },
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
@@ -16,14 +23,17 @@ module.exports = {
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+          dark: 'hsl(var(--primary-dark))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+          dark: 'hsl(var(--secondary-dark))',
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
+          dark: 'hsl(var(--destructive-dark))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
@@ -41,6 +51,8 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        ink: 'hsl(var(--ink))',
+        black: '#36322B',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -49,6 +61,9 @@ module.exports = {
       },
       borderWidth: {
         hairline: hairlineWidth(),
+      },
+      boxShadow: {
+        block: '4px 4px 0px 0px #36322B40',
       },
       keyframes: {
         'accordion-down': {
@@ -61,8 +76,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        'sans': ['IosevkaCharon'],
-        
+        sans: ['IosevkaCharon'],
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',

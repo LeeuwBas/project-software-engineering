@@ -1,12 +1,5 @@
-import Main from '@/components/widgets/mainview';
-import Toolbar from '@/components/widgets/toolbar';
-import Topbar from '@/components/widgets/topbar';
-import * as storage from '@/lib/storage';
-import { PopupConfigs } from '@/lib/types';
-import { BlurView } from 'expo-blur';
-import { useEffect, useRef, useState } from 'react';
-import { AppState, Pressable, View } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '@/auth/AuthManager';
+import { Redirect } from 'expo-router';
 
 export default function Index() {
   const auth = useAuth();
