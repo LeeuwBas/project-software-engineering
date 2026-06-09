@@ -1,16 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Settings {
-    chosenPet: String;
+    chosenPet: String,
 }
 
 interface StatLine {
-    waterDrank: number;
+    waterDrank: number,
 }
 
 interface StatisticsData {
-    entries: number;
-    Statistics: Record<string, StatLine>;
+    entries: number,
+    Statistics: Record<string, StatLine>,
 }
 
 export interface StatisticsSummary {
@@ -21,6 +21,13 @@ export interface StatisticsSummary {
     average: number,
     minimum: number,
     maximum: number,
+}
+
+export interface StatisticsBarChart {
+    statisticName: string,
+    isFull: boolean,
+    daysPerBin: number,
+    bins: number[],
 }
 
 // ---------------------------------- Statistics Functions ----------------------------------
@@ -77,7 +84,7 @@ async function getRangeStat(statName: string, lowerDay: Date, upperDay: Date) {
     return Object.values(entries).map(([_, entry]) => entry[statName as keyof StatLine]);
 }
 
-async function getStatSummary(statName: string, days: number) {
+export async function getStatSummary(statName: string, days: number) {
     const today = new Date();
     const lowerDay = new Date();
     lowerDay.setDate(today.getDate() - days);
@@ -101,7 +108,39 @@ async function getStatSummary(statName: string, days: number) {
     return returnValue as StatisticsSummary
 }
 
+export async function getStatBarChart(statName: string, days: number, binCount: number) {
 
+    if (days % binCount != 0) {
+        return null;
+    }
 
+    var today = new Date();
+    var lowerDay = new Date();
+    lowerDay.setDate(today.getDate() - days);
+
+    const returnValue: Partial<StatisticsBarChart> = {statisticName: statName};
+    returnValue.bins = [];
+    returnValue.daysPerBin = days / binCount;
+    returnValue.isFull = true;
+
+    for (let i = 0; i < binCount; i++) {
+        const values = await getRangeStat(statName, lowerDay, today);
+
+        if (values == null) {
+            return null;
+        }
+
+        if (values.length < returnValue.daysPerBin) {
+            returnValue.isFull = false;
+        }
+
+        returnValue.bins.push(values.reduce((Acc, x, _) => Acc + x) / values.length);
+
+        lowerDay = today
+        today.setDate(today.getDate() + returnValue.daysPerBin);
+    }
+
+    return returnValue as StatisticsBarChart
+}
 
 // ---------------------------------- Settings Functions ----------------------------------
