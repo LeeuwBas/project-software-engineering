@@ -4,8 +4,8 @@ import Topbar from '@/components/widgets/topbar';
 import * as storage from '@/lib/storage';
 import { PopupConfigs } from '@/lib/types';
 import { BlurView } from 'expo-blur';
-import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import '../global.css';
@@ -14,6 +14,25 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const {water, saveWater} = storage.useWater(menuOpen);
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'background') {
+        triggerBackup();
+      }
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const triggerBackup = async () => {
+    //Backup logic
+  };
 
   function changeMenu() {
     setMenuOpen(!menuOpen)

@@ -1,5 +1,6 @@
 import Menu from '@/components/widgets/Menu';
 import { PopupConfigs } from '@/lib/types';
+import { useRouter } from 'expo-router';
 import { ChartNoAxesCombined, Check, Plus, User } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -18,6 +19,7 @@ export default function Toolbar(
     
     const [draftWater, setDraftWater] = useState(water)
     const popupOpen: boolean = popup.menuOpen || popup.settingsOpen
+    const router = useRouter()
 
     function close() {
         if (popup.menuOpen) {
@@ -44,7 +46,8 @@ export default function Toolbar(
             <View className='w-full flex flex-row border-2 bg-slate-200 border-slate-200 p-1 gap-32 justify-center'>
                 <Pressable
                 disabled={popupOpen}
-                className={`p-2 transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}>
+                className={`p-2 transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}
+                onPress={() => router.push('/stats')}>
                     <ChartNoAxesCombined size={"28"} />
                 </Pressable>
 
