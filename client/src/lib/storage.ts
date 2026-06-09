@@ -26,6 +26,12 @@ export function useWater(menuOpen : boolean) {
         }
     }
 
+    function saveWater(value: number) {
+        setWaterData(value)
+        setWater(value)
+        console.log('saved water ' + value)
+    }
+
     // Gets water data from storage on render.
     useEffect(() => {
         async function getWater() {
@@ -38,13 +44,5 @@ export function useWater(menuOpen : boolean) {
         getWater();
     }, [])
 
-    // Sends water data to storage when popup menu is closed.
-    useEffect(() => {
-        if (!menuOpen && loaded) {
-            console.log('saved water ' + water);
-            setWaterData(water);
-        }
-    }, [water, loaded, menuOpen]);
-
-    return {water, setWater};
+    return {water, saveWater};
 }

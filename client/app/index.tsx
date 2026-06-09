@@ -13,7 +13,7 @@ import '../global.css';
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const {water, setWater} = storage.useWater(menuOpen);
+  const {water, saveWater} = storage.useWater(menuOpen);
 
   // Show or hide menu depending on if menu is already open
   function changeMenu() {
@@ -37,14 +37,18 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView className='bg-[#74c6b6]/85'>
         <View className='flex flex-col size-full bg-[#74c6b6]/30'>
-                  <Topbar />
+          <Topbar />
 
-        <Main leftSideStat='water' leftSideValue={water} rightSideStat='none' rightSideValue={0}/>
+          <Main leftSideStat='water' leftSideValue={water} rightSideStat='none' rightSideValue={0}/>
 
-        {/* The blur that appears when popup menu is opened */}
-        <BlurView className={`absolute w-full h-full transition-opacity duration-300 ${ popupOpen ? 'opacity-100' : 'opacity-0' }`} intensity={40} tint='regular' experimentalBlurMethod='dimezisBlurView'/>
+          {/* The blur that appears when popup menu is opened */}
+          <BlurView className={`absolute w-full h-full transition-opacity duration-300 ${ popupOpen ? 'opacity-100' : 'opacity-0' }`} intensity={40} tint='regular' experimentalBlurMethod='dimezisBlurView'/>
 
-        <Toolbar popup={popup} water={water} setWater={setWater} />
+          <Toolbar
+            popup={popup}
+            water={water}
+            saveWater={saveWater}
+            />
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
