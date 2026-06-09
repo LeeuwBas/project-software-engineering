@@ -1,31 +1,18 @@
+import getMood from '@/lib/mood';
+import { getWeatherStatus } from "@/lib/weather";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Sun } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AppText } from '../AppText';
-import { getWeatherStatus } from "@/lib/weather";
-import { useEffect, useState } from 'react';
-
-
-function Mood(happiness: number) {
-    switch (true) {
-        case happiness < 20:
-            return 'Sad'
-        case happiness < 40:
-            return 'Gloomy'
-        case happiness < 60:
-            return 'Neutral'
-        case happiness < 80:
-            return 'Content'
-    }
-    return 'Happy'
-}
 
 export default function Topbar() {
     const date = new Date();
     const day = date.toLocaleDateString('en-US', { weekday: 'short' })
 
+    // TODO: calculate happiness based on number of tasks completed.
     const happiness = 40
-    const mood = Mood(happiness)
+    const mood = getMood(happiness)
 
     const [weather, setWeather] = useState<{status: string; temp: number} | null>(null);
 
