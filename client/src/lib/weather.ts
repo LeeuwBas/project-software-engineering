@@ -20,6 +20,11 @@ async function getWeatherStatus(): Promise<WeatherData | null> {
 
     const data = await response.json();
 
+    if (!response.ok || !data.weather?.[0]) {
+        console.warn('Weather unavailable', response.status, data);
+        return null;
+    }
+
     const weather: WeatherData = {
         status: data.weather[0].main,
         id: data.weather[0].id,
