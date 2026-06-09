@@ -5,3 +5,9 @@ export interface PopupConfigs {
   settingsOpen: boolean;
   changeSettings: Function;
 }
+
+export interface PetType {
+    id: number,
+    setId: Function,
+    saveId: Function
+}

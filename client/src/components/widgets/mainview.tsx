@@ -1,6 +1,7 @@
 import Pet from '@/components/widgets/Pet';
 import Statbar from '@/components/widgets/Statbar';
 import { View } from 'react-native';
+import { usePet } from '../contexts/PetContext';
 
 export default function Main(
     {
@@ -15,6 +16,8 @@ export default function Main(
         rightSideValue: number
     }
 ) {
+    const {id} = usePet()
+
     return (
         <View className="flex-row flex-1">
             <View className="w-5">
@@ -22,7 +25,7 @@ export default function Main(
             </View>
 
             <View className="flex-1 justify-center">
-                <Pet id={0}/>
+                <Pet id={id}/>
             </View>
 
             <View className="w-5">

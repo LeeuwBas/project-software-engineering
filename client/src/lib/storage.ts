@@ -48,3 +48,39 @@ export function useWater(menuOpen : boolean) {
 
     return {water, setWater};
 }
+
+export function petContextInit() {
+    const [id, setId] = useState(0)
+
+    async function getIdData(): Promise<number> {
+        try {
+            const id = await AsyncStorage.getItem('pet_id');
+            return id !== null ? parseInt(id) : 0;
+        } catch(error) {
+            console.error('Getting pet id went wrong', error)
+            return 0
+        }
+    }
+
+    async function saveId(id: number) {
+        try {
+            await AsyncStorage.setItem('pet_id', JSON.stringify(id));
+        } catch (error) {
+            console.error('Setting pet id went wrong.', error);
+        }
+        setId(id)
+        console.log('saved pet id ' + id)
+    }
+
+    useEffect(() => {
+        async function getId() {
+            const saved_id = await getIdData();
+            setId(saved_id);
+            console.log('retrieved pet id ' + saved_id)
+        }
+
+        getId();
+    }, [])
+
+    return {id, setId, saveId}
+}

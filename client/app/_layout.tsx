@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/auth/AuthManager";
+import { PetProvider } from "@/components/contexts/PetContext";
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -14,16 +15,19 @@ export default function RootLayout() {
   if (!loaded) return null;
 
   return (
+    // PetProvider provides components with pet id so pet selection and homepage are in sync.
     // Gesture handler wrapper to handle toasts using sonner library.
     // Toasts are 'pop-ups' that you can use after some action fails or succeeds.
-    <AuthProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaProvider>
-          <Stack screenOptions={{ headerShown: false }} />
-          <Toaster />
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
-    </AuthProvider>
+    <PetProvider>
+      <AuthProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SafeAreaProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+            <Toaster />
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </AuthProvider>
+    </PetProvider>
   );
 }
 
