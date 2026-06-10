@@ -31,7 +31,7 @@ SECRET_KEY = config(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=True, cast=bool)
 DOMAINS = [
-    d.strip() for d in config("DOMAIN", default="127.0.0.1,localhost").split(",")
+    d.strip() for d in config("DOMAIN", default="127.0.0.1,localhost,10.0.2.2").split(",")
 ]
 BEHIND_PROXY = config("BEHIND_PROXY", default=False, cast=bool)
 
