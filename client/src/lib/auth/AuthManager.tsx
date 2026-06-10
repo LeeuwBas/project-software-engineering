@@ -1,7 +1,7 @@
 import {tokenStorage} from "@/lib/auth/TokenStorage";
 import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
-import {Redirect} from "expo-router";
-import {API_ENDPOINT} from "@/lib/api/ApiManager";
+import {Redirect, useRouter} from "expo-router";
+import {API_ENDPOINT} from "@/lib/api/ApiEndpoint";
 
 type Auth = {
     accessToken: string | null;
