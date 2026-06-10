@@ -1,5 +1,6 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
 import { View } from 'react-native';
 
@@ -28,17 +29,30 @@ export default function Settings(
   return (
     <View className={`-top-6 transition-opacity duration-200 ${ isOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
       <View className='absolute bottom-full mb-2 items-center w-full'>
-          <View className="w-3/4 p-2 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
-              {ITEMS.map((item) => (
-                <Button
-                  className='my-2 h-12 flex'
-                  key={item.label}
-                  variant="default"
-                  onPress={() => setActiveItem(item)}>
-                  <AppText>{item.label}</AppText>
-                </Button>
-              ))}
-          </View>
+        <Card>
+          <CardContent>
+            {ITEMS.map((item) => (
+              <Button
+                className='my-2 h-12 flex'
+                key={item.label}
+                variant="secondary"
+                onPress={() => setActiveItem(item)}>
+                <AppText className='text-white font-bold'>{item.label}</AppText>
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
+        {/* <View className="w-3/4 p-2 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
+            {ITEMS.map((item) => (
+              <Button
+                className='my-2 h-12 flex'
+                key={item.label}
+                variant="default"
+                onPress={() => setActiveItem(item)}>
+                <AppText>{item.label}</AppText>
+              </Button>
+            ))}
+        </View> */}
       </View>
     </View>
   )
