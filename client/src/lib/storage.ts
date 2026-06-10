@@ -158,20 +158,11 @@ export async function getStatBarChart(statName: string, days: number, binCount: 
 }
 
 /*
- * Updates or inserts a stat, default is to update today, can be changed.
+ * Updates a stat, default is to update today, can be changed.
  */
-async function updateStat(statName: string, change: number, day: Date = new Date()) {
-    var line: StatLine| null = null;
-
-    try {
-        line = await getDayStat(day);
-    } catch(err) {
-        if (!(err instanceof TypeError)) {
-            throw err
-        }
-        line = createStatLine();
-    }
-    if (line == null) {
+export async function updateStat(statName: string, change: number, day: Date = new Date()) {
+    var line: StatLine| null = await getDayStat(day);
+    if (line === null || line === undefined) {
         return null;
     }
 
@@ -180,6 +171,19 @@ async function updateStat(statName: string, change: number, day: Date = new Date
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
 }
+
+/*
+ * Returns the data of a specified statistic at a specified date.
+ */
+export async function getStat(statName: string, day: Date = new Date()) {
+    const line = await getDayStat(day);
+    if (line === null || line === undefined) {
+        return null
+    }
+
+    return line[statName as keyof StatLine]
+}
+
 
 // ---------------------------------- Settings Functions ----------------------------------
 
