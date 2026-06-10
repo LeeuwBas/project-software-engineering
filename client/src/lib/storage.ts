@@ -195,7 +195,6 @@ import { useEffect, useState } from 'react';
 // Handles water in storage. May be used as template for future objects.
 export function useWater(menuOpen : boolean) {
     const [water, setWater] = useState(0);
-    const [loaded, setLoaded] = useState(false); // Prevents stored value from being overwritten by init.
 
     // Sends water value to storage.
     async function setWaterData(water: number) {
@@ -217,25 +216,22 @@ export function useWater(menuOpen : boolean) {
         }
     }
 
+    function saveWater(value: number) {
+        setWaterData(value)
+        setWater(value)
+        console.log('saved water ' + value)
+    }
+
     // Gets water data from storage on render.
     useEffect(() => {
         async function getWater() {
             const saved_water = await getWaterData();
             setWater(saved_water);
-            setLoaded(true);
             console.log('retrieved water ' + saved_water)
         }
 
         getWater();
     }, [])
 
-    // Sends water data to storage when popup menu is closed.
-    useEffect(() => {
-        if (!menuOpen && loaded) {
-            console.log('saved water ' + water);
-            setWaterData(water);
-        }
-    }, [water, loaded, menuOpen]);
-
-    return {water, setWater};
+    return {water, saveWater};
 }
