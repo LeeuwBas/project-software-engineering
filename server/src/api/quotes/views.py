@@ -30,7 +30,7 @@ class RequestQuote(APIView):
         },
     )
     def get(self, request):
-        serializer = QuoteRequestSerializer(data=request.data)
+        serializer = QuoteRequestSerializer(data=request.query_params)
 
         if serializer.is_valid():
             mood = serializer.validated_data["mood"]
