@@ -3,6 +3,8 @@ import random
 
 
 def get_happiness_tier(happiness):
+    # Change these values to allow for different happiness scales
+    # If these values/names get changed, make sure to adapt the tests
     if happiness < 40:
         return "sad"
     elif happiness < 80:
