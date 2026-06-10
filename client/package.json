@@ -38,7 +38,6 @@
     "@rn-primitives/toggle-group": "^1.4.0",
     "@rn-primitives/tooltip": "^1.4.0",
     "@sbaiahmed1/react-native-blur": "4.6.3-beta.1",
-    "@shopify/react-native-skia": "^2.6.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expo": "^54.0.0",
