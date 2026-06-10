@@ -16,7 +16,7 @@ export default function PetSelection() {
     function confirm() {
         setId(draftId)
         saveId(draftId)
-        router.back()
+        router.push('/signup')
     }
 
     return (
@@ -43,9 +43,12 @@ export default function PetSelection() {
                         </View>
                     </View>
                     
-                    <View className='items-center'>
+                    <View className='items-center gap-2'>
                         <Pressable className='w-1/2 bg-slate-400' onPress={() => confirm()}>
                             <AppText>Confirm</AppText>
+                        </Pressable>
+                        <Pressable className='w-1/2 bg-slate-400' onPress={() => router.push('/login')}>
+                            <AppText>I already have an account</AppText>
                         </Pressable>
                     </View>
                 </View>

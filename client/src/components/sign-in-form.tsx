@@ -1,3 +1,4 @@
+import { useAuth } from "@/auth/AuthManager";
 import { SocialConnections } from '@/components/social-connections';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +9,6 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import {useAuth} from "@/auth/AuthManager";
 
 
 export function SignInForm() {

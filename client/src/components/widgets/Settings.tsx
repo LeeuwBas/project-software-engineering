@@ -1,3 +1,4 @@
+import { useAuth } from '@/auth/AuthManager';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
@@ -14,6 +15,7 @@ export default function Settings(
   }
 
   const router = useRouter()
+  const auth = useAuth()
 
   type SettingItem = {
     label: string;
@@ -23,6 +25,7 @@ export default function Settings(
   const ITEMS: SettingItem[] = [
     { label: 'Change Pet', effect: () => router.push('/pet-select')},
     { label: 'Change Username', effect: null },
+    { label: 'Sign out', effect: () => auth?.signOut() },
     { label: 'More', effect: null },
   ];
 

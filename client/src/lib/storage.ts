@@ -68,7 +68,6 @@ export function petContextInit() {
         } catch (error) {
             console.error('Setting pet id went wrong.', error);
         }
-        setId(id)
         console.log('saved pet id ' + id)
     }
 

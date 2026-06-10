@@ -1,6 +1,6 @@
-import {tokenStorage} from "@/auth/TokenStorage";
-import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
-import {Redirect} from "expo-router";
+import { tokenStorage } from "@/auth/TokenStorage";
+import { Redirect } from "expo-router";
+import { createContext, JSX, ReactNode, useContext, useEffect, useState } from "react";
 
 type Auth = {
     accessToken: string | null;
@@ -121,7 +121,7 @@ export function requireAuth(element: JSX.Element) {
     if (auth?.isLoading) return null;
 
     if (!auth?.accessToken) {
-        return <Redirect href="/login"/>;
+        return <Redirect href="/pet-select"/>;
     }
 
     return element;
