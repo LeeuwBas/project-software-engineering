@@ -8,8 +8,8 @@ export default function Topbar() {
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });
 
   return (
-    <View className="flex flex-row items-center">
-      <View className="w-1/2 flex-row gap-2 pt-2">
+    <View className="flex-row content-start">
+      <View className="flex-row w-1/2 gap-2">
         <Weather />
         <AppText className=" text-2xl font-bold">{day}</AppText>
       </View>
