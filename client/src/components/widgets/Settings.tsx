@@ -1,3 +1,4 @@
+import { useAuth } from '@/auth/AuthManager';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,14 +15,19 @@ export default function Settings(
   if (!isOpen) {
     return
   }
-    type SettingItem = {
-    label: string;
+
+  const auth = useAuth()
+
+  type SettingItem = {
+    label: string
+    effect: Function | null
   };
 
   const ITEMS: SettingItem[] = [
-    { label: 'Change Pet' },
-    { label: 'Change Username' },
-    { label: 'More' },
+    { label: 'Change Pet', effect: null },
+    { label: 'Change Username', effect: null },
+    { label: 'More', effect: null },
+    { label: 'Sign out', effect: () => auth?.signOut}
   ];
 
   const [activeItem, setActiveItem] = useState<SettingItem | null>(null);
@@ -42,17 +48,6 @@ export default function Settings(
             ))}
           </CardContent>
         </Card>
-        {/* <View className="w-3/4 p-2 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
-            {ITEMS.map((item) => (
-              <Button
-                className='my-2 h-12 flex'
-                key={item.label}
-                variant="default"
-                onPress={() => setActiveItem(item)}>
-                <AppText>{item.label}</AppText>
-              </Button>
-            ))}
-        </View> */}
       </View>
     </View>
   )
