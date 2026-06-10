@@ -1,6 +1,7 @@
+import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 export default function Settings(
   {
@@ -30,11 +31,11 @@ export default function Settings(
           <View className="w-3/4 p-2 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
               {ITEMS.map((item) => (
                 <Button
-                  className='my-2'
+                  className='my-2 h-12 flex'
                   key={item.label}
                   variant="default"
                   onPress={() => setActiveItem(item)}>
-                  <Text>{item.label}</Text>
+                  <AppText>{item.label}</AppText>
                 </Button>
               ))}
           </View>
