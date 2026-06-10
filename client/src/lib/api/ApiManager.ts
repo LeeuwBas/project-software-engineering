@@ -62,7 +62,7 @@ export async function postAPI(endpoint: string, json: any) {
  * @param init The request object, same as fetch().
  * @return the response of the server, or null if the network is offline or the user is not authenticated.
  */
-export async function queryApi(endpoint: string, init: RequestInit = {}): Promise<Response|null> {
+export async function queryApi(endpoint: string, init: RequestInit = {}, recurse_unauthenticated: boolean = true): Promise<Response|null> {
     const auth = useAuth()
     const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 
@@ -90,6 +90,13 @@ export async function queryApi(endpoint: string, init: RequestInit = {}): Promis
     }
 
     if (res.status === 401) {
+
+        if (!recurse_unauthenticated) {
+            // Do not try to re-authenticate
+            // This can prevent infinite recursion when the backend fails.
+            return null;
+        }
+
         try {
             await auth.renewToken();
         } catch (err) {
@@ -97,7 +104,7 @@ export async function queryApi(endpoint: string, init: RequestInit = {}): Promis
             return null;
         }
 
-        return queryApi(endpoint, init);
+        return queryApi(endpoint, init, false);
     }
     return res;
 }
