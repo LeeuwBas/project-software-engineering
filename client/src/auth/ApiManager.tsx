@@ -1,7 +1,7 @@
 import {useAuth} from "@/auth/AuthManager";
 
 
-export const API_ENDPOINT: string = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
+export const API_ENDPOINT: string = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.virtuopet.app";
 
 /**
  * Make a request to the API which requires authentication.
