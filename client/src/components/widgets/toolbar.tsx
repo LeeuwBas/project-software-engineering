@@ -1,46 +1,29 @@
 import Menu from '@/components/widgets/Menu';
-import { PopupConfigs } from '@/lib/types';
-import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import {PopupConfigs} from '@/lib/types';
+import {useRouter} from 'expo-router';
 import ChartIcon from '@assets/icons/chart.svg';
 import PersonIcon from '@assets/icons/person.svg';
 import PlusIcon from '@assets/icons/plus.svg';
 import CheckIcon from '@assets/icons/check.svg';
-import { Pressable, View } from 'react-native';
+import {Pressable, View} from 'react-native';
 import Settings from './Settings';
 
 export default function Toolbar({
   popup,
-  water,
-  saveWater,
 }: {
   popup: PopupConfigs;
-  water: number;
-  saveWater: Function;
 }) {
-  const [draftWater, setDraftWater] = useState(water);
+
   const popupOpen: boolean = popup.menuOpen || popup.settingsOpen;
   const router = useRouter();
 
   function close() {
-    if (popup.menuOpen) {
-      saveWater(draftWater);
-      popup.changeMenu();
-    } else {
-      popup.changeMenu();
-    }
+    popup.changeMenu();
   }
-
-  // Refresh value in popup when retrieved from storage
-  useEffect(() => {
-    if (popup.menuOpen) {
-      setDraftWater(water);
-    }
-  }, [popup.menuOpen, water]);
 
   return (
     <View className="relative left-0 right-0 z-20 mt-auto w-full items-center">
-      <Menu isOpen={popup.menuOpen} water={draftWater} setWater={setDraftWater} />
+      <Menu isOpen={popup.menuOpen} />
       <Settings isOpen={popup.settingsOpen} />
 
       {/* The toolbar itself */}

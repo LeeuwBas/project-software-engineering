@@ -1,7 +1,7 @@
 import {useAuth} from "@/lib/auth/AuthManager";
 
 
-export const API_ENDPOINT: string = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
+export const API_ENDPOINT: string = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.virtuopet.app";
 
 /**
  * Sends a GET request to the given API endpoint, authenticated with the current session.
