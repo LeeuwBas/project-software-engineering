@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { Toaster } from 'sonner-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { configureReanimatedLogger } from 'react-native-reanimated';
-import {AuthProvider} from "@/auth/AuthManager";
+import {AuthProvider} from "@/lib/auth/AuthManager";
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
