@@ -1,18 +1,12 @@
 import { AppText } from '@/components/AppText';
 import { WeatherData, getWeather } from '@/lib/weather';
-import { CloudFog, CloudLightning, CloudRain, Snowflake, Sun } from 'lucide-react-native';
 import SunnyCloud from '@assets/icons/sunny_cloud.svg';
+import { CloudFog, CloudLightning, CloudRain, Snowflake, Sun } from 'lucide-react-native';
 import { View } from 'react-native';
 
 export default function Weather() {
   const weather = getWeather();
-  if (!weather)
-    return (
-      <View className="items-center">
-        <SunnyCloud width={30} height={30} className="pb-1" />
-        <AppText className="font-bold">20 °C</AppText>
-      </View>
-    );
+  if (!weather) return
 
   function weatherIcon(weather: WeatherData) {
     if (weather.id < 299) return <CloudLightning size={30} />;
