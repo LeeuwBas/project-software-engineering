@@ -30,6 +30,13 @@ export interface StatisticsBarChart {
     bins: number[],
 }
 
+export function createStatLine(overrides: Partial<StatLine> = {}) {
+    return {
+        waterDrank: 0,
+        ...overrides,
+    };
+}
+
 // ---------------------------------- Statistics Functions ----------------------------------
 
 /*
@@ -47,11 +54,9 @@ function calculateDate(date: Date) {
 }
 
 /*
- * Returns a statistic from a single day.
- *
- * Expects the statName to be one of the internal statistic key names.
+ * Returns the statistic data interface of the given day.
  */
-async function getDayStat(statName: string, day: Date) {
+async function getDayStat(day: Date) {
     const date = calculateDate(day);
     const raw = await AsyncStorage.getItem('Statistics')
 
@@ -61,7 +66,7 @@ async function getDayStat(statName: string, day: Date) {
         return null
     }
 
-    return data.Statistics[date][statName as keyof StatLine];
+    return data.Statistics[date];
 }
 
 /*
@@ -84,6 +89,11 @@ async function getRangeStat(statName: string, lowerDay: Date, upperDay: Date) {
     return Object.values(entries).map(([_, entry]) => entry[statName as keyof StatLine]);
 }
 
+/*
+ * Gets the stat summary for the past 'days' time.
+ *
+ * returns a statisticsSummary interface type
+ */
 export async function getStatSummary(statName: string, days: number) {
     const today = new Date();
     const lowerDay = new Date();
@@ -108,6 +118,10 @@ export async function getStatSummary(statName: string, days: number) {
     return returnValue as StatisticsSummary
 }
 
+/*
+ * Creates the bins with data for a bar chart to use.
+ * Shows data for the previous 'days' amount of days, in 'binCount' bins.
+ */
 export async function getStatBarChart(statName: string, days: number, binCount: number) {
 
     if (days % binCount != 0) {
@@ -141,6 +155,30 @@ export async function getStatBarChart(statName: string, days: number, binCount: 
     }
 
     return returnValue as StatisticsBarChart
+}
+
+/*
+ * Updates or inserts a stat, default is to update today, can be changed.
+ */
+async function updateStat(statName: string, change: number, day: Date = new Date()) {
+    var line: StatLine| null = null;
+
+    try {
+        line = await getDayStat(day);
+    } catch(err) {
+        if (!(err instanceof TypeError)) {
+            throw err
+        }
+        line = createStatLine();
+    }
+    if (line == null) {
+        return null;
+    }
+
+    const oldVal = line[statName as keyof StatLine]
+    line[statName as keyof StatLine] = oldVal + change;
+
+    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
