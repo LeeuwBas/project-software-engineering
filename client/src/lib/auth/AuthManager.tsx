@@ -117,6 +117,7 @@ export function requireNoAuth(element: JSX.Element) {
 
 export function requireAuth(element: JSX.Element) {
     const auth = useAuth();
+    if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return element;
     if (auth?.isLoading) return null;
 
     if (!auth?.accessToken) {
