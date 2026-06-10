@@ -5,12 +5,15 @@ import {AppText} from '../AppText';
 import {waterBridge} from "@/lib/api/APIBridge";
 import {useWater} from "@/lib/api/WaterBridge";
 
-export default function WaterWidget() {
+export default function WaterWidget(){
 
-    const water = useWater() ?? 0;
+    const water = useWater()
 
     async function alterWaterValue(value: number) {
-        await waterBridge.addWater(value);
+        if (water === undefined) {
+            return
+        }
+        await waterBridge.setWater(water + value)
     }
 
   return (
@@ -18,7 +21,7 @@ export default function WaterWidget() {
       <View className="flex w-full flex-row items-center justify-between p-2">
         <View className="flex flex-row items-center gap-2">
           <GlassWater size={30} />
-          <AppText className="min-w-10 text-base font-bold">{water}</AppText>
+          <AppText className="min-w-10 text-base font-bold">{water ?? 0}</AppText>
         </View>
 
         <View className="flex flex-row items-center gap-2">

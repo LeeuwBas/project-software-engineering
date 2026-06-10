@@ -3,7 +3,7 @@ import {createNewState} from "@/lib/api/ValueState";
 
 // Use the water bridge when the values need to be manipulated.
 export interface WaterBridge {
-    addWater: (value: number) => Promise<number>,
+    setWater: (value: number) => Promise<number>,
 }
 
 const waterState = createNewState();
@@ -26,7 +26,7 @@ export function useWater() {
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
         load,
-        addWater,
+        setWater: setWater,
     };
 }
 
@@ -41,14 +41,12 @@ async function load() {
     return loadedWater;
 }
 
-async function addWater(value: number) {
-    const current_water = waterState.getState().value;
-
-    if (current_water === undefined) {
+async function setWater(value: number) {
+    if (waterState.getState().value === undefined) {
         throw Error("Water not loaded yet")
     }
 
-    const new_water = Math.max(Math.min(current_water + value, 100), 0);
+    const new_water = Math.max(Math.min(value, 100), 0);
     waterState.getState().setValue(new_water)
     return new_water;
 }

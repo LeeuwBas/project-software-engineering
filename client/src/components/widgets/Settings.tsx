@@ -1,4 +1,4 @@
-import { useAuth } from '@/auth/AuthManager';
+import { useAuth } from '@/lib/auth/AuthManager';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';

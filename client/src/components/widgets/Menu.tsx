@@ -5,12 +5,8 @@ import WaterWidget from './WaterWidget';
 
 export default function Menu({
   isOpen,
-  water,
-  setWater,
 }: {
   isOpen: boolean;
-  water: number;
-  setWater: (value: number) => void;
 }) {
   // TODO: Add backend for retrieving name
   const name = 'Alex';
@@ -28,7 +24,7 @@ export default function Menu({
             <CardTitle className="mx-6 my-4 text-2xl font-bold">{name}</CardTitle>
           </CardHeader>
           <CardContent className="w-full items-center">
-            <WaterWidget water={water} setWater={setWater} />
+            <WaterWidget />
             <StepsWidget />
           </CardContent>
         </Card>

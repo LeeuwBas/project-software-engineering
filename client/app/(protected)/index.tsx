@@ -7,10 +7,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {initializeApiManager} from "@/lib/api/APIBridge";
+import {useWater} from "@/lib/api/WaterBridge";
 
 export default function App() {
-  const { popup, water, saveWater, popupOpen } = useAppContext();
+  const { popup, popupOpen } = useAppContext();
   const appState = useRef(AppState.currentState);
+  const water = useWater() ?? 0
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -18,6 +21,10 @@ export default function App() {
       appState.current = nextAppState;
     });
     return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    initializeApiManager().then()
   }, []);
 
   const triggerBackup = async () => {
@@ -49,7 +56,7 @@ export default function App() {
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
-        <Toolbar popup={popup} water={water} saveWater={saveWater} />
+        <Toolbar popup={popup} />
       </LinearGradient>
     </SafeAreaView>
   );
