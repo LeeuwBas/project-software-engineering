@@ -1,8 +1,11 @@
-import {requireAuth} from "@/auth/AuthManager";
-import {Slot} from "expo-router";
+import { requireAuth } from '@/auth/AuthManager';
+import { AppProvider } from '@/lib/AppContext';
+import { Slot } from 'expo-router';
 
 export default function AppLayout() {
   return requireAuth(
-    <Slot/>
+    <AppProvider>
+      <Slot />
+    </AppProvider>
   );
 }
