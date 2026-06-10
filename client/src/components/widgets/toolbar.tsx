@@ -1,64 +1,56 @@
-import { Button } from '@/components/ui/button';
 import Menu from '@/components/widgets/Menu';
-import { PopupConfigs } from '@/lib/types';
-import { ChartNoAxesCombined, Check, Plus, User } from 'lucide-react-native';
-import { View } from 'react-native';
+import {PopupConfigs} from '@/lib/types';
+import {useRouter} from 'expo-router';
+import ChartIcon from '@assets/icons/chart.svg';
+import PersonIcon from '@assets/icons/person.svg';
+import PlusIcon from '@assets/icons/plus.svg';
+import CheckIcon from '@assets/icons/check.svg';
+import {Pressable, View} from 'react-native';
 import Settings from './Settings';
 
-export default function Toolbar(
-    {
-        popup,
-        water,
-        setWater
-    } : {
-        popup: PopupConfigs,
-        water: number,
-        setWater: {(value: number): void}
-    }) {
+export default function Toolbar({
+  popup,
+}: {
+  popup: PopupConfigs;
+}) {
 
-    const popupOpen: boolean = popup.menuOpen || popup.settingsOpen
+  const popupOpen: boolean = popup.menuOpen || popup.settingsOpen;
+  const router = useRouter();
 
-    return (
-        <View className='w-full mt-auto z-20'>
-            <View className='left-0 right-0 items-center' >
-                <View className='relative items-center w-full'>
-                    <Menu isOpen={popup.menuOpen} water={water} setWater={setWater} />
-                    <Settings isOpen={popup.settingsOpen} />
+  function close() {
+    popup.changeMenu();
+  }
 
-                    {/* The toolbar itself */}
-                    <View className='w-full flex flex-row border-2 bg-slate-200 border-slate-200 p-1 justify-evenly'>
-                        <Button
-                        disabled={popupOpen}
-                        className={`transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}
-                        variant='outline'>
-                            <ChartNoAxesCombined size={"28"} />
-                        </Button>
+  return (
+    <View className="relative left-0 right-0 z-20 mt-auto w-full items-center">
+      <Menu isOpen={popup.menuOpen} />
+      <Settings isOpen={popup.settingsOpen} />
 
-                        <Button
-                        disabled={popup.settingsOpen}
-                        variant='outline'
-                        size="icon"
-                        className={`rounded-full transition-opacity duration-200 ${ popup.settingsOpen ? 'opacity-0' : 'opacity-100' }`}
-                        onPress={() => popup.changeMenu()}>
-                            {popup.menuOpen && (
-                                <Check size={32} color={"#008000"} />
-                            )}
+      {/* The toolbar itself */}
+      <View className="flex w-full flex-row justify-center gap-32 border-t-4 border-border bg-white p-1">
+        <Pressable
+          disabled={popupOpen}
+          className={`p-2 transition-opacity duration-200 ${popupOpen ? 'opacity-0' : 'opacity-100'}`}
+          onPress={() => router.push('/stats')}>
+          <ChartIcon width={28} height={28} />
+        </Pressable>
 
-                            {!popup.menuOpen && (
-                                <Plus size={35} />
-                            )}
-                        </Button>
+        <Pressable
+          disabled={popup.settingsOpen}
+          className={`shadow-block border-primary-dark absolute -top-[25px] size-16 items-center justify-center border-4 bg-primary transition-opacity duration-200 ${popup.settingsOpen ? 'opacity-0' : 'opacity-100'}`}
+          onPress={() => close()}>
+          {popup.menuOpen && <CheckIcon width={50} height={50} color={'white'} />}
 
-                        <Button
-                        disabled={popup.menuOpen}
-                        className={`transition-opacity duration-200 ${ popup.menuOpen ? 'opacity-0' : 'opacity-100' }`}
-                        variant='outline'
-                        onPress={() => popup.changeSettings()}>
-                            <User size={28} />
-                        </Button>
-                    </View>
-                </View>
-            </View>
-        </View>
-    )
+          {!popup.menuOpen && <PlusIcon width={50} height={50} color={'white'} />}
+        </Pressable>
+
+        <Pressable
+          disabled={popup.menuOpen}
+          className={`p-2 transition-opacity  duration-200 ${popup.menuOpen ? 'opacity-0' : 'opacity-100'}`}
+          onPress={() => popup.changeSettings()}>
+          <PersonIcon width={28} height={28} />
+        </Pressable>
+      </View>
+    </View>
+  );
 }

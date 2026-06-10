@@ -1,6 +1,7 @@
-import {tokenStorage} from "@/auth/TokenStorage";
+import {tokenStorage} from "@/lib/auth/TokenStorage";
 import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
-import {Redirect} from "expo-router";
+import {Redirect, useRouter} from "expo-router";
+import {API_ENDPOINT} from "@/lib/api/ApiEndpoint";
 
 type Auth = {
     accessToken: string | null;
@@ -18,8 +19,6 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isLoading, setLoading] = useState(true);
-
-    const API_ENDPOINT = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
 
     useEffect(() => {
         async function init() {
@@ -118,6 +117,7 @@ export function requireNoAuth(element: JSX.Element) {
 
 export function requireAuth(element: JSX.Element) {
     const auth = useAuth();
+    if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return element;
     if (auth?.isLoading) return null;
 
     if (!auth?.accessToken) {

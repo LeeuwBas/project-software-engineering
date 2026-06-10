@@ -1,0 +1,30 @@
+{
+  "idle": {
+    "sad": [
+      "Idle sad 1",
+      "Idle sad 2"
+    ],
+    "neutral": [
+      "Idle neutral 1",
+      "Idle neutral 2"
+    ],
+    "happy": [
+      "Idle happy 1",
+      "Idle happy 2"
+    ]
+  },
+  "click": {
+    "sad": [
+      "Click sad 1",
+      "Click sad 2"
+    ],
+    "neutral": [
+      "Click neutral 1",
+      "Click neutral 2"
+    ],
+    "happy": [
+      "Click happy 1",
+      "Click happy 2"
+    ]
+  }
+}

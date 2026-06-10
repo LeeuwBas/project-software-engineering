@@ -1,22 +1,20 @@
-import { Heart } from 'lucide-react-native';
-import { Text, View } from 'react-native';
-import { AppText } from '../AppText';
+import { AppText } from '@/components/AppText';
+import Weather from '@/components/widgets/Weather';
+import { View } from 'react-native';
+import Happiness from './Happiness';
 
 export default function Topbar() {
-    const date = new Date();
-    const day = date.toLocaleDateString('en-US', { weekday: 'short' })
+  const date = new Date();
+  const day = date.toLocaleDateString('en-US', { weekday: 'short' });
 
-    return (
-        <View className="flex flex-row items-center">
-            <View className='ml-5'>
-                <AppText className=' text-2xl font-bold'>{day}</AppText>
-            </View>
+  return (
+    <View className="flex-row content-start">
+      <View className="flex-row w-1/2 gap-2">
+        <Weather />
+        <AppText className=" text-2xl font-bold">{day}</AppText>
+      </View>
 
-            <View className='ml-auto flex-row gap-2 mr-10'>
-                {Array.from({ length: 3 }).map((_, index) => (
-                <Heart key={index} fill={"#FF0000"} />
-                ))}
-            </View>
-        </View>
-    )
+      <Happiness />
+    </View>
+  );
 }
