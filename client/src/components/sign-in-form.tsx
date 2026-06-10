@@ -8,7 +8,7 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import {useAuth} from "@/auth/AuthManager";
+import {useAuth} from "@/lib/auth/AuthManager";
 
 
 export function SignInForm() {
