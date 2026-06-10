@@ -14,6 +14,7 @@ const AppContext = createContext<AppContextType>(null!);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [statsOpen, setStatsOpen] = useState(false);
   const { water, saveWater } = storage.useWater(menuOpen);
 
   const popup: PopupConfigs = {
@@ -21,6 +22,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     changeMenu: () => setMenuOpen(!menuOpen),
     settingsOpen,
     changeSettings: () => setSettingsOpen(!settingsOpen),
+    statsOpen,
+    changeStats: () => setStatsOpen(!statsOpen),
   };
 
   return (

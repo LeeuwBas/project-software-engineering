@@ -27,6 +27,7 @@ export default function App() {
   function closePopup() {
     if (popup.menuOpen) popup.changeMenu();
     if (popup.settingsOpen) popup.changeSettings();
+    if (popup.statsOpen) popup.changeStats();
   }
 
   return (
@@ -40,7 +41,12 @@ export default function App() {
         <View className="flex-1 p-4">
           <Topbar />
 
-          <Main leftSideStat="water" leftSideValue={water} rightSideStat="none" rightSideValue={0} />
+          <Main
+            leftSideStat="water"
+            leftSideValue={water}
+            rightSideStat="none"
+            rightSideValue={0}
+          />
         </View>
 
         <BlurView
