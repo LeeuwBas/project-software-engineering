@@ -19,7 +19,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isLoading, setLoading] = useState(true);
 
-    const API_ENDPOINT = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
+    const API_ENDPOINT = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.virtuopet.app";
 
     useEffect(() => {
         async function init() {
