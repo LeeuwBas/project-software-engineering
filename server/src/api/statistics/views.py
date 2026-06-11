@@ -16,7 +16,7 @@ from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
 from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal
+from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -416,4 +416,12 @@ class CalendarView(APIView):
             }
     )
     def get(self, request, start_date, end_date):
-        pass
+        startDay = datetime.fromisoformat(start_date)
+        endDay = datetime.fromisoformat(end_date)
+
+        if startDay >= endDay:
+            return Response("Invalid Input", 400)
+
+        returnList = getCalender(request.user, startDay, endDay)
+
+        return Response(returnList, 200)
