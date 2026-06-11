@@ -50,7 +50,7 @@ urlpatterns = [
     path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
     path("api/stats/view", StatisticsView.as_view(), name="statview"),
     path("api/goals/<str:goal_date>", GoalManageView.as_view(), name="goal_endpoint"),
-    path("api/calendar/<str:begin_date>/<str:end_date>", CalendarView.as_view(), name="calendar_endpoint"),
+    path("api/calendar/<str:start_date>/<str:end_date>", CalendarView.as_view(), name="calendar_endpoint"),
     path('', include(router.urls)),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
