@@ -69,7 +69,7 @@ async function getStat(day: Date) {
  * @param day - day for which you request the goal
  * @returns Number, that contains the goal
  */
-async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
+export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
         (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false));
     goalDates.sort()
@@ -91,7 +91,8 @@ async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
 }
 
 /**
- * 
+ * Sets a new goal, starting today.
+ *
  * @param statName Name of the goal to change
  * @param goal new value for the goal
  */
@@ -265,12 +266,15 @@ export async function updateStat(statName: string, change: number, day: Date = n
 }
 
 /**
- * Aggregates all statistical data between given dates, only returns booleans
+ * Aggregates all statistical data between given dates, only returns booleans.
+ *
+ *
+ * The data is in a key value pair: [['<statname 1>': true, '<statname 2>': false...], ...].
+ *
+ * Data is ordered with the oldest pair first
  * @param lowerDate - Start date of the aggregation
  * @param upperDate - End date of the aggregation
  * @returns dictionary containing a boolean if all data is present, and the data
- * The data is in a key value pair: [['<statname 1>': true, '<statname 2>': false...], ...].
- * Data is ordered with the oldest pair first
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
     let returnValue:[string, boolean][][] = [];
