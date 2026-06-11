@@ -34,6 +34,14 @@ export default function Toolbar(
                         disabled={popupOpen}
                         className={`transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}
                         variant='outline'
+                        onPress={() => router.push('/animation_test')}>
+                            <ChartNoAxesCombined size={"28"} />
+                        </Button>
+                        
+                        <Button
+                        disabled={popupOpen}
+                        className={`transition-opacity duration-200 ${ popupOpen ? 'opacity-0' : 'opacity-100' }`}
+                        variant='outline'
                         onPress={() => router.push('/stats')}>
                             <ChartNoAxesCombined size={"28"} />
                         </Button>
