@@ -9,7 +9,7 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
-  const { popup, water, saveWater, popupOpen } = useAppContext();
+  const { popup, water, saveWater } = useAppContext();
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -50,8 +50,8 @@ export default function App() {
         </View>
 
         <BlurView
-          className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
-          intensity={30}
+          className={`absolute h-full w-full transition-opacity duration-300 ${popup.popupOpen ? 'opacity-100' : 'opacity-0'}`}
+          intensity={40}
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
