@@ -57,17 +57,27 @@ def getBarChart(days: int, bins: int, user: str, statistic: str):
 
     return bin_dict
 
-def getToday(user: str, statistic: str):
+def getDay(user: str, statistic: str | None, day: datetime | None = None):
+
+    if day is None:
+        day = timezone.now()
 
     filter = {
         'user': user,
-        'date': timezone.now().date()
+        'date': day.date()
     }
-    amount = getattr(Stats.objects.filter(**filter).first(), statistic)
 
-    return amount
+    line = Stats.objects.filter(**filter).first()
 
-def getGoal(user: str, statName: str | None = None, day: datetime | None = None):
+    if line is None:
+        line = Stats()
+
+    if statistic is None:
+        return getStatDict(line)
+    else:
+        return getattr(line, statistic)
+
+def getGoal(user: str, statName: str | None, day: datetime | None = None):
     """
         Retrieves the latest goal, either for a given stat or just for all stats
         combined.
@@ -82,7 +92,7 @@ def getGoal(user: str, statName: str | None = None, day: datetime | None = None)
         'date__lte': day.date()
     }
 
-    line = Goals.objects.filter(filter).order_by('-date').first()
+    line = Goals.objects.filter(**filter).order_by('-date').first()
 
     if line is None:
         line = Goals()
@@ -103,10 +113,28 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
 
     oldLine = getGoal(user, None, day)
     for statName, value in goal_data.items():
-        setattr(oldLine, statName, value)
+        oldLine[statName] = value
     oldLine.update({
         'date': day.date(),
         'user': user
     })
 
     Goals.objects.update_or_create(**oldLine)
+
+def getCalender(user: str, startDay: datetime, endDay: datetime):
+    returnList = []
+
+    currentDay = startDay
+    while currentDay <= endDay:
+
+        stats = getDay(user, None, currentDay)
+        goals = getGoal(user, None, currentDay)
+
+        for key in stats.keys():
+            stats[key] = stats[key] >= goals[key]
+
+        returnList.append(stats)
+
+        currentDay += timedelta(1)
+
+    return returnList
