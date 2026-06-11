@@ -1,13 +1,13 @@
 from django.utils import timezone
 from django.db.models import F
 
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter,\
-                                  OpenApiResponse
+                                  OpenApiResponse, inline_serializer
 from drf_spectacular.types import OpenApiTypes
 
 from datetime import datetime
@@ -400,18 +400,14 @@ class CalendarView(APIView):
                 )
             ],
             responses={
-                200: {
-                    'type': 'object',
-                    'properties': {
-                        'goals': {
-                            'type': 'object',
-                            'additionalProperties': {'type': 'integer'},
-                            'example': {
-                                'water': 5
-                            }
-                        }
-                    }
-                },
+                200: inline_serializer(
+                    name='MyResponse',
+                    fields={
+                        'key': serializers.CharField(),
+                        'val': serializers.FloatField(),
+                    },
+                    many=True
+                ),
                 400: OpenApiResponse(description="Invalid input.")
             }
     )
