@@ -24,7 +24,8 @@ export function SignUpForm() {
 
   const passwordInputRef = React.useRef<TextInput>(null);
 
-  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
+  // if you want to locally host go to client/.env.example and READ THE INSTRUCTIONS
+  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.virtuopet.app"; 
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();

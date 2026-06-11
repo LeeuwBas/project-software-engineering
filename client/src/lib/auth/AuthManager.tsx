@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from "@/lib/api/ApiEndpoint";
+import { API_ENDPOINT } from "@/lib/api/ApiManager";
 import { tokenStorage } from "@/lib/auth/TokenStorage";
 import { Redirect } from "expo-router";
 import { createContext, JSX, ReactNode, useContext, useEffect, useState } from "react";
@@ -67,6 +67,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         });
 
         if (!res.ok) {
+            console.log("signIn() failed");
             return false;
         }
 
@@ -78,7 +79,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
         setAccessToken(receivedAccessToken);
         setRefreshToken(receivedRefreshToken);
-
+        console.log("signIn() success");
         return true;
     }
 
