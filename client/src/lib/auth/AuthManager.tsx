@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from "@/lib/api/ApiManager";
 import { tokenStorage } from "@/lib/auth/TokenStorage";
-import { Redirect, useRouter } from "expo-router";
+import { Redirect } from "expo-router";
 import { createContext, JSX, ReactNode, useContext, useEffect, useState } from "react";
 
 type Auth = {
@@ -59,7 +59,6 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     async function signIn(email: string, password: string) {
-        console.log("signIn() start");
         let res;
         res = await fetch(`${API_ENDPOINT}/auth/token/`, {
             method: "POST",
@@ -85,12 +84,9 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     async function signOut() {
-        const router = useRouter();
-        console.log("signOut() start");
         await tokenStorage.clear();
         setAccessToken(null);
         setRefreshToken(null);
-        router.replace('/login');
     }
 
     return (
