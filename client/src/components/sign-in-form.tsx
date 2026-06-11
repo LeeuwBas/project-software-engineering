@@ -8,8 +8,8 @@ import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Pressable, TextInput, View } from 'react-native';
-import {useAuth} from "@/lib/auth/AuthManager";
-
+import { useAuth } from '@/lib/auth/AuthManager';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function SignInForm() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export function SignInForm() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
-  
+
   const passwordInputRef = React.useRef<TextInput>(null);
 
   function onEmailSubmitEditing() {
@@ -41,13 +41,10 @@ export function SignInForm() {
   }
 
   return (
-    <View className="gap-6">
-      <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
+    <SafeAreaView className="flex-1 gap-6">
+      <Card className="border-border/0 shadow-none m-6 mt-auto border-4 sm:border-border sm:shadow-sm sm:shadow-black/5">
         <CardHeader>
-          <CardTitle className="text-center text-xl sm:text-left">Sign in to your app</CardTitle>
-          <CardDescription className="text-center sm:text-left">
-            Welcome back! Please sign in to continue
-          </CardDescription>
+          <CardTitle className="text-center text-xl sm:text-left">Sign in</CardTitle>
         </CardHeader>
         <CardContent className="gap-6">
           <View className="gap-6">
@@ -98,20 +95,14 @@ export function SignInForm() {
               <Text>Continue</Text>
             </Button>
           </View>
-          <Text className="text-center text-sm">
-            Don&apos;t have an account?{' '}
+          <View className="flex flex-row items-center">
+            <Text className="text-center text-sm">Don&apos;t have an account? </Text>
             <Pressable onPress={() => router.replace('/signup')}>
               <Text className="text-sm underline underline-offset-4">Sign up</Text>
             </Pressable>
-          </Text>
-          <View className="flex-row items-center">
-            <Separator className="flex-1" />
-            <Text className="px-4 text-sm text-muted-foreground">or</Text>
-            <Separator className="flex-1" />
           </View>
-          <SocialConnections />
         </CardContent>
       </Card>
-    </View>
+    </SafeAreaView>
   );
 }
