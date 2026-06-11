@@ -17,6 +17,10 @@ def getStatDict(line: Stats | Goals):
     }
 
 def getSummary(days: int, user: str, statistic: str):
+    """
+        Aggregates a summary for the requested statistic, summarizes the past days,
+        amount is given in 'days'.
+    """
     filter_dict = {"user": user}
     if days > 0:
         oldest = timezone.now() - timedelta(days)
@@ -32,6 +36,10 @@ def getSummary(days: int, user: str, statistic: str):
     return response
 
 def getBarChart(days: int, bins: int, user: str, statistic: str):
+    """
+        Returns statistics data aggregated into a format to render a bar chart.
+        days must be a multiple of bins.
+    """
     days_per_bin = days//bins
 
     bin_dict = {}
@@ -58,7 +66,10 @@ def getBarChart(days: int, bins: int, user: str, statistic: str):
     return bin_dict
 
 def getDay(user: str, statistic: str | None, day: datetime | None = None):
-
+    """
+        Returns the statistic line of a given day. If a statistic is given it
+        will return just that statistic, if None, will return a dictionary with the full line.
+    """
     if day is None:
         day = timezone.now()
 
@@ -122,6 +133,12 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
     Goals.objects.update_or_create(**oldLine)
 
 def getCalender(user: str, startDay: datetime, endDay: datetime):
+    """
+        Returns a list of dictionaries to render the calendar in the frontend
+        Every item in the dictionaries show if that goal was met that day.
+
+        The dictionaries are in chronological order and are inclusive on both ends.
+    """
     returnList = []
 
     currentDay = startDay
