@@ -1,7 +1,7 @@
-import {tokenStorage} from "@/lib/auth/TokenStorage";
-import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
-import {Redirect} from "expo-router";
-import {API_ENDPOINT} from "@/lib/api/ApiManager";
+import { API_ENDPOINT } from "@/lib/api/ApiManager";
+import { tokenStorage } from "@/lib/auth/TokenStorage";
+import { Redirect, useRouter } from "expo-router";
+import { createContext, JSX, ReactNode, useContext, useEffect, useState } from "react";
 
 type Auth = {
     accessToken: string | null;
@@ -59,6 +59,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
 
     async function signIn(email: string, password: string) {
+        console.log("signIn() start");
         let res;
         res = await fetch(`${API_ENDPOINT}/auth/token/`, {
             method: "POST",
@@ -67,6 +68,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         });
 
         if (!res.ok) {
+            console.log("signIn() failed");
             return false;
         }
 
@@ -78,14 +80,17 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
         setAccessToken(receivedAccessToken);
         setRefreshToken(receivedRefreshToken);
-
+        console.log("signIn() success");
         return true;
     }
 
     async function signOut() {
+        const router = useRouter();
+        console.log("signOut() start");
         await tokenStorage.clear();
         setAccessToken(null);
         setRefreshToken(null);
+        router.replace('/login');
     }
 
     return (
