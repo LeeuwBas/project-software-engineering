@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { dateDifference } from "./utils";
+import {dateDifference} from "./utils";
 
 const statPrefix = 'Stats-'
 const goalPrefix = 'Goals-'
@@ -8,8 +8,9 @@ interface Settings {
     chosenPet: String,
 }
 
-interface StatLine {
-    waterDrank: number,
+export interface StatLine {
+    waterDrank: number | null,
+    sleep: number | null,
 }
 
 export interface StatisticsSummary {
@@ -31,9 +32,10 @@ export interface StatisticsBarChart {
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
-        waterDrank: 0,
+        waterDrank: null,
+        sleep: null,
         ...overrides,
-    };
+    } as StatLine;
 }
 
 // ---------------------------------- Statistics Functions ----------------------------------
@@ -116,12 +118,12 @@ async function getStatRange(lowerDay: Date, upperDay: Date) {
     const upperDate = calculateDate(upperDay);
 
     const dates = (await AsyncStorage.getAllKeys()).filter(
-            (key) => key.startsWith(statPrefix) && lowerDate < key && key <= upperDate
-        ).sort();
+        (key) => key.startsWith(statPrefix) && lowerDate < key && key <= upperDate
+    ).sort();
 
 
     const raw = await AsyncStorage.multiGet(dates);
-    const lines = raw.map(([date, line]): [string, StatLine] => [date, (line ? JSON.parse(line): null)])
+    const lines = raw.map(([date, line]): [string, StatLine] => [date, (line ? JSON.parse(line) : null)])
 
     return lines.filter(([_, val]) => val != null)
 }
@@ -161,7 +163,8 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
         return null;
     }
 
-    return lines.map(([date, line]): [string, number | boolean] => [date, line[statName as keyof StatLine]])
+    return lines.map(([date, line]): [string, number | boolean | null] => [date, line[statName as keyof StatLine]])
+        .filter((item): item is [string, number | boolean] => item[1] != null)
 }
 
 /**
@@ -220,7 +223,7 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
     returnValue.isFull = true;
 
     let lowerBinDate = lowerDay;
-    let upperBinDate = lowerDay;
+    const upperBinDate = lowerDay;
     upperBinDate.setDate(upperBinDate.getDate() + returnValue.daysPerBin);
 
     for (let i = 0; i < binCount; i++) {
@@ -250,16 +253,21 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
  * @param change - Amount that the statistic needs to be changed, may be postitive or negative
  * @param day - Date of the line that needs to be changed, defaults to today.
  *
- * @returns true if the value was updated correctly, null if something went wrong.
+ * @returns true if the value was updated correctly, false if something went wrong.
  */
-export async function updateStat(statName: string, change: number, day: Date = new Date()) {
-    let line: StatLine| null = await getStat(day);
+export async function updateStat<K extends keyof StatLine>(statName: K, change: number, day: Date = new Date()) {
+    const line: StatLine | null = await getStat(day);
     if (line === null || line === undefined) {
-        return null;
+        return false;
     }
 
-    const oldVal = line[statName as keyof StatLine]
-    line[statName as keyof StatLine] = oldVal + change;
+    const oldVal = line[statName]
+
+    if (oldVal === null) {
+        return false
+    }
+
+    line[statName] = oldVal + change;
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     return true;
@@ -309,15 +317,64 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
     }
 }
 
+/**
+ * Updates a stat, default is to update today, can be changed.
+ *
+ * @param statName - Internal name of the statistic that needs to be changed
+ * @param value - The new value to change
+ * @param day - Date of the line that needs to be changed, defaults to today.
+ *
+ * @returns true if the value was updated correctly, false if something went wrong.
+ */
+export async function setStat<K extends keyof StatLine>(statName: K, value: number, day: Date = new Date()) {
+    const line: StatLine | null = await getStat(day);
+    if (line === null || line === undefined) {
+        return false;
+    }
+
+    if(line[statName] === null) {
+        return false;
+    }
+
+    line[statName] = value;
+    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    return true;
+}
+
+/**
+ * Inserts a statistic into the storage. When there are no statistics saved, a new entry is made,
+ * else it is inserted into the already existing statline.
+ *
+ * @param statName The name of the statistic to insert.
+ * @param value The value to insert
+ * @param day The date to insert at
+ *
+ * @return True if there was not data for this day and stat, false if it already existed.
+ */
+export async function insertStat<K extends keyof StatLine>(statName: K, value: number, day: Date = new Date()) {
+    let line = await getStat(day)
+    if (line === null || line === undefined) {
+        line = createStatLine({[statName]: value})
+    } else {
+        if (line[statName] !== null) {
+            return false
+        }
+        line[statName] = value
+    }
+    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    return true
+}
+
+
 // ---------------------------------- Settings Functions ----------------------------------
 
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 // Handles water in storage. May be used as template for future objects.
-export function useWater(menuOpen : boolean) {
+export function useWater(menuOpen: boolean) {
     const [water, setWater] = useState(0);
 
     // Sends water value to storage.

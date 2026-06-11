@@ -1,17 +1,29 @@
 import {create, StoreApi, UseBoundStore} from "zustand";
 
 type ValueState = {
-    value: number | undefined;
+    value: number | null;
     setValue: (value: number) => void;
 };
 
-export function createNewState() {
+export type ValueZustand = UseBoundStore<StoreApi<ValueState>>
+
+/**
+ * Creates a new ValueZustand
+ *
+ * @returns the created ValueZustand
+ */
+export function createNewState(): ValueZustand {
     return create<ValueState>((set) => ({
-        value: undefined,
+        value: null,
         setValue: (value) => set({value: value}),
     }));
 }
 
-export function useValue(state: UseBoundStore<StoreApi<ValueState>>) {
+/**
+ * Create a useState like object for the given zustand.
+ *
+ * @param state the state to create the hook for.
+ */
+export function useValue(state: ValueZustand) {
     return state(((s) => s.value))
 }
