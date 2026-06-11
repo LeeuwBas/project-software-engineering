@@ -1,8 +1,14 @@
-export interface StatisticMetadata {
-  id: string;
+export type StatName = 'water' | 'test';
+
+export interface StatInfo {
   title: string;
   unit: string;
 }
+
+export const STATS: Record<StatName, StatInfo> = {
+  water: { title: 'Water drank', unit: 'glasses' },
+  test: { title: 'test title', unit: 'test unit' },
+};
 
 export interface StatisticResponse {
   today: number;
@@ -13,10 +19,7 @@ export interface StatisticResponse {
   low: number;
 }
 
-export type HistoryPeriod =
-  | 'week'
-  | 'month'
-  | 'year';
+export type HistoryPeriod = 'week' | 'month' | 'year';
 
 export const PERIOD_CONFIG = {
   week: {

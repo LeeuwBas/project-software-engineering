@@ -1,14 +1,18 @@
+import { StatisticView } from '@/components/stats/StatisticView';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import CalendarOverview from '@/components/widgets/CalendarOverview';
+import { StatName } from '@/lib/stats/statistics-types';
 import PersonIcon from '@assets/icons/person.svg';
 import { CalendarDays, GlassWater, LucideIcon } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import { Button } from '../ui/button';
-import CalendarOverview from './CalendarOverview';
+
+type TabId = 'calender' | StatName;
 
 type Tab = {
-  id: string;
+  id: TabId;
   icon: LucideIcon | React.FC<SvgProps>;
 };
 
@@ -17,12 +21,12 @@ export default function Stats({ isOpen }: { isOpen: boolean }) {
     return null;
   }
 
-  const [activeTab, setActiveTab] = useState('calender');
+  const [activeTab, setActiveTab] = useState<TabId>('calender');
 
   const labels: Tab[] = [
     { id: 'calender', icon: CalendarDays },
     { id: 'water', icon: GlassWater },
-    { id: 'acc', icon: PersonIcon },
+    { id: 'test', icon: PersonIcon },
   ];
 
   return (
@@ -42,7 +46,7 @@ export default function Stats({ isOpen }: { isOpen: boolean }) {
         </View>
         <Card className="w-full items-center justify-center py-3 shadow-block">
           <CardContent className="w-full items-center px-2">
-            {activeTab === 'calender' ? <CalendarOverview /> : <></>}
+            {activeTab === 'calender' ? <CalendarOverview /> : <StatisticView stat={activeTab} />}
           </CardContent>
         </Card>
       </View>
