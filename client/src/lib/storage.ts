@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {dateDifference} from "./utils";
 
 const statPrefix = 'Stats-'
+const goalPrefix = 'Goals-'
 
 interface Settings {
     chosenPet: String,
@@ -45,12 +46,12 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
  *
  * Key format is: "Stats-yyyy-mm-dd"
  */
-function calculateDate(date: Date) {
+function calculateDate(date: Date, stat: boolean = true) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate() + 1).padStart(2, '0');
 
-    return `${statPrefix}${year}-${month}-${day}`
+    return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`
 }
 
 /**
@@ -61,6 +62,51 @@ async function getStat(day: Date) {
     const raw = await AsyncStorage.getItem(date)
 
     return (raw ? JSON.parse(raw) : null) as StatLine | null;
+}
+
+/**
+ * Returns the most recent set goal from the day.
+ *
+ * @param statName - name of the statistic you request the goal for. If null, returns the full StatLine object
+ * @param day - day for which you request the goal
+ * @returns Number, that contains the goal
+ */
+export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
+    const goalDates = (await AsyncStorage.getAllKeys()).filter(
+        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false));
+    goalDates.sort()
+
+    const date = goalDates[-1];
+
+    const raw = await AsyncStorage.getItem(date);
+    const data: StatLine | null = raw ? JSON.parse(raw) : null;
+
+    if (data === null) {
+        return null;
+    }
+
+    if (statName === null) {
+        return data;
+    }
+
+    return data[statName as keyof StatLine];
+}
+
+/**
+ * Sets a new goal, starting today.
+ *
+ * @param statName Name of the goal to change
+ * @param goal new value for the goal
+ */
+export async function setNewGoal(statName: string, goal: number) {
+    const today = calculateDate(new Date(), false);
+
+    var oldGoal = await getCurrentGoal(null);
+    if (oldGoal === null || typeof oldGoal === 'number') {
+        oldGoal = createStatLine();
+    }
+    oldGoal[statName as keyof StatLine] = goal;
+    AsyncStorage.setItem(today, JSON.stringify(oldGoal));
 }
 
 /**
@@ -227,6 +273,49 @@ export async function updateStat<K extends keyof StatLine>(statName: K, change: 
     return true;
 }
 
+/**
+ * Aggregates all statistical data between given dates, only returns booleans.
+ *
+ *
+ * The data is in a key value pair: [['<statname 1>': true, '<statname 2>': false...], ...].
+ *
+ * Data is ordered with the oldest pair first
+ * @param lowerDate - Start date of the aggregation
+ * @param upperDate - End date of the aggregation
+ * @returns dictionary containing a boolean if all data is present, and the data
+ */
+export async function getCalender(lowerDate: Date, upperDate: Date) {
+    let returnValue:[string, boolean][][] = [];
+    let isFull = true;
+
+    for (let currentDay = lowerDate; currentDay <= upperDate; currentDay.setDate(currentDay.getDate() + 1)) {
+        let dayStat = await getStat(currentDay);
+        const dayGoals = await getCurrentGoal(null, currentDay);
+        let today: [string, boolean][] = []
+
+        if (dayGoals === null || typeof dayGoals === "number") {
+            // only possible if no goal was ever set, which would be an incorrect state
+            return null
+        }
+
+        if (dayStat === null) {
+            isFull = false;
+            dayStat = createStatLine();
+        }
+
+        for (let key in Object.keys(dayStat)) {
+            const complete = dayStat[key as keyof StatLine] <= dayGoals[key as keyof StatLine];
+            today.push([key, complete]);
+        }
+
+        returnValue.push(today)
+    }
+
+    return {
+        isFull: isFull,
+        vals: returnValue
+    }
+}
 
 /**
  * Updates a stat, default is to update today, can be changed.
