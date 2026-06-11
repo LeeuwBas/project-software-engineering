@@ -39,11 +39,13 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient
         colors={['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd']}
         locations={[0, 0.5, 0.5, 1]}
-        className="flex flex-1 flex-col">
+        className="flex flex-col"
+        style={{ flex: 1 }}
+        >
         <Pressable className="absolute inset-0 z-10 size-full" onPress={closePopup} />
 
         <View className="flex-1 p-4">

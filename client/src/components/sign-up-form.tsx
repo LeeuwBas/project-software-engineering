@@ -1,15 +1,20 @@
-import { SocialConnections } from '@/components/social-connections';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
-
 
 export function SignUpForm() {
   const router = useRouter();
@@ -60,30 +65,18 @@ export function SignUpForm() {
   }
 
   return (
-    <View className="gap-6">
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
         <CardHeader>
           <CardTitle className="text-center text-xl sm:text-left">Create your account</CardTitle>
-          <CardDescription className="text-center sm:text-left">
-            Welcome! Please fill in your details to get started.
-          </CardDescription>
         </CardHeader>
         <CardContent className="gap-6">
           <View className="gap-6">
-            {
-              // This is generally confusing syntax! What it basically means is:
-              // 'if errors.general: render the text'
-              // And this is the basic syntax:
-              // '<condition> && <expression>'
-              // This is a TypeScript shorthand that is very often used in React.
-              errors.general && (
-                <Text className="text-sm text-destructive">{errors.general[0]}</Text>
-
-                // There is also another short-hand that's often used, which is the
-                // ternary operator. This is formatted as follows:
-                // '<condition> ? <expression> : <else-expression>'
-              )
-            }
+            {errors.general && (
+              <Text className="text-sm text-destructive">{errors.general[0]}</Text>
+            )}
             <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -95,13 +88,6 @@ export function SignUpForm() {
                 onSubmitEditing={onEmailSubmitEditing}
                 returnKeyType="next"
                 submitBehavior="submit"
-                // These 'onChangeText' handlers make these input fields 'controlled'
-                // inputs, meaning the value is controlled by React state rather than
-                // the native input value.
-                // If we don't add this, react doesn't really 'know' the current input
-                // value. This is standard practice in React forms. If we didn't do this,
-                // we would have to add something like a function when the user hits 'submit' that
-                // manually updates the state with the input value, which is not ideal.
                 onChangeText={setEmail}
               />
               {errors.email && <Text className="text-sm text-destructive">{errors.email[0]}</Text>}
@@ -143,23 +129,17 @@ export function SignUpForm() {
               <Text>Continue</Text>
             </Button>
           </View>
-          <Text className="text-center text-sm">
-            Already have an account?{' '}
+          <View className="flex flex-row items-center">
+            <Text className="text-center text-sm">Already have an account? </Text>
             <Pressable
               onPress={() => {
                 router.replace('/login');
               }}>
-              <Text className="text-sm underline underline-offset-4">Sign in</Text>
+              <Text className="text-sm underline">Sign in</Text>
             </Pressable>
-          </Text>
-          <View className="flex-row items-center">
-            <Separator className="flex-1" />
-            <Text className="px-4 text-sm text-muted-foreground">or</Text>
-            <Separator className="flex-1" />
           </View>
-          <SocialConnections />
         </CardContent>
       </Card>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
