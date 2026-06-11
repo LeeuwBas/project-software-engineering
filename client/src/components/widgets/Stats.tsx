@@ -2,6 +2,7 @@ import { StatisticView } from '@/components/stats/StatisticView';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import CalendarOverview from '@/components/widgets/CalendarOverview';
+import { useAppContext } from '@/lib/AppContext';
 import { StatName } from '@/lib/stats/statistics-types';
 import PersonIcon from '@assets/icons/person.svg';
 import { CalendarDays, GlassWater, LucideIcon } from 'lucide-react-native';
@@ -16,12 +17,13 @@ type Tab = {
   icon: LucideIcon | React.FC<SvgProps>;
 };
 
-export default function Stats({ isOpen }: { isOpen: boolean }) {
-  if (!isOpen) {
+export default function Stats({}: {}) {
+  const { statsOpen } = useAppContext();
+  const [activeTab, setActiveTab] = useState<TabId>('calender');
+
+  if (!statsOpen) {
     return null;
   }
-
-  const [activeTab, setActiveTab] = useState<TabId>('calender');
 
   const labels: Tab[] = [
     { id: 'calender', icon: CalendarDays },
@@ -31,7 +33,7 @@ export default function Stats({ isOpen }: { isOpen: boolean }) {
 
   return (
     <View
-      className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+      className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
       <View className="bottom-full w-[90%] items-center">
         <View className="absolute -top-10 w-full flex-row gap-1">
           {labels.map(({ id, icon: Icon }) => (

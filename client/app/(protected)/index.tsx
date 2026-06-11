@@ -1,6 +1,8 @@
 import Main from '@/components/widgets/mainview';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
+import { initializeApiManager } from '@/lib/api/APIBridge';
+import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,8 +11,10 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
-  const { popup, water, saveWater } = useAppContext();
+  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
+    useAppContext();
   const appState = useRef(AppState.currentState);
+  const water = useWater() ?? 0;
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -20,14 +24,18 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
+  useEffect(() => {
+    initializeApiManager().then();
+  }, []);
+
   const triggerBackup = async () => {
     //Backup logic
   };
 
   function closePopup() {
-    if (popup.menuOpen) popup.changeMenu();
-    if (popup.settingsOpen) popup.changeSettings();
-    if (popup.statsOpen) popup.changeStats();
+    if (menuOpen) changeMenu();
+    if (settingsOpen) changeSettings();
+    if (statsOpen) changeStats();
   }
 
   return (
@@ -50,12 +58,12 @@ export default function App() {
         </View>
 
         <BlurView
-          className={`absolute h-full w-full transition-opacity duration-300 ${popup.popupOpen ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
           intensity={40}
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
-        <Toolbar popup={popup} water={water} saveWater={saveWater} />
+        <Toolbar />
       </LinearGradient>
     </SafeAreaView>
   );

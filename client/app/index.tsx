@@ -1,4 +1,4 @@
-import { requireAuth } from '@/auth/AuthManager';
+import { requireAuth } from '@/lib/auth/AuthManager';
 import { Redirect } from 'expo-router';
 
 export default function Index() {

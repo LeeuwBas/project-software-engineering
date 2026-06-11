@@ -1,27 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAppContext } from '@/lib/AppContext';
 import { View } from 'react-native';
 import StepsWidget from './StepsWidget';
 import WaterWidget from './WaterWidget';
 
-export default function Menu({
-  isOpen,
-  water,
-  setWater,
-}: {
-  isOpen: boolean;
-  water: number;
-  setWater: (value: number) => void;
-}) {
+export default function Menu({ water, setWater }: { water: number; setWater: Function }) {
   // TODO: Add backend for retrieving name
   const name = 'Alex';
-
-  if (!isOpen) {
+  const { menuOpen } = useAppContext();
+  if (!menuOpen) {
     return null;
   }
 
   return (
     <View
-      className={`absolute -top-6 w-full transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
+      className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
           <CardHeader className="items-center">
