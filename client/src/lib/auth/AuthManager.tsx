@@ -106,6 +106,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
 
 export function isAuth() {
     const auth = useAuth();
+
     if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return true;
     if (auth?.accessToken) return true;
     return false;
@@ -113,24 +114,20 @@ export function isAuth() {
 
 export function redirectIfAuth(element: JSX.Element) {
     const auth = useAuth();
+
     if (auth?.isLoading) return null;
-
-    if (isAuth()) {
-        return <Redirect href="/"/>;
-    }
-
-    return element;
+    return isAuth() ? <Redirect href="/"/> : element;
 }
 
 export function redirectUnlessAuth(element: JSX.Element) {
     const auth = useAuth();
+
     if (auth?.isLoading) return null;
+    return isAuth() ? element : <Redirect href="/login"/>;
+}
 
-    if (!isAuth()) {
-        return <Redirect href="/login"/>;
-    }
-
-    return element;
+export function authDependent(authElement: any, noAuthElement: any) {
+    return isAuth() ? authElement : noAuthElement;
 }
 
 export function useAuth() {

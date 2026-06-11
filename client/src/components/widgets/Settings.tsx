@@ -1,8 +1,7 @@
-import { useAuth } from '@/lib/auth/AuthManager';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {useEffect, useState} from 'react';
+import { authDependent, useAuth } from '@/lib/auth/AuthManager';
 import { View } from 'react-native';
 
 export default function Settings(
@@ -27,14 +26,12 @@ export default function Settings(
     { label: 'Change Pet', effect: null },
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
-    { label: 'Sign out', effect: () => auth?.signOut()}
-  ];
+    authDependent(
+      { label: 'Sign out', effect: () => auth?.signOut()},
+      { label: 'Sign in', effect: () => auth?.signIn()}
+    )
 
-  function executeEffect(item: SettingItem) {
-    if (item && item.effect) {
-      item.effect()
-    }
-  }
+  ];
 
   return (
     <View className={`-top-6 transition-opacity duration-200 ${ isOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
@@ -46,7 +43,7 @@ export default function Settings(
                 className='my-2 h-12 flex'
                 key={item.label}
                 variant="secondary"
-                onPress={() => executeEffect(item)}>
+                onPress={() => {item.effect?.();}}>
                 <AppText className='text-white font-bold'>{item.label}</AppText>
               </Button>
             ))}
