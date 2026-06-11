@@ -79,6 +79,9 @@ async function getStatRange(lowerDay: Date, upperDay: Date) {
     return lines.filter(([_, val]) => val != null)
 }
 
+/*
+ * Returns the data of a single statistic at the given day.
+ */
 export async function getNamedStat(statName: string, day: Date) {
     const line = await getStat(day);
 
@@ -89,6 +92,9 @@ export async function getNamedStat(statName: string, day: Date) {
     return line[statName as keyof StatLine];
 }
 
+/*
+ * Get all statistic lines of a given stat in a given date range.
+ */
 export async function getNamedStatRange(statName: string, lowerDay: Date, upperDay: Date) {
     const lines = await getStatRange(lowerDay, upperDay);
 
