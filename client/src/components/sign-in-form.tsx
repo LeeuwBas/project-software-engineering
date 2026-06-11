@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth/AuthManager';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function SignInForm() {
