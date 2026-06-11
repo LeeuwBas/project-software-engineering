@@ -7,7 +7,7 @@ export interface PopupConfigs {
 }
 
 export interface PetType {
-    id: number,
-    setId: Function,
-    saveId: Function
+  pet: number;
+  setPet: Function;
+  savePet: Function;
 }

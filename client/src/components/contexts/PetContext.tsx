@@ -1,23 +1,19 @@
-import * as storage from '@/lib/storage'
-import { PetType } from '@/lib/types'
-import { createContext, ReactNode, useContext } from "react"
+import * as storage from '@/lib/storage';
+import { PetType } from '@/lib/types';
+import { createContext, ReactNode, useContext } from 'react';
 
-const petContext  = createContext<PetType | undefined>(undefined)
+const petContext = createContext<PetType | undefined>(undefined);
 
-export function PetProvider({children}: {children: ReactNode}) {
-    return (
-        <petContext.Provider value={storage.petContextInit()}>
-            {children}
-        </petContext.Provider>
-    )
+export function PetProvider({ children }: { children: ReactNode }) {
+  return <petContext.Provider value={storage.petContextInit()}>{children}</petContext.Provider>;
 }
 
-export function usePetId() {
-    const context = useContext(petContext)
+export function usePet() {
+  const context = useContext(petContext);
 
-    if (!context) {
-        throw new Error('usePet must be inside PetProvider')
-    }
+  if (!context) {
+    throw new Error('usePet must be inside PetProvider');
+  }
 
-    return context
+  return context;
 }
