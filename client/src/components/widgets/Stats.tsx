@@ -27,22 +27,22 @@ export default function Stats({ isOpen }: { isOpen: boolean }) {
 
   return (
     <View
-      className={`absolute -top-20 w-full items-center transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
-      <View className="absolute bottom-full w-[90%] items-center">
-        <View className="w-full flex-row justify-items-start">
+      className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+      <View className="bottom-full w-[90%] items-center">
+        <View className="absolute -top-10 w-full flex-row gap-1">
           {labels.map(({ id, icon: Icon }) => (
             <Button
               key={id}
               variant={id === activeTab ? 'default' : 'outline'}
-              className=""
+              className={id === activeTab ? '' : 'border-0 px-5 opacity-60'}
               onPress={() => setActiveTab(id)}>
               <Icon width={30} height={30} />
             </Button>
           ))}
         </View>
-        <Card className="w-full items-center justify-center pt-3 shadow-block">
+        <Card className="w-full items-center justify-center py-3 shadow-block">
           <CardContent className="w-full items-center px-2">
-            <CalendarOverview></CalendarOverview>
+            {activeTab === 'calender' ? <CalendarOverview /> : <></>}
           </CardContent>
         </Card>
       </View>
