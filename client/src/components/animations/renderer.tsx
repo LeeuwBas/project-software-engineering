@@ -2,7 +2,7 @@ import React from 'react';
 import { Canvas, useImage, rect, Skia, Atlas, FilterMode, MipmapMode } from '@shopify/react-native-skia';
 import { useSharedValue, useFrameCallback, useDerivedValue } from 'react-native-reanimated';
 
-import { ANIMATIONS, AnimationName } from '@/lib/animations';
+import { ANIMATIONS, AnimationName } from '@/lib/animations/library';
 
 interface AnimationProps {
   animation: AnimationName;
