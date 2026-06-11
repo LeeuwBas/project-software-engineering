@@ -207,23 +207,73 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
  * @param change - Amount that the statistic needs to be changed, may be postitive or negative
  * @param day - Date of the line that needs to be changed, defaults to today.
  *
- * @returns true if the value was updated correctly, null if something went wrong.
+ * @returns true if the value was updated correctly, false if something went wrong.
  */
-export async function updateStat(statName: string, change: number, day: Date = new Date()) {
+export async function updateStat<K extends keyof StatLine>(statName: K, change: number, day: Date = new Date()) {
     const line: StatLine | null = await getStat(day);
     if (line === null || line === undefined) {
-        return null;
+        return false;
     }
 
-    const oldVal = line[statName as keyof StatLine]
+    const oldVal = line[statName]
 
     if (oldVal === null) {
-        return
+        return false
     }
-    line[statName as keyof StatLine] = oldVal + change;
+
+    line[statName] = oldVal + change;
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     return true;
+}
+
+
+/**
+ * Updates a stat, default is to update today, can be changed.
+ *
+ * @param statName - Internal name of the statistic that needs to be changed
+ * @param value - The new value to change
+ * @param day - Date of the line that needs to be changed, defaults to today.
+ *
+ * @returns true if the value was updated correctly, false if something went wrong.
+ */
+export async function setStat<K extends keyof StatLine>(statName: K, value: number, day: Date = new Date()) {
+    const line: StatLine | null = await getStat(day);
+    if (line === null || line === undefined) {
+        return false;
+    }
+
+    if(line[statName] === null) {
+        return false;
+    }
+
+    line[statName] = value;
+    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    return true;
+}
+
+/**
+ * Inserts a statistic into the storage. When there are no statistics saved, a new entry is made,
+ * else it is inserted into the already existing statline.
+ *
+ * @param statName The name of the statistic to insert.
+ * @param value The value to insert
+ * @param day The date to insert at
+ *
+ * @return True if there was not data for this day and stat, false if it already existed.
+ */
+export async function insertStat<K extends keyof StatLine>(statName: K, value: number, day: Date = new Date()) {
+    let line = await getStat(day)
+    if (line === null || line === undefined) {
+        line = createStatLine({[statName]: value})
+    } else {
+        if (line[statName] !== null) {
+            return false
+        }
+        line[statName] = value
+    }
+    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    return true
 }
 
 

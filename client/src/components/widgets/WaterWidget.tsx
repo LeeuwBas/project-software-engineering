@@ -10,7 +10,7 @@ export default function WaterWidget(){
     const water = useWater()
 
     async function alterWaterValue(value: number) {
-        if (water === undefined) {
+        if (water === null) {
             return
         }
         await waterBridge.setWater(water + value)
