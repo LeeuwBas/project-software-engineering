@@ -12,7 +12,7 @@ export default function AnimationView() {
                 alignItems: 'center',
             }}
             >
-                <Animation animation='blob_breath_happy' scale={12}/>
+                <Animation animation='onigiri_drinking' scale={12}/>
             </View>
         </SafeAreaView>
     );

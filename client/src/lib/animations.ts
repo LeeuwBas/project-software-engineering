@@ -124,6 +124,20 @@ export const ANIMATIONS = {
     fps: 8,
     source: require('../../assets/onigiri/onigiri_breath_neutral.png'),
   },
+  onigiri_sleeping: {
+    width: 64,
+    height: 64,
+    frameCount: 40,
+    fps: 8,
+    source: require('../../assets/onigiri/onigiri_sleeping.png'),
+  },
+  onigiri_drinking: {
+    width: 64,
+    height: 64,
+    frameCount: 57,
+    fps: 8,
+    source: require('../../assets/onigiri/onigiri_drinking.png'),
+  },
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;
