@@ -23,7 +23,7 @@ export default function Main({
       </View>
 
       <View className="flex-1 justify-center">
-        <Pet id={pet} />
+        <Pet className="mx-auto w-3/5" id={pet} />
       </View>
 
       <View className="w-5">
