@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AnimationView() {
     return (
-        <SafeAreaView>
+        <SafeAreaView className='flex-1'>
             <View
             style={{
                 flex: 1,
@@ -12,16 +12,7 @@ export default function AnimationView() {
                 alignItems: 'center',
             }}
             >
-                <Animation animation='test' />
-            </View>
-            <View
-            style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}
-            >
-                <Animation animation='test_small' scale={16}/>
+                <Animation animation='test_small' scale={12}/>
             </View>
         </SafeAreaView>
     );
