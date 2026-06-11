@@ -25,6 +25,7 @@ from api.statistics.views import (
     StatsWaterUpdate,
     StatsWaterBarChart,
     StatisticsView,
+    GoalManageView,
 )
 from api.quotes.views import RequestQuote
 
@@ -47,6 +48,7 @@ urlpatterns = [
     path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water"),
     path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
     path("api/stats/view", StatisticsView.as_view(), name="statview"),
+    path('api/goals/<str:goal_date>', GoalManageView.as_view(), name="goal_endpoint"),
     path('', include(router.urls)),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
