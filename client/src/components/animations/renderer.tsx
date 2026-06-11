@@ -4,13 +4,23 @@ import { useSharedValue, useFrameCallback, useDerivedValue } from 'react-native-
 
 import { ANIMATIONS, AnimationName } from '@/lib/animations';
 
-interface SpriteAnimationProps {
+interface AnimationProps {
   animation: AnimationName;
   scale?: number;
 }
 
-export function Animation({ animation, scale = 1 }: SpriteAnimationProps) {
-  const config = ANIMATIONS[animation];
+/**
+ * Builds an element that renders an animation from the assets based on an input key defined
+ * in '@/lib/animations.ts' using the react native Skia library.
+ * 
+ * @param {AnimationName} animation key of animation in library
+ * @param {number} scale scales the animation by this amount, defaults to 1
+ * @returns A TSX element that renders the specified animation at the specified scale
+ */
+export function Animation({ animation, scale = 1 }: AnimationProps) {
+  const config = ANIMATIONS[animation]
+    ? ANIMATIONS[animation]
+    : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
   const frame = useSharedValue(0);
 
@@ -27,7 +37,6 @@ export function Animation({ animation, scale = 1 }: SpriteAnimationProps) {
 
   // 3. Derive transforms scaled and positioned correctly
   const transforms = useDerivedValue(() => {
-    // RSXform(scos, ssin, tx, ty) -> scale=scale, rotation=0, x=0, y=0
     return [Skia.RSXform(scale, 0, 0, 0)];
   });
 

@@ -12,7 +12,7 @@ export default function AnimationView() {
                 alignItems: 'center',
             }}
             >
-                <Animation animation='test_small' scale={12}/>
+                <Animation animation='frog_drinking' scale={12}/>
             </View>
         </SafeAreaView>
     );
