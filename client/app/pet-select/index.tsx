@@ -3,8 +3,9 @@ import { usePet } from '@/components/contexts/PetContext';
 import { Button } from '@/components/ui/button';
 import Pet from '@/components/widgets/Pet';
 import { useAuth } from '@/lib/auth/AuthManager';
+import ChevronLeft from '@assets/icons/chevron_left.svg';
+import ChevronRight from '@assets/icons/chevron_right.svg';
 import { useRouter } from 'expo-router';
-import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -33,9 +34,9 @@ export default function PetSelection() {
               {draftPet !== 0 && (
                 <Button
                   variant="outline"
-                  className="mx-2 flex h-auto items-center"
+                  className="mx-2 flex h-auto items-center py-0"
                   onPress={() => setPetId(draftPet - 1)}>
-                  <ChevronLeft size={80} />
+                  <ChevronLeft width={80} height={80} />
                 </Button>
               )}
             </View>
@@ -46,9 +47,9 @@ export default function PetSelection() {
               {draftPet !== NUM_PETS - 1 && (
                 <Button
                   variant="outline"
-                  className="mx-2 flex h-auto items-center"
+                  className="mx-2 flex h-auto items-center py-0"
                   onPress={() => setPetId(draftPet + 1)}>
-                  <ChevronRight size={80} />
+                  <ChevronRight width={80} height={80} />
                 </Button>
               )}
             </View>
