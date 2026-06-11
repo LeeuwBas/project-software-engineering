@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { dateDifference } from "./utils";
 
 const statPrefix = 'Stats-'
+const goalPrefix = 'Goals-'
 
 interface Settings {
     chosenPet: String,
@@ -43,12 +44,12 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
  *
  * Key format is: "Stats-yyyy-mm-dd"
  */
-function calculateDate(date: Date) {
+function calculateDate(date: Date, stat: boolean = true) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate() + 1).padStart(2, '0');
 
-    return `${statPrefix}${year}-${month}-${day}`
+    return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`
 }
 
 /**
@@ -59,6 +60,50 @@ async function getStat(day: Date) {
     const raw = await AsyncStorage.getItem(date)
 
     return (raw ? JSON.parse(raw) : null) as StatLine | null;
+}
+
+/**
+ * Returns the most recent set goal from the day.
+ *
+ * @param statName - name of the statistic you request the goal for. If null, returns the full StatLine object
+ * @param day - day for which you request the goal
+ * @returns Number, that contains the goal
+ */
+async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
+    const goalDates = (await AsyncStorage.getAllKeys()).filter(
+        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false));
+    goalDates.sort()
+
+    const date = goalDates[-1];
+
+    const raw = await AsyncStorage.getItem(date);
+    const data: StatLine | null = raw ? JSON.parse(raw) : null;
+
+    if (data === null) {
+        return null;
+    }
+
+    if (statName === null) {
+        return data;
+    }
+
+    return data[statName as keyof StatLine];
+}
+
+/**
+ * 
+ * @param statName Name of the goal to change
+ * @param goal new value for the goal
+ */
+export async function setNewGoal(statName: string, goal: number) {
+    const today = calculateDate(new Date(), false);
+
+    var oldGoal = await getCurrentGoal(null);
+    if (oldGoal === null || typeof oldGoal === 'number') {
+        oldGoal = createStatLine();
+    }
+    oldGoal[statName as keyof StatLine] = goal;
+    AsyncStorage.setItem(today, JSON.stringify(oldGoal));
 }
 
 /**
