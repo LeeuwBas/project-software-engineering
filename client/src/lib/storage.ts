@@ -283,7 +283,6 @@ export async function insertStat<K extends keyof StatLine>(statName: K, value: n
 // ------------------------------- Deprecated Water Funtions ------------------------------
 
 import {useEffect, useState} from 'react';
-import {waterBridge} from "@/lib/api/APIBridge";
 
 // Handles water in storage. May be used as template for future objects.
 export function useWater(menuOpen: boolean) {
