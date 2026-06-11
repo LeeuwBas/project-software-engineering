@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
+import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
@@ -20,7 +21,7 @@ export function SignUpForm() {
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
-  const passwordInputRef = React.useRef<TextInput>(null);
+  const passwordInputRef = React.useRef<Input>(null);
 
   const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
 
@@ -58,10 +59,14 @@ export function SignUpForm() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <ImageBackground
+      source={require('@assets/background_login.png')}
+      contentFit="cover"
+      style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Card className="mx-4 border-border shadow-none">
           <CardHeader>
-            <CardTitle className="text-center text-xl sm:text-left">Create your account</CardTitle>
+            <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
           </CardHeader>
           <CardContent className="gap-6">
             <View className="gap-6">
@@ -107,6 +112,7 @@ export function SignUpForm() {
                 <Input
                   ref={passwordInputRef}
                   id="password"
+                  placeholder="••••••••"
                   secureTextEntry
                   returnKeyType="send"
                   onSubmitEditing={onSubmit}
@@ -122,17 +128,9 @@ export function SignUpForm() {
                 <Text>Continue</Text>
               </Button>
             </View>
-            <View className="flex flex-row items-center">
-              <Text className="text-center text-sm">Already have an account? </Text>
-              <Pressable
-                onPress={() => {
-                  router.replace('/login');
-                }}>
-                <Text className="text-sm underline">Sign in</Text>
-              </Pressable>
-            </View>
           </CardContent>
         </Card>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
