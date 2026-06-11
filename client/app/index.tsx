@@ -1,8 +1,8 @@
-import { requireAuth } from '@/lib/auth/AuthManager';
+import { redirectUnlessAuth } from '@/lib/auth/AuthManager';
 import { Redirect } from 'expo-router';
 
 export default function Index() {
-  return requireAuth(
+  return redirectUnlessAuth(
     <Redirect href="/(protected)"/>
   )
 }

@@ -1,9 +1,9 @@
-import {requireAuth} from "@/lib/auth/AuthManager";
 import { AppProvider } from '@/lib/AppContext';
+import { redirectUnlessAuth } from "@/lib/auth/AuthManager";
 import { Slot } from 'expo-router';
 
 export default function AppLayout() {
-  return requireAuth(
+  return redirectUnlessAuth(
     <AppProvider>
       <Slot />
     </AppProvider>

@@ -1,7 +1,7 @@
-import {tokenStorage} from "@/lib/auth/TokenStorage";
-import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
-import {Redirect, useRouter} from "expo-router";
-import {API_ENDPOINT} from "@/lib/api/ApiEndpoint";
+import { API_ENDPOINT } from "@/lib/api/ApiEndpoint";
+import { tokenStorage } from "@/lib/auth/TokenStorage";
+import { Redirect } from "expo-router";
+import { createContext, JSX, ReactNode, useContext, useEffect, useState } from "react";
 
 type Auth = {
     accessToken: string | null;
@@ -104,23 +104,29 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     );
 };
 
-export function requireNoAuth(element: JSX.Element) {
+export function isAuth() {
+    const auth = useAuth();
+    if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return true;
+    if (auth?.accessToken) return true;
+    return false;
+}
+
+export function redirectIfAuth(element: JSX.Element) {
     const auth = useAuth();
     if (auth?.isLoading) return null;
 
-    if (auth?.accessToken) {
+    if (isAuth()) {
         return <Redirect href="/"/>;
     }
 
     return element;
 }
 
-export function requireAuth(element: JSX.Element) {
+export function redirectUnlessAuth(element: JSX.Element) {
     const auth = useAuth();
-    if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return element;
     if (auth?.isLoading) return null;
 
-    if (!auth?.accessToken) {
+    if (!isAuth()) {
         return <Redirect href="/login"/>;
     }
 

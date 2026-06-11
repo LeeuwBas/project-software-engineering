@@ -1,6 +1,6 @@
 import { SignUpForm } from '@/components/sign-up-form';
-import {requireNoAuth} from "@/lib/auth/AuthManager";
+import { redirectIfAuth } from "@/lib/auth/AuthManager";
 
 export default function SignUpScreen() {
-  return requireNoAuth(<SignUpForm />);
+  return redirectIfAuth(<SignUpForm />);
 }
