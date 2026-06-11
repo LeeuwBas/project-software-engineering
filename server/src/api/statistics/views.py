@@ -10,13 +10,13 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter,\
                                   OpenApiResponse
 from drf_spectacular.types import OpenApiTypes
 
-from datetime import date
+from datetime import datetime
 
 from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
 from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getToday, getGoal, setGoal
+from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -177,6 +177,7 @@ class StatsWaterBarChart(APIView):
             'bins': bin_dict
         })
 
+
 class StatisticsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -255,7 +256,7 @@ class StatisticsView(APIView):
 
         print(statistic)
 
-        today = getToday(request.user, statistic)
+        today = getDay(request.user, statistic)
         summary = getSummary(days, request.user, statistic)
         bar_chart = getBarChart(days, bin_count, request.user, statistic)
 
@@ -267,6 +268,7 @@ class StatisticsView(APIView):
         response.update(summary)
 
         return Response(response)
+
 
 class GoalManageView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -312,7 +314,7 @@ class GoalManageView(APIView):
     )
     def get(self, request, goal_date):
         goal_name = request.query_params.get('goal_name', None)
-        day = date.fromisoformat(goal_date)
+        day = datetime.fromisoformat(goal_date)
 
         goals = getGoal(request.user, goal_name, day)
 
@@ -360,10 +362,58 @@ class GoalManageView(APIView):
     )
     def post(self, request, goal_date):
         goal_data = request.data.get('goals')
-        day = date.fromisoformat(goal_date)
+        day = datetime.fromisoformat(goal_date)
 
         if len(goal_data) == 0:
             return Response("Invalid input", 400)
 
         setGoal(request.user, goal_data, day)
         return Response("ok", 200)
+
+
+class CalendarView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+            summary="Retrieves the calendar view of a given date range.",
+            description="""Retrieves boolean data if all goals are completed
+            for a given date range. Inclusive on both sides of the date range
+            (a <= b <= c).
+
+            Element 0 of the return array is the oldest date.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="start_date",
+                    description="start date of the calendar view",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="end_date",
+                    description="end date of the calender view",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'goals': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                'water': 5
+                            }
+                        }
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def get(self, request, start_date, end_date):
+        pass
