@@ -1,4 +1,4 @@
-import {create} from "zustand";
+import {create, StoreApi, UseBoundStore} from "zustand";
 
 type ValueState = {
     value: number | undefined;
@@ -10,4 +10,8 @@ export function createNewState() {
         value: undefined,
         setValue: (value) => set({value: value}),
     }));
+}
+
+export function useValue(state: UseBoundStore<StoreApi<ValueState>>) {
+    return state(((s) => s.value))
 }

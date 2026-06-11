@@ -1,5 +1,5 @@
 import {LoadableBridge} from "@/lib/api/APIBridge";
-import {createNewState} from "@/lib/api/ValueState";
+import {createNewState, useValue} from "@/lib/api/ValueState";
 
 // Use the water bridge when the values need to be manipulated.
 export interface WaterBridge {
@@ -20,7 +20,7 @@ const waterState = createNewState();
  * This will update the water value whenever it is changed internally.
  */
 export function useWater() {
-    return waterState(((s) => s.value));
+    return useValue(waterState)
 }
 
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
