@@ -46,7 +46,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
 
   const values = response ? Object.values(response.bins) : [0]; // Placeholder for when fetching data fails
 
-  const labels = getChartLabels(period, values.length);
+  const labels = getChartLabels(period);
 
   return (
     <View className="w-full px-2">

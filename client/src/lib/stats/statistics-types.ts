@@ -27,7 +27,7 @@ export interface StatisticResponse {
 
 export type HistoryPeriod = 'week' | 'month' | 'year';
 
-export const PERIOD_CONFIG = {
+export const PERIOD_CONFIG: Record<HistoryPeriod, any> = {
   week: {
     days: 7,
     bins: 7,
@@ -40,4 +40,4 @@ export const PERIOD_CONFIG = {
     days: 360,
     bins: 12,
   },
-} as const;
+};
