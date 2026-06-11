@@ -139,10 +139,7 @@ export async function getStatSummary(statName: string, days: number) {
 
     const returnValue: Partial<StatisticsSummary> = {statisticName: statName};
 
-    // if (values instanceof [string, number][])
-
     returnValue.total = values.reduce((Acc, [d, x], _) => Acc + +x, 0);
-    // returnValue.total = values.reduce((Acc, [d, x], _) => Acc + ((x instanceof boolean) ? +x : x), 0);
     returnValue.count = values.length;
     returnValue.average = returnValue.total / returnValue.count;
     returnValue.maximum = values.reduce((Acc, [d, x], _) => Acc > +x ? Acc : +x, 0);
