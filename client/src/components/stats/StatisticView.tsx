@@ -49,7 +49,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
   const labels = getChartLabels(period, values.length);
 
   return (
-    <View>
+    <View className="w-full px-2">
       <View>
         <AppText className="text-xl font-bold">{statData.title}</AppText>
         <AppText>Today: {loading ? 'Loading...' : `${response?.today} ${statData.unit}`}</AppText>
@@ -77,7 +77,9 @@ export function StatisticView({ stat }: { stat: StatName }) {
         </Button>
       </View>
 
-      <StatisticChart values={values} labels={labels} />
+      {!loading && (
+        <StatisticChart values={values} labels={labels} barconfig={statData.barconfig} />
+      )}
 
       <View className="mt-4 gap-2">
         <AppText>Highest: {loading ? 'Loading...' : `${response?.high} ${statData.unit}`}</AppText>

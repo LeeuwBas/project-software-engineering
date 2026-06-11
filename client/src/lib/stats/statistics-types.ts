@@ -1,13 +1,19 @@
 export type StatName = 'water' | 'test';
 
+export interface barConfig {
+  color: string;
+  maxValue: number;
+}
+
 export interface StatInfo {
   title: string;
   unit: string;
+  barconfig: barConfig;
 }
 
 export const STATS: Record<StatName, StatInfo> = {
-  water: { title: 'Water drank', unit: 'glasses' },
-  test: { title: 'test title', unit: 'test unit' },
+  water: { title: 'Water drank', unit: 'glasses', barconfig: { color: '#74ccf4', maxValue: 20 } },
+  test: { title: 'test title', unit: 'test unit', barconfig: { color: 'lightgrey', maxValue: 20 } },
 };
 
 export interface StatisticResponse {
