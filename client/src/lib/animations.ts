@@ -100,7 +100,30 @@ export const ANIMATIONS = {
     frameCount: 61,
     fps: 8,
     source: require('../../assets/frog/frog_drinking.png'),
-  }
+  },
+
+  // onigiri pet assets
+  onigiri_blink: {
+    width: 64,
+    height: 64,
+    frameCount: 4,
+    fps: 8,
+    source: require('../../assets/onigiri/onigiri_blink.png'),
+  },
+  onigiri_breath_happy: {
+    width: 64,
+    height: 64,
+    frameCount: 40,
+    fps: 8,
+    source: require('../../assets/onigiri/onigiri_breath_happy.png'),
+  },
+  onigiri_breath_neutral: {
+    width: 64,
+    height: 64,
+    frameCount: 40,
+    fps: 8,
+    source: require('../../assets/onigiri/onigiri_breath_neutral.png'),
+  },
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;
