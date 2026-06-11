@@ -158,7 +158,7 @@ export async function getStatSummary(statName: string, days: number) {
  * @param lowerDay - Date object of the first day.
  * @param upperDay - Date object of the last day.
  *
- * 
+ * @return StatisticsBarChart interface object with the requested data.
  */
 export async function getStatBarChart(statName: string, lowerDay: Date, upperDay: Date, binCount: number) {
 
