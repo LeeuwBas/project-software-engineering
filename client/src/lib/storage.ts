@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { dateDifference } from "./utils";
+import {dateDifference} from "./utils";
 
 const statPrefix = 'Stats-'
 
@@ -7,8 +7,9 @@ interface Settings {
     chosenPet: String,
 }
 
-interface StatLine {
-    waterDrank: number,
+export interface StatLine {
+    waterDrank: number | null,
+    sleep: number | null,
 }
 
 export interface StatisticsSummary {
@@ -30,9 +31,10 @@ export interface StatisticsBarChart {
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
-        waterDrank: 0,
+        waterDrank: null,
+        sleep: null,
         ...overrides,
-    };
+    } as StatLine;
 }
 
 // ---------------------------------- Statistics Functions ----------------------------------
@@ -70,12 +72,12 @@ async function getStatRange(lowerDay: Date, upperDay: Date) {
     const upperDate = calculateDate(upperDay);
 
     const dates = (await AsyncStorage.getAllKeys()).filter(
-            (key) => key.startsWith(statPrefix) && lowerDate < key && key <= upperDate
-        ).sort();
+        (key) => key.startsWith(statPrefix) && lowerDate < key && key <= upperDate
+    ).sort();
 
 
     const raw = await AsyncStorage.multiGet(dates);
-    const lines = raw.map(([date, line]): [string, StatLine] => [date, (line ? JSON.parse(line): null)])
+    const lines = raw.map(([date, line]): [string, StatLine] => [date, (line ? JSON.parse(line) : null)])
 
     return lines.filter(([_, val]) => val != null)
 }
@@ -115,7 +117,8 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
         return null;
     }
 
-    return lines.map(([date, line]): [string, number | boolean] => [date, line[statName as keyof StatLine]])
+    return lines.map(([date, line]): [string, number | boolean | null] => [date, line[statName as keyof StatLine]])
+        .filter((item): item is [string, number | boolean] => item[1] != null)
 }
 
 /**
@@ -173,8 +176,8 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
     returnValue.daysPerBin = days / binCount;
     returnValue.isFull = true;
 
-    var lowerBinDate = lowerDay;
-    var upperBinDate = lowerDay;
+    let lowerBinDate = lowerDay;
+    const upperBinDate = lowerDay;
     upperBinDate.setDate(upperBinDate.getDate() + returnValue.daysPerBin);
 
     for (let i = 0; i < binCount; i++) {
@@ -207,12 +210,16 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
  * @returns true if the value was updated correctly, null if something went wrong.
  */
 export async function updateStat(statName: string, change: number, day: Date = new Date()) {
-    var line: StatLine| null = await getStat(day);
+    const line: StatLine | null = await getStat(day);
     if (line === null || line === undefined) {
         return null;
     }
 
     const oldVal = line[statName as keyof StatLine]
+
+    if (oldVal === null) {
+        return
+    }
     line[statName as keyof StatLine] = oldVal + change;
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
@@ -225,10 +232,11 @@ export async function updateStat(statName: string, change: number, day: Date = n
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
+import {waterBridge} from "@/lib/api/APIBridge";
 
 // Handles water in storage. May be used as template for future objects.
-export function useWater(menuOpen : boolean) {
+export function useWater(menuOpen: boolean) {
     const [water, setWater] = useState(0);
 
     // Sends water value to storage.
