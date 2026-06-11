@@ -54,7 +54,8 @@ __pycache__/
 *.pyc
 .venv/**
 **/db.sqlite3
-**/migrations/**
+**/migrations/*
+!**/migrations/__init__.py
 
 # Django
 *.sqlite3
