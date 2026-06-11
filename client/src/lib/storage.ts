@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { dateDifference } from "./utils";
 
 const statPrefix = 'Stats-'
 
@@ -36,11 +37,11 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
 
 // ---------------------------------- Statistics Functions ----------------------------------
 
-/*
+/**
  * Creates a string to serve as the key to the database. Takes in a Date object and turns it into a key for the
  * storage.
  *
- * Key format is: "yyyy-mm-dd"
+ * Key format is: "Stats-yyyy-mm-dd"
  */
 function calculateDate(date: Date) {
     const year = date.getFullYear();
@@ -50,7 +51,7 @@ function calculateDate(date: Date) {
     return `${statPrefix}${year}-${month}-${day}`
 }
 
-/*
+/**
  * Returns the statistic data interface of the given day.
  */
 async function getStat(day: Date) {
@@ -60,7 +61,7 @@ async function getStat(day: Date) {
     return (raw ? JSON.parse(raw) : null) as StatLine | null;
 }
 
-/*
+/**
  * Gets all existing entries of statistics in the given date range.
  * Exclusive bound on the lower range and inclusive bound on the upper range (a < b <= c)
  */
@@ -79,8 +80,13 @@ async function getStatRange(lowerDay: Date, upperDay: Date) {
     return lines.filter(([_, val]) => val != null)
 }
 
-/*
+/**
  * Returns the data of a single statistic at the given day.
+ *
+ * @param statName - Internal name of the requested statistic.
+ * @param day - Date object of the requested day.
+ *
+ * @returns A number or boolean representing the requested data
  */
 export async function getNamedStat(statName: string, day: Date) {
     const line = await getStat(day);
@@ -92,8 +98,15 @@ export async function getNamedStat(statName: string, day: Date) {
     return line[statName as keyof StatLine];
 }
 
-/*
+/**
  * Get all statistic lines of a given stat in a given date range.
+ * Dates are exclusive on the lower date, and inclusive on the upper date.
+ *
+ * @param statName - Internal name of the requested statistic.
+ * @param lowerDay - Date object of the first day.
+ * @param upperDay - Date object of the last day.
+ *
+ * @returns A number or boolean representing the requested data
  */
 export async function getNamedStatRange(statName: string, lowerDay: Date, upperDay: Date) {
     const lines = await getStatRange(lowerDay, upperDay);
@@ -105,10 +118,13 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
     return lines.map(([date, line]): [string, number | boolean] => [date, line[statName as keyof StatLine]])
 }
 
-/*
+/**
  * Gets the stat summary for the past 'days' time.
  *
- * returns a statisticsSummary interface type
+ * @param statName - Name of the statistic to summarize.
+ * @param days - Amount of days to summarize.
+ *
+ * @returns StatisticsSummary object containing all data
  */
 export async function getStatSummary(statName: string, days: number) {
     const today = new Date();
@@ -137,27 +153,35 @@ export async function getStatSummary(statName: string, days: number) {
     return returnValue as StatisticsSummary
 }
 
-/*
+/**
  * Creates the bins with data for a bar chart to use.
  * Shows data for the previous 'days' amount of days, in 'binCount' bins.
+ *
+ * @param statName - Internal name of the requested statistic.
+ * @param lowerDay - Date object of the first day.
+ * @param upperDay - Date object of the last day.
+ *
+ * 
  */
-export async function getStatBarChart(statName: string, days: number, binCount: number) {
+export async function getStatBarChart(statName: string, lowerDay: Date, upperDay: Date, binCount: number) {
+
+    const days = dateDifference(lowerDay, upperDay);
 
     if (days % binCount != 0) {
         return null;
     }
-
-    var today = new Date();
-    var lowerDay = new Date();
-    lowerDay.setDate(today.getDate() - days);
 
     const returnValue: Partial<StatisticsBarChart> = {statisticName: statName};
     returnValue.bins = [];
     returnValue.daysPerBin = days / binCount;
     returnValue.isFull = true;
 
+    var lowerBinDate = lowerDay;
+    var upperBinDate = lowerDay;
+    upperBinDate.setDate(upperBinDate.getDate() + returnValue.daysPerBin);
+
     for (let i = 0; i < binCount; i++) {
-        const values = await getNamedStatRange(statName, lowerDay, today);
+        const values = await getNamedStatRange(statName, lowerBinDate, upperBinDate);
 
         if (values == null) {
             return null;
@@ -169,15 +193,21 @@ export async function getStatBarChart(statName: string, days: number, binCount: 
 
         returnValue.bins.push(values.reduce((Acc, [d, x], _) => Acc + +x, 0) / values.length);
 
-        lowerDay = today
-        today.setDate(today.getDate() + returnValue.daysPerBin);
+        lowerBinDate = upperBinDate;
+        upperBinDate.setDate(upperBinDate.getDate() + returnValue.daysPerBin);
     }
 
     return returnValue as StatisticsBarChart
 }
 
-/*
+/**
  * Updates a stat, default is to update today, can be changed.
+ *
+ * @param statName - Internal name of the statistic that needs to be changed
+ * @param change - Amount that the statistic needs to be changed, may be postitive or negative
+ * @param day - Date of the line that needs to be changed, defaults to today.
+ *
+ * @returns true if the value was updated correctly, null if something went wrong.
  */
 export async function updateStat(statName: string, change: number, day: Date = new Date()) {
     var line: StatLine| null = await getStat(day);
@@ -189,6 +219,7 @@ export async function updateStat(statName: string, change: number, day: Date = n
     line[statName as keyof StatLine] = oldVal + change;
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    return true;
 }
 
 
