@@ -9,6 +9,7 @@ export interface calendarCell {
     value: number;
     currentDay: boolean;
     active: boolean;
+    hidden: boolean;
 }
 
 const weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
@@ -31,7 +32,7 @@ export default function CalendarOverview() {
         for (let i = startDayOfWeek-1; i >= 0; i--) {
             const newDate: Date = new Date(year, month, totalPrev - i);
             const newCell: calendarCell = {
-                id: `prevcell-${i}`, date: newDate, value: totalPrev - i, currentDay: false, active: false
+                id: `prevcell-${i}`, date: newDate, value: totalPrev - i, currentDay: false, active: false, hidden: false,
             };
             grid.push(newCell);
         }
@@ -43,7 +44,7 @@ export default function CalendarOverview() {
                                     today.getMonth() === month &&
                                     today.getFullYear() === year;
             const newCell: calendarCell = {
-                id: `currCell-${i}`, date: newDate, value: i, currentDay: isToday, active: true
+                id: `currCell-${i}`, date: newDate, value: i, currentDay: isToday, active: true, hidden: false,
             };
             grid.push(newCell);
         }
@@ -52,7 +53,14 @@ export default function CalendarOverview() {
         for (let i = 1; i <= (grid.length % 7); i++) {
             const newDate: Date = new Date(year, month, i);
             const newCell: calendarCell = {
-                id: `nextCell-${i}`, date: newDate, value: i, currentDay: false, active: false
+                id: `nextCell-${i}`, date: newDate, value: i, currentDay: false, active: false, hidden: false,
+            };
+            grid.push(newCell);
+        }
+
+        for (let i = grid.length; i < 42; i++) {
+            const newCell: calendarCell = {
+                id: `emptyCell-${i}`, date: currentDate, value: 0, currentDay: false, active: false, hidden: true,
             };
             grid.push(newCell);
         }
@@ -100,15 +108,17 @@ export default function CalendarOverview() {
                 scrollEnabled={false}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View className={`flex-1 justify-between h-16 gap-y-1 items-center m-1 border-2 ${item.active ? 'border-neutral-300' : 'border-transparent opacity-40'} ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
+                    <View className={`flex-1 justify-between h-16 gap-y-1 items-center m-1 border-2 
+                    ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'} 
+                    ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
                         <AppText className="text-sm font-bold self-end">{item.value || 'Placeholder'}</AppText>
                         <View className="flex-row flex-wrap gap-1 p-0.5">
-                            <View className="h-2 w-2 border-[1px] bg-orange-500" />
-                            <View className="h-2 w-2 border-[1px] bg-red-500" />
-                            <View className="h-2 w-2 border-[1px] bg-blue-500" />
-                            <View className="h-2 w-2 border-[1px] bg-green-500" />
-                            <View className="h-2 w-2 border-[1px] bg-pink-500" />
-                            <View className="h-2 w-2 border-[1px] bg-yellow-500" />
+                            <View className="h-[20%] aspect-square border-[1px] bg-red-500" />
+                            <View className="h-[20%] aspect-square border-[1px] bg-blue-500" />
+                            <View className="h-[20%] aspect-square border-[1px] bg-green-500" />
+                            <View className="h-[20%] aspect-square border-[1px] bg-orange-500" />
+                            <View className="h-[20%] aspect-square border-[1px] bg-yellow-500" />
+                            <View className="h-[20%] aspect-square border-[1px] bg-purple-500" />
                         </View>
                     </View>
                 )}

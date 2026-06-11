@@ -16,7 +16,7 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView>
         <SafeAreaProvider>
           <Stack screenOptions={{ headerShown: false }} />
           <Toaster />
