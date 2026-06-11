@@ -5,14 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
+import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
@@ -65,81 +58,81 @@ export function SignUpForm() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-center text-xl sm:text-left">Create your account</CardTitle>
-        </CardHeader>
-        <CardContent className="gap-6">
-          <View className="gap-6">
-            {errors.general && (
-              <Text className="text-sm text-destructive">{errors.general[0]}</Text>
-            )}
-            <View className="gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="m@example.com"
-                keyboardType="email-address"
-                autoComplete="email"
-                autoCapitalize="none"
-                onSubmitEditing={onEmailSubmitEditing}
-                returnKeyType="next"
-                submitBehavior="submit"
-                onChangeText={setEmail}
-              />
-              {errors.email && <Text className="text-sm text-destructive">{errors.email[0]}</Text>}
-            </View>
-            <View className="gap-1.5">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                placeholder="Your username"
-                autoComplete="username"
-                autoCapitalize="none"
-                returnKeyType="next"
-                submitBehavior="submit"
-                onChangeText={setUsername}
-              />
-              {errors.username && (
-                <Text className="text-sm text-destructive">{errors.username[0]}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+        <Card className="mx-4 border-border shadow-none">
+          <CardHeader>
+            <CardTitle className="text-center text-xl sm:text-left">Create your account</CardTitle>
+          </CardHeader>
+          <CardContent className="gap-6">
+            <View className="gap-6">
+              {errors.general && (
+                <Text className="text-sm text-destructive">{errors.general[0]}</Text>
               )}
-            </View>
-            <View className="gap-1.5">
-              <View className="flex-row items-center">
-                <Label htmlFor="password">Password</Label>
+              <View className="gap-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  placeholder="m@example.com"
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  onSubmitEditing={onEmailSubmitEditing}
+                  returnKeyType="next"
+                  submitBehavior="submit"
+                  onChangeText={setEmail}
+                />
+                {errors.email && (
+                  <Text className="text-sm text-destructive">{errors.email[0]}</Text>
+                )}
               </View>
-              <Input
-                ref={passwordInputRef}
-                id="password"
-                secureTextEntry
-                returnKeyType="send"
-                onSubmitEditing={onSubmit}
-                onChangeText={setPassword}
-                autoComplete="new-password"
-                textContentType="newPassword"
-              />
-              {errors.password && (
-                <Text className="text-sm text-destructive">{errors.password[0]}</Text>
-              )}
+              <View className="gap-1.5">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  placeholder="Your username"
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  submitBehavior="submit"
+                  onChangeText={setUsername}
+                />
+                {errors.username && (
+                  <Text className="text-sm text-destructive">{errors.username[0]}</Text>
+                )}
+              </View>
+              <View className="gap-1.5">
+                <View className="flex-row items-center">
+                  <Label htmlFor="password">Password</Label>
+                </View>
+                <Input
+                  ref={passwordInputRef}
+                  id="password"
+                  secureTextEntry
+                  returnKeyType="send"
+                  onSubmitEditing={onSubmit}
+                  onChangeText={setPassword}
+                  autoComplete="new-password"
+                  textContentType="newPassword"
+                />
+                {errors.password && (
+                  <Text className="text-sm text-destructive">{errors.password[0]}</Text>
+                )}
+              </View>
+              <Button className="w-full" onPress={onSubmit}>
+                <Text>Continue</Text>
+              </Button>
             </View>
-            <Button className="w-full" onPress={onSubmit}>
-              <Text>Continue</Text>
-            </Button>
-          </View>
-          <View className="flex flex-row items-center">
-            <Text className="text-center text-sm">Already have an account? </Text>
-            <Pressable
-              onPress={() => {
-                router.replace('/login');
-              }}>
-              <Text className="text-sm underline">Sign in</Text>
-            </Pressable>
-          </View>
-        </CardContent>
-      </Card>
-    </KeyboardAvoidingView>
+            <View className="flex flex-row items-center">
+              <Text className="text-center text-sm">Already have an account? </Text>
+              <Pressable
+                onPress={() => {
+                  router.replace('/login');
+                }}>
+                <Text className="text-sm underline">Sign in</Text>
+              </Pressable>
+            </View>
+          </CardContent>
+        </Card>
+    </SafeAreaView>
   );
 }
