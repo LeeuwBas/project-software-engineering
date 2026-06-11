@@ -10,11 +10,13 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter,\
                                   OpenApiResponse
 from drf_spectacular.types import OpenApiTypes
 
+from datetime import date
+
 from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
-from .models import Stats
+from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getToday
+from .helpers import getBarChart, getSummary, getToday, getGoal, setGoal
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -265,3 +267,103 @@ class StatisticsView(APIView):
         response.update(summary)
 
         return Response(response)
+
+class GoalManageView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+            summary="Retrieves the set goal at a given date.",
+            description="""Retrieves the goals of a given dat for a given
+            module. If the module is not supplied it will return all set goals.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="goal_date",
+                    description="date for which the requested goal was active",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="goal_name",
+                    description="Internal name of the goal. If not supplied, "\
+                            "the api will return all goals at the given date.",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.QUERY,
+                    required=False
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'goals': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                'water': 5
+                            }
+                        }
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def get(self, request, goal_date):
+        goal_name = request.query_params.get('goal_name', None)
+        day = date.fromisoformat(goal_date)
+
+        goals = getGoal(request.user, goal_name, day)
+
+        if goals is None:
+            return Response(
+                {'error': 'Invalid input.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if type(goals) is dict:
+            return Response(goals, 200)
+        else:
+            return Response({goal_name: goals}, 200)
+
+    @extend_schema(
+            summary="Sets a new goal",
+            description="""Updates or inserts a new goal to be followed.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="goal_date",
+                    description="date for which to set the goal",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                )
+            ],
+            request={
+                'application/json': {
+                    'type': 'object',
+                    'properties': {
+                        'goals': {
+                            'type': 'object',
+                            'description': "Goals that need to be updated. "
+                            "<internal_name>:<val>",
+                            'additionalProperties': {'type': 'number'}
+                        }
+                    }
+                }
+            },
+            responses={
+                200: "ok",
+                400: "Invalid Input."
+            }
+    )
+    def post(self, request, goal_date):
+        goal_data = request.data.get('goals')
+        day = date.fromisoformat(goal_date)
+
+        if len(goal_data) == 0:
+            return Response("Invalid input", 400)
+
+        setGoal(request.user, goal_data, day)
+        return Response("ok", 200)
