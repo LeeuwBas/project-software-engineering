@@ -1,49 +1,54 @@
-import { useAuth } from '@/auth/AuthManager';
+import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/lib/auth/AuthManager';
 import { useRouter } from 'expo-router';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-export default function Settings(
-  {
-    isOpen
-  }: {
-    isOpen: boolean
-  }) {
-
+export default function Settings({ isOpen }: { isOpen: boolean }) {
   if (!isOpen) {
-    return
+    return;
   }
 
-  const router = useRouter()
-  const auth = useAuth()
+  const router = useRouter();
+  const auth = useAuth();
 
   type SettingItem = {
     label: string;
-    effect: (() => void) | null
+    effect: Function | null;
   };
 
   const ITEMS: SettingItem[] = [
-    { label: 'Change Pet', effect: () => router.push('/pet-select')},
+    { label: 'Change Pet', effect: () => router.push('/pet-select') },
     { label: 'Change Username', effect: null },
-    { label: 'Sign out', effect: () => auth?.signOut() },
     { label: 'More', effect: null },
+    { label: 'Sign out', effect: () => auth?.signOut() },
   ];
 
+  function executeEffect(item: SettingItem) {
+    if (item && item.effect) {
+      item.effect();
+    }
+  }
+
   return (
-    <View className={`transition-opacity duration-200 ${ isOpen ? 'opacity-100' : 'opacity-0' } items-center`} >
-      <View className='absolute bottom-full mb-2 items-center w-full'>
-          <View className="w-3/4 p-2 h-auto bg-grey justify-center items-center bg-white rounded-3xl shadow-sm">
-              {ITEMS.map((item) => (
-                <Button
-                  className='my-2'
-                  key={item.label}
-                  variant="default"
-                  onPress={item.effect}>
-                  <Text>{item.label}</Text>
-                </Button>
-              ))}
-          </View>
+    <View
+      className={`-top-6 transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
+      <View className="absolute bottom-full mb-2 w-full items-center">
+        <Card>
+          <CardContent>
+            {ITEMS.map((item) => (
+              <Button
+                className="my-2 flex h-12"
+                key={item.label}
+                variant="secondary"
+                onPress={() => executeEffect(item)}>
+                <AppText className="font-bold text-white">{item.label}</AppText>
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
       </View>
     </View>
-  )
+  );
 }

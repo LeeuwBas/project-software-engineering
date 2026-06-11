@@ -20,7 +20,7 @@ export default function Main(
 
     return (
         <View className="flex-row flex-1">
-            <View className="w-5">
+            <View className='w-5'>
                 <Statbar stat={leftSideStat} value={leftSideValue}/>
             </View>
 
@@ -28,7 +28,7 @@ export default function Main(
                 <Pet id={id}/>
             </View>
 
-            <View className="w-5">
+            <View className='w-5'>
                 <Statbar stat={rightSideStat} value={rightSideValue}/>
             </View>
         </View>

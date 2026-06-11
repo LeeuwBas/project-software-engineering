@@ -1,8 +1,6 @@
-import { requireAuth } from "@/auth/AuthManager"
-import { Redirect } from "expo-router"
+import { requireAuth } from '@/lib/auth/AuthManager';
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-    return requireAuth(
-        <Redirect href='/(protected)'/>
-    )
+  return requireAuth(<Redirect href="/(protected)" />);
 }
