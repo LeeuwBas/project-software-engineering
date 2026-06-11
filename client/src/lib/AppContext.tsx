@@ -27,7 +27,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AppContext.Provider value={{ popup, water, saveWater, popupOpen: menuOpen || settingsOpen }}>
+    <AppContext.Provider value={{ popup, water, saveWater, popupOpen: menuOpen || settingsOpen || statsOpen }}>
       {children}
     </AppContext.Provider>
   );

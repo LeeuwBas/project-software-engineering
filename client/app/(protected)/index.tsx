@@ -51,7 +51,7 @@ export default function App() {
 
         <BlurView
           className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
-          intensity={40}
+          intensity={30}
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
