@@ -1,4 +1,4 @@
-import {getNamedStat, insertStat, setStat, StatLine, updateStat} from "@/lib/storage";
+import {getNamedStat, getStatBarChart, insertStat, setStat, StatLine, updateStat} from "@/lib/storage";
 import {ValueZustand} from "@/lib/api/ValueState";
 
 
@@ -100,6 +100,52 @@ export async function incrementStatistic<K extends keyof StatLine>(name: K, incr
         throw Error("Value set while loading from server")
     }
     return true;
+}
+
+/**
+ * Loads a barchart from the backend storage
+ *
+ * @param name The name of the statistic
+ * @param bins The amount of bins to load
+ * @param daysPerBin The amount of days per bin. If it is one and a request to the server is made, the values are cached locally.
+ * @param date The date of the latest value
+ *
+ * @returns an array daysPerBin values corresponding with each bin.
+ */
+export async function getStatisticChart<K extends keyof StatLine>(name: K, bins: number, daysPerBin: number, date: Date = new Date()) {
+    const startDate = new Date(date)
+    startDate.setDate(startDate.getDate() - bins * daysPerBin)
+
+    const storage = await getStatBarChart(name, startDate, date, bins)
+
+    if (storage !== null && storage.isFull) {
+        return storage.bins;
+    }
+
+    const server = await loadServerChart(name, startDate, date, bins);
+    let promise: Promise<any> = Promise.resolve()
+
+    if (daysPerBin === 1) {
+        for (let i = 0; i < server.length; i++) {
+            const day = new Date(startDate)
+            day.setDate(day.getDate() + i)
+
+            promise = Promise.all([promise, insertStat(name, server[i], day)])
+        }
+    }
+
+    await promise
+
+    return server;
+}
+
+async function loadServerChart<K extends keyof StatLine>(name: K, startDate: Date, endDate: Date, bins: number) {
+    // TODO load from server
+    const loaded: number[] = []
+    for (let i = 0; i < bins; i++) {
+        loaded.push(Math.round(Math.random() * 100))
+    }
+    return loaded
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {

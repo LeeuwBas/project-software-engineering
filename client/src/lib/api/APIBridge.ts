@@ -1,8 +1,15 @@
 import {createWaterBridge} from "@/lib/api/WaterBridge";
 
 export type LoadableBridge<T> = T & Loadable;
+
 export interface Loadable {
     load: () => Promise<any>,
+}
+
+export interface StatisticBridge {
+    getRaw: (date?: Date) => Promise<number>,
+    set: (value: number, date?: Date) => Promise<any>
+    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>,
 }
 
 const loaders: Loadable[] = [];
@@ -33,6 +40,11 @@ export async function initializeApiManager() {
         })
     ).then(); // Map to void promise
 }
+
+export async function getCalender(startDate: Date, endDate: Date) {
+
+}
+
 
 export const waterBridge = register(createWaterBridge());
 
