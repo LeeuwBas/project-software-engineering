@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import Sum, Max, Min, Avg, F
+from django.db.models import Sum, Max, Min, Avg, F, Count
 
 from datetime import timedelta, datetime
 
@@ -28,12 +28,20 @@ def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime
         'date__lte': upperDay.date()
     }
 
+    day_amount = (upperDay - lowerDay).days
+
     lines = Stats.objects.filter(**filter_dict)
 
     response:dict = lines.aggregate(total=Sum(statistic),
-                                    average=Avg(statistic),
                                     low=Min(statistic),
-                                    high=Max(statistic))
+                                    high=Max(statistic),
+                                    count=Count(statistic))
+
+    response['average'] = response['total']/day_amount
+
+    if response['count'] < day_amount:
+        response['low'] = 0
+        response['count'] = day_amount
 
     return response
 

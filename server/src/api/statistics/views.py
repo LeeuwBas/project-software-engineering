@@ -219,14 +219,14 @@ class SummaryView(APIView):
                     required=True
                 ),
                 OpenApiParameter(
-                    name="start_date",
+                    name="startDate",
                     description="start date of the calendar view",
                     type=OpenApiTypes.STR,
                     location=OpenApiParameter.PATH,
                     required=True
                 ),
                 OpenApiParameter(
-                    name="end_date",
+                    name="endDate",
                     description="end date of the calender view",
                     type=OpenApiTypes.STR,
                     location=OpenApiParameter.PATH,
@@ -246,11 +246,14 @@ class SummaryView(APIView):
                 400: OpenApiResponse(description="Invalid input.")
             }
     )
-    def get(self, request, statName, start_date, end_date):
-        if end_date < start_date:
+    def get(self, request, statName, startDate, endDate):
+        if endDate < startDate:
             Response("Invalid input", 400)
 
-        returnDict = getSummary(request.user, statName, start_date, end_date)
+        startDate = datetime.fromisoformat(startDate)
+        endDate = datetime.fromisoformat(endDate)
+
+        returnDict = getSummary(request.user, statName, startDate, endDate)
 
         return Response(returnDict, 200)
 
