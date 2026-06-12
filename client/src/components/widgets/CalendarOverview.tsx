@@ -2,6 +2,8 @@ import { ArrowBigLeft, ArrowBigRight, Square } from "lucide-react-native"
 import { AppText } from "../AppText"
 import { FlatList, View, Pressable } from "react-native"
 import { useMemo, useState } from "react";
+import { getCalender } from "@/lib/storage";
+import { indexOf } from "eslint.config";
 
 export interface calendarCell {
     id: string;
@@ -18,6 +20,9 @@ export default function CalendarOverview() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
+
+    let last_day = null
+    let renderedDayAmount = 0
 
     // Memoization for calendar grid to only change when year or month changes
     // Prevent rerender when parent rerenders
@@ -58,6 +63,9 @@ export default function CalendarOverview() {
             grid.push(newCell);
         }
 
+        last_day = grid[-1]
+        renderedDayAmount = grid.length
+
         for (let i = grid.length; i < 42; i++) {
             const newCell: calendarCell = {
                 id: `emptyCell-${i}`, date: currentDate, value: 0, currentDay: false, active: false, hidden: true,
@@ -68,7 +76,27 @@ export default function CalendarOverview() {
         return grid;
     }, [year, month]);
 
+    // const calendarStatData = getCalender(dayGrid[0].date, dayGrid[dayGrid.length - 1].date)
+    // console.log(calendarStatData)
+    
+    const dummy_data = Object.fromEntries(
+        Array.from({ length: renderedDayAmount }, (_, i) => {
+        const date = new Date(dayGrid[0].date);
+        date.setDate(date.getDate() + i);
 
+        return [
+            date.toDateString(),
+            {
+                water: Math.random() < 0.5,
+                steps: Math.random() < 0.5,
+                sleep: Math.random() < 0.5,
+            },
+            ];
+        })
+    );
+
+    console.log(dummy_data)
+    
     return (
         <View>
             {/* Month/year displaty with arrow buttons */}
@@ -112,13 +140,10 @@ export default function CalendarOverview() {
                     ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'} 
                     ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
                         <AppText className="text-sm font-bold self-end">{item.value || 'Placeholder'}</AppText>
-                        <View className="flex-row flex-wrap gap-1 p-0.5">
-                            <View className="h-[20%] aspect-square border-[1px] bg-red-500" />
-                            <View className="h-[20%] aspect-square border-[1px] bg-blue-500" />
-                            <View className="h-[20%] aspect-square border-[1px] bg-green-500" />
-                            <View className="h-[20%] aspect-square border-[1px] bg-orange-500" />
-                            <View className="h-[20%] aspect-square border-[1px] bg-yellow-500" />
-                            <View className="h-[20%] aspect-square border-[1px] bg-purple-500" />
+                        <View className="flex-row flex-wrap gap-1 p-0.5 self-start">
+                            <View className={`h-[7px] aspect-square border-[1px] ${dummy_data[item.date.toDateString()]["sleep"] ? 'bg-red-500' : 'hidden'}`} />
+                            <View className={`h-[7px] aspect-square border-[1px] ${dummy_data[item.date.toDateString()]["water"] ? 'bg-blue-500' : 'hidden'}`}/>
+                            <View className={`h-[7px] aspect-square border-[1px] ${dummy_data[item.date.toDateString()]["steps"] ? 'bg-green-500' : 'hidden'}`}/>
                         </View>
                     </View>
                 )}
