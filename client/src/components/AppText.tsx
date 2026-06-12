@@ -17,7 +17,7 @@ export function AppText({ className = '', style, ...props }: TextProps & { class
 
   return (
     <Text
-      className={cleanedClassName}
+      className={`text-foreground ${cleanedClassName}`}
       style={[
         { fontFamily: hasBoldClass ? 'IosevkaCharon-Bold' : 'IosevkaCharon' },
         style,

@@ -2,10 +2,10 @@ import PetHome from '@/components/widgets/PetHome';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
-import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useColorScheme } from 'nativewind';
 import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -37,10 +37,17 @@ export default function App() {
     if (statsOpen) changeStats();
   }
 
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const dark = colorScheme === 'dark';
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient
-        colors={['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd']}
+        colors={
+          dark
+            ? ['#34504f', '#34504f', '#26403f', '#26403f'] // dark mode
+            : ['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd'] // light mode
+        }
         locations={[0, 0.5, 0.5, 1]}
         className="flex flex-col"
         style={{ flex: 1 }}>

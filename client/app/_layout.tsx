@@ -2,6 +2,9 @@ import { PetProvider } from '@/components/contexts/PetContext';
 import { AuthProvider } from '@/lib/auth/AuthManager';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import { colorScheme } from 'nativewind';
+import { useEffect } from 'react';
+import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -13,6 +16,11 @@ export default function RootLayout() {
     IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),
     'IosevkaCharon-Bold': require('@assets/fonts/IosevkaCharon-Bold.ttf'),
   });
+  const system = useColorScheme(); // This is the REACT NATIVE hook, but there's also a nativewind hook. nice :(
+  useEffect(() => {
+    colorScheme.set(system ?? 'light');
+  }, [system]);
+
   if (!loaded) return null;
 
   return (
