@@ -42,7 +42,6 @@ router.register(r"users", UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
-    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/stats/metrics", StatsWaterRequestAverage.as_view(), name="water_metrics"),
     path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water"),
     path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
