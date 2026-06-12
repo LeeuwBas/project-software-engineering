@@ -1,20 +1,22 @@
 from django.utils import timezone
 from django.db.models import F
 
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter,\
-                                  OpenApiResponse
+                                  OpenApiResponse, inline_serializer
 from drf_spectacular.types import OpenApiTypes
+
+from datetime import datetime
 
 from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
-from .models import Stats
+from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getToday
+from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -175,6 +177,7 @@ class StatsWaterBarChart(APIView):
             'bins': bin_dict
         })
 
+
 class StatisticsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -253,7 +256,7 @@ class StatisticsView(APIView):
 
         print(statistic)
 
-        today = getToday(request.user, statistic)
+        today = getDay(request.user, statistic)
         summary = getSummary(days, request.user, statistic)
         bar_chart = getBarChart(days, bin_count, request.user, statistic)
 
@@ -265,3 +268,156 @@ class StatisticsView(APIView):
         response.update(summary)
 
         return Response(response)
+
+
+class GoalManageView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+            summary="Retrieves the set goal at a given date.",
+            description="""Retrieves the goals of a given dat for a given
+            module. If the module is not supplied it will return all set goals.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="goal_date",
+                    description="date for which the requested goal was active",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="goal_name",
+                    description="Internal name of the goal. If not supplied, "\
+                            "the api will return all goals at the given date.",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.QUERY,
+                    required=False
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'goals': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                'water': 5
+                            }
+                        }
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def get(self, request, goal_date):
+        goal_name = request.query_params.get('goal_name', None)
+        day = datetime.fromisoformat(goal_date)
+
+        goals = getGoal(request.user, goal_name, day)
+
+        if goals is None:
+            return Response(
+                {'error': 'Invalid input.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if type(goals) is dict:
+            return Response(goals, 200)
+        else:
+            return Response({goal_name: goals}, 200)
+
+    @extend_schema(
+            summary="Sets a new goal",
+            description="""Updates or inserts a new goal to be followed.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="goal_date",
+                    description="date for which to set the goal",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                )
+            ],
+            request={
+                'application/json': {
+                    'type': 'object',
+                    'properties': {
+                        'goals': {
+                            'type': 'object',
+                            'description': "Goals that need to be updated. "
+                            "<internal_name>:<val>",
+                            'additionalProperties': {'type': 'number'}
+                        }
+                    }
+                }
+            },
+            responses={
+                200: "ok",
+                400: "Invalid Input."
+            }
+    )
+    def post(self, request, goal_date):
+        goal_data = request.data.get('goals')
+        day = datetime.fromisoformat(goal_date)
+
+        if len(goal_data) == 0:
+            return Response("Invalid input", 400)
+
+        setGoal(request.user, goal_data, day)
+        return Response("ok", 200)
+
+
+class CalendarView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+            summary="Retrieves the calendar view of a given date range.",
+            description="""Retrieves boolean data if all goals are completed
+            for a given date range. Inclusive on both sides of the date range
+            (a <= b <= c).
+
+            Element 0 of the return array is the oldest date.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="start_date",
+                    description="start date of the calendar view",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="end_date",
+                    description="end date of the calender view",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                )
+            ],
+            responses={
+                200: inline_serializer(
+                    name='MyResponse',
+                    fields={
+                        'key': serializers.CharField(),
+                        'val': serializers.FloatField(),
+                    },
+                    many=True
+                ),
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def get(self, request, start_date, end_date):
+        startDay = datetime.fromisoformat(start_date)
+        endDay = datetime.fromisoformat(end_date)
+
+        if startDay >= endDay:
+            return Response("Invalid Input", 400)
+
+        returnList = getCalender(request.user, startDay, endDay)
+
+        return Response(returnList, 200)
