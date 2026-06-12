@@ -220,7 +220,7 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
     returnValue.isFull = true;
 
     let lowerBinDate = new Date(lowerDay);
-    let upperBinDate = upperDay;
+    let upperBinDate = new Date(lowerDay);
     upperBinDate.setDate(lowerBinDate.getDate() + returnValue.daysPerBin);
 
     for (let i = 0; i < binCount; i++) {
