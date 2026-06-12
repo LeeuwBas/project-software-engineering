@@ -144,6 +144,14 @@ export async function getStatisticChart<K extends keyof StatLine>(name: K, bins:
     return server;
 }
 
+/**
+ * Load a calendar from the backend storage. If not in local storage it is requested from the server
+ *
+ * @param startDate The date to start at
+ * @param endDate The date to end at
+ *
+ * @returns The loaded calendar, or null if unloaded. The calendar might not be complete if not all data is present.
+ */
 export async function loadCalender(startDate: Date, endDate: Date) {
     const storage = await getCalender(startDate, endDate)
 
@@ -154,7 +162,7 @@ export async function loadCalender(startDate: Date, endDate: Date) {
     const server = await loadServerCalendar(startDate, endDate)
 
     if (server === null) {
-        return storage
+        return storage?.vals ?? null
     }
 
     return server
