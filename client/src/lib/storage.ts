@@ -1,41 +1,41 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {dateDifference} from "./utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { dateDifference } from './utils';
 
-const statPrefix = 'Stats-'
-const goalPrefix = 'Goals-'
+const statPrefix = 'Stats-';
+const goalPrefix = 'Goals-';
 
 interface Settings {
-    chosenPet: String,
+  chosenPet: String;
 }
 
 export interface StatLine {
-    waterDrank: number | null,
-    sleep: number | null,
+  waterDrank: number | null;
+  sleep: number | null;
 }
 
 export interface StatisticsSummary {
-    statisticName: string,
-    isFull: boolean,
-    total: number,
-    count: number,
-    average: number,
-    minimum: number,
-    maximum: number,
+  statisticName: string;
+  isFull: boolean;
+  total: number;
+  count: number;
+  average: number;
+  minimum: number;
+  maximum: number;
 }
 
 export interface StatisticsBarChart {
-    statisticName: string,
-    isFull: boolean,
-    daysPerBin: number,
-    bins: number[],
+  statisticName: string;
+  isFull: boolean;
+  daysPerBin: number;
+  bins: number[];
 }
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
-    return {
-        waterDrank: null,
-        sleep: null,
-        ...overrides,
-    } as StatLine;
+  return {
+    waterDrank: null,
+    sleep: null,
+    ...overrides,
+  } as StatLine;
 }
 
 // ---------------------------------- Statistics Functions ----------------------------------
@@ -47,21 +47,21 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
  * Key format is: "Stats-yyyy-mm-dd"
  */
 function calculateDate(date: Date, stat: boolean = true) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
-    return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`
+  return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`;
 }
 
 /**
  * Returns the statistic data interface of the given day.
  */
 async function getStat(day: Date) {
-    const date = calculateDate(day);
-    const raw = await AsyncStorage.getItem(date)
+  const date = calculateDate(day);
+  const raw = await AsyncStorage.getItem(date);
 
-    return (raw ? JSON.parse(raw) : null) as StatLine | null;
+  return (raw ? JSON.parse(raw) : null) as StatLine | null;
 }
 
 /**
@@ -72,24 +72,25 @@ async function getStat(day: Date) {
  * @returns Number, that contains the goal
  */
 export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
-    const goalDates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false));
-    goalDates.sort()
+  const goalDates = (await AsyncStorage.getAllKeys()).filter(
+    (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false)
+  );
+  goalDates.sort();
 
-    const date = goalDates[-1];
+  const date = goalDates[-1];
 
-    const raw = await AsyncStorage.getItem(date);
-    const data: StatLine | null = raw ? JSON.parse(raw) : null;
+  const raw = await AsyncStorage.getItem(date);
+  const data: StatLine | null = raw ? JSON.parse(raw) : null;
 
-    if (data === null) {
-        return null;
-    }
+  if (data === null) {
+    return null;
+  }
 
-    if (statName === null) {
-        return data;
-    }
+  if (statName === null) {
+    return data;
+  }
 
-    return data[statName as keyof StatLine];
+  return data[statName as keyof StatLine];
 }
 
 /**
@@ -99,14 +100,14 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  * @param goal new value for the goal
  */
 export async function setNewGoal(statName: string, goal: number) {
-    const today = calculateDate(new Date(), false);
+  const today = calculateDate(new Date(), false);
 
-    var oldGoal = await getCurrentGoal(null);
-    if (oldGoal === null || typeof oldGoal === 'number') {
-        oldGoal = createStatLine();
-    }
-    oldGoal[statName as keyof StatLine] = goal;
-    AsyncStorage.setItem(today, JSON.stringify(oldGoal));
+  var oldGoal = await getCurrentGoal(null);
+  if (oldGoal === null || typeof oldGoal === 'number') {
+    oldGoal = createStatLine();
+  }
+  oldGoal[statName as keyof StatLine] = goal;
+  AsyncStorage.setItem(today, JSON.stringify(oldGoal));
 }
 
 /**
@@ -114,17 +115,20 @@ export async function setNewGoal(statName: string, goal: number) {
  * Exclusive bound on the lower range and inclusive bound on the upper range (a < b <= c)
  */
 async function getStatRange(lowerDay: Date, upperDay: Date) {
-    const lowerDate = calculateDate(lowerDay);
-    const upperDate = calculateDate(upperDay);
+  const lowerDate = calculateDate(lowerDay);
+  const upperDate = calculateDate(upperDay);
 
-    const dates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(statPrefix) && lowerDate < key && key <= upperDate
-    ).sort();
+  const dates = (await AsyncStorage.getAllKeys())
+    .filter((key) => key.startsWith(statPrefix) && lowerDate < key && key <= upperDate)
+    .sort();
 
-    const raw = await AsyncStorage.multiGet(dates);
-    const lines = raw.map(([date, line]): [string, StatLine] => [date, (line ? JSON.parse(line) : null)])
+  const raw = await AsyncStorage.multiGet(dates);
+  const lines = raw.map(([date, line]): [string, StatLine] => [
+    date,
+    line ? JSON.parse(line) : null,
+  ]);
 
-    return lines.filter(([_, val]) => val != null)
+  return lines.filter(([_, val]) => val != null);
 }
 
 /**
@@ -136,13 +140,13 @@ async function getStatRange(lowerDay: Date, upperDay: Date) {
  * @returns A number or boolean representing the requested data
  */
 export async function getNamedStat(statName: string, day: Date) {
-    const line = await getStat(day);
+  const line = await getStat(day);
 
-    if (line === null) {
-        return null;
-    }
+  if (line === null) {
+    return null;
+  }
 
-    return line[statName as keyof StatLine];
+  return line[statName as keyof StatLine];
 }
 
 /**
@@ -156,10 +160,11 @@ export async function getNamedStat(statName: string, day: Date) {
  * @returns A number or boolean representing the requested data
  */
 export async function getNamedStatRange(statName: string, lowerDay: Date, upperDay: Date) {
-    const lines = await getStatRange(lowerDay, upperDay);
+  const lines = await getStatRange(lowerDay, upperDay);
 
-    return lines.map(([date, line]): [string, number | null] => [date, line[statName as keyof StatLine]])
-        .filter((item): item is [string, number] => item[1] != null)
+  return lines
+    .map(([date, line]): [string, number | null] => [date, line[statName as keyof StatLine]])
+    .filter((item): item is [string, number] => item[1] != null);
 }
 
 /**
@@ -171,27 +176,27 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
  * @returns StatisticsSummary object containing all data
  */
 export async function getStatSummary(statName: string, days: number) {
-    const today = new Date();
-    const lowerDay = new Date();
-    lowerDay.setDate(today.getDate() - days);
+  const today = new Date();
+  const lowerDay = new Date();
+  lowerDay.setDate(today.getDate() - days);
 
-    const values = await getNamedStatRange(statName, lowerDay, today);
+  const values = await getNamedStatRange(statName, lowerDay, today);
 
-    if (values == null) {
-        return null;
-    }
+  if (values == null) {
+    return null;
+  }
 
-    const returnValue: Partial<StatisticsSummary> = {statisticName: statName};
+  const returnValue: Partial<StatisticsSummary> = { statisticName: statName };
 
-    returnValue.total = values.reduce((Acc, [d, x], _) => Acc + +x, 0);
-    returnValue.count = values.length;
-    returnValue.average = returnValue.total / returnValue.count;
-    returnValue.maximum = values.reduce((Acc, [d, x], _) => Acc > +x ? Acc : +x, 0);
-    returnValue.minimum = values.reduce((Acc, [d, x], _) => Acc < +x ? Acc : +x, 0);
+  returnValue.total = values.reduce((Acc, [d, x], _) => Acc + +x, 0);
+  returnValue.count = values.length;
+  returnValue.average = returnValue.total / returnValue.count;
+  returnValue.maximum = values.reduce((Acc, [d, x], _) => (Acc > +x ? Acc : +x), 0);
+  returnValue.minimum = values.reduce((Acc, [d, x], _) => (Acc < +x ? Acc : +x), 0);
 
-    returnValue.isFull = returnValue.count == days
+  returnValue.isFull = returnValue.count == days;
 
-    return returnValue as StatisticsSummary
+  return returnValue as StatisticsSummary;
 }
 
 /**
@@ -205,43 +210,46 @@ export async function getStatSummary(statName: string, days: number) {
  *
  * @return StatisticsBarChart interface object with the requested data.
  */
-export async function getStatBarChart(statName: string, lowerDay: Date, upperDay: Date, binCount: number) {
+export async function getStatBarChart(
+  statName: string,
+  lowerDay: Date,
+  upperDay: Date,
+  binCount: number
+) {
+  const days = dateDifference(lowerDay, upperDay);
 
+  if (days % binCount != 0) {
+    return null;
+  }
 
-    const days = dateDifference(lowerDay, upperDay);
+  const returnValue: Partial<StatisticsBarChart> = { statisticName: statName };
+  returnValue.bins = [];
+  returnValue.daysPerBin = days / binCount;
+  returnValue.isFull = true;
 
-    if (days % binCount != 0) {
-        return null;
+  let lowerBinDate = new Date(lowerDay);
+  let upperBinDate = new Date(lowerDay);
+  upperBinDate.setDate(lowerBinDate.getDate() + returnValue.daysPerBin);
+
+  for (let i = 0; i < binCount; i++) {
+    const values = await getNamedStatRange(statName, lowerBinDate, upperBinDate);
+
+    if (values.length < returnValue.daysPerBin) {
+      returnValue.isFull = false;
     }
 
-    const returnValue: Partial<StatisticsBarChart> = {statisticName: statName};
-    returnValue.bins = [];
-    returnValue.daysPerBin = days / binCount;
-    returnValue.isFull = true;
-
-    let lowerBinDate = new Date(lowerDay);
-    let upperBinDate = upperDay;
-    upperBinDate.setDate(lowerBinDate.getDate() + returnValue.daysPerBin);
-
-    for (let i = 0; i < binCount; i++) {
-        const values = await getNamedStatRange(statName, lowerBinDate, upperBinDate);
-
-        if (values.length < returnValue.daysPerBin) {
-            returnValue.isFull = false;
-        }
-
-        if (values.length !== 0) {
-            returnValue.bins.push(values.reduce((Acc, [d, x], _) => Acc + +x, 0) / values.length);
-        } else {
-            returnValue.bins.push(0);
-        }
-
-        lowerBinDate = upperBinDate;
-        upperBinDate = new Date(lowerDay)
-        upperBinDate.setDate(upperBinDate.getDate() + (i + 2) * returnValue.daysPerBin)
+    if (values.length !== 0) {
+      returnValue.bins.push(values.reduce((Acc, [d, x], _) => Acc + +x, 0) / values.length);
+    } else {
+      returnValue.bins.push(0);
     }
 
-    return returnValue as StatisticsBarChart
+    lowerBinDate = upperBinDate;
+    upperBinDate = new Date(lowerDay);
+    upperBinDate.setDate(upperBinDate.getDate() + (i + 2) * returnValue.daysPerBin);
+  }
+
+  return returnValue as StatisticsBarChart;
 }
 
 /**
@@ -253,22 +261,26 @@ export async function getStatBarChart(statName: string, lowerDay: Date, upperDay
  *
  * @returns true if the value was updated correctly, false if something went wrong.
  */
-export async function updateStat<K extends keyof StatLine>(statName: K, change: number, day: Date = new Date()) {
-    const line: StatLine | null = await getStat(day);
-    if (line === null || line === undefined) {
-        return false;
-    }
+export async function updateStat<K extends keyof StatLine>(
+  statName: K,
+  change: number,
+  day: Date = new Date()
+) {
+  const line: StatLine | null = await getStat(day);
+  if (line === null || line === undefined) {
+    return false;
+  }
 
-    const oldVal = line[statName]
+  const oldVal = line[statName];
 
-    if (oldVal === null) {
-        return false
-    }
+  if (oldVal === null) {
+    return false;
+  }
 
-    line[statName] = oldVal + change;
+  line[statName] = oldVal + change;
 
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
-    return true;
+  AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+  return true;
 }
 
 /**
@@ -283,39 +295,43 @@ export async function updateStat<K extends keyof StatLine>(statName: K, change: 
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
-    let returnValue: [string, boolean][][] = [];
-    let isFull = true;
+  let returnValue: [string, boolean][][] = [];
+  let isFull = true;
 
-    for (let currentDay = lowerDate; currentDay <= upperDate; currentDay.setDate(currentDay.getDate() + 1)) {
-        let dayStat = await getStat(currentDay);
-        const dayGoals = await getCurrentGoal(null, currentDay);
-        let today: [string, boolean][] = []
+  for (
+    let currentDay = lowerDate;
+    currentDay <= upperDate;
+    currentDay.setDate(currentDay.getDate() + 1)
+  ) {
+    let dayStat = await getStat(currentDay);
+    const dayGoals = await getCurrentGoal(null, currentDay);
+    let today: [string, boolean][] = [];
 
-        if (dayGoals === null || typeof dayGoals === "number") {
-            // only possible if no goal was ever set, which would be an incorrect state
-            return null
-        }
-
-        if (dayStat === null) {
-            isFull = false;
-            dayStat = createStatLine();
-        }
-
-        for (let key in Object.keys(dayStat)) {
-            const achieved = dayStat[key as keyof StatLine] ?? -1
-            const goal = dayGoals[key as keyof StatLine] ?? 0
-
-            const complete = achieved <= goal;
-            today.push([key, complete]);
-        }
-
-        returnValue.push(today)
+    if (dayGoals === null || typeof dayGoals === 'number') {
+      // only possible if no goal was ever set, which would be an incorrect state
+      return null;
     }
 
-    return {
-        isFull: isFull,
-        vals: returnValue
+    if (dayStat === null) {
+      isFull = false;
+      dayStat = createStatLine();
     }
+
+    for (let key in Object.keys(dayStat)) {
+      const achieved = dayStat[key as keyof StatLine] ?? -1;
+      const goal = dayGoals[key as keyof StatLine] ?? 0;
+
+      const complete = achieved <= goal;
+      today.push([key, complete]);
+    }
+
+    returnValue.push(today);
+  }
+
+  return {
+    isFull: isFull,
+    vals: returnValue,
+  };
 }
 
 /**
@@ -327,19 +343,23 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
  *
  * @returns true if the value was updated correctly, false if something went wrong.
  */
-export async function setStat<K extends keyof StatLine>(statName: K, value: number, day: Date = new Date()) {
-    const line: StatLine | null = await getStat(day);
-    if (line === null || line === undefined) {
-        return false;
-    }
+export async function setStat<K extends keyof StatLine>(
+  statName: K,
+  value: number,
+  day: Date = new Date()
+) {
+  const line: StatLine | null = await getStat(day);
+  if (line === null || line === undefined) {
+    return false;
+  }
 
-    if (line[statName] === null) {
-        return false;
-    }
+  if (line[statName] === null) {
+    return false;
+  }
 
-    line[statName] = value;
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
-    return true;
+  line[statName] = value;
+  AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+  return true;
 }
 
 /**
@@ -352,68 +372,70 @@ export async function setStat<K extends keyof StatLine>(statName: K, value: numb
  *
  * @return True if there was not data for this day and stat, false if it already existed.
  */
-export async function insertStat<K extends keyof StatLine>(statName: K, value: number, day: Date = new Date()) {
-    let line = await getStat(day)
-    if (line === null || line === undefined) {
-        line = createStatLine({[statName]: value})
-    } else {
-        if (line[statName] !== null) {
-            return false
-        }
-        line[statName] = value
+export async function insertStat<K extends keyof StatLine>(
+  statName: K,
+  value: number,
+  day: Date = new Date()
+) {
+  let line = await getStat(day);
+  if (line === null || line === undefined) {
+    line = createStatLine({ [statName]: value });
+  } else {
+    if (line[statName] !== null) {
+      return false;
     }
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
-    return true
+    line[statName] = value;
+  }
+  AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+  return true;
 }
-
 
 // ---------------------------------- Settings Functions ----------------------------------
 
-
 // ------------------------------- Deprecated Water Funtions ------------------------------
 
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 // Handles water in storage. May be used as template for future objects.
 export function useWater(menuOpen: boolean) {
-    const [water, setWater] = useState(0);
+  const [water, setWater] = useState(0);
 
-    // Sends water value to storage.
-    async function setWaterData(water: number) {
-        try {
-            await AsyncStorage.setItem('water', JSON.stringify(water));
-        } catch (error) {
-            console.error('Setting water went wrong.', error);
-        }
+  // Sends water value to storage.
+  async function setWaterData(water: number) {
+    try {
+      await AsyncStorage.setItem('water', JSON.stringify(water));
+    } catch (error) {
+      console.error('Setting water went wrong.', error);
+    }
+  }
+
+  // Gets water value from storage.
+  async function getWaterData(): Promise<number> {
+    try {
+      const water = await AsyncStorage.getItem('water');
+      return water !== null ? parseInt(water) : 0;
+    } catch (error) {
+      console.error('Getting water went wrong.', error);
+      return 0;
+    }
+  }
+
+  function saveWater(value: number) {
+    setWaterData(value);
+    setWater(value);
+    console.log('saved water ' + value);
+  }
+
+  // Gets water data from storage on render.
+  useEffect(() => {
+    async function getWater() {
+      const saved_water = await getWaterData();
+      setWater(saved_water);
+      console.log('retrieved water ' + saved_water);
     }
 
-    // Gets water value from storage.
-    async function getWaterData(): Promise<number> {
-        try {
-            const water = await AsyncStorage.getItem('water');
-            return water !== null ? parseInt(water) : 0;
-        } catch (error) {
-            console.error('Getting water went wrong.', error);
-            return 0;
-        }
-    }
+    getWater();
+  }, []);
 
-    function saveWater(value: number) {
-        setWaterData(value)
-        setWater(value)
-        console.log('saved water ' + value)
-    }
-
-    // Gets water data from storage on render.
-    useEffect(() => {
-        async function getWater() {
-            const saved_water = await getWaterData();
-            setWater(saved_water);
-            console.log('retrieved water ' + saved_water)
-        }
-
-        getWater();
-    }, [])
-
-    return {water, saveWater};
+  return { water, saveWater };
 }

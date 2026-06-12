@@ -19,7 +19,7 @@ export const STATS: Record<StatName, StatInfo> = {
   water: {
     title: 'Water drank',
     unit: 'glasses',
-    barconfig: { barcolor: '#74ccf4', goalcolor: '#15a4e6', maxValue: 20 },
+    barconfig: { barcolor: '#74ccf4', goalcolor: '#15a4e6', maxValue: 100 },
   },
 };
 

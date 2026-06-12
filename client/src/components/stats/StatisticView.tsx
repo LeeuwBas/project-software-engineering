@@ -2,22 +2,20 @@ import { AppText } from '@/components/AppText';
 import { StatisticChart } from '@/components/stats/StatisticChart';
 import { Button } from '@/components/ui/button';
 import { getChartLabels } from '@/lib/stats/chart-labels';
-import { fetchStatistic } from '@/lib/stats/statistics-api';
+import { HistoryPeriod, PERIOD_CONFIG, StatName, STATS } from '@/lib/stats/statistics-types';
 import {
-  HistoryPeriod,
-  PERIOD_CONFIG,
-  StatisticResponse,
-  StatName,
-  STATS,
-} from '@/lib/stats/statistics-types';
+  getStatBarChart,
+  getStatSummary,
+  StatisticsBarChart,
+  StatisticsSummary,
+} from '@/lib/storage';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 export function StatisticView({ stat }: { stat: StatName }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
-  // const [summary, setSummary] = useState<StatisticsSummary | null>(null);
-  // const [bars, setBars] = useState<StatisticsBarChart | null>(null);
-  const [response, setResponse] = useState<StatisticResponse | null>(null);
+  const [summary, setSummary] = useState<StatisticsSummary | null>(null);
+  const [bars, setBars] = useState<StatisticsBarChart | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,9 +29,15 @@ export function StatisticView({ stat }: { stat: StatName }) {
 
         const config = PERIOD_CONFIG[period];
 
-        const data = await fetchStatistic(stat, config.days, config.bins);
-
-        setResponse(data);
+        // Temporary calls to storage.ts functions
+        // Use API bridge when it is done
+        const now = new Date();
+        const past = new Date();
+        past.setTime(now.getTime() - 1000 * 60 * 60 * 24 * config.days);
+        const barsData = await getStatBarChart('waterDrank', past, now, config.bins);
+        setBars(barsData);
+        const summaryData = await getStatSummary('waterDrank', config.days);
+        setSummary(summaryData);
       } catch (err) {
         console.error(err);
 
@@ -46,7 +50,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
     loadData();
   }, [period, stat]);
 
-  const values = response ? Object.values(response.bins) : [0]; // Placeholder for when fetching data fails
+  const values = bars ? Object.values(bars.bins) : [0]; // Placeholder for when fetching data fails
 
   const labels = getChartLabels(period);
 
@@ -54,7 +58,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
     <View className="w-full px-2">
       <View>
         <AppText className="text-xl font-bold">{statData.title}</AppText>
-        <AppText>Today: {loading ? 'Loading...' : `${response?.today} ${statData.unit}`}</AppText>
+        {/* <AppText>Today: {loading ? 'Loading...' : `${response?.today} ${statData.unit}`}</AppText> */}
       </View>
       <View className="mb-4 flex-row gap-2">
         <Button
@@ -84,12 +88,14 @@ export function StatisticView({ stat }: { stat: StatName }) {
       )}
 
       <View className="mt-4 gap-2">
-        <AppText>Highest: {loading ? 'Loading...' : `${response?.high} ${statData.unit}`}</AppText>
+        <AppText>
+          Highest: {loading ? 'Loading...' : `${summary?.maximum} ${statData.unit}`}
+        </AppText>
 
-        <AppText>Lowest: {loading ? 'Loading...' : `${response?.low} ${statData.unit}`}</AppText>
+        <AppText>Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${statData.unit}`}</AppText>
 
         <AppText>
-          Average: {loading ? 'Loading...' : `${response?.average} ${statData.unit}`}
+          Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`}
         </AppText>
 
         {error && <AppText className="text-red-500">Failed to load statistics: {error}</AppText>}
