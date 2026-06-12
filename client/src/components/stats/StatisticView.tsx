@@ -12,6 +12,14 @@ import {
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
+function generateData(bins: number): number[] {
+  const values = Array(bins);
+  for (let i = 0; i < values.length; i++) {
+    values[i] = Math.round(Math.random() * 20 + 50);
+  }
+  return values;
+}
+
 export function StatisticView({ stat }: { stat: StatName }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
   const [summary, setSummary] = useState<StatisticsSummary | null>(null);
@@ -50,7 +58,9 @@ export function StatisticView({ stat }: { stat: StatName }) {
     loadData();
   }, [period, stat]);
 
-  const values = bars ? Object.values(bars.bins) : [0]; // Placeholder for when fetching data fails
+  // const values = bars ? Object.values(bars.bins) : [0]; // Placeholder for when fetching data fails
+  const config = PERIOD_CONFIG[period];
+  const values = generateData(config.bins);
 
   const labels = getChartLabels(period);
 
