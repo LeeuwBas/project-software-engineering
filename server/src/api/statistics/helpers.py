@@ -88,6 +88,21 @@ def getDay(user: str, statistic: str | None, day: datetime | None = None):
     else:
         return getattr(line, statistic)
 
+def setDay(user: str, statistic: dict[str, int], day: datetime | None = None):
+    """
+        Sets new data for a specified date.
+        Takes the dictionary in statistics for all data, only overwrites.
+    """
+    if day is None:
+        day = datetime.now()
+
+    statistic.update({
+        'user': user,
+        'date': day.date()
+    })
+
+    Stats.objects.update_or_create(**statistic)
+
 def getGoal(user: str, statName: str | None, day: datetime | None = None):
     """
         Retrieves the latest goal, either for a given stat or just for all stats
