@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Canvas, useImage, rect, Skia, Atlas, FilterMode, MipmapMode } from '@shopify/react-native-skia';
 import { useSharedValue, useFrameCallback, useDerivedValue } from 'react-native-reanimated';
 
-import { ANIMATIONS, AnimationName } from '@/lib/animations';
+import { ANIMATIONS, AnimationName } from '@/lib/animations/library';
 
 interface AnimationProps {
   animation: AnimationName;
@@ -34,18 +34,17 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     frame.value = Math.floor((info.timeSinceFirstFrame / 1000) * config.fps) % config.frameCount;
   });
 
-  // Derive dynamic texture positions (rects) based on current frame
+  // Samples frame based on index and frame size
   const sprites = useDerivedValue(() => {
     const x = frame.value * config.width;
     return [rect(x, 0, config.width, config.height)];
   });
 
-  // 3. Derive transforms scaled and positioned correctly
+  // Scales sampled frame correctly
   const transforms = useDerivedValue(() => {
     return [Skia.RSXform(scale, 0, 0, 0)];
   });
 
-  // Prevents rendering until the image asset is fully ready
   if (!image) {
     return null;
   }
