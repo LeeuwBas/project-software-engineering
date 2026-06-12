@@ -1,6 +1,6 @@
 import { useWater } from '@/lib/api/WaterBridge';
-import { GlassWater } from 'lucide-react-native';
 import { View, Image } from 'react-native';
+
 
 export default function WaterBar() {
   const water = useWater() ?? 0;
