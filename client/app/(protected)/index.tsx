@@ -50,8 +50,8 @@ export default function App() {
           <Topbar />
 
           <Main
-            leftSideStat="water"
-            leftSideValue={water}
+            leftSideStat="none"
+            leftSideValue={0}
             rightSideStat="none"
             rightSideValue={0}
           />

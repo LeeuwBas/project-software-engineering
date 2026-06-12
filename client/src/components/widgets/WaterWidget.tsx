@@ -5,6 +5,7 @@ import {AppText} from '../AppText';
 import {waterBridge} from "@/lib/api/APIBridge";
 import {useWater} from "@/lib/api/WaterBridge";
 
+
 export default function WaterWidget(){
 
     const water = useWater()
