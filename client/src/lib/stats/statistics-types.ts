@@ -1,10 +1,11 @@
 import { LucideIcon } from 'lucide-react-native';
 import { SvgProps } from 'react-native-svg';
 
-export type StatName = 'water' | 'sleep';
+export type StatName = 'water';
 
 export interface barConfig {
-  color: string;
+  barcolor: string;
+  goalcolor: string;
   maxValue: number;
 }
 
@@ -18,12 +19,7 @@ export const STATS: Record<StatName, StatInfo> = {
   water: {
     title: 'Water drank',
     unit: 'glasses',
-    barconfig: { color: '#74ccf4', maxValue: 20 },
-  },
-  sleep: {
-    title: 'test title',
-    unit: 'test unit',
-    barconfig: { color: 'lightgrey', maxValue: 20 },
+    barconfig: { barcolor: '#74ccf4', goalcolor: '#15a4e6', maxValue: 20 },
   },
 };
 
