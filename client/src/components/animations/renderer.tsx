@@ -1,6 +1,6 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { Canvas, useImage, rect, Skia, Atlas, FilterMode, MipmapMode } from '@shopify/react-native-skia';
+import { useEffect, useRef } from 'react';
+import { Canvas, useImage, rect, Skia, Atlas, FilterMode, MipmapMode, SkImage } from '@shopify/react-native-skia';
 import { useSharedValue, useFrameCallback, useDerivedValue } from 'react-native-reanimated';
 
 import { ANIMATIONS, AnimationName } from '@/lib/animations/library';
@@ -45,9 +45,15 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     return [Skia.RSXform(scale, 0, 0, 0)];
   });
 
-  if (!image) {
-    return null;
+
+  // keep old image while switching
+  const lastImage = useRef<SkImage | null>(null);
+
+  if (image) {
+    lastImage.current = image;
   }
+
+  const displayImage = image ?? lastImage.current;
 
   return (
     <Canvas style={{ width: config.width * scale, height: config.height * scale }}>
