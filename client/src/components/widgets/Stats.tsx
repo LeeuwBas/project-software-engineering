@@ -3,23 +3,21 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import CalendarOverview from '@/components/widgets/CalendarOverview';
 import { useAppContext } from '@/lib/AppContext';
-import { StatName } from '@/lib/stats/statistics-types';
+import { Tab, TabId } from '@/lib/stats/statistics-types';
 import PersonIcon from '@assets/icons/person.svg';
-import { CalendarDays, GlassWater, LucideIcon } from 'lucide-react-native';
-import { useState } from 'react';
+import { CalendarDays, GlassWater } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { SvgProps } from 'react-native-svg';
-
-type TabId = 'calender' | StatName;
-
-type Tab = {
-  id: TabId;
-  icon: LucideIcon | React.FC<SvgProps>;
-};
 
 export default function Stats({}: {}) {
   const { statsOpen } = useAppContext();
   const [activeTab, setActiveTab] = useState<TabId>('calender');
+
+  useEffect(() => {
+    if (!statsOpen) {
+      setActiveTab('calender');
+    }
+  }, [statsOpen]);
 
   if (!statsOpen) {
     return null;
@@ -28,7 +26,7 @@ export default function Stats({}: {}) {
   const labels: Tab[] = [
     { id: 'calender', icon: CalendarDays },
     { id: 'water', icon: GlassWater },
-    { id: 'test', icon: PersonIcon },
+    { id: 'sleep', icon: PersonIcon },
   ];
 
   return (

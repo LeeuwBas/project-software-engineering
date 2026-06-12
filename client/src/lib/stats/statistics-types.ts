@@ -1,4 +1,7 @@
-export type StatName = 'water' | 'test';
+import { LucideIcon } from 'lucide-react-native';
+import { SvgProps } from 'react-native-svg';
+
+export type StatName = 'water' | 'sleep';
 
 export interface barConfig {
   color: string;
@@ -12,8 +15,16 @@ export interface StatInfo {
 }
 
 export const STATS: Record<StatName, StatInfo> = {
-  water: { title: 'Water drank', unit: 'glasses', barconfig: { color: '#74ccf4', maxValue: 20 } },
-  test: { title: 'test title', unit: 'test unit', barconfig: { color: 'lightgrey', maxValue: 20 } },
+  water: {
+    title: 'Water drank',
+    unit: 'glasses',
+    barconfig: { color: '#74ccf4', maxValue: 20 },
+  },
+  sleep: {
+    title: 'test title',
+    unit: 'test unit',
+    barconfig: { color: 'lightgrey', maxValue: 20 },
+  },
 };
 
 export interface StatisticResponse {
@@ -40,4 +51,11 @@ export const PERIOD_CONFIG: Record<HistoryPeriod, any> = {
     days: 360,
     bins: 12,
   },
+};
+
+export type TabId = 'calender' | StatName;
+
+export type Tab = {
+  id: TabId;
+  icon: LucideIcon | React.FC<SvgProps>;
 };

@@ -15,6 +15,8 @@ import { View } from 'react-native';
 
 export function StatisticView({ stat }: { stat: StatName }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
+  // const [summary, setSummary] = useState<StatisticsSummary | null>(null);
+  // const [bars, setBars] = useState<StatisticsBarChart | null>(null);
   const [response, setResponse] = useState<StatisticResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
