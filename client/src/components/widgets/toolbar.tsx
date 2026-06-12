@@ -1,19 +1,14 @@
 import Menu from '@/components/widgets/Menu';
-import {PopupConfigs} from '@/lib/types';
-import {useRouter} from 'expo-router';
+import { PopupConfigs } from '@/lib/types';
+import { useRouter } from 'expo-router';
 import ChartIcon from '@assets/icons/chart.svg';
 import PersonIcon from '@assets/icons/person.svg';
 import PlusIcon from '@assets/icons/plus.svg';
 import CheckIcon from '@assets/icons/check.svg';
-import {Pressable, View} from 'react-native';
+import { Pressable, View } from 'react-native';
 import Settings from './Settings';
 
-export default function Toolbar({
-  popup,
-}: {
-  popup: PopupConfigs;
-}) {
-
+export default function Toolbar({ popup }: { popup: PopupConfigs }) {
   const popupOpen: boolean = popup.menuOpen || popup.settingsOpen;
   const router = useRouter();
 
@@ -27,7 +22,7 @@ export default function Toolbar({
       <Settings isOpen={popup.settingsOpen} />
 
       {/* The toolbar itself */}
-      <View className="flex w-full flex-row justify-center gap-32 border-t-4 border-border bg-white p-1">
+      <View className="flex w-full flex-row justify-center gap-32 border-t-4 border-border bg-card p-1">
         <Pressable
           disabled={popupOpen}
           className={`p-2 transition-opacity duration-200 ${popupOpen ? 'opacity-0' : 'opacity-100'}`}
@@ -37,7 +32,7 @@ export default function Toolbar({
 
         <Pressable
           disabled={popup.settingsOpen}
-          className={`shadow-block border-primary-dark absolute -top-[25px] size-16 items-center justify-center border-4 bg-primary transition-opacity duration-200 ${popup.settingsOpen ? 'opacity-0' : 'opacity-100'}`}
+          className={`absolute -top-[25px] size-16 items-center justify-center border-4 border-primary-dark bg-primary shadow-block transition-opacity duration-200 ${popup.settingsOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => close()}>
           {popup.menuOpen && <CheckIcon width={50} height={50} color={'white'} />}
 
