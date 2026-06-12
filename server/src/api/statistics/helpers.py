@@ -16,15 +16,17 @@ def getStatDict(line: Stats | Goals):
         'water': line.water
     }
 
-def getSummary(days: int, user: str, statistic: str):
+def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime):
     """
         Aggregates a summary for the requested statistic, summarizes the past days,
         amount is given in 'days'.
     """
-    filter_dict = {"user": user}
-    if days > 0:
-        oldest = timezone.now() - timedelta(days)
-        filter_dict["date__gte"] = oldest
+
+    filter_dict = {
+        "user": user,
+        'date__gt': lowerDay.date(),
+        'date__lte': upperDay.date()
+    }
 
     lines = Stats.objects.filter(**filter_dict)
 
