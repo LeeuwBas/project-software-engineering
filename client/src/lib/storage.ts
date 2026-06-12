@@ -49,7 +49,7 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
 function calculateDate(date: Date, stat: boolean = true) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
   return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`;
 }
@@ -162,16 +162,9 @@ export async function getNamedStat(statName: string, day: Date) {
 export async function getNamedStatRange(statName: string, lowerDay: Date, upperDay: Date) {
   const lines = await getStatRange(lowerDay, upperDay);
 
-  if (lines === null) {
-    return null;
-  }
-
   return lines
-    .map(([date, line]): [string, number | boolean | null] => [
-      date,
-      line[statName as keyof StatLine],
-    ])
-    .filter((item): item is [string, number | boolean] => item[1] != null);
+    .map(([date, line]): [string, number | null] => [date, line[statName as keyof StatLine]])
+    .filter((item): item is [string, number] => item[1] != null);
 }
 
 /**
@@ -213,6 +206,7 @@ export async function getStatSummary(statName: string, days: number) {
  * @param statName - Internal name of the requested statistic.
  * @param lowerDay - Date object of the first day.
  * @param upperDay - Date object of the last day.
+ * @param binCount - Amount of bins to use.
  *
  * @return StatisticsBarChart interface object with the requested data.
  */
@@ -233,25 +227,26 @@ export async function getStatBarChart(
   returnValue.daysPerBin = days / binCount;
   returnValue.isFull = true;
 
-  let lowerBinDate = lowerDay;
-  const upperBinDate = lowerDay;
-  upperBinDate.setDate(upperBinDate.getDate() + returnValue.daysPerBin);
+  let lowerBinDate = new Date(lowerDay);
+  let upperBinDate = new Date(lowerDay);
+  upperBinDate.setDate(lowerBinDate.getDate() + returnValue.daysPerBin);
 
   for (let i = 0; i < binCount; i++) {
     const values = await getNamedStatRange(statName, lowerBinDate, upperBinDate);
-
-    if (values == null) {
-      return null;
-    }
 
     if (values.length < returnValue.daysPerBin) {
       returnValue.isFull = false;
     }
 
-    returnValue.bins.push(values.reduce((Acc, [d, x], _) => Acc + +x, 0) / values.length);
+    if (values.length !== 0) {
+      returnValue.bins.push(values.reduce((Acc, [d, x], _) => Acc + +x, 0) / values.length);
+    } else {
+      returnValue.bins.push(0);
+    }
 
     lowerBinDate = upperBinDate;
-    upperBinDate.setDate(upperBinDate.getDate() + returnValue.daysPerBin);
+    upperBinDate = new Date(lowerDay);
+    upperBinDate.setDate(upperBinDate.getDate() + (i + 2) * returnValue.daysPerBin);
   }
 
   return returnValue as StatisticsBarChart;
@@ -323,7 +318,10 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
     }
 
     for (let key in Object.keys(dayStat)) {
-      const complete = dayStat[key as keyof StatLine] <= dayGoals[key as keyof StatLine];
+      const achieved = dayStat[key as keyof StatLine] ?? -1;
+      const goal = dayGoals[key as keyof StatLine] ?? 0;
+
+      const complete = achieved <= goal;
       today.push([key, complete]);
     }
 

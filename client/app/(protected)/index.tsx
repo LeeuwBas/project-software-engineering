@@ -12,7 +12,8 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
-  const { popup, popupOpen } = useAppContext();
+  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
+    useAppContext();
   const appState = useRef(AppState.currentState);
   const water = useWater() ?? 0;
   const { pet } = usePet();
@@ -34,8 +35,9 @@ export default function App() {
   };
 
   function closePopup() {
-    if (popup.menuOpen) popup.changeMenu();
-    if (popup.settingsOpen) popup.changeSettings();
+    if (menuOpen) changeMenu();
+    if (settingsOpen) changeSettings();
+    if (statsOpen) changeStats();
   }
 
   return (
@@ -61,7 +63,7 @@ export default function App() {
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
-        <Toolbar popup={popup} />
+        <Toolbar />
       </LinearGradient>
     </SafeAreaView>
   );

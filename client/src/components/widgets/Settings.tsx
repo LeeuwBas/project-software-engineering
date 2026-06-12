@@ -1,17 +1,19 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useAppContext } from '@/lib/AppContext';
 import { useAuth } from '@/lib/auth/AuthManager';
-import { useRouter } from 'expo-router';
 import { View } from 'react-native';
+import { useRouter } from 'expo-router';
 
-export default function Settings({ isOpen }: { isOpen: boolean }) {
-  if (!isOpen) {
+export default function Settings({}: {}) {
+  const { settingsOpen } = useAppContext();
+  const auth = useAuth();
+  const router = useRouter();
+
+  if (!settingsOpen) {
     return;
   }
-
-  const router = useRouter();
-  const auth = useAuth();
 
   type SettingItem = {
     label: string;
@@ -33,7 +35,7 @@ export default function Settings({ isOpen }: { isOpen: boolean }) {
 
   return (
     <View
-      className={`-top-6 transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
+      className={`-top-6 transition-opacity duration-200 ${settingsOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full mb-2 w-full items-center">
         <Card>
           <CardContent>
