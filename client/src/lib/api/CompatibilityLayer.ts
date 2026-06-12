@@ -1,4 +1,4 @@
-import {getNamedStat, getStatBarChart, insertStat, setStat, StatLine, updateStat} from "@/lib/storage";
+import {getCalender, getNamedStat, getStatBarChart, insertStat, setStat, StatLine, updateStat} from "@/lib/storage";
 import {ValueZustand} from "@/lib/api/ValueState";
 
 
@@ -123,6 +123,11 @@ export async function getStatisticChart<K extends keyof StatLine>(name: K, bins:
     }
 
     const server = await loadServerChart(name, startDate, date, bins);
+
+    if (server === null) {
+        return storage?.bins ?? null
+    }
+
     let promise: Promise<any> = Promise.resolve()
 
     if (daysPerBin === 1) {
@@ -137,6 +142,27 @@ export async function getStatisticChart<K extends keyof StatLine>(name: K, bins:
     await promise
 
     return server;
+}
+
+export async function loadCalender(startDate: Date, endDate: Date) {
+    const storage = await getCalender(startDate, endDate)
+
+    if (storage !== null && storage.isFull) {
+        return storage.vals
+    }
+
+    const server = await loadServerCalendar(startDate, endDate)
+
+    if (server === null) {
+        return storage
+    }
+
+    return server
+}
+
+async function loadServerCalendar(startDate: Date, endDate: Date) {
+    // TODO load from server
+    return null
 }
 
 async function loadServerChart<K extends keyof StatLine>(name: K, startDate: Date, endDate: Date, bins: number) {
