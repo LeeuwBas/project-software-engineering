@@ -269,6 +269,25 @@ class StatisticsView(APIView):
 
         return Response(response)
 
+"""
+/api/stats/<date>/
+    get:
+        query param: statname, if None, return all stats of date
+
+    post:
+        data: statname and value dict. can have multiple in one go
+
+
+/api/barchart/<statname>/<startDate>/<endDate>/
+    get:
+        query param: bins, if not provided, default to 1 day per bin
+
+/api/summary/<statName>/<startDate>/<endDate>/
+    get:
+        no params
+
+"""
+
 
 class GoalManageView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
