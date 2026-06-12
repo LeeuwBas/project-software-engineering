@@ -379,6 +379,76 @@ class StatManageView(APIView):
         return Response("ok", 200)
 
 
+class BarchartView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+            summary="Retrieves data for a bar chart between given dates.",
+            description="""Retrieves the bin data to create a bar chart for a
+            given statistic at a given date range. If bins is supplied, it must
+            be divider of the amount of days. Date is exclusive on the lower
+            bound and inclusive on the upper bound.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="statName",
+                    description="name of the statistic to get the bar chart.",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="startDate",
+                    description="Start date of the bar chart. exclusive",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="endDate",
+                    description="End date of the bar chart. inclusive",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'days_per_bin': {
+                            'type': 'integer',
+                            'example': 5,
+                        },
+                        'bins': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                '0': 5,
+                                '1': 8,
+                                '2': 3
+                            }
+                        }
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def get(self, request, statName, startDate, endDate):
+        startDate = datetime.fromisoformat(startDate)
+        endDate = datetime.fromisoformat(endDate)
+
+        days = (endDate - startDate).days
+        bins = request.query_params.get('bins', days)
+
+        if days % bins != 0:
+            return Response("Invalid input", 400)
+
+        returnData = getBarChart(days, bins, request.user, statName)
+        return Response(returnData, 200)
+
+
 class GoalManageView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
