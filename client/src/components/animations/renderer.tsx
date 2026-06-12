@@ -29,18 +29,18 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     frame.value = 0;
   }, [animation]);
 
-  // driving the animation loop
+  // Calculates frame index in asset
   useFrameCallback((info) => {
     frame.value = Math.floor((info.timeSinceFirstFrame / 1000) * config.fps) % config.frameCount;
   });
 
-  // Samples frame based on index and frame size
+  // Samples frame based on index and frame size from asset
   const sprites = useDerivedValue(() => {
     const x = frame.value * config.width;
     return [rect(x, 0, config.width, config.height)];
   });
 
-  // Scales sampled frame correctly
+  // Scales sampled frame according to function input
   const transforms = useDerivedValue(() => {
     return [Skia.RSXform(scale, 0, 0, 0)];
   });
