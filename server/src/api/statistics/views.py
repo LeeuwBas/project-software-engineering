@@ -16,7 +16,7 @@ from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
 from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender
+from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender, setDay
 
 class StatsWaterRequestAverage(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -272,10 +272,10 @@ class StatisticsView(APIView):
 """
 /api/stats/<date>/
     get:
-        query param: statname, if None, return all stats of date
+        query param: statName, if None, return all stats of date
 
     post:
-        data: statname and value dict. can have multiple in one go
+        data: statName and value dict. can have multiple in one go
 
 
 /api/barchart/<statname>/<startDate>/<endDate>/
@@ -287,6 +287,96 @@ class StatisticsView(APIView):
         no params
 
 """
+
+class StatManageView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+            summary="Retrieves the statistics data of a given date.",
+            description="""Retrieves the statistics of a given date, if no name
+            for the statistic was provided, the API will return all known stats.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="date",
+                    description="date for which the requested goal was active",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                ),
+                OpenApiParameter(
+                    name="statName",
+                    description="Internal name of the goal. If not supplied, "\
+                            "the api will return all goals at the given date.",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.QUERY,
+                    required=False
+                )
+            ],
+            responses={
+                200: {
+                    'type': 'object',
+                    'properties': {
+                        'goals': {
+                            'type': 'object',
+                            'additionalProperties': {'type': 'integer'},
+                            'example': {
+                                'water': 5
+                            }
+                        }
+                    }
+                },
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def get(self, request, date):
+        statName = request.query_params.get('statName', None)
+        day = datetime.fromisoformat(date)
+
+        returnVal = getDay(request.user, statName, day)
+
+        return Response(returnVal, 200)
+
+    @extend_schema(
+            summary="Retrieves the statistics data of a given date.",
+            description="""Retrieves the statistics of a given date, if no name
+            for the statistic was provided, the API will return all known stats.
+            """,
+            parameters=[
+                OpenApiParameter(
+                    name="date",
+                    description="date for which the requested goal was active",
+                    type=OpenApiTypes.STR,
+                    location=OpenApiParameter.PATH,
+                    required=True
+                )
+            ],
+            request={
+                'application/json': {
+                    'type': 'object',
+                    'properties': {
+                        'stats': {
+                            'type': 'object',
+                            'description': "Statistics to be inserted. "
+                            "<internal_name>:<val>",
+                            'additionalProperties': {'type': 'number'}
+                        }
+                    }
+                }
+            },
+            responses={
+                200: "ok",
+                400: OpenApiResponse(description="Invalid input.")
+            }
+    )
+    def post(self, request, date):
+        stat_data = request.data.get('stats')
+        day = datetime.fromisoformat(date)
+
+        setDay(request.user, stat_data, day)
+
+        return Response("ok", 200)
 
 
 class GoalManageView(APIView):
