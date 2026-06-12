@@ -18,10 +18,7 @@ export default function WaterWidget({ water, setWater }: { water: number; setWat
         </View>
 
         <View className="flex flex-row items-center gap-2">
-          <Button
-            variant={'outline'}
-            disabled={water === 8}
-            onPress={() => alterWaterValue(1)}>
+          <Button variant={'outline'} disabled={water === 8} onPress={() => alterWaterValue(1)}>
             <Plus size={20} />
           </Button>
           <Button variant="outline" disabled={water === 0} onPress={() => alterWaterValue(-1)}>

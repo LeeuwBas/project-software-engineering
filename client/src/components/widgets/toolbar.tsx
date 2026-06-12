@@ -19,7 +19,7 @@ export default function Toolbar({}: {}) {
 
   function closeMenu() {
     if (menuOpen) {
-      waterBridge.setWater(draftWater);
+      waterBridge.set(draftWater);
       changeMenu();
     } else {
       changeMenu();
