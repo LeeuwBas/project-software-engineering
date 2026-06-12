@@ -304,7 +304,10 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
         }
 
         for (let key in Object.keys(dayStat)) {
-            const complete = dayStat[key as keyof StatLine] <= dayGoals[key as keyof StatLine];
+            const achieved = dayStat[key as keyof StatLine] ?? -1
+            const goal = dayGoals[key as keyof StatLine] ?? 0
+
+            const complete = achieved <= goal;
             today.push([key, complete]);
         }
 
