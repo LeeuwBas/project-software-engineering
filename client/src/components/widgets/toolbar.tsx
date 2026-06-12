@@ -22,7 +22,7 @@ export default function Toolbar({ popup }: { popup: PopupConfigs }) {
       <Settings isOpen={popup.settingsOpen} />
 
       {/* The toolbar itself */}
-      <View className="flex w-full flex-row justify-center gap-32 border-t-4 border-border bg-white p-1">
+      <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-white p-1">
         <Pressable
           disabled={popupOpen}
           className={`p-2 transition-opacity duration-200 ${popupOpen ? 'opacity-0' : 'opacity-100'}`}
