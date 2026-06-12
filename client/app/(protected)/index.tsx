@@ -1,4 +1,5 @@
-import Main from '@/components/widgets/mainview';
+import { usePet } from '@/components/contexts/PetContext';
+import PetHome from '@/components/widgets/PetHome';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
@@ -14,6 +15,7 @@ export default function App() {
   const { popup, popupOpen } = useAppContext();
   const appState = useRef(AppState.currentState);
   const water = useWater() ?? 0;
+  const { pet } = usePet();
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -42,19 +44,15 @@ export default function App() {
         colors={['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd']}
         locations={[0, 0.5, 0.5, 1]}
         className="flex flex-col"
-        style={{ flex: 1 }}
-        >
+        style={{ flex: 1 }}>
         <Pressable className="absolute inset-0 z-10 size-full" onPress={closePopup} />
 
         <View className="flex-1 p-4">
           <Topbar />
 
-          <Main
-            leftSideStat="none"
-            leftSideValue={0}
-            rightSideStat="none"
-            rightSideValue={0}
-          />
+          <View className="flex-1 justify-center">
+            <PetHome id={pet} />
+          </View>
         </View>
 
         <BlurView
