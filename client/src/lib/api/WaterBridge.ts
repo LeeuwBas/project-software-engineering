@@ -1,6 +1,6 @@
 import {LoadableBridge} from "@/lib/api/APIBridge";
 import {createNewState, useValue} from "@/lib/api/ValueState";
-import {loadZustand, setZustand} from "@/lib/api/CompatibilityLayer";
+import {loadZustand, setZustand} from "@/lib/api/GenericStorage";
 
 // Use the water bridge when the values need to be manipulated.
 export interface WaterBridge {
