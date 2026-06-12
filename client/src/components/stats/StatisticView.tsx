@@ -99,13 +99,21 @@ export function StatisticView({ stat }: { stat: StatName }) {
 
       <View className="mt-4 gap-2">
         <AppText>
-          Highest: {loading ? 'Loading...' : `${summary?.maximum} ${statData.unit}`}
+          {/* Highest: {loading ? 'Loading...' : `${summary?.maximum} ${statData.unit}`} */}
+          Highest: {loading ? 'Loading...' : `${Math.max(...values)} ${statData.unit}`}
         </AppText>
 
-        <AppText>Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${statData.unit}`}</AppText>
+        {/* <AppText>Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${statData.unit}`}</AppText> */}
+        <AppText>
+          Lowest: {loading ? 'Loading...' : `${Math.min(...values)} ${statData.unit}`}
+        </AppText>
 
         <AppText>
-          Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`}
+          {/* Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`} */}
+          Average:{' '}
+          {loading
+            ? 'Loading...'
+            : `${Math.round((values.reduce((Acc, x) => Acc + x) / values.length) * 10) / 10} ${statData.unit}`}
         </AppText>
 
         {error && <AppText className="text-red-500">Failed to load statistics: {error}</AppText>}
