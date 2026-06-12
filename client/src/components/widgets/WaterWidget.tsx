@@ -1,21 +1,19 @@
-import {Button} from '@/components/ui/button';
-import {GlassWater, Minus, Plus} from 'lucide-react-native';
-import {Text, View} from 'react-native';
-import {AppText} from '../AppText';
-import {waterBridge} from "@/lib/api/APIBridge";
-import {useWater} from "@/lib/api/WaterBridge";
+import { Button } from '@/components/ui/button';
+import { GlassWater, Minus, Plus } from 'lucide-react-native';
+import { Text, View } from 'react-native';
+import { AppText } from '../AppText';
+import { waterBridge } from '@/lib/api/APIBridge';
+import { useWater } from '@/lib/api/WaterBridge';
 
+export default function WaterWidget() {
+  const water = useWater();
 
-export default function WaterWidget(){
-
-    const water = useWater()
-
-    async function alterWaterValue(value: number) {
-        if (water === null) {
-            return
-        }
-        await waterBridge.setWater(water + value)
+  async function alterWaterValue(value: number) {
+    if (water === null) {
+      return;
     }
+    await waterBridge.setWater(water + value);
+  }
 
   return (
     <>
@@ -26,11 +24,14 @@ export default function WaterWidget(){
         </View>
 
         <View className="flex flex-row items-center gap-2">
-          <Button variant={'outline'} onPress={() => alterWaterValue(10)}>
-            <Plus size={35} />
+          <Button
+            variant={'outline'}
+            disabled={water === 8}
+            onPress={() => alterWaterValue(1)}>
+            <Plus size={20} />
           </Button>
-          <Button variant="outline" onPress={() => alterWaterValue(-10)}>
-            <Minus size={35} />
+          <Button variant="outline" disabled={water === 0} onPress={() => alterWaterValue(-1)}>
+            <Minus size={20} />
           </Button>
         </View>
       </View>

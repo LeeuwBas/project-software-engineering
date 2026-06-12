@@ -3,11 +3,7 @@ import { View } from 'react-native';
 import StepsWidget from './StepsWidget';
 import WaterWidget from './WaterWidget';
 
-export default function Menu({
-  isOpen,
-}: {
-  isOpen: boolean;
-}) {
+export default function Menu({ isOpen }: { isOpen: boolean }) {
   // TODO: Add backend for retrieving name
   const name = 'Alex';
 
@@ -23,7 +19,7 @@ export default function Menu({
           <CardHeader className="items-center">
             <CardTitle className="mx-6 my-4 text-2xl font-bold">{name}</CardTitle>
           </CardHeader>
-          <CardContent className="w-full items-center">
+          <CardContent className="w-full max-w-full items-center">
             <WaterWidget />
             <StepsWidget />
           </CardContent>
