@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { Canvas, useImage, rect, Skia, Atlas, FilterMode, MipmapMode } from '@shopify/react-native-skia';
 import { useSharedValue, useFrameCallback, useDerivedValue } from 'react-native-reanimated';
 
@@ -23,8 +24,12 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
   const frame = useSharedValue(0);
+  
+  useEffect(() => {
+    frame.value = 0;
+  }, [animation]);
 
-  // Driving the animation loop
+  // driving the animation loop
   useFrameCallback((info) => {
     frame.value = Math.floor((info.timeSinceFirstFrame / 1000) * config.fps) % config.frameCount;
   });

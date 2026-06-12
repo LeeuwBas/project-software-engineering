@@ -17,17 +17,17 @@ export default function Main(
 ) {
     return (
         <View className="flex-row flex-1">
-            <View className="w-5">
+            {/* <View className="w-5">
                 <Statbar stat={leftSideStat} value={leftSideValue}/>
-            </View>
+            </View> */}
 
             <View className="flex-1 justify-center">
                 <Pet />
             </View>
 
-            <View className="w-5">
+            {/* <View className="w-5">
                 <Statbar stat={rightSideStat} value={rightSideValue}/>
-            </View>
+            </View> */}
         </View>
     )
 }
