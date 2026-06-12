@@ -1,5 +1,6 @@
 import {getNamedStat, insertStat, setStat, StatLine, updateStat} from "@/lib/storage";
 import {ValueZustand} from "@/lib/api/ValueState";
+import {getAPI} from "@/lib/api/ApiManager";
 
 
 /**
@@ -16,7 +17,9 @@ export async function loadZustand<K extends keyof StatLine>(state: ValueZustand,
         throw Error(`${name} already loaded`)
     }
 
-    const loadedValue = await getStatistic(name)
+    // For the current day we can default to 0. For other days we cannot.
+    const loadedValue = await getStatistic(name) ?? 0
+
     state.getState().setValue(loadedValue);
     return loadedValue;
 }
@@ -54,6 +57,11 @@ export async function getStatistic<K extends keyof StatLine>(name: K, date: Date
         return storage;
     }
     const server = await loadServer(name, date);
+
+    if (server === null) {
+        return null
+    }
+
     const inserted = await insertStat(name, server, date)
 
     if (!inserted) {
@@ -88,7 +96,7 @@ export async function setStatistic<K extends keyof StatLine>(name: K, value: num
  * @param increment the amount to increment by, can be negative.
  * @param date the date to change
  *
- * @returns true
+ * @returns true if successful, false if the network is offline.
  */
 export async function incrementStatistic<K extends keyof StatLine>(name: K, increment: number, date: Date = new Date()) {
     if (await updateStat(name, increment, date)) {
@@ -96,6 +104,11 @@ export async function incrementStatistic<K extends keyof StatLine>(name: K, incr
     }
 
     const server = await loadServer(name, date)
+
+    if (server === null) {
+        return false;
+    }
+
     if (!await insertStat(name, server + increment, date)) {
         throw Error("Value set while loading from server")
     }
@@ -103,6 +116,13 @@ export async function incrementStatistic<K extends keyof StatLine>(name: K, incr
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
-    // TODO load from server
-    return 0
+    const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`
+
+    const result = await getAPI(endpoint)
+
+    if (result === null) {
+        return null
+    }
+
+    return +result.stats[name]
 }
