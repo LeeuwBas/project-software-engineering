@@ -41,8 +41,7 @@ export async function initializeApiManager() {
     ).then(); // Map to void promise
 }
 
-export async function getCalender(startDate: Date, endDate: Date) {
-
+export async function getGoalCalender(startDate: Date, endDate: Date) {
 }
 
 
