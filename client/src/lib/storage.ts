@@ -125,7 +125,7 @@ async function getStatRange(lowerDay: Date, upperDay: Date) {
     const raw = await AsyncStorage.multiGet(dates);
     const lines = raw.map(([date, line]): [string, StatLine] => [date, (line ? JSON.parse(line) : null)])
 
-    return lines.filter(([_, val]) => val != null)
+    return lines//.filter(([_, val]) => val != null)
 }
 
 /**
