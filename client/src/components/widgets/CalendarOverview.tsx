@@ -20,6 +20,7 @@ export default function CalendarOverview() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
+    const today = new Date();
 
     let last_day = null
     let renderedDayAmount = 0
@@ -31,7 +32,6 @@ export default function CalendarOverview() {
         const startDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
         const totalDays = new Date(year, month + 1, 0).getDate();
         const totalPrev = new Date(year, month, 0).getDate(); // Total days in the previous month
-        const today = new Date();
 
         // Push filler cells to align correctly with weekdays
         for (let i = startDayOfWeek-1; i >= 0; i--) {
@@ -56,7 +56,7 @@ export default function CalendarOverview() {
 
         // Push cells of coming month
         for (let i = 1; i <= (grid.length % 7); i++) {
-            const newDate: Date = new Date(year, month, i);
+            const newDate: Date = new Date(year, month+1, i);
             const newCell: calendarCell = {
                 id: `nextCell-${i}`, date: newDate, value: i, currentDay: false, active: false, hidden: false,
             };
@@ -79,24 +79,29 @@ export default function CalendarOverview() {
     // const calendarStatData = getCalender(dayGrid[0].date, dayGrid[dayGrid.length - 1].date)
     // console.log(calendarStatData)
     
-    const dummy_data = Object.fromEntries(
-        Array.from({ length: renderedDayAmount }, (_, i) => {
-        const date = new Date(dayGrid[0].date);
-        date.setDate(date.getDate() + i);
+    const dummy_data = useMemo(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        return [
-            date.toDateString(),
-            {
-                water: Math.random() < 0.5,
-                steps: Math.random() < 0.5,
-                sleep: Math.random() < 0.5,
-            },
-            ];
-        })
-    );
+        return Object.fromEntries(
+            dayGrid.map((day) => {
+                const cellDate = new Date(day.date);
+                cellDate.setHours(0, 0, 0, 0);
 
-    console.log(dummy_data)
-    
+                const isFuture = today < cellDate
+
+                return [
+                    day.date.toDateString(),
+                    {
+                        water: isFuture ? false : Math.random() < 0.5,
+                        steps: isFuture ? false : Math.random() < 0.5,
+                        sleep: isFuture ? false : Math.random() < 0.5,
+                    },
+                ];
+            })
+        );
+    }, [dayGrid, year, month]);
+
     return (
         <View>
             {/* Month/year displaty with arrow buttons */}
@@ -112,12 +117,13 @@ export default function CalendarOverview() {
                     {currentDate.toLocaleDateString("en-US", { month: "long" }) + " " + year}
                 </AppText>
 
-                <Pressable
-                    onPress={() => setCurrentDate(new Date(year, month + 1))}
-                    hitSlop={12}
-                >
-                    <ArrowBigRight size={24} />
-                </Pressable>
+                <View style={{ width: 24 }}>
+                {month !== today.getMonth() && (
+                    <Pressable onPress={() => setCurrentDate(new Date(year, month + 1))} hitSlop={12}>
+                        <ArrowBigRight size={24} />
+                    </Pressable>
+                )}
+                </View>
             </View>
 
             {/* Row of weekdays */}
