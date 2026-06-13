@@ -1,12 +1,11 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
-import { useAuthSwitchNoLoading, useSignOutAndRouteTo } from '@/lib/auth/AuthManager';
-import { View } from 'react-native';
-import { useColorScheme } from 'nativewind';
+import { useSignOutAndRouteTo } from '@/lib/auth/AuthManager';
 import Moon from '@assets/icons/moon.svg';
 import SunnyCloud from '@assets/icons/sunny_cloud.svg';
+import { useColorScheme } from 'nativewind';
+import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
 export default function Settings({ isOpen }: { isOpen: boolean }) {
@@ -14,8 +13,7 @@ export default function Settings({ isOpen }: { isOpen: boolean }) {
     return;
   }
 
-  const authSwitchNL = useAuthSwitchNoLoading()
-  const signOutGo = useSignOutAndRouteTo()
+  const signOutGoTo = useSignOutAndRouteTo()
 
   type SettingItem = {
     label: string;
@@ -30,19 +28,13 @@ export default function Settings({ isOpen }: { isOpen: boolean }) {
     { label: 'Change Pet', effect: null },
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
-    { label: 'Sign out', effect: () => auth?.signOut() },
+    { label: 'Sign out', effect: signOutGoTo },
     {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,
       icon: dark ? SunnyCloud : Moon,
     },
   ];
-
-  function executeEffect(item: SettingItem) {
-    if (item && item.effect) {
-      item.effect();
-    }
-  }
 
   return (
     <View
@@ -57,7 +49,7 @@ export default function Settings({ isOpen }: { isOpen: boolean }) {
                   className="my-2 flex h-12"
                   key={item.label}
                   variant="secondary"
-                  onPress={() => executeEffect(item)}>
+                  onPress={() => {item.effect?.();}}>
                   {Icon && <Icon width={24} height={24} className="text-white" />}
                   <AppText className="font-bold text-white">{item.label}</AppText>
                 </Button>
