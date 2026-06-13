@@ -79,7 +79,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
         setAccessToken(receivedAccessToken);
         setRefreshToken(receivedRefreshToken);
-        console.log("signIn() success");
+        console.log("Successfully logged in");
         return true;
     }
 
