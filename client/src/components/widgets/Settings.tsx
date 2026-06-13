@@ -1,7 +1,7 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { authDependent, useAuth } from '@/lib/auth/AuthManager';
+import { useAuthSwitchNoLoading, useSignOutAndRouteTo } from '@/lib/auth/AuthManager';
 import { View } from 'react-native';
 
 export default function Settings(
@@ -15,7 +15,8 @@ export default function Settings(
     return
   }
 
-  const auth = useAuth()
+  const authSwitchNL = useAuthSwitchNoLoading()
+  const signOutGo = useSignOutAndRouteTo()
 
   type SettingItem = {
     label: string
@@ -26,9 +27,9 @@ export default function Settings(
     { label: 'Change Pet', effect: null },
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
-    authDependent(
-      { label: 'Sign out', effect: () => auth?.signOut()},
-      { label: 'Sign in', effect: () => auth?.signIn()}
+    authSwitchNL(
+      { label: 'Sign out', effect: () => {signOutGo();}},
+      { label: 'Sign in', effect: () => {signOutGo();}}
     )
 
   ];

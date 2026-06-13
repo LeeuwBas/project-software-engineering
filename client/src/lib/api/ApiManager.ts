@@ -1,5 +1,5 @@
-import {useAuth} from "@/lib/auth/AuthManager";
-import {API_ENDPOINT} from "@/lib/api/ApiEndpoint";
+import { API_ENDPOINT } from "@/lib/api/ApiEndpoint";
+import { useAuth } from "@/lib/auth/AuthManager";
 
 /**
  * Sends a GET request to the given API endpoint, authenticated with the current session.
