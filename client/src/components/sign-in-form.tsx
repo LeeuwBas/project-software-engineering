@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/auth/AuthManager';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { TextInput, View } from 'react-native';
+import { Keyboard, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function SignInForm() {
@@ -26,15 +26,16 @@ export function SignInForm() {
 
   async function onSubmit() {
     try {
-      const success = await auth?.signIn(email, password);
-
+      const success = await auth.signIn(email, password);
+      // on success, the RequireNoAuth in app/login/index will kick us to the homepage, and we can add a loading screen
+      // to it to make this page more reactive, since right now it just sits here waiting for the server.
       if (success) {
-        router.replace('/');
+        Keyboard.dismiss(); // sometimes my samsung glitched and the keyboard stayed untill i added this
       } else {
         setErrors({ detail: ['Wrong login credentials.'] });
       }
     } catch (err) {
-      console.error('Sign in request failed:');
+      console.log('Sign in request failed:', (err as Error).message);
       setErrors({ detail: ['Could not reach the server.'] });
     }
   }
@@ -85,7 +86,7 @@ export function SignInForm() {
                 <Input
                   ref={passwordInputRef}
                   id="password"
-                  placeholder='••••••••'
+                  placeholder="••••••••"
                   secureTextEntry
                   returnKeyType="send"
                   onSubmitEditing={onSubmit}
@@ -100,6 +101,17 @@ export function SignInForm() {
               <Button className="w-full" onPress={onSubmit}>
                 <Text>Continue</Text>
               </Button>
+
+              {/* - Begin placeholder for testing - */}
+              {/* uncomment this to test the routing between pages */}
+              <Button
+                className="mt-2 w-1/2 self-center py-1"
+                onPress={() => {
+                  router.replace('/signup');
+                }}>
+                <Text className="text-sm">goto signup</Text>
+              </Button>
+              {/* - End placeholder for testing - */}
             </View>
           </CardContent>
         </Card>
