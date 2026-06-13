@@ -12,7 +12,21 @@ class Stats(models.Model):
             user: holds the user id for identification
             date: holds date of the statistic
 
-            water_amount: glasses of water drank on the given day
+            water: glasses of water drank on the given day
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField(default=timezone.now)
+    water = models.IntegerField(default=0)
+
+class Goals(models.Model):
+    """
+        Simple goal model.
+        Contains the goals the user wants to achieve starting on date.
+        data held:
+            user: holds the user id for identification
+            date: holds start date of the goal
+
+            water: glasses of water drank on the given day
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)

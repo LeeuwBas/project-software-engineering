@@ -14,17 +14,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: cn(
-          'bg-primary active:bg-primary/90 border-4 border-primary-dark shadow-sm shadow-black/5',
+          'bg-primary active:bg-primary/90 border-4 border-primary-dark text-primary-foreground shadow-sm shadow-black/5',
           Platform.select({ web: 'hover:bg-primary/90' })
         ),
         destructive: cn(
-          'bg-destructive active:bg-destructive/90 dark:bg-destructive/60 border-4 border-destructive-dark shadow-sm shadow-black/5',
+          'bg-destructive active:bg-destructive/90 border-4 border-destructive-dark shadow-sm shadow-black/5',
           Platform.select({
             web: 'hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40',
           })
         ),
         outline: cn(
-          'border-border bg-background active:bg-accent dark:bg-input/30 dark:border-input dark:active:bg-input/50 border-4 shadow-sm shadow-black/5',
+          'border-border bg-background active:bg-accent dark:active:bg-input/50 border-4 shadow-sm shadow-black/5 text-foreground',
           Platform.select({
             web: 'hover:bg-accent dark:hover:bg-input/50',
           })
@@ -64,7 +64,7 @@ const buttonTextVariants = cva(
         default: 'text-white font-bold',
         destructive: 'text-white font-bold',
         outline: cn(
-          'text-black font-bold group-active:text-accent-foreground',
+          'text-secondary-foreground font-bold group-active:text-accent-foreground',
           Platform.select({ web: 'group-hover:text-accent-foreground' })
         ),
         secondary: 'text-white font-bold',

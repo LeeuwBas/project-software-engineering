@@ -7,13 +7,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {initializeApiManager} from "@/lib/api/APIBridge";
-import {useWater} from "@/lib/api/WaterBridge";
+import { initializeApiManager } from '@/lib/api/APIBridge';
+import { useWater } from '@/lib/api/WaterBridge';
+import { useColorScheme } from 'nativewind';
 
 export default function App() {
   const { popup, popupOpen } = useAppContext();
   const appState = useRef(AppState.currentState);
-  const water = useWater() ?? 0
+  const water = useWater() ?? 0;
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -24,7 +25,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    initializeApiManager().then()
+    initializeApiManager().then();
   }, []);
 
   const triggerBackup = async () => {
@@ -36,18 +37,31 @@ export default function App() {
     if (popup.settingsOpen) popup.changeSettings();
   }
 
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const dark = colorScheme === 'dark';
+
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient
-        colors={['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd']}
+        colors={
+          dark
+            ? ['#34504f', '#34504f', '#26403f', '#26403f'] // dark mode
+            : ['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd'] // light mode
+        }
         locations={[0, 0.5, 0.5, 1]}
-        className="flex flex-1 flex-col">
+        className="flex flex-col"
+        style={{ flex: 1 }}>
         <Pressable className="absolute inset-0 z-10 size-full" onPress={closePopup} />
 
         <View className="flex-1 p-4">
           <Topbar />
 
-          <Main leftSideStat="water" leftSideValue={water} rightSideStat="none" rightSideValue={0} />
+          <Main
+            leftSideStat="water"
+            leftSideValue={water}
+            rightSideStat="none"
+            rightSideValue={0}
+          />
         </View>
 
         <BlurView

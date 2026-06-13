@@ -20,8 +20,8 @@ export default function Statbar({ stat, value }: { stat: string; value: number }
   return (
     bgColor && (
       <View className="my-auto h-1/2 w-full">
-        <GlassWater size={20} className="mb-2 text-black" />
-        <View className="border-border-dark my-auto flex-auto border-4 bg-transparent">
+        <GlassWater size={20} className="mb-2 text-foreground" />
+        <View className="my-auto flex-auto border-4 border-border-dark bg-transparent dark:border-border">
           <View
             className="mt-auto"
             style={{

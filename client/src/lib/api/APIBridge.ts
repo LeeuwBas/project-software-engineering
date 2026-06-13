@@ -1,8 +1,16 @@
 import {createWaterBridge} from "@/lib/api/WaterBridge";
+import {loadCalender} from "@/lib/api/CompatibilityLayer";
 
 export type LoadableBridge<T> = T & Loadable;
+
 export interface Loadable {
     load: () => Promise<any>,
+}
+
+export interface StatisticBridge {
+    getRaw: (date?: Date) => Promise<number>,
+    set: (value: number, date?: Date) => Promise<any>
+    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>,
 }
 
 const loaders: Loadable[] = [];
@@ -33,6 +41,20 @@ export async function initializeApiManager() {
         })
     ).then(); // Map to void promise
 }
+
+/**
+ * Get and load the calendar with the achieved goals data.
+ *
+ * @param startDate The first date of the calendar
+ * @param endDate The last date of the calendar
+ *
+ * @returns An array with a dictionary for all goals indicating achievement. Or null if something
+ * went TERRIBLY wrong.
+ */
+export async function getGoalCalender(startDate: Date, endDate: Date) {
+    return await loadCalender(startDate, endDate)
+}
+
 
 export const waterBridge = register(createWaterBridge());
 
