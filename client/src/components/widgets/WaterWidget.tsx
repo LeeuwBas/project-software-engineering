@@ -13,7 +13,7 @@ export default function WaterWidget(){
         if (water === null) {
             return
         }
-        await waterBridge.setWater(water + value)
+        await waterBridge.set(water + value)
     }
 
   return (
