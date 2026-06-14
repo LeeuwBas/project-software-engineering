@@ -37,7 +37,7 @@ export default function PetHome({
   return (
     <View className={className} {...props}>
       <Pressable
-        className="items-center justify-center self-center overflow-hidden"
+        className=" items-center justify-center self-center overflow-hidden"
         onPress={() => {
           currentAnim === happyAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(happyAnim);
         }}>

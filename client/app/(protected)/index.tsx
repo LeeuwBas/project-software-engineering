@@ -47,8 +47,13 @@ export default function App() {
         locations={[0, 0.5, 0.5, 1]}
         className="flex flex-col"
         style={{ flex: 1 }}>
-        <Pressable className="absolute inset-0 z-10 size-full" onPress={closePopup} />
-
+        {popupOpen && (
+          <Pressable
+            className="absolute inset-0 z-10"
+            onPress={closePopup}
+          />
+        )}
+        
         <View className="flex-1 p-4">
           <Topbar />
 
@@ -58,8 +63,9 @@ export default function App() {
         </View>
 
         <BlurView
+          pointerEvents='none'
           className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
-          intensity={40}
+          intensity={20}
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />

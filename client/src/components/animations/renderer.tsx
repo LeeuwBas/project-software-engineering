@@ -25,6 +25,7 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
   const image = useImage(config.source);
   const frame = useSharedValue(0);
   
+  
   useEffect(() => {
     frame.value = 0;
   }, [animation]);
@@ -57,13 +58,13 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
 
   return (
     <Canvas style={{ width: config.width * scale, height: config.height * scale }}>
-      <Atlas 
-        image={image} 
-        sprites={sprites} 
-        transforms={transforms} 
-        sampling={{ 
-          filter: FilterMode.Nearest, 
-          mipmap: MipmapMode.Nearest 
+      <Atlas
+        image={displayImage}
+        sprites={sprites}
+        transforms={transforms}
+        sampling={{
+          filter: FilterMode.Nearest,
+          mipmap: MipmapMode.Linear,
         }}
       />
     </Canvas>
