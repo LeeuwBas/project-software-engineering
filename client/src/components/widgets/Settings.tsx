@@ -32,19 +32,13 @@ export default function Settings() {
     { label: 'Change Pet', effect: () => router.push('/pet-select') },
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
-    { label: 'Sign out', effect: () => auth?.signOut() },
+    { label: 'Sign out', effect: signOutGoTo },
     {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,
       icon: dark ? Sunny : Moon,
     },
   ];
-
-  function executeEffect(item: SettingItem) {
-    if (item && item.effect) {
-      item.effect();
-    }
-  }
 
   return (
     <View
@@ -59,7 +53,9 @@ export default function Settings() {
                   className="my-2 flex h-12"
                   key={item.label}
                   variant="secondary"
-                  onPress={() => executeEffect(item)}>
+                  onPress={() => {
+                    item.effect?.();
+                  }}>
                   {Icon && <Icon width={24} height={24} className="text-white" />}
                   <AppText className="font-bold text-white">{item.label}</AppText>
                 </Button>

@@ -1,7 +1,7 @@
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
-import { Redirect } from 'expo-router';
-import { createContext, JSX, ReactNode, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 type Auth = {
   accessToken: string | null;
@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     if (!res.ok) {
+      console.log('Login failed');
       return false;
     }
 
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
-
+    console.log('Successfully logged in');
     return true;
   }
 
@@ -103,29 +104,117 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export function requireNoAuth(element: JSX.Element) {
-  const auth = useAuth();
-  if (auth?.isLoading) return null;
+// - Hooks - //
 
-  if (auth?.accessToken) {
-    return <Redirect href="/" />;
+/**
+ * Use {@link useIsAuth} for signin state.
+ * @returns The auth context for the app.
+ * @example
+ * const auth = useAuth();
+ * if (auth.isLoading) print("logging in...");
+ */
+export function useAuth(): Auth {
+  const authCtx = useContext(AuthContext);
+  if (authCtx == null) {
+    throw new Error('AuthProvider returned null');
   }
-
-  return element;
+  return authCtx;
 }
 
-export function requireAuth(element: JSX.Element) {
+/**
+ * @peram auth should be the auth context.
+ * @returns `true` if the user is logged in.
+ */
+export function useIsAuth(): boolean {
   const auth = useAuth();
-  if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return element;
-  if (auth?.isLoading) return null;
-
-  if (!auth?.accessToken) {
-    return <Redirect href="/pet-select" />;
-  }
-
-  return element;
+  if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return true;
+  if (auth.accessToken) return true;
+  return false;
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
+/**
+ *
+ * @returns `true` if auth is loading.
+ */
+export function useIsLoading(): boolean {
+  const auth = useAuth();
+  return auth.isLoading;
+}
+
+/**
+ * A hook that functions as a flexible root for signin state logic.
+ *
+ * @returns A callback function with a flexible type that looks similar to:
+ * ```ts
+ * (authElement: A, noAuthElement: B, loadingElement: C) => A | B | C | null
+ * ```
+ * that returns values based off auth state.
+ *
+ * @example // you always have to call the hook first at top level of component
+ * const authSwitch = useAuthSwitch();
+ * // then use callback anywhere:
+ * authSwitch(<Dashboard />, <Login />, <Spinner />);
+ * // when returning a Component, null causes nothing to be rendered
+ * authSwitch(<Profile />, <Redirect />, null); // return nothing while loading, then redierect if the result is not logged in
+ * // typescript has no keyword arguments so if you want something only while logged out:
+ * authSwitch(null, <Login />);
+ */
+export function useAuthSwitch() {
+  const isLoading = useIsLoading();
+  const isAuth = useIsAuth();
+  // the callback function:
+  return <T, U = null, V = null>(
+    authElement: T,
+    noAuthElement: U = null as any,
+    loadingElement: V = null as any
+  ) => {
+    if (isLoading) return loadingElement as any;
+    return isAuth ? (authElement as any) : (noAuthElement as any);
+  };
+}
+
+/**
+ * A 2 arg version of {@link useAuthSwitch} that shows the logged out argument when loading instead of a third argument.
+ *
+ * @returns A callback function with a flexible type that looks similar to:
+ * ```ts
+ * (authElement: A, noAuthElement: B) => A | B | null
+ * ```
+ * that returns values based off auth state.
+ *
+ * @example // you always have to call the hook first at top level of component
+ * const authSwitchL = useAuthSwitchNoLoading();
+ * // then use callback anywhere:
+ * authSwitchL(<Dashboard />, <Login />);
+ * // when returning a Component, null causes nothing to be rendered,
+ * // typescript has no keyword arguments so if you want something only while logged out:
+ * authSwitchL(null, <Login />);
+ */
+export function useAuthSwitchNoLoading() {
+  const authSwitch = useAuthSwitch();
+
+  return <T, U = null>(authElement: T, noAuthElement: U = null as any) =>
+    authSwitch(authElement, noAuthElement, noAuthElement);
+}
+
+/**
+ *
+ * @param defaultPath Use to set the path to route to
+ * @returns A callback functoin that takes a `path` to route to, uses `defaultPath` as default value
+ *
+ * @example
+ * // set route when calling hook:
+ * const signOut = useSignOutAndRouteTo('/login');
+ * signoOut();
+ * // OR set route when calling callback
+ * const signOut = useSignOutAndRouteTo();
+ * signoOut('/login'); // callback peram takes precidence if you do both
+ */
+export function useSignOutAndRouteTo(defaultPath: string = '/login') {
+  const auth = useAuth();
+  const router = useRouter();
+  return (path: string = defaultPath) => {
+    auth.signOut();
+    router.replace(path);
+  };
 }
