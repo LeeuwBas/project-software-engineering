@@ -1,20 +1,24 @@
-import { useAuth } from '@/lib/auth/AuthManager';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { useAppContext } from '@/lib/AppContext';
+import { useAuth } from '@/lib/auth/AuthManager';
+import Moon from '@assets/icons/weather_icons/moon.svg';
+import Sunny from '@assets/icons/weather_icons/sunny.svg';
+import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import Moon from '@assets/icons/moon.svg';
-import SunnyCloud from '@assets/icons/sunny_cloud.svg';
+import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
-export default function Settings({ isOpen }: { isOpen: boolean }) {
-  if (!isOpen) {
+export default function Settings() {
+  const { settingsOpen } = useAppContext();
+  const auth = useAuth();
+  const router = useRouter();
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
+  if (!settingsOpen) {
     return;
   }
-
-  const auth = useAuth();
 
   type SettingItem = {
     label: string;
@@ -22,18 +26,17 @@ export default function Settings({ isOpen }: { isOpen: boolean }) {
     icon?: React.FC<SvgProps>;
   };
 
-  const { colorScheme, toggleColorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 
   const ITEMS: SettingItem[] = [
-    { label: 'Change Pet', effect: null },
+    { label: 'Change Pet', effect: () => router.push('/pet-select') },
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
     { label: 'Sign out', effect: () => auth?.signOut() },
     {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,
-      icon: dark ? SunnyCloud : Moon,
+      icon: dark ? Sunny : Moon,
     },
   ];
 
@@ -45,7 +48,7 @@ export default function Settings({ isOpen }: { isOpen: boolean }) {
 
   return (
     <View
-      className={`-top-6 transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
+      className={`-top-6 transition-opacity duration-200 ${settingsOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full mb-2 w-full items-center">
         <Card>
           <CardContent>

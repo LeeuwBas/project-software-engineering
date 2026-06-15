@@ -12,8 +12,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
-import ChartIcon from '@assets/icons/chart.svg';
-import PersonIcon from '@assets/icons/person.svg';
+import PersonIcon from '@assets/icons/toolbar_icons/profile.svg';
+import ChartIcon from '@assets/icons/toolbar_icons/stats.svg';
 import { ScrollView, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
 
