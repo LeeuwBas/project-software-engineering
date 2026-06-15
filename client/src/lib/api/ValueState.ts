@@ -1,11 +1,11 @@
-import {create, StoreApi, UseBoundStore} from "zustand";
+import { create, StoreApi, UseBoundStore } from 'zustand';
 
 type ValueState = {
     value: number | null;
     setValue: (value: number) => void;
 };
 
-export type ValueZustand = UseBoundStore<StoreApi<ValueState>>
+export type ValueZustand = UseBoundStore<StoreApi<ValueState>>;
 
 /**
  * Creates a new ValueZustand
@@ -15,7 +15,7 @@ export type ValueZustand = UseBoundStore<StoreApi<ValueState>>
 export function createNewState(): ValueZustand {
     return create<ValueState>((set) => ({
         value: null,
-        setValue: (value) => set({value: value}),
+        setValue: (value) => set({ value: value }),
     }));
 }
 
@@ -25,5 +25,5 @@ export function createNewState(): ValueZustand {
  * @param state the state to create the hook for.
  */
 export function useValue(state: ValueZustand) {
-    return state(((s) => s.value))
+    return state((s) => s.value);
 }
