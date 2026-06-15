@@ -1,6 +1,11 @@
-import {LoadableBridge, StatisticBridge} from "@/lib/api/APIBridge";
-import {createNewState, useValue} from "@/lib/api/ValueState";
-import {getStatistic, getStatisticChart, loadZustand, setZustand} from "@/lib/api/CompatibilityLayer";
+import { LoadableBridge, StatisticBridge } from '@/lib/api/APIBridge';
+import {
+    getStatistic,
+    getStatisticChart,
+    loadZustand,
+    setZustand,
+} from '@/lib/api/CompatibilityLayer';
+import { createNewState, useValue } from '@/lib/api/ValueState';
 
 // Use the water bridge when the values need to be manipulated.
 export interface WaterBridge extends StatisticBridge {}
@@ -19,14 +24,15 @@ const waterState = createNewState();
  * This will update the water value whenever it is changed internally.
  */
 export function useWater() {
-    return useValue(waterState)
+    return useValue(waterState);
 }
 
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
-        load: () => loadZustand(waterState, "waterDrank"),
-        getRaw: (date) => getStatistic("waterDrank", date ?? new Date()),
-        set: (value) => setZustand(waterState, "waterDrank", Math.max(Math.min(value, 100), 0)),
-        getBarChart: (bins, daysPerBin, endDate) => getStatisticChart("waterDrank", bins, daysPerBin, endDate)
+        load: () => loadZustand(waterState, 'waterDrank'),
+        getRaw: (date) => getStatistic('waterDrank', date ?? new Date()),
+        set: (value) => setZustand(waterState, 'waterDrank', Math.max(Math.min(value, 100), 0)),
+        getBarChart: (bins, daysPerBin, endDate) =>
+            getStatisticChart('waterDrank', bins, daysPerBin, endDate),
     };
 }

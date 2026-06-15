@@ -11,5 +11,9 @@ module.exports = {
       files: '*.ts',
       options: { tabWidth: 4 },
     },
+    {
+      files: '*.d.ts',
+      options: { tabWidth: 2 },
+    },
   ],
 };
