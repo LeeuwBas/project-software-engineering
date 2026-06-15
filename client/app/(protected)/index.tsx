@@ -1,9 +1,7 @@
-import { usePet } from '@/components/contexts/PetContext';
 import PetHome from '@/components/widgets/PetHome';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
-import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,8 +13,6 @@ export default function App() {
   const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
     useAppContext();
   const appState = useRef(AppState.currentState);
-  const water = useWater() ?? 0;
-  const { pet } = usePet();
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -47,23 +43,18 @@ export default function App() {
         locations={[0, 0.5, 0.5, 1]}
         className="flex flex-col"
         style={{ flex: 1 }}>
-        {popupOpen && (
-          <Pressable
-            className="absolute inset-0 z-10"
-            onPress={closePopup}
-          />
-        )}
-        
+        {popupOpen && <Pressable className="absolute inset-0 z-10" onPress={closePopup} />}
+
         <View className="flex-1 p-4">
           <Topbar />
 
           <View className="flex-1 justify-center">
-            <PetHome id={pet} />
+            <PetHome />
           </View>
         </View>
 
         <BlurView
-          pointerEvents='none'
+          pointerEvents="none"
           className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
           intensity={20}
           tint="regular"

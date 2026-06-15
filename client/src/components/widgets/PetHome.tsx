@@ -1,16 +1,10 @@
+import { Animation } from '@/components/animations/renderer';
+import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName } from '@/lib/animations/library';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { Animation } from '../animations/renderer';
 
-export default function PetHome({
-  className = '',
-  id,
-  ...props
-}: {
-  className?: string;
-  id: number;
-}) {
+export default function PetHome({ className = '', ...props }: { className?: string }) {
   function selection(id: number) {
     switch (id) {
       case 0:
@@ -24,7 +18,9 @@ export default function PetHome({
     }
   }
 
-  const source = selection(id); // derived, never stale
+  const { pet } = usePet();
+
+  const source = selection(pet); // derived, never stale
   const happyAnim = `${source}_breath_happy` as AnimationName;
   const blinkAnim = `${source}_blink` as AnimationName;
 
@@ -32,7 +28,7 @@ export default function PetHome({
 
   useEffect(() => {
     setCurrentAnim(happyAnim);
-  }, [happyAnim, id]);
+  }, [happyAnim, pet]);
 
   return (
     <View className={className} {...props}>
