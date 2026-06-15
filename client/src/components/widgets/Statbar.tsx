@@ -25,7 +25,7 @@ export default function Statbar({ stat, value }: { stat: string; value: number }
           <View
             className="mt-auto"
             style={{
-              height: `${value}%`,
+              height: `${Math.min(Math.max(value, 0), 8) * 12.5}%`,
               backgroundColor: bgColor,
             }}
           />

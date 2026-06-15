@@ -1,7 +1,7 @@
 import { AppText } from '@/components/AppText';
 import Weather from '@/components/widgets/Weather';
 import { View } from 'react-native';
-import Happiness from './Happiness';
+import WaterBar from './WaterBar';
 
 export default function Topbar() {
   const date = new Date();
@@ -14,7 +14,7 @@ export default function Topbar() {
         <AppText className=" text-2xl font-bold">{day}</AppText>
       </View>
 
-      <Happiness />
+    <WaterBar/>
     </View>
   );
 }

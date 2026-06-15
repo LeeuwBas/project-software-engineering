@@ -1,10 +1,27 @@
-import { Image } from "expo-image";
-import { View } from "react-native";
+import Blob from '@assets/pets/blob/blob.svg';
+import Frog from '@assets/pets/frog/frog.svg';
+import Onigiri from '@assets/pets/onigiri/onigiri.svg';
+import { View } from 'react-native';
 
-export default function Pet() {
-    return (
-        <View className="w-3/5 mx-auto">
-            <Image style={{width: "100%", aspectRatio: 1}} contentFit="cover" source={require("@/../assets/onigiri_sprite.webp")}/>
-        </View>
-    );
+export default function Pet({ className = '', id, ...props }: { className?: string; id: number }) {
+  function selection(id: number) {
+    switch (id) {
+      case 0:
+        return <Onigiri width={'100%'} height={200} />;
+      case 1:
+        return <Frog width={'100%'} height={200} />;
+      case 2:
+        return <Blob width={'100%'} height={200} />;
+      default:
+        console.error('Unknown pet id');
+    }
+  }
+
+  const source = selection(id);
+
+  return (
+    <View className={className} {...props}>
+      {selection(id)}
+    </View>
+  );
 }

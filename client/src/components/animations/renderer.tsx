@@ -23,15 +23,19 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     ? ANIMATIONS[animation]
     : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
-  const frame = useSharedValue(0);
+  const frame = useSharedValue(0);  
+  const startTime = useSharedValue(0);
+  
   
   useEffect(() => {
+    startTime.value = performance.now();
     frame.value = 0;
   }, [animation]);
 
   // Calculates frame index in asset
   useFrameCallback((info) => {
-    frame.value = Math.floor((info.timeSinceFirstFrame / 1000) * config.fps) % config.frameCount;
+    const elapsed = info.timestamp - startTime.value;
+    frame.value = Math.floor((elapsed / 1000) * config.fps) % config.frameCount;
   });
 
   // Samples frame based on index and frame size from asset
@@ -57,13 +61,13 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
 
   return (
     <Canvas style={{ width: config.width * scale, height: config.height * scale }}>
-      <Atlas 
-        image={image} 
-        sprites={sprites} 
-        transforms={transforms} 
-        sampling={{ 
-          filter: FilterMode.Nearest, 
-          mipmap: MipmapMode.Nearest 
+      <Atlas
+        image={displayImage}
+        sprites={sprites}
+        transforms={transforms}
+        sampling={{
+          filter: FilterMode.Nearest,
+          mipmap: MipmapMode.Linear,
         }}
       />
     </Canvas>
