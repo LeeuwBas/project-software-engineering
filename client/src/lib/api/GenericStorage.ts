@@ -182,16 +182,29 @@ export async function loadCalender(startDate: Date, endDate: Date) {
 }
 
 async function loadServerCalendar(startDate: Date, endDate: Date) {
-    // TODO load from server
-    return null
+    const endpoint = `/api/calendar/${startDate.toISOString()}/${endDate.toISOString()}/`
+
+    const result: any[] = await getAPI(endpoint)
+
+
+    result.forEach((dict, index, _) => {
+        const keys = Object.keys(dict)
+        keys.forEach((value, ix, _) => {
+            dict[value] = +dict[value]
+        })
+    })
+
+    return result
 }
 
 async function loadServerChart<K extends keyof StatLine>(name: K, startDate: Date, endDate: Date, bins: number) {
-    // TODO load from server
-    const loaded: number[] = []
-    for (let i = 0; i < bins; i++) {
-        loaded.push(Math.round(Math.random() * 100))
-    }
+    const endpoint = `/api/barchart/${name}/${startDate.toISOString()}/${endDate.toISOString()}/?bins=${bins}`
+
+    const result = await getAPI(endpoint)
+
+    const bin_data = result.bins
+    const loaded: number[] = Object.keys(bin_data).map((value, index, _) => +bin_data[value])
+
     return loaded
 }
 
