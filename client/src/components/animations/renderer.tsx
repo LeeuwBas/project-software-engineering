@@ -1,9 +1,17 @@
-import React from 'react';
-import { useEffect, useRef } from 'react';
-import { Canvas, useImage, rect, Skia, Atlas, FilterMode, MipmapMode, SkImage } from '@shopify/react-native-skia';
-import { useSharedValue, useFrameCallback, useDerivedValue } from 'react-native-reanimated';
+import React, { useEffect, useRef } from 'react';
+import {
+  Atlas,
+  Canvas,
+  FilterMode,
+  MipmapMode,
+  rect,
+  Skia,
+  SkImage,
+  useImage,
+} from '@shopify/react-native-skia';
+import { useDerivedValue, useFrameCallback, useSharedValue } from 'react-native-reanimated';
 
-import { ANIMATIONS, AnimationName } from '@/lib/animations/library';
+import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
 
 interface AnimationProps {
   animation: AnimationName;
@@ -13,20 +21,17 @@ interface AnimationProps {
 /**
  * Builds an element that renders an animation from the assets based on an input key defined
  * in '@/lib/animations.ts' using the react native Skia library.
- * 
+ *
  * @param {AnimationName} animation key of animation in library
  * @param {number} scale scales the animation by this amount, defaults to 1
  * @returns A TSX element that renders the specified animation at the specified scale
  */
 export function Animation({ animation, scale = 1 }: AnimationProps) {
-  const config = ANIMATIONS[animation]
-    ? ANIMATIONS[animation]
-    : ANIMATIONS['placeholder'];
+  const config = ANIMATIONS[animation] ? ANIMATIONS[animation] : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
-  const frame = useSharedValue(0);  
+  const frame = useSharedValue(0);
   const startTime = useSharedValue(0);
-  
-  
+
   useEffect(() => {
     startTime.value = performance.now();
     frame.value = 0;
@@ -48,7 +53,6 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
   const transforms = useDerivedValue(() => {
     return [Skia.RSXform(scale, 0, 0, 0)];
   });
-
 
   // keep old image while switching
   const lastImage = useRef<SkImage | null>(null);

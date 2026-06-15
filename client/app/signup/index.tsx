@@ -1,4 +1,4 @@
-import RequireNoAuth from "@/components/auth/RequireNoAuth";
+import RequireNoAuth from '@/components/auth/RequireNoAuth';
 import { SignUpForm } from '@/components/sign-up-form';
 
 export default function SignUpScreen() {
