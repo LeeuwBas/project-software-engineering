@@ -1,5 +1,5 @@
-import {useAuth} from "@/lib/auth/AuthManager";
-import {API_ENDPOINT} from "@/lib/api/ApiEndpoint";
+import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
+import { internalAuth } from '@/lib/auth/AuthManager';
 
 /**
  * Sends a GET request to the given API endpoint, authenticated with the current session.
@@ -10,16 +10,20 @@ import {API_ENDPOINT} from "@/lib/api/ApiEndpoint";
  * @throws Error when the request fails by any other means. (For example a 405 method not allowed).
  */
 export async function getAPI(endpoint: string, authenticate: boolean = true) {
-    const response = await queryApi(endpoint, {
-        method: "GET",
-    },  authenticate)
+    const response = await queryApi(
+        endpoint,
+        {
+            method: 'GET',
+        },
+        authenticate
+    );
 
     if (!response) {
         return null;
     }
 
     if (!response.ok) {
-        throw new Error("Request failed")
+        throw new Error('Request failed');
     }
 
     return await response.json();
@@ -35,13 +39,17 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
  * @throws Error when the request has failed
  */
 export async function postAPI(endpoint: string, json: any, authenticate: boolean = true) {
-    const response = await queryApi(endpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+    const response = await queryApi(
+        endpoint,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(json),
         },
-        body: JSON.stringify(json),
-    }, authenticate);
+        authenticate
+    );
 
     // When we do not authenticate, we do not throw errors
     if (!response || (!authenticate && !response.ok)) {
@@ -49,7 +57,7 @@ export async function postAPI(endpoint: string, json: any, authenticate: boolean
     }
 
     if (!response.ok) {
-        throw new Error("Request failed")
+        throw new Error('Request failed');
     }
 
     return await response.json();
@@ -71,8 +79,8 @@ export async function queryApi(
     init: RequestInit = {},
     authenticate: boolean = true,
     recurse_unauthenticated: boolean = true
-): Promise<Response|null> {
-    const auth = useAuth()
+): Promise<Response | null> {
+    const auth = internalAuth;
     const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 
     if (authenticate && (!auth || auth.isLoading)) {
@@ -81,27 +89,28 @@ export async function queryApi(
 
     let res;
     try {
-        const request = authenticate ? {
-            ...init,
-            headers: {
-                "Authorization": `Bearer ${auth?.accessToken}`,
-                ...init.headers,
-            },
-        } : init;
+        const request = authenticate
+            ? {
+                  ...init,
+                  headers: {
+                      Authorization: `Bearer ${auth?.accessToken}`,
+                      ...init.headers,
+                  },
+              }
+            : init;
 
-         res = await fetch(ENDPOINT, request);
+        res = await fetch(ENDPOINT, request);
     } catch (error) {
         if (!(error instanceof TypeError)) {
-            throw error
+            throw error;
         }
 
         // Network error (most likely no internet)
-        console.log("Server is unreachable")
+        console.log('Server is unreachable');
         return null;
     }
 
     if (authenticate && res.status === 401) {
-
         if (!recurse_unauthenticated) {
             // Do not try to re-authenticate
             // This can prevent infinite recursion when the backend fails.
@@ -109,9 +118,9 @@ export async function queryApi(
         }
 
         try {
-            await auth?.renewToken();
+            await auth.renewToken();
         } catch (err) {
-            await auth?.signOut();
+            await auth.signOut();
             return null;
         }
 

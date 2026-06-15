@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import Sum, Max, Min, Avg, F
+from django.db.models import Sum, Max, Min, Avg, F, Count
 
 from datetime import timedelta, datetime
 
@@ -16,22 +16,32 @@ def getStatDict(line: Stats | Goals):
         'water': line.water
     }
 
-def getSummary(days: int, user: str, statistic: str):
+def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime):
     """
         Aggregates a summary for the requested statistic, summarizes the past days,
         amount is given in 'days'.
     """
-    filter_dict = {"user": user}
-    if days > 0:
-        oldest = timezone.now() - timedelta(days)
-        filter_dict["date__gte"] = oldest
+
+    filter_dict = {
+        "user": user,
+        'date__gt': lowerDay.date(),
+        'date__lte': upperDay.date()
+    }
+
+    day_amount = (upperDay - lowerDay).days
 
     lines = Stats.objects.filter(**filter_dict)
 
     response:dict = lines.aggregate(total=Sum(statistic),
-                                    average=Avg(statistic),
                                     low=Min(statistic),
-                                    high=Max(statistic))
+                                    high=Max(statistic),
+                                    count=Count(statistic))
+
+    response['average'] = response['total']/day_amount
+
+    if response['count'] < day_amount:
+        response['low'] = 0
+        response['count'] = day_amount
 
     return response
 
@@ -87,6 +97,21 @@ def getDay(user: str, statistic: str | None, day: datetime | None = None):
         return getStatDict(line)
     else:
         return getattr(line, statistic)
+
+def setDay(user: str, statistic: dict[str, int], day: datetime | None = None):
+    """
+        Sets new data for a specified date.
+        Takes the dictionary in statistics for all data, only overwrites.
+    """
+    if day is None:
+        day = datetime.now()
+
+    statistic.update({
+        'user': user,
+        'date': day.date()
+    })
+
+    Stats.objects.update_or_create(**statistic)
 
 def getGoal(user: str, statName: str | None, day: datetime | None = None):
     """

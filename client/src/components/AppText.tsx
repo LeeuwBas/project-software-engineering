@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text, TextProps, StyleSheet } from 'react-native';
+import { Text, TextProps } from 'react-native';
 
 /**
  * Themed text component that enforces the app's custom font.
- * 
+ *
  * @param className - NativeWind utility classes; `font-bold` is intercepted to switch font variant
  * @param style - Additional inline styles, merged after font family (takes precedence)
  * @param props - Remaining {@link TextProps} forwarded to the underlying <{@link Text}>
@@ -17,11 +17,8 @@ export function AppText({ className = '', style, ...props }: TextProps & { class
 
   return (
     <Text
-      className={cleanedClassName}
-      style={[
-        { fontFamily: hasBoldClass ? 'IosevkaCharon-Bold' : 'IosevkaCharon' },
-        style,
-      ]}
+      className={`text-foreground ${cleanedClassName}`}
+      style={[{ fontFamily: hasBoldClass ? 'IosevkaCharon-Bold' : 'IosevkaCharon' }, style]}
       {...props}
     />
   );

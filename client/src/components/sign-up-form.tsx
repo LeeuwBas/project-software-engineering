@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
+import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
@@ -23,8 +24,6 @@ export function SignUpForm() {
 
   const passwordInputRef = React.useRef<Input>(null);
 
-  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
-
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
   }
@@ -38,7 +37,7 @@ export function SignUpForm() {
     // and update the error state. As soon as the error state is updated,
     // the page is 'reloaded' and the error message is displayed to the user.
     try {
-      const response = await fetch(`${API_URL}/users/`, {
+      const response = await fetch(`${API_ENDPOINT}/users/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, username, password }),
@@ -127,6 +126,17 @@ export function SignUpForm() {
               <Button className="w-full" onPress={onSubmit}>
                 <Text>Continue</Text>
               </Button>
+
+              {/* - Begin placeholder for testing - */}
+              {/* uncomment this to test the routing between pages */}
+              {/*<Button
+                className="mt-2 w-1/2 self-center py-1"
+                onPress={() => {
+                  router.replace('/login');
+                }}>
+                <Text className="text-sm">goto login</Text>
+              </Button>
+              {/* - End placeholder for testing - */}
             </View>
           </CardContent>
         </Card>

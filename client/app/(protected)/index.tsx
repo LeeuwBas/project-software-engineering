@@ -1,19 +1,19 @@
-import Main from '@/components/widgets/mainview';
+import PetHome from '@/components/widgets/PetHome';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
+import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useAppContext } from '@/lib/AppContext';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useColorScheme } from 'nativewind';
 import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {initializeApiManager} from "@/lib/api/APIBridge";
-import {useWater} from "@/lib/api/WaterBridge";
 
 export default function App() {
-  const { popup, popupOpen } = useAppContext();
+  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
+    useAppContext();
   const appState = useRef(AppState.currentState);
-  const water = useWater() ?? 0
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -24,7 +24,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    initializeApiManager().then()
+    initializeApiManager().then();
   }, []);
 
   const triggerBackup = async () => {
@@ -32,33 +32,43 @@ export default function App() {
   };
 
   function closePopup() {
-    if (popup.menuOpen) popup.changeMenu();
-    if (popup.settingsOpen) popup.changeSettings();
+    if (menuOpen) changeMenu();
+    if (settingsOpen) changeSettings();
+    if (statsOpen) changeStats();
   }
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const dark = colorScheme === 'dark';
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient
-        colors={['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd']}
+        colors={
+          dark
+            ? ['#34504f', '#34504f', '#26403f', '#26403f'] // dark mode
+            : ['#e9f1ec', '#e9f1ec', '#c7d0bd', '#c7d0bd'] // light mode
+        }
         locations={[0, 0.5, 0.5, 1]}
         className="flex flex-col"
-        style={{ flex: 1 }}
-        >
-        <Pressable className="absolute inset-0 z-10 size-full" onPress={closePopup} />
+        style={{ flex: 1 }}>
+        {popupOpen && <Pressable className="absolute inset-0 z-10" onPress={closePopup} />}
 
         <View className="flex-1 p-4">
           <Topbar />
 
-          <Main leftSideStat="water" leftSideValue={water} rightSideStat="none" rightSideValue={0} />
+          <View className="flex-1 justify-center">
+            <PetHome />
+          </View>
         </View>
 
         <BlurView
+          pointerEvents="none"
           className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
-          intensity={40}
+          intensity={20}
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
         />
-        <Toolbar popup={popup} />
+        <Toolbar />
       </LinearGradient>
     </SafeAreaView>
   );

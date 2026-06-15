@@ -1,6 +1,5 @@
 import { AppText } from '@/components/AppText';
 import getMood from '@/lib/mood';
-import { Frown, Smile } from 'lucide-react-native';
 import { View } from 'react-native';
 
 export default function Happiness() {
@@ -12,7 +11,7 @@ export default function Happiness() {
     <View className="w-1/2">
       <View className="flex-row justify-center gap-1">
         {/*<Frown size={20} />*/}
-        <View className="border-border-dark h-4 flex-1 flex-row overflow-hidden border-4">
+        <View className="h-4 flex-1 flex-row overflow-hidden border-4 border-border-dark dark:border-border">
           <View className="flex-1 bg-[#f99295]" />
           <View className="flex-1 bg-[#ffb347]" />
           <View className="flex-1 bg-[#ffd568]" />

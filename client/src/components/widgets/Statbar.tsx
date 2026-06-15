@@ -20,12 +20,12 @@ export default function Statbar({ stat, value }: { stat: string; value: number }
   return (
     bgColor && (
       <View className="my-auto h-1/2 w-full">
-        <GlassWater size={20} className="mb-2 text-black" />
-        <View className="border-border-dark my-auto flex-auto border-4 bg-transparent">
+        <GlassWater size={20} className="mb-2 text-foreground" />
+        <View className="my-auto flex-auto border-4 border-border-dark bg-transparent dark:border-border">
           <View
             className="mt-auto"
             style={{
-              height: `${value}%`,
+              height: `${Math.min(Math.max(value, 0), 8) * 12.5}%`,
               backgroundColor: bgColor,
             }}
           />

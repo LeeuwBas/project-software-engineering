@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from 'clsx';
+import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+    return twMerge(clsx(inputs));
 }
 
 /**
@@ -11,5 +11,5 @@ export function cn(...inputs: ClassValue[]) {
  * @returns amount of days between a and b, includes both a and b.
  */
 export function dateDifference(a: Date, b: Date) {
-  return Math.ceil(Math.abs(a.getTime() - b.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.ceil(Math.abs(a.getTime() - b.getTime()) / (1000 * 60 * 60 * 24));
 }
