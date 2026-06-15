@@ -1,5 +1,5 @@
-import { loadCalender } from '@/lib/api/CompatibilityLayer';
-import { createWaterBridge } from '@/lib/api/WaterBridge';
+import { createWaterBridge } from "@/lib/api/WaterBridge";
+import { loadCalender } from "@/lib/api/GenericStorage";
 
 export type LoadableBridge<T> = T & Loadable;
 

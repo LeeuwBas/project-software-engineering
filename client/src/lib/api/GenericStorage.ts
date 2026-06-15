@@ -1,4 +1,5 @@
 import { ValueZustand } from '@/lib/api/ValueState';
+import { getAPI } from '@/lib/api/ApiManager';
 import {
     getCalender,
     getNamedStat,
@@ -23,7 +24,9 @@ export async function loadZustand<K extends keyof StatLine>(state: ValueZustand,
         throw Error(`${name} already loaded`);
     }
 
-    const loadedValue = await getStatistic(name);
+    // For the current day we can default to 0. For other days we cannot.
+    const loadedValue = (await getStatistic(name)) ?? 0;
+
     state.getState().setValue(loadedValue);
     return loadedValue;
 }
@@ -65,6 +68,11 @@ export async function getStatistic<K extends keyof StatLine>(name: K, date: Date
         return storage;
     }
     const server = await loadServer(name, date);
+
+    if (server === null) {
+        return null;
+    }
+
     const inserted = await insertStat(name, server, date);
 
     if (!inserted) {
@@ -103,7 +111,7 @@ export async function setStatistic<K extends keyof StatLine>(
  * @param increment the amount to increment by, can be negative.
  * @param date the date to change
  *
- * @returns true
+ * @returns true if successful, false if the network is offline.
  */
 export async function incrementStatistic<K extends keyof StatLine>(
     name: K,
@@ -115,6 +123,11 @@ export async function incrementStatistic<K extends keyof StatLine>(
     }
 
     const server = await loadServer(name, date);
+
+    if (server === null) {
+        return false;
+    }
+
     if (!(await insertStat(name, server + increment, date))) {
         throw Error('Value set while loading from server');
     }
@@ -193,8 +206,18 @@ export async function loadCalender(startDate: Date, endDate: Date) {
 }
 
 async function loadServerCalendar(startDate: Date, endDate: Date) {
-    // TODO load from server
-    return null;
+    const endpoint = `/api/calendar/${startDate.toISOString()}/${endDate.toISOString()}/`;
+
+    const result: any[] = await getAPI(endpoint);
+
+    result.forEach((dict, index, _) => {
+        const keys = Object.keys(dict);
+        keys.forEach((value, ix, _) => {
+            dict[value] = +dict[value];
+        });
+    });
+
+    return result;
 }
 
 async function loadServerChart<K extends keyof StatLine>(
@@ -203,15 +226,24 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
-    // TODO load from server
-    const loaded: number[] = [];
-    for (let i = 0; i < bins; i++) {
-        loaded.push(Math.round(Math.random() * 100));
-    }
+    const endpoint = `/api/barchart/${name}/${startDate.toISOString()}/${endDate.toISOString()}/?bins=${bins}`;
+
+    const result = await getAPI(endpoint);
+
+    const bin_data = result.bins;
+    const loaded: number[] = Object.keys(bin_data).map((value, index, _) => +bin_data[value]);
+
     return loaded;
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
-    // TODO load from server
-    return 0;
+    const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`;
+
+    const result = await getAPI(endpoint);
+
+    if (result === null) {
+        return null;
+    }
+
+    return +result.stats[name];
 }
