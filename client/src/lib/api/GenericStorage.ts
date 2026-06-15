@@ -1,5 +1,5 @@
 import { ValueZustand } from '@/lib/api/ValueState';
-import { getAPI } from "@/lib/api/ApiManager";
+import { getAPI } from '@/lib/api/ApiManager';
 import {
     getCalender,
     getNamedStat,
@@ -25,7 +25,7 @@ export async function loadZustand<K extends keyof StatLine>(state: ValueZustand,
     }
 
     // For the current day we can default to 0. For other days we cannot.
-    const loadedValue = await getStatistic(name) ?? 0;
+    const loadedValue = (await getStatistic(name)) ?? 0;
 
     state.getState().setValue(loadedValue);
     return loadedValue;
@@ -128,8 +128,8 @@ export async function incrementStatistic<K extends keyof StatLine>(
         return false;
     }
 
-    if (!await insertStat(name, server + increment, date)) {
-        throw Error("Value set while loading from server");
+    if (!(await insertStat(name, server + increment, date))) {
+        throw Error('Value set while loading from server');
     }
     return true;
 }
@@ -210,18 +210,22 @@ async function loadServerCalendar(startDate: Date, endDate: Date) {
 
     const result: any[] = await getAPI(endpoint);
 
-
     result.forEach((dict, index, _) => {
         const keys = Object.keys(dict);
         keys.forEach((value, ix, _) => {
             dict[value] = +dict[value];
-        })
-    })
+        });
+    });
 
     return result;
 }
 
-async function loadServerChart<K extends keyof StatLine>(name: K, startDate: Date, endDate: Date, bins: number) {
+async function loadServerChart<K extends keyof StatLine>(
+    name: K,
+    startDate: Date,
+    endDate: Date,
+    bins: number
+) {
     const endpoint = `/api/barchart/${name}/${startDate.toISOString()}/${endDate.toISOString()}/?bins=${bins}`;
 
     const result = await getAPI(endpoint);
