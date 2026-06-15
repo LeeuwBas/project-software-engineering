@@ -22,7 +22,7 @@ export default function PetSelection() {
   function confirm() {
     setPet(draftPet);
     savePet(draftPet);
-    isLoggedIn ? router.back() : router.push('/signup');
+    isLoggedIn ? router.push('/') : router.push('/signup');
   }
 
   return (
