@@ -1,6 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAppContext } from '@/lib/AppContext';
 import { View } from 'react-native';
+import { AppText } from '../AppText';
 import StepsWidget from './StepsWidget';
 import WaterWidget from './WaterWidget';
 
@@ -24,6 +26,11 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
             <WaterWidget water={water} setWater={setWater} />
             <StepsWidget />
           </CardContent>
+          <CardFooter>
+            <Button className="py-0">
+              <AppText className="font-bold text-white">Change goals</AppText>
+            </Button>
+          </CardFooter>
         </Card>
       </View>
     </View>
