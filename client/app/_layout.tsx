@@ -10,8 +10,8 @@ import '../global.css';
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    IosevkaCharon: require('@/assets/fonts/IosevkaCharon-Regular.ttf'),
-    'IosevkaCharon-Bold': require('@/assets/fonts/IosevkaCharon-Bold.ttf'),
+    IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),
+    'IosevkaCharon-Bold': require('@assets/fonts/IosevkaCharon-Bold.ttf'),
   });
   if (!loaded) return null;
 

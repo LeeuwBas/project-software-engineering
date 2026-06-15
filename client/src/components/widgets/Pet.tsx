@@ -5,11 +5,11 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
   function selection(id: number) {
     switch (id) {
       case 0:
-        return require('@/assets/pets/onigiri.png');
+        return require('@assets/pets/onigiri/onigiri.png');
       case 1:
-        return require('@/assets/pets/frog.png');
+        return require('@assets/pets/frog/frog.png');
       case 2:
-        return require('@/assets/pets/blob.png');
+        return require('@assets/pets/blob/blob.png');
       default:
         console.error('Unknown pet id');
     }

@@ -1,5 +1,5 @@
 import { useWater } from '@/lib/api/WaterBridge';
-import { View, Image } from 'react-native';
+import { Image, View } from 'react-native';
 
 export default function WaterBar() {
   const water = useWater() ?? 0;
@@ -7,7 +7,7 @@ export default function WaterBar() {
     <View className="w-1/2">
       <View className="flex-row justify-center gap-1">
         <View className="h-4"></View>
-        <Image source={require('@assets/icons/glass.png')} className="h-full" />
+        <Image source={require('@assets/icons/module_icons/glass.png')} className="h-full" />
         <View className="flex-1 flex-row overflow-hidden border-4 border-border-dark">
           <View
             className="mt-auto h-full"
