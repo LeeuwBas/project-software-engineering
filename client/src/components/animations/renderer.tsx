@@ -24,15 +24,21 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
   const frame = useSharedValue(0);
+  const startTime = useSharedValue<number | null>(null);
   
   
   useEffect(() => {
+    startTime.value = null;
     frame.value = 0;
   }, [animation]);
 
   // Calculates frame index in asset
   useFrameCallback((info) => {
-    frame.value = Math.floor((info.timeSinceFirstFrame / 1000) * config.fps) % config.frameCount;
+    if (startTime.value === null) {
+      startTime.value = info.timeSinceFirstFrame;
+    }
+    const elapsed = info.timeSinceFirstFrame - startTime.value;
+    frame.value = Math.floor((elapsed / 1000) * config.fps) % config.frameCount;
   });
 
   // Samples frame based on index and frame size from asset

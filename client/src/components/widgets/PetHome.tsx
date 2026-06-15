@@ -1,9 +1,19 @@
 import { Animation } from '@/components/animations/renderer';
 import { usePet } from '@/components/contexts/PetContext';
-import { AnimationName } from '@/lib/animations/library';
+import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { useWater } from '@/lib/api/WaterBridge';
 
+
+/**
+ * This component represents the pet with its associated animations for the homescreen.
+ * Can be used as reference for other pet displays in different locations.
+ * Interactions with the pet can be represented by a function here which calls the setCurrentAnim
+ * function with the corresponding animation from the animations file
+ *
+ * @returns a pet for the homescreen
+ */
 export default function PetHome({ className = '', ...props }: { className?: string }) {
   function selection(id: number) {
     switch (id) {
@@ -21,21 +31,62 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   const { pet } = usePet();
 
   const source = selection(pet); // derived, never stale
-  const happyAnim = `${source}_breath_happy` as AnimationName;
+  const idleAnim = `${source}_breath_happy` as AnimationName;
   const blinkAnim = `${source}_blink` as AnimationName;
+  const waterAnim = `${source}_drinking` as AnimationName;
 
-  const [currentAnim, setCurrentAnim] = useState<AnimationName>(happyAnim);
+  const [currentAnim, setCurrentAnim] = useState<AnimationName>(idleAnim);
+  const [animIteration, setAnimIteration] = useState(1)
 
+  const waterValue = useWater() ?? null;
+  const [prevWater, setPrevWater] = useState<number | null>(null);
+
+
+  // Sync animation when the pet or base idle animation changes
   useEffect(() => {
-    setCurrentAnim(happyAnim);
-  }, [happyAnim, pet]);
+    setCurrentAnim(idleAnim);
+  }, [idleAnim, pet]);
+
+
+  // When water value changes play water animation once
+  // Has exception for when watervalue is loaded at render and when water value is lower than previous value
+  useEffect(() => {
+    if (prevWater !== null && waterValue != null && waterValue !== prevWater && waterValue >= prevWater) {
+      setAnimIteration(1)
+      setCurrentAnim(waterAnim)
+    } else {
+      setCurrentAnim(idleAnim)
+      setAnimIteration(1)
+    }
+    setPrevWater(waterValue);
+  },[waterValue])
+
+
+  // Goes back to idle after specified interation counts in animIteration
+  // Starts new animation when either current animation, idle animation or watervalue changes
+  // This triggers rerender of animation component
+  useEffect(() => {
+    if (currentAnim === idleAnim) return;
+
+    const meta = ANIMATIONS[currentAnim];
+    if (!meta) return;
+
+    const oneIterationMs = (meta.frameCount / meta.fps) * 1000;
+    const totalDurationMs = oneIterationMs * animIteration;
+
+    const timer = setTimeout(() => {
+      setCurrentAnim(idleAnim);
+    }, totalDurationMs);
+
+    return () => clearTimeout(timer);
+  }, [currentAnim, idleAnim, animIteration, waterValue]);
 
   return (
     <View className={className} {...props}>
       <Pressable
         className=" items-center justify-center self-center overflow-hidden"
         onPress={() => {
-          currentAnim === happyAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(happyAnim);
+          currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim); setAnimIteration(2)
         }}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} />

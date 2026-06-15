@@ -2,6 +2,7 @@ import PetHome from '@/components/widgets/PetHome';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
+import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
