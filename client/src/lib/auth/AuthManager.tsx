@@ -104,24 +104,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// - Functions - //
-
-/**
- * @peram auth should be the auth context.
- * @returns `true` if the user is logged in.
- */
-export function isAuth(auth: Auth) {
-  if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return true;
-  if (auth?.accessToken) return true;
-  return false;
-}
-
 // - Hooks - //
 
 /**
- * This wrapper allows us to treat the auth context as `Auth` instead of `Auth | null`.
- *
+ * Use {@link useIsAuth} for signin state.
  * @returns The auth context for the app.
+ * @example
+ * const auth = useAuth();
+ * if (auth.isLoading) print("logging in...");
  */
 export function useAuth(): Auth {
   const authCtx = useContext(AuthContext);
@@ -132,13 +122,14 @@ export function useAuth(): Auth {
 }
 
 /**
- * This is the hook version, see {@link isAuth} for the function.
- *
+ * @peram auth should be the auth context.
  * @returns `true` if the user is logged in.
  */
 export function useIsAuth(): boolean {
   const auth = useAuth();
-  return isAuth(auth);
+  if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return true;
+  if (auth.accessToken) return true;
+  return false;
 }
 
 /**
