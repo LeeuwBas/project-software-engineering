@@ -13,7 +13,8 @@ export interface AnimationMetaData {
   valid inputs for the animation rendering component in
   '@/components/animations/renderer.tsx'.
 
-  All entry keys are formatted as '@assets/<filepath>'.
+  All entry keys are formatted as the name of the asset file 
+  in the 'client/assets/' directory unless a placeholder.
 
   All entry values are formatted as follows:
   - width: width of a single frame
