@@ -1,4 +1,4 @@
-import RequireAuth from "@/components/auth/RequireAuth";
+import RequireAuth from '@/components/auth/RequireAuth';
 import { AppProvider } from '@/lib/AppContext';
 import { Slot } from 'expo-router';
 

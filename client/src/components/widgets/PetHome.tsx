@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useWater } from '@/lib/api/WaterBridge';
 
-
 /**
  * This component represents the pet with its associated animations for the homescreen.
  * Can be used as reference for other pet displays in different locations.
@@ -36,31 +35,33 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   const waterAnim = `${source}_drinking` as AnimationName;
 
   const [currentAnim, setCurrentAnim] = useState<AnimationName>(idleAnim);
-  const [animIteration, setAnimIteration] = useState(1)
+  const [animIteration, setAnimIteration] = useState(1);
 
   const waterValue = useWater() ?? null;
   const [prevWater, setPrevWater] = useState<number | null>(null);
-
 
   // Sync animation when the pet or base idle animation changes
   useEffect(() => {
     setCurrentAnim(idleAnim);
   }, [idleAnim, pet]);
 
-
   // When water value changes play water animation once
   // Has exception for when watervalue is loaded at render and when water value is lower than previous value
   useEffect(() => {
-    if (prevWater !== null && waterValue != null && waterValue !== prevWater && waterValue >= prevWater) {
-      setAnimIteration(1)
-      setCurrentAnim(waterAnim)
+    if (
+      prevWater !== null &&
+      waterValue != null &&
+      waterValue !== prevWater &&
+      waterValue >= prevWater
+    ) {
+      setAnimIteration(1);
+      setCurrentAnim(waterAnim);
     } else {
-      setCurrentAnim(idleAnim)
-      setAnimIteration(1)
+      setCurrentAnim(idleAnim);
+      setAnimIteration(1);
     }
     setPrevWater(waterValue);
-  },[waterValue])
-
+  }, [waterValue]);
 
   // Goes back to idle after specified interation counts in animIteration
   // Starts new animation when either current animation, idle animation or watervalue changes
@@ -86,7 +87,8 @@ export default function PetHome({ className = '', ...props }: { className?: stri
       <Pressable
         className=" items-center justify-center self-center overflow-hidden"
         onPress={() => {
-          currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim); setAnimIteration(2)
+          currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
+          setAnimIteration(2);
         }}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} />

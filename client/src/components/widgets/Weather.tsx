@@ -1,5 +1,5 @@
 import { AppText } from '@/components/AppText';
-import { WeatherData, getWeather } from '@/lib/weather';
+import { getWeather, WeatherData } from '@/lib/weather';
 import Cloudy from '@assets/icons/weather_icons/cloudy.svg';
 import Misty from '@assets/icons/weather_icons/misty.svg';
 import Rainy from '@assets/icons/weather_icons/rainy.svg';
