@@ -38,8 +38,8 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
   }, [animation]);
 
   // Calculates frame index in asset
-  useFrameCallback((info) => {
-    const elapsed = info.timestamp - startTime.value;
+  useFrameCallback(() => {
+    const elapsed = performance.now() - startTime.value;
     frame.value = Math.floor((elapsed / 1000) * config.fps) % config.frameCount;
   });
 
