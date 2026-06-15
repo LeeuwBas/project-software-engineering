@@ -1,6 +1,13 @@
-import {getCalender, getNamedStat, getStatBarChart, insertStat, setStat, StatLine, updateStat} from "@/lib/storage";
-import {ValueZustand} from "@/lib/api/ValueState";
-
+import { ValueZustand } from '@/lib/api/ValueState';
+import {
+    getCalender,
+    getNamedStat,
+    getStatBarChart,
+    insertStat,
+    setStat,
+    StatLine,
+    updateStat,
+} from '@/lib/storage';
 
 /**
  * Loads a given statistic into the given zustand.
@@ -13,10 +20,10 @@ import {ValueZustand} from "@/lib/api/ValueState";
  */
 export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
     if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`)
+        throw Error(`${name} already loaded`);
     }
 
-    const loadedValue = await getStatistic(name)
+    const loadedValue = await getStatistic(name);
     state.getState().setValue(loadedValue);
     return loadedValue;
 }
@@ -30,13 +37,17 @@ export async function loadZustand<K extends keyof StatLine>(state: ValueZustand,
  *
  * @throws Error if the stat is not loaded.
  */
-export async function setZustand<K extends keyof StatLine>(state: ValueZustand, name: K, value: number) {
+export async function setZustand<K extends keyof StatLine>(
+    state: ValueZustand,
+    name: K,
+    value: number
+) {
     if (state.getState().value === null) {
-        throw Error(`Stat ${name} not loaded yet`)
+        throw Error(`Stat ${name} not loaded yet`);
     }
 
-    state.getState().setValue(value)
-    await setStatistic(name, value)
+    state.getState().setValue(value);
+    await setStatistic(name, value);
 }
 
 /**
@@ -48,16 +59,16 @@ export async function setZustand<K extends keyof StatLine>(state: ValueZustand, 
  * @returns The loaded statistic
  */
 export async function getStatistic<K extends keyof StatLine>(name: K, date: Date = new Date()) {
-    const storage = await getNamedStat(name, date)
+    const storage = await getNamedStat(name, date);
 
     if (storage !== null) {
         return storage;
     }
     const server = await loadServer(name, date);
-    const inserted = await insertStat(name, server, date)
+    const inserted = await insertStat(name, server, date);
 
     if (!inserted) {
-        throw Error("Value set while loading from server")
+        throw Error('Value set while loading from server');
     }
     return server;
 }
@@ -71,12 +82,16 @@ export async function getStatistic<K extends keyof StatLine>(name: K, date: Date
  *
  * @returns true if successful, false otherwise.
  */
-export async function setStatistic<K extends keyof StatLine>(name: K, value: number, date: Date = new Date()) {
+export async function setStatistic<K extends keyof StatLine>(
+    name: K,
+    value: number,
+    date: Date = new Date()
+) {
     if (await setStat(name, value, date)) {
-        return true
+        return true;
     }
 
-    return await insertStat(name, value, date)
+    return await insertStat(name, value, date);
 }
 
 /**
@@ -90,14 +105,18 @@ export async function setStatistic<K extends keyof StatLine>(name: K, value: num
  *
  * @returns true
  */
-export async function incrementStatistic<K extends keyof StatLine>(name: K, increment: number, date: Date = new Date()) {
+export async function incrementStatistic<K extends keyof StatLine>(
+    name: K,
+    increment: number,
+    date: Date = new Date()
+) {
     if (await updateStat(name, increment, date)) {
-        return true
+        return true;
     }
 
-    const server = await loadServer(name, date)
-    if (!await insertStat(name, server + increment, date)) {
-        throw Error("Value set while loading from server")
+    const server = await loadServer(name, date);
+    if (!(await insertStat(name, server + increment, date))) {
+        throw Error('Value set while loading from server');
     }
     return true;
 }
@@ -112,11 +131,16 @@ export async function incrementStatistic<K extends keyof StatLine>(name: K, incr
  *
  * @returns an array daysPerBin values corresponding with each bin.
  */
-export async function getStatisticChart<K extends keyof StatLine>(name: K, bins: number, daysPerBin: number, date: Date = new Date()) {
-    const startDate = new Date(date)
-    startDate.setDate(startDate.getDate() - bins * daysPerBin)
+export async function getStatisticChart<K extends keyof StatLine>(
+    name: K,
+    bins: number,
+    daysPerBin: number,
+    date: Date = new Date()
+) {
+    const startDate = new Date(date);
+    startDate.setDate(startDate.getDate() - bins * daysPerBin);
 
-    const storage = await getStatBarChart(name, startDate, date, bins)
+    const storage = await getStatBarChart(name, startDate, date, bins);
 
     if (storage !== null && storage.isFull) {
         return storage.bins;
@@ -125,21 +149,21 @@ export async function getStatisticChart<K extends keyof StatLine>(name: K, bins:
     const server = await loadServerChart(name, startDate, date, bins);
 
     if (server === null) {
-        return storage?.bins ?? null
+        return storage?.bins ?? null;
     }
 
-    let promise: Promise<any> = Promise.resolve()
+    let promise: Promise<any> = Promise.resolve();
 
     if (daysPerBin === 1) {
         for (let i = 0; i < server.length; i++) {
-            const day = new Date(startDate)
-            day.setDate(day.getDate() + i)
+            const day = new Date(startDate);
+            day.setDate(day.getDate() + i);
 
-            promise = Promise.all([promise, insertStat(name, server[i], day)])
+            promise = Promise.all([promise, insertStat(name, server[i], day)]);
         }
     }
 
-    await promise
+    await promise;
 
     return server;
 }
@@ -153,36 +177,41 @@ export async function getStatisticChart<K extends keyof StatLine>(name: K, bins:
  * @returns The loaded calendar, or null if unloaded. The calendar might not be complete if not all data is present.
  */
 export async function loadCalender(startDate: Date, endDate: Date) {
-    const storage = await getCalender(startDate, endDate)
+    const storage = await getCalender(startDate, endDate);
 
     if (storage !== null && storage.isFull) {
-        return storage.vals
+        return storage.vals;
     }
 
-    const server = await loadServerCalendar(startDate, endDate)
+    const server = await loadServerCalendar(startDate, endDate);
 
     if (server === null) {
-        return storage?.vals ?? null
+        return storage?.vals ?? null;
     }
 
-    return server
+    return server;
 }
 
 async function loadServerCalendar(startDate: Date, endDate: Date) {
     // TODO load from server
-    return null
+    return null;
 }
 
-async function loadServerChart<K extends keyof StatLine>(name: K, startDate: Date, endDate: Date, bins: number) {
+async function loadServerChart<K extends keyof StatLine>(
+    name: K,
+    startDate: Date,
+    endDate: Date,
+    bins: number
+) {
     // TODO load from server
-    const loaded: number[] = []
+    const loaded: number[] = [];
     for (let i = 0; i < bins; i++) {
-        loaded.push(Math.round(Math.random() * 100))
+        loaded.push(Math.round(Math.random() * 100));
     }
-    return loaded
+    return loaded;
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
     // TODO load from server
-    return 0
+    return 0;
 }
