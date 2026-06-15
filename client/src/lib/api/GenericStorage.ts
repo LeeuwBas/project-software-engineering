@@ -206,6 +206,9 @@ export async function loadCalender(startDate: Date, endDate: Date) {
 }
 
 async function loadServerCalendar(startDate: Date, endDate: Date) {
+    //TODO when on main
+    return null;
+
     const endpoint = `/api/calendar/${startDate.toISOString()}/${endDate.toISOString()}/`;
 
     const result: any[] = await getAPI(endpoint);
@@ -226,6 +229,9 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
+    //TODO when on main
+    return null;
+
     const endpoint = `/api/barchart/${name}/${startDate.toISOString()}/${endDate.toISOString()}/?bins=${bins}`;
 
     const result = await getAPI(endpoint);
@@ -237,6 +243,9 @@ async function loadServerChart<K extends keyof StatLine>(
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
+    //TODO when on main
+    return 0;
+
     const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`;
 
     const result = await getAPI(endpoint);
