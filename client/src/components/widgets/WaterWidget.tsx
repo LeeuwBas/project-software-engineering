@@ -17,7 +17,7 @@ export default function WaterWidget(){
     }
 
   return (
-    <>
+     <>
       <View className="flex w-full flex-row items-center justify-between p-2">
         <View className="flex flex-row items-center gap-2">
           <GlassWater size={30} />
