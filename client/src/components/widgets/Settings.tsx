@@ -32,7 +32,12 @@ export default function Settings() {
     { label: 'Change Pet', effect: () => router.push('/pet-select') },
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
-    { label: 'Sign out', effect: signOutGoTo },
+    {
+      label: 'Sign out',
+      effect: () => {
+        auth.signOut();
+      },
+    },
     {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,

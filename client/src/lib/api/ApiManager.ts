@@ -1,5 +1,5 @@
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
-import { useAuth } from '@/lib/auth/AuthManager';
+import { internalAuth } from '@/lib/auth/AuthManager';
 
 /**
  * Sends a GET request to the given API endpoint, authenticated with the current session.
@@ -80,7 +80,7 @@ export async function queryApi(
     authenticate: boolean = true,
     recurse_unauthenticated: boolean = true
 ): Promise<Response | null> {
-    const auth = useAuth();
+    const auth = internalAuth;
     const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 
     if (authenticate && (!auth || auth.isLoading)) {
@@ -118,9 +118,9 @@ export async function queryApi(
         }
 
         try {
-            await auth?.renewToken();
+            await auth.renewToken();
         } catch (err) {
-            await auth?.signOut();
+            await auth.signOut();
             return null;
         }
 
