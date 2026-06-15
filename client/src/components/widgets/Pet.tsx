@@ -1,15 +1,17 @@
-import { Image } from 'expo-image';
+import Blob from '@assets/pets/blob/blob.svg';
+import Frog from '@assets/pets/frog/frog.svg';
+import Onigiri from '@assets/pets/onigiri/onigiri.svg';
 import { View } from 'react-native';
 
 export default function Pet({ className = '', id, ...props }: { className?: string; id: number }) {
   function selection(id: number) {
     switch (id) {
       case 0:
-        return require('@assets/pets/onigiri/onigiri.png');
+        return <Onigiri width={'100%'} height={200} />;
       case 1:
-        return require('@assets/pets/frog/frog.png');
+        return <Frog width={'100%'} height={200} />;
       case 2:
-        return require('@assets/pets/blob/blob.png');
+        return <Blob width={'100%'} height={200} />;
       default:
         console.error('Unknown pet id');
     }
@@ -19,7 +21,7 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
 
   return (
     <View className={className} {...props}>
-      <Image style={{ width: '100%', aspectRatio: 1 }} contentFit="cover" source={source} />
+      {selection(id)}
     </View>
   );
 }
