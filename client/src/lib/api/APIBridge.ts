@@ -1,5 +1,6 @@
-import { createWaterBridge } from '@/lib/api/WaterBridge';
 import { loadCalender } from '@/lib/api/GenericStorage';
+import { createQuoteBridge } from '@/lib/api/QuoteBridge';
+import { createWaterBridge } from '@/lib/api/WaterBridge';
 
 export type LoadableBridge<T> = T & Loadable;
 
@@ -56,3 +57,4 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 }
 
 export const waterBridge = register(createWaterBridge());
+export const quoteBridge = createQuoteBridge();
