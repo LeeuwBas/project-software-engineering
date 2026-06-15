@@ -3,14 +3,29 @@ import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-type Auth = {
+type AuthService = {
   accessToken: string | null;
   refreshToken: string | null;
   isLoading: boolean;
-
   renewToken: () => Promise<void>;
+  signOut: () => Promise<void>;
+};
+
+type Auth = {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+
   signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
+};
+
+export const internalAuth: AuthService = {
+  accessToken: null,
+  refreshToken: null,
+  isLoading: true,
+
+  renewToken: async () => {},
+  signOut: async () => {},
 };
 
 const AuthContext = createContext<Auth | null>(null);
@@ -19,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(true);
+  const [isAuthenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -28,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (storedAccessToken && storedRefreshToken) {
         setAccessToken(storedAccessToken);
         setRefreshToken(storedRefreshToken);
+        setAuthenticated(true);
       }
       setLoading(false);
       console.log('Successfully loaded tokens from storage');
@@ -56,6 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(data.accessToken, data.refreshToken);
     setAccessToken(data.accessToken);
     setRefreshToken(data.refreshToken);
+    setAuthenticated(true);
   }
 
   async function signIn(email: string, password: string) {
@@ -79,6 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
+    setAuthenticated(true);
     console.log('Successfully logged in');
     return true;
   }
@@ -87,15 +106,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.clear();
     setAccessToken(null);
     setRefreshToken(null);
+    setAuthenticated(false);
   }
+
+  useEffect(() => {
+    internalAuth.accessToken = accessToken;
+    internalAuth.refreshToken = refreshToken;
+    internalAuth.isLoading = isLoading;
+    internalAuth.renewToken = renewToken;
+    internalAuth.signOut = signOut;
+  }, [accessToken, refreshToken]);
 
   return (
     <AuthContext.Provider
       value={{
-        accessToken,
-        refreshToken,
+        isAuthenticated,
         isLoading,
-        renewToken,
         signIn,
         signOut,
       }}>
@@ -128,7 +154,7 @@ export function useAuth(): Auth {
 export function useIsAuth(): boolean {
   const auth = useAuth();
   if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return true;
-  if (auth.accessToken) return true;
+  if (auth.isAuthenticated) return true;
   return false;
 }
 

@@ -3,7 +3,7 @@ import { Redirect } from 'expo-router';
 
 export default function Index() {
   return (
-    <RequireAuth>
+    <RequireAuth href={'/pet-select'}>
       <Redirect href="/(protected)" />
     </RequireAuth>
   );
