@@ -1,6 +1,5 @@
 import { AppText } from '@/components/AppText';
 import getMood from '@/lib/mood';
-import { Frown, Smile } from 'lucide-react-native';
 import { View } from 'react-native';
 
 export default function Happiness() {

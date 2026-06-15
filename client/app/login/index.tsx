@@ -1,6 +1,10 @@
+import RequireNoAuth from '@/components/auth/RequireNoAuth';
 import { SignInForm } from '@/components/sign-in-form';
-import {requireNoAuth} from "@/lib/auth/AuthManager";
 
 export default function LoginScreen() {
-  return requireNoAuth(<SignInForm />);
+  return (
+    <RequireNoAuth>
+      <SignInForm />
+    </RequireNoAuth>
+  );
 }

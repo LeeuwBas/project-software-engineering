@@ -1,8 +1,27 @@
-export interface StatisticMetadata {
-    id: string;
+import { LucideIcon } from 'lucide-react-native';
+import { SvgProps } from 'react-native-svg';
+
+export type StatName = 'water';
+
+export interface barConfig {
+    barcolor: string;
+    goalcolor: string;
+    maxValue: number;
+}
+
+export interface StatInfo {
     title: string;
     unit: string;
+    barconfig: barConfig;
 }
+
+export const STATS: Record<StatName, StatInfo> = {
+    water: {
+        title: 'Water drank',
+        unit: 'glasses',
+        barconfig: { barcolor: '#74ccf4', goalcolor: '#15a4e6', maxValue: 9 },
+    },
+};
 
 export interface StatisticResponse {
     today: number;
@@ -15,7 +34,7 @@ export interface StatisticResponse {
 
 export type HistoryPeriod = 'week' | 'month' | 'year';
 
-export const PERIOD_CONFIG = {
+export const PERIOD_CONFIG: Record<HistoryPeriod, any> = {
     week: {
         days: 7,
         bins: 7,
@@ -28,4 +47,11 @@ export const PERIOD_CONFIG = {
         days: 360,
         bins: 12,
     },
-} as const;
+};
+
+export type TabId = 'calender' | StatName;
+
+export type Tab = {
+    id: TabId;
+    icon: LucideIcon | React.FC<SvgProps>;
+};

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { dateDifference } from './utils';
+import { useEffect, useState } from 'react';
 
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
@@ -228,7 +229,7 @@ export async function getStatBarChart(
     returnValue.isFull = true;
 
     let lowerBinDate = new Date(lowerDay);
-    let upperBinDate = upperDay;
+    let upperBinDate = new Date(lowerDay);
     upperBinDate.setDate(lowerBinDate.getDate() + returnValue.daysPerBin);
 
     for (let i = 0; i < binCount; i++) {
@@ -394,8 +395,6 @@ export async function insertStat<K extends keyof StatLine>(
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 
-import { useEffect, useState } from 'react';
-
 // Handles water in storage. May be used as template for future objects.
 export function useWater(menuOpen: boolean) {
     const [water, setWater] = useState(0);
@@ -438,4 +437,39 @@ export function useWater(menuOpen: boolean) {
     }, []);
 
     return { water, saveWater };
+}
+
+export function petContextInit() {
+    const [pet, setPet] = useState(0);
+
+    async function getPetData(): Promise<number> {
+        try {
+            const id = await AsyncStorage.getItem('pet_id');
+            return id !== null ? parseInt(id) : 0;
+        } catch (error) {
+            console.error('Getting pet id went wrong', error);
+            return 0;
+        }
+    }
+
+    async function savePet(id: number) {
+        try {
+            await AsyncStorage.setItem('pet_id', JSON.stringify(id));
+        } catch (error) {
+            console.error('Setting pet id went wrong.', error);
+        }
+        console.log('saved pet id ' + id);
+    }
+
+    useEffect(() => {
+        async function getPet() {
+            const saved_id = await getPetData();
+            setPet(saved_id);
+            console.log('retrieved pet id ' + saved_id);
+        }
+
+        getPet();
+    }, []);
+
+    return { pet, setPet, savePet };
 }

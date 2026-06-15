@@ -23,17 +23,9 @@ export async function fetchStatistic(
             min: 0,
             max: 12,
         },
-        running: {
+        test: {
             min: 0,
             max: 15,
-        },
-        math: {
-            min: 0,
-            max: 150,
-        },
-        sleep: {
-            min: 100,
-            max: 150,
         },
     };
 
