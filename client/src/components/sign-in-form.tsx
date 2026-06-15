@@ -104,7 +104,7 @@ export function SignInForm() {
 
               {/* - Begin placeholder for testing - */}
               {/* uncomment this to test the routing between pages */}
-              <Button
+              {/*<Button
                 className="mt-2 w-1/2 self-center py-1"
                 onPress={() => {
                   router.replace('/signup');
