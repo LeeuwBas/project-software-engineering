@@ -5,7 +5,7 @@ import { View, TextInput } from 'react-native';
 import { AppText } from '../AppText';
 import StepsWidget from './StepsWidget';
 import WaterWidget from './WaterWidget';
-import { GlassWater } from 'lucide-react-native';
+import { GlassWater, SportShoe } from 'lucide-react-native';
 import { useState } from 'react';
 import { getCurrentGoal } from '@/lib/storage';
 
@@ -44,7 +44,11 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
               <AppText className='font-bold text-lg'>Goals:</AppText>
               <View className="flex flex-row items-center gap-2 p-2">
                 <GlassWater size={30} />
-                <TextInput className='bg-slate-400' defaultValue={`${goals['water']}`}></TextInput>
+                <TextInput inputMode='numeric' className='bg-slate-400 border-2 rounded-xl px-2' defaultValue={`${goals['water']}`}></TextInput>
+              </View>
+              <View className="flex flex-row items-center gap-2 p-2">
+                <SportShoe size={30} />
+                <TextInput inputMode='numeric' className='bg-slate-400 border-2 rounded-xl px-2' defaultValue={`${goals['steps']}`}></TextInput>
               </View>
             </CardContent>
           )}
