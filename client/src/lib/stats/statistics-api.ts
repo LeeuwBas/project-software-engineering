@@ -46,9 +46,9 @@ export async function fetchStatistic(
 
   const average = values.reduce((sum, value) => sum + value, 0) / values.length;
 
-  const average = values.reduce((sum, value) => sum + value, 0) / values.length;
-
   const high = Math.max(...values);
+
+  const low = Math.min(...values);
 
   return {
     today: values[values.length - 1],
