@@ -15,6 +15,7 @@ import { Text } from '@/components/ui/text';
 import ChartIcon from '@assets/icons/chart.svg';
 import PersonIcon from '@assets/icons/person.svg';
 import { ScrollView, View } from 'react-native';
+import { useColorScheme } from 'nativewind';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -44,8 +45,13 @@ function ColorGroup({ title, children }: { title: string; children: React.ReactN
 }
 
 export default function ReferencePage() {
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+
   return (
     <ScrollView contentContainerClassName="items-start gap-8 p-8 bg-background">
+      <Button onPress={toggleColorScheme}>
+        {colorScheme === 'dark' ? 'sun icon' : 'dark icon'}
+      </Button>
       <Section title="Colors">
         <AppText className="text-sm text-muted-foreground">
           Key color philosophy: Use primary, secondary and accent colors for drawing attention to

@@ -21,12 +21,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from api.statistics.views import (
-    StatsWaterRequestAverage,
-    StatsWaterUpdate,
-    StatsWaterBarChart,
-    StatisticsView,
     GoalManageView,
     CalendarView,
+    StatManageView,
+    BarchartView,
+    SummaryView
 )
 from api.quotes.views import RequestQuote
 
@@ -44,12 +43,12 @@ router.register(r"users", UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
-    path("api/stats/metrics", StatsWaterRequestAverage.as_view(), name="water_metrics"),
-    path("api/stats/addwater", StatsWaterUpdate.as_view(), name="update_water"),
-    path("api/stats/waterchart", StatsWaterBarChart.as_view(), name="water_chart"),
-    path("api/stats/view", StatisticsView.as_view(), name="statview"),
+    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/goals/<str:goal_date>", GoalManageView.as_view(), name="goal_endpoint"),
     path("api/calendar/<str:start_date>/<str:end_date>", CalendarView.as_view(), name="calendar_endpoint"),
+    path("api/stats/<str:date>", StatManageView.as_view(), name="stat_manager"),
+    path("api/barchart/<str:statName>/<str:startDate>/<str:endDate>/", BarchartView.as_view(), name="bar_chart"),
+    path("api/summary/<str:statName>/<str:startDate>/<str:endDate>/", SummaryView.as_view(), name="summary_view"),
     path('', include(router.urls)),
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
