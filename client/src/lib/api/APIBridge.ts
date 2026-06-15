@@ -1,23 +1,23 @@
-import {createWaterBridge} from "@/lib/api/WaterBridge";
-import {loadCalender} from "@/lib/api/GenericStorage";
+import { createWaterBridge } from "@/lib/api/WaterBridge";
+import { loadCalender } from "@/lib/api/GenericStorage";
 
 export type LoadableBridge<T> = T & Loadable;
 
 export interface Loadable {
-    load: () => Promise<any>,
+    load: () => Promise<any>;
 }
 
 export interface StatisticBridge {
-    getRaw: (date?: Date) => Promise<number>,
-    set: (value: number, date?: Date) => Promise<any>
-    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>,
+    getRaw: (date?: Date) => Promise<number>;
+    set: (value: number, date?: Date) => Promise<any>;
+    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
 }
 
 const loaders: Loadable[] = [];
 let initPromise: Promise<void> | null = null;
 
 function register<T>(module: LoadableBridge<T>): T {
-    loaders.push(module)
+    loaders.push(module);
     return module;
 }
 
@@ -30,16 +30,16 @@ export async function initializeApiManager() {
     if (initPromise) {
         return initPromise;
     }
-    return initPromise = Promise.all(
+    return (initPromise = Promise.all(
         loaders.map((s) => {
             try {
-                return s.load()
+                return s.load();
             } catch (err) {
-                console.error("Could not load module: ", err)
-                return Promise.resolve()
+                console.error('Could not load module: ', err);
+                return Promise.resolve();
             }
         })
-    ).then(); // Map to void promise
+    ).then()); // Map to void promise
 }
 
 /**
@@ -52,10 +52,7 @@ export async function initializeApiManager() {
  * went TERRIBLY wrong.
  */
 export async function getGoalCalender(startDate: Date, endDate: Date) {
-    return await loadCalender(startDate, endDate)
+    return await loadCalender(startDate, endDate);
 }
 
-
 export const waterBridge = register(createWaterBridge());
-
-

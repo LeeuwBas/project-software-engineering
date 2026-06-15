@@ -9,16 +9,16 @@ const ACCESS_TOKEN = 'access_token';
 const REFRESH_TOKEN = 'refresh_token';
 
 export const tokenStorage = {
-  getAccessToken: async () => localStorage.getItem(ACCESS_TOKEN),
-  getRefreshToken: async () => localStorage.getItem(REFRESH_TOKEN),
+    getAccessToken: async () => localStorage.getItem(ACCESS_TOKEN),
+    getRefreshToken: async () => localStorage.getItem(REFRESH_TOKEN),
 
-  setTokens: async (access: string, refresh: string) => {
-    localStorage.setItem(ACCESS_TOKEN, access);
-    localStorage.setItem(REFRESH_TOKEN, refresh);
-  },
+    setTokens: async (access: string, refresh: string) => {
+        localStorage.setItem(ACCESS_TOKEN, access);
+        localStorage.setItem(REFRESH_TOKEN, refresh);
+    },
 
-  clear: async () => {
-    localStorage.removeItem(ACCESS_TOKEN);
-    localStorage.removeItem(REFRESH_TOKEN);
-  },
+    clear: async () => {
+        localStorage.removeItem(ACCESS_TOKEN);
+        localStorage.removeItem(REFRESH_TOKEN);
+    },
 };

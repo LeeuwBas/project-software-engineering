@@ -19,7 +19,7 @@ const waterState = createNewState();
  * This will update the water value whenever it is changed internally.
  */
 export function useWater() {
-    return useValue(waterState)
+    return useValue(waterState);
 }
 
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
