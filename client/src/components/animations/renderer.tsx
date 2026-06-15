@@ -23,7 +23,7 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
     ? ANIMATIONS[animation]
     : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
-  const frame = useSharedValue(0);
+  const frame = useSharedValue(0);  
   const startTime = useSharedValue(0);
   
   
@@ -35,9 +35,7 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
   // Calculates frame index in asset
   useFrameCallback((info) => {
     const elapsed = info.timestamp - startTime.value;
-
     frame.value = Math.floor((elapsed / 1000) * config.fps) % config.frameCount;
-    
   });
 
   // Samples frame based on index and frame size from asset
