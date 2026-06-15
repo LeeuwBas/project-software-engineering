@@ -4,8 +4,8 @@ import { waterBridge } from '@/lib/api/APIBridge';
 import { useWater } from '@/lib/api/WaterBridge';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
-import PersonIcon from '@assets/icons/toolbar_icons/profile.svg';
-import ChartIcon from '@assets/icons/toolbar_icons/stats.svg';
+import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
+import StatsIcon from '@assets/icons/toolbar_icons/stats.svg';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import Settings from './Settings';
@@ -45,7 +45,7 @@ export default function Toolbar({}: {}) {
           disabled={menuOpen || settingsOpen}
           className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => changeStats()}>
-          <ChartIcon width={28} height={28} color="#555555" />
+          <StatsIcon width={28} height={28} color="#555555" />
         </Pressable>
 
         <Pressable
@@ -61,7 +61,7 @@ export default function Toolbar({}: {}) {
           disabled={statsOpen || menuOpen}
           className={`p-2 transition-opacity  duration-200 ${statsOpen || menuOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => changeSettings()}>
-          <PersonIcon width={28} height={28} color="#555555" />
+          <ProfileIcon width={28} height={28} color="#555555" />
         </Pressable>
       </View>
     </View>
