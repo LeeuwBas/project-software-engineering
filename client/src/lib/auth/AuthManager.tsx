@@ -1,6 +1,7 @@
-import {tokenStorage} from "@/auth/TokenStorage";
-import {createContext, JSX, ReactNode, useContext, useEffect, useState} from "react";
-import {Redirect} from "expo-router";
+import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
+import { tokenStorage } from '@/lib/auth/TokenStorage';
+import { Redirect } from 'expo-router';
+import { createContext, JSX, ReactNode, useContext, useEffect, useState } from 'react';
 
 type Auth = {
     accessToken: string | null;
@@ -10,16 +11,14 @@ type Auth = {
     renewToken: () => Promise<void>;
     signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => Promise<void>;
-}
+};
 
-const AuthContext = createContext<Auth | null>(null)
+const AuthContext = createContext<Auth | null>(null);
 
-export const AuthProvider = ({children}: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isLoading, setLoading] = useState(true);
-
-    const API_ENDPOINT = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.viruopet.app";
 
     useEffect(() => {
         async function init() {
@@ -31,7 +30,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                 setRefreshToken(storedRefreshToken);
             }
             setLoading(false);
-            console.log("Successfully loaded tokens from storage")
+            console.log('Successfully loaded tokens from storage');
         }
 
         init();
@@ -39,17 +38,17 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
 
     async function renewToken() {
         if (!refreshToken) {
-            throw new Error("No refresh token available");
+            throw new Error('No refresh token available');
         }
 
         const res = await fetch(`${API_ENDPOINT}/auth/token/refresh`, {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"refresh": refreshToken}),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh: refreshToken }),
         });
 
         if (!res.ok) {
-            throw new Error("Session expired");
+            throw new Error('Session expired');
         }
 
         const data = await res.json();
@@ -62,12 +61,13 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     async function signIn(email: string, password: string) {
         let res;
         res = await fetch(`${API_ENDPOINT}/auth/token/`, {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password}),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
         });
 
         if (!res.ok) {
+            console.log('Login failed');
             return false;
         }
 
@@ -79,7 +79,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
         setAccessToken(receivedAccessToken);
         setRefreshToken(receivedRefreshToken);
-
+        console.log('Successfully logged in');
         return true;
     }
 
@@ -98,8 +98,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                 renewToken,
                 signIn,
                 signOut,
-            }}
-        >
+            }}>
             {children}
         </AuthContext.Provider>
     );
@@ -110,7 +109,7 @@ export function requireNoAuth(element: JSX.Element) {
     if (auth?.isLoading) return null;
 
     if (auth?.accessToken) {
-        return <Redirect href="/"/>;
+        return <Redirect href="/" />;
     }
 
     return element;
@@ -118,15 +117,16 @@ export function requireNoAuth(element: JSX.Element) {
 
 export function requireAuth(element: JSX.Element) {
     const auth = useAuth();
+    if (process.env.EXPO_PUBLIC_DISABLE_AUTH === 'True') return element;
     if (auth?.isLoading) return null;
 
     if (!auth?.accessToken) {
-        return <Redirect href="/login"/>;
+        return <Redirect href="/login" />;
     }
 
     return element;
 }
 
 export function useAuth() {
-    return useContext(AuthContext)
+    return useContext(AuthContext);
 }

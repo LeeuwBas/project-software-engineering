@@ -1,15 +1,14 @@
-import { SocialConnections } from '@/components/social-connections';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
+import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { Pressable, TextInput, View } from 'react-native';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
-
 
 export function SignUpForm() {
   const router = useRouter();
@@ -22,9 +21,10 @@ export function SignUpForm() {
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
-  const passwordInputRef = React.useRef<TextInput>(null);
+  const passwordInputRef = React.useRef<Input>(null);
 
-  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? 'http://127.0.0.1:8000';
+  // if you want to locally host go to client/.env.example and READ THE INSTRUCTIONS
+  const API_URL = process.env.EXPO_PUBLIC_SERVER_ENDPOINT ?? "https://api.virtuopet.app"; 
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
@@ -60,106 +60,78 @@ export function SignUpForm() {
   }
 
   return (
-    <View className="gap-6">
-      <Card className="border-border/0 shadow-none sm:border-border sm:shadow-sm sm:shadow-black/5">
-        <CardHeader>
-          <CardTitle className="text-center text-xl sm:text-left">Create your account</CardTitle>
-          <CardDescription className="text-center sm:text-left">
-            Welcome! Please fill in your details to get started.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="gap-6">
-          <View className="gap-6">
-            {
-              // This is generally confusing syntax! What it basically means is:
-              // 'if errors.general: render the text'
-              // And this is the basic syntax:
-              // '<condition> && <expression>'
-              // This is a TypeScript shorthand that is very often used in React.
-              errors.general && (
+    <ImageBackground
+      source={require('@assets/background_login.png')}
+      contentFit="cover"
+      style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Card className="mx-4 border-border shadow-none">
+          <CardHeader>
+            <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
+          </CardHeader>
+          <CardContent className="gap-6">
+            <View className="gap-6">
+              {errors.general && (
                 <Text className="text-sm text-destructive">{errors.general[0]}</Text>
-
-                // There is also another short-hand that's often used, which is the
-                // ternary operator. This is formatted as follows:
-                // '<condition> ? <expression> : <else-expression>'
-              )
-            }
-            <View className="gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="m@example.com"
-                keyboardType="email-address"
-                autoComplete="email"
-                autoCapitalize="none"
-                onSubmitEditing={onEmailSubmitEditing}
-                returnKeyType="next"
-                submitBehavior="submit"
-                // These 'onChangeText' handlers make these input fields 'controlled'
-                // inputs, meaning the value is controlled by React state rather than
-                // the native input value.
-                // If we don't add this, react doesn't really 'know' the current input
-                // value. This is standard practice in React forms. If we didn't do this,
-                // we would have to add something like a function when the user hits 'submit' that
-                // manually updates the state with the input value, which is not ideal.
-                onChangeText={setEmail}
-              />
-              {errors.email && <Text className="text-sm text-destructive">{errors.email[0]}</Text>}
-            </View>
-            <View className="gap-1.5">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                placeholder="Your username"
-                autoComplete="username"
-                autoCapitalize="none"
-                returnKeyType="next"
-                submitBehavior="submit"
-                onChangeText={setUsername}
-              />
-              {errors.username && (
-                <Text className="text-sm text-destructive">{errors.username[0]}</Text>
               )}
-            </View>
-            <View className="gap-1.5">
-              <View className="flex-row items-center">
-                <Label htmlFor="password">Password</Label>
+              <View className="gap-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  placeholder="john@doe.com"
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  onSubmitEditing={onEmailSubmitEditing}
+                  returnKeyType="next"
+                  submitBehavior="submit"
+                  onChangeText={setEmail}
+                />
+                {errors.email && (
+                  <Text className="text-sm text-destructive">{errors.email[0]}</Text>
+                )}
               </View>
-              <Input
-                ref={passwordInputRef}
-                id="password"
-                secureTextEntry
-                returnKeyType="send"
-                onSubmitEditing={onSubmit}
-                onChangeText={setPassword}
-                autoComplete="new-password"
-                textContentType="newPassword"
-              />
-              {errors.password && (
-                <Text className="text-sm text-destructive">{errors.password[0]}</Text>
-              )}
+              <View className="gap-1.5">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  placeholder="Your username"
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  submitBehavior="submit"
+                  onChangeText={setUsername}
+                />
+                {errors.username && (
+                  <Text className="text-sm text-destructive">{errors.username[0]}</Text>
+                )}
+              </View>
+              <View className="gap-1.5">
+                <View className="flex-row items-center">
+                  <Label htmlFor="password">Password</Label>
+                </View>
+                <Input
+                  ref={passwordInputRef}
+                  id="password"
+                  placeholder="••••••••"
+                  secureTextEntry
+                  returnKeyType="send"
+                  onSubmitEditing={onSubmit}
+                  onChangeText={setPassword}
+                  autoComplete="new-password"
+                  textContentType="newPassword"
+                />
+                {errors.password && (
+                  <Text className="text-sm text-destructive">{errors.password[0]}</Text>
+                )}
+              </View>
+              <Button className="w-full" onPress={onSubmit}>
+                <Text>Continue</Text>
+              </Button>
             </View>
-            <Button className="w-full" onPress={onSubmit}>
-              <Text>Continue</Text>
-            </Button>
-          </View>
-          <Text className="text-center text-sm">
-            Already have an account?{' '}
-            <Pressable
-              onPress={() => {
-                router.replace('/login');
-              }}>
-              <Text className="text-sm underline underline-offset-4">Sign in</Text>
-            </Pressable>
-          </Text>
-          <View className="flex-row items-center">
-            <Separator className="flex-1" />
-            <Text className="px-4 text-sm text-muted-foreground">or</Text>
-            <Separator className="flex-1" />
-          </View>
-          <SocialConnections />
-        </CardContent>
-      </Card>
-    </View>
+          </CardContent>
+        </Card>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }

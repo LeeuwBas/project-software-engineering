@@ -1,21 +1,28 @@
+import { AuthProvider } from '@/lib/auth/AuthManager';
 import { Stack } from 'expo-router';
-import { Toaster } from 'sonner-native';
+import { useFonts } from 'expo-font';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { configureReanimatedLogger } from 'react-native-reanimated';
-import {AuthProvider} from "@/auth/AuthManager";
-import { useFonts } from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Toaster } from 'sonner-native';
+import '../global.css';
+import { useColorScheme } from 'react-native';
+import { colorScheme } from 'nativewind';
+import { useEffect } from 'react';
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    'IosevkaCharon': require('../assets/fonts/IosevkaCharon-Regular.ttf'),
-    'IosevkaCharon-Bold': require('../assets/fonts/IosevkaCharon-Bold.ttf')
+    IosevkaCharon: require('../assets/fonts/IosevkaCharon-Regular.ttf'),
+    'IosevkaCharon-Bold': require('../assets/fonts/IosevkaCharon-Bold.ttf'),
   });
+  const system = useColorScheme(); // This is the REACT NATIVE hook, but there's also a nativewind hook. nice :(
+  useEffect(() => {
+    colorScheme.set(system ?? 'light');
+  }, [system]);
+
   if (!loaded) return null;
 
   return (
-    // Gesture handler wrapper to handle toasts using sonner library.
-    // Toasts are 'pop-ups' that you can use after some action fails or succeeds.
     <AuthProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
@@ -27,6 +34,4 @@ export default function RootLayout() {
   );
 }
 
-configureReanimatedLogger({
-  strict: false,
-});
+configureReanimatedLogger({ strict: false });

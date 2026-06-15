@@ -1,27 +1,55 @@
 from django.utils import timezone
-from django.db.models import Sum, Max, Min, Avg, F
+from django.db.models import Sum, Max, Min, Avg, F, Count
 
-from datetime import timedelta
+from datetime import timedelta, datetime
 
-from .models import Stats
+from .models import Stats, Goals
 
 
-def getSummary(days: int, user: str, statistic: str):
-    filter_dict = {"user": user}
-    if days > 0:
-        oldest = timezone.now() - timedelta(days)
-        filter_dict["date__gte"] = oldest
+def getStatDict(line: Stats | Goals):
+    """
+        Pulls all items in stats and goals models into a nice dictionary to
+        read from and update.
+
+    """
+    return {
+        'water': line.water
+    }
+
+def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime):
+    """
+        Aggregates a summary for the requested statistic, summarizes the past days,
+        amount is given in 'days'.
+    """
+
+    filter_dict = {
+        "user": user,
+        'date__gt': lowerDay.date(),
+        'date__lte': upperDay.date()
+    }
+
+    day_amount = (upperDay - lowerDay).days
 
     lines = Stats.objects.filter(**filter_dict)
 
     response:dict = lines.aggregate(total=Sum(statistic),
-                                    average=Avg(statistic),
                                     low=Min(statistic),
-                                    high=Max(statistic))
+                                    high=Max(statistic),
+                                    count=Count(statistic))
+
+    response['average'] = response['total']/day_amount
+
+    if response['count'] < day_amount:
+        response['low'] = 0
+        response['count'] = day_amount
 
     return response
 
 def getBarChart(days: int, bins: int, user: str, statistic: str):
+    """
+        Returns statistics data aggregated into a format to render a bar chart.
+        days must be a multiple of bins.
+    """
     days_per_bin = days//bins
 
     bin_dict = {}
@@ -47,12 +75,108 @@ def getBarChart(days: int, bins: int, user: str, statistic: str):
 
     return bin_dict
 
-def getToday(user: str, statistic: str):
+def getDay(user: str, statistic: str | None, day: datetime | None = None):
+    """
+        Returns the statistic line of a given day. If a statistic is given it
+        will return just that statistic, if None, will return a dictionary with the full line.
+    """
+    if day is None:
+        day = timezone.now()
 
     filter = {
         'user': user,
-        'date': timezone.now()
+        'date': day.date()
     }
-    amount = getattr(Stats.objects.filter(**filter).first(), statistic)
 
-    return amount
+    line = Stats.objects.filter(**filter).first()
+
+    if line is None:
+        line = Stats()
+
+    if statistic is None:
+        return getStatDict(line)
+    else:
+        return getattr(line, statistic)
+
+def setDay(user: str, statistic: dict[str, int], day: datetime | None = None):
+    """
+        Sets new data for a specified date.
+        Takes the dictionary in statistics for all data, only overwrites.
+    """
+    if day is None:
+        day = datetime.now()
+
+    statistic.update({
+        'user': user,
+        'date': day.date()
+    })
+
+    Stats.objects.update_or_create(**statistic)
+
+def getGoal(user: str, statName: str | None, day: datetime | None = None):
+    """
+        Retrieves the latest goal, either for a given stat or just for all stats
+        combined.
+
+        If no day was given, will retrieve the most recent goal.
+    """
+    if day is None:
+        day = timezone.now()
+
+    filter = {
+        'user': user,
+        'date__lte': day.date()
+    }
+
+    line = Goals.objects.filter(**filter).order_by('-date').first()
+
+    if line is None:
+        line = Goals()
+
+    if statName is None:
+        return getStatDict(line)
+
+    return getattr(line, statName, None)
+
+def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
+    """
+        Updates a given goal, keeps all other goals the same.
+
+        If no day was given, will update for today.
+    """
+    if day is None:
+        day = timezone.now()
+
+    oldLine = getGoal(user, None, day)
+    for statName, value in goal_data.items():
+        oldLine[statName] = value
+    oldLine.update({
+        'date': day.date(),
+        'user': user
+    })
+
+    Goals.objects.update_or_create(**oldLine)
+
+def getCalender(user: str, startDay: datetime, endDay: datetime):
+    """
+        Returns a list of dictionaries to render the calendar in the frontend
+        Every item in the dictionaries show if that goal was met that day.
+
+        The dictionaries are in chronological order and are inclusive on both ends.
+    """
+    returnList = []
+
+    currentDay = startDay
+    while currentDay <= endDay:
+
+        stats = getDay(user, None, currentDay)
+        goals = getGoal(user, None, currentDay)
+
+        for key in stats.keys():
+            stats[key] = stats[key] >= goals[key]
+
+        returnList.append(stats)
+
+        currentDay += timedelta(1)
+
+    return returnList

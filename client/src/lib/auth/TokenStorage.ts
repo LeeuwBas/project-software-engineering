@@ -13,7 +13,11 @@ export const tokenStorage = {
   },
 
   clear: async () => {
-    await SecureStore.deleteItemAsync(ACCESS_TOKEN);
-    await SecureStore.deleteItemAsync(REFRESH_TOKEN);
+    return Promise.all(
+        [
+            SecureStore.deleteItemAsync(ACCESS_TOKEN),
+            SecureStore.deleteItemAsync(REFRESH_TOKEN),
+        ]
+    )
   },
 };
