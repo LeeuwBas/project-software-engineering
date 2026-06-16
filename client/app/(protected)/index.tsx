@@ -11,7 +11,8 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
-  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
+  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats, 
+    stressMenuOpen, changeStressMenu } =
     useAppContext();
   const appState = useRef(AppState.currentState);
 
@@ -35,9 +36,10 @@ export default function App() {
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();
     if (statsOpen) changeStats();
+    if (stressMenuOpen) changeStressMenu();
   }
 
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 
   return (
