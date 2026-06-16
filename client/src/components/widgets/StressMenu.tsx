@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAppContext } from '@/lib/AppContext';
 import { View, Text } from 'react-native';
@@ -25,11 +25,21 @@ function saveStress(score1: number, score2: number, score3: number) {
 }
 
 export default function StressMenu() {
-  const { stressMenuOpen } = useAppContext();
+  const { stressMenuOpen, setSendStress } = useAppContext();
   
   const [score1, setScore1] = useState<number | null>(null);
   const [score2, setScore2] = useState<number | null>(null);
   const [score3, setScore3] = useState<number | null>(null);
+
+  useEffect(() => {
+    setSendStress(() => () => {
+      if (score1 !== null && score2 !== null && score3 !== null) {
+        saveStress(score1, score2, score3);
+      }
+    });
+
+    return () => setSendStress(() => {});
+  }, [score1, score2, score3, setSendStress]);
 
   if (!stressMenuOpen) {
     return null;

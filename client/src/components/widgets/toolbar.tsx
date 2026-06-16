@@ -56,7 +56,7 @@ export default function Toolbar({}: {}) {
           className={`absolute -top-[25px] size-16 items-center justify-center border-4 border-primary-dark bg-primary shadow-block transition-opacity duration-200 ${statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'}`}
           onPress={() => {
             if (stressMenuOpen) {
-              sendStress 
+              sendStress()
             }
             closeMenu()
           }}>

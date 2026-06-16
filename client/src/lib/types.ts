@@ -9,6 +9,8 @@ export interface PopupConfigs {
     changeStats: Function;
     stressMenuOpen: boolean;
     changeStressMenu: Function;
+    sendStress: Function;
+    setSendStress: Function,
 }
 
 export interface PetType {
