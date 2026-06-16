@@ -395,29 +395,24 @@ export async function insertStat<K extends keyof StatLine>(
 // ---------------------------------- Settings Functions ----------------------------------
 
 export async function getSettings(): Promise<Settings> {
+    const defaults: Settings = {
+        chosenPet: '',
+        has_done_tutorial: false,
+    };
     try {
-        const chosenPet = await AsyncStorage.getItem('chosenPet');
-        const hasDoneTutorial = await AsyncStorage.getItem('has_done_tutorial');
-        return {
-            chosenPet: chosenPet ?? '',
-            has_done_tutorial: hasDoneTutorial !== null,
-        };
+        const raw = await AsyncStorage.getItem('settings');
+
+        // The spread operator here makes this future proof, if the settings interface ever changes
+        return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
     } catch (error) {
         console.error(error);
-        return {
-            chosenPet: '',
-            has_done_tutorial: false,
-        };
+        return defaults;
     }
 }
 
 export async function setSettings(settings: Settings) {
     try {
-        await AsyncStorage.setItem('chosenPet', settings.chosenPet);
-        await AsyncStorage.setItem(
-            'has_done_tutorial',
-            settings.has_done_tutorial ? 'true' : 'false'
-        );
+        await AsyncStorage.setItem('settings', JSON.stringify(settings));
     } catch (error) {
         console.error(error);
     }
