@@ -3,6 +3,7 @@ import { useAppContext } from '@/lib/AppContext';
 import { View } from 'react-native';
 import StepsWidget from './StepsWidget';
 import WaterWidget from './WaterWidget';
+import StressWidget from './StressWidget';
 
 export default function Menu({ water, setWater }: { water: number; setWater: Function }) {
   // TODO: Add backend for retrieving name
@@ -23,6 +24,7 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
           <CardContent className="w-full max-w-full items-center">
             <WaterWidget water={water} setWater={setWater} />
             <StepsWidget />
+            <StressWidget />
           </CardContent>
         </Card>
       </View>
