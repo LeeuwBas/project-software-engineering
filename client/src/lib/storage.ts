@@ -92,9 +92,8 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
     let data: StatLine | null = null;
 
     if (goalDates.length == 0) {
-        data = createStatLine()
+        data = createStatLine();
     } else {
-
         goalDates.sort();
 
         const date = goalDates[-1];
@@ -439,14 +438,11 @@ export async function markSyncRequired<K extends keyof StatLine>(
     const dateString = calculateDate(date, '');
 
     if (currentSync === null) {
-        console.log(JSON.stringify({ [dateString]: new Array(statName) }));
         AsyncStorage.setItem(storageKey, JSON.stringify({ [dateString]: new Array(statName) }));
         return;
     }
 
     const storage = JSON.parse(currentSync);
-    console.log('loaded: ', storage);
-
     const currentDay = storage[dateString];
 
     if (currentDay) {
@@ -457,8 +453,6 @@ export async function markSyncRequired<K extends keyof StatLine>(
     } else {
         storage[dateString] = new Array(statName);
     }
-
-    console.log('updated: ', storage);
 
     AsyncStorage.setItem(storageKey, JSON.stringify(storage));
 }
@@ -483,8 +477,6 @@ export async function getSyncData(forGoals: boolean) {
 
         promises.push(
             getStatOn((forGoals ? goalPrefix : statPrefix) + key).then((stats) => {
-                console.log('loaded stats:', stats);
-
                 if (stats === null) {
                     return;
                 }
