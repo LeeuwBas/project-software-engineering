@@ -58,7 +58,7 @@ function calculateDate(date: Date, stat: boolean = true) {
 /**
  * Returns the statistic data interface of the given day.
  */
-async function getStat(day: Date) {
+export async function getStat(day: Date = new Date()) {
     const date = calculateDate(day);
     const raw = await AsyncStorage.getItem(date);
 
