@@ -88,6 +88,10 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
 
     const date = goalDates[-1];
 
+    if (!date) {
+        throw Error('No goals set yet');
+    }
+
     const raw = await AsyncStorage.getItem(date);
     const data: StatLine | null = raw ? JSON.parse(raw) : null;
 
@@ -423,7 +427,6 @@ export async function markSyncRequired<K extends keyof StatLine>(
     date: Date = new Date()
 ) {
     const storageKey = syncDataKey + (isGoal ? 'Goals' : '');
-
     const currentSync = await AsyncStorage.getItem(storageKey);
     const dateString = calculateDate(date, '');
 
@@ -440,7 +443,9 @@ export async function markSyncRequired<K extends keyof StatLine>(
 
     if (currentDay) {
         const dayData: any[] = currentDay;
-        dayData.push(statName);
+        if (!dayData.includes(statName)) {
+            dayData.push(statName);
+        }
     } else {
         storage[dateString] = new Array(statName);
     }

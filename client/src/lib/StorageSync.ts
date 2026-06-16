@@ -7,6 +7,7 @@ import { postAPI } from '@/lib/api/ApiManager';
  * @param includeGoals Weather goals should be synced too.
  */
 export async function syncServer(includeGoals: boolean) {
+    console.log('syncing...');
     if (includeGoals) {
         await Promise.all([syncStats(), syncStats(true)]);
     }
@@ -17,9 +18,9 @@ async function syncStats(goals: boolean = false) {
     const syncData = await getSyncData(goals);
     const promises: Promise<void>[] = [];
     for (const key of Object.keys(syncData)) {
-        const endpoint = goals ? `/api/goals/${key}/` : `/api/stats/${key}/`;
+        const endpoint = goals ? `/api/goals/${key}` : `/api/stats/${key}`;
         promises.push(
-            postAPI(endpoint, syncData[key]).then((response) =>
+            postAPI(endpoint, { ['stats']: syncData[key] }).then((response) =>
                 console.log(`Synced stats (goals=${goals}) with response:`, response)
             )
         );

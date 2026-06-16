@@ -40,6 +40,7 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
  * @throws Error when the request has failed
  */
 export async function postAPI(endpoint: string, json: any, authenticate: boolean = true) {
+    console.log(endpoint, json);
     const response = await queryApi(
         endpoint,
         {
@@ -88,7 +89,7 @@ export async function queryApi(
         return null;
     }
 
-    let res;
+    let res: Response;
     try {
         const request = authenticate
             ? {
