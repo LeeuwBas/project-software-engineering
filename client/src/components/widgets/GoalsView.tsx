@@ -18,12 +18,20 @@ export default function GoalsView({
         <TextInput
           keyboardType="numeric"
           inputMode="numeric"
-          className="rounded-xl border-2 bg-slate-300 px-2 py-1"
+          className="rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
           value={goals.water.toString()}
-          onChangeText={(new_goal) =>
+          onChangeText={(text) => {
+            if (Number(text) > 99) text = '99';
+            if (text.length > 10) return;
             setGoals((prev) => ({
               ...prev,
-              water: Number(new_goal) || 0,
+              water: text,
+            }));
+          }}
+          onBlur={() =>
+            setGoals((prev) => ({
+              ...prev,
+              water: Math.ceil(prev.water),
             }))
           }
         />
@@ -33,12 +41,20 @@ export default function GoalsView({
         <TextInput
           keyboardType="numeric"
           inputMode="numeric"
-          className="rounded-xl border-2 bg-slate-300 px-2 py-1"
+          className="rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
           value={goals.steps.toString()}
-          onChangeText={(new_goal) =>
+          onChangeText={(text) => {
+            if (Number(text) > 99999) text = '99999';
+            if (text.length > 10) return;
             setGoals((prev) => ({
               ...prev,
-              steps: Number(new_goal) || 0,
+              steps: text,
+            }));
+          }}
+          onBlur={() =>
+            setGoals((prev) => ({
+              ...prev,
+              steps: Math.ceil(prev.steps),
             }))
           }
         />

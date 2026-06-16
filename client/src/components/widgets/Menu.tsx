@@ -25,6 +25,11 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
 
   function submitGoals() {
     console.log(goals);
+    const final_goals = {
+      water: Math.ceil(goals.water),
+      steps: Math.ceil(goals.steps),
+    };
+    setGoals(final_goals);
     // TODO: Save final goals to storage
     setGoalsViewActive(false);
   }
