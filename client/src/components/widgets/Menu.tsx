@@ -4,10 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import StepsWidget from '@/components/widgets/StepsWidget';
 import WaterWidget from '@/components/widgets/WaterWidget';
 import { useAppContext } from '@/lib/AppContext';
-import Glass from '@assets/icons/module_icons/glass.svg';
-import Shoe from '@assets/icons/module_icons/shoe.svg';
 import { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
+import GoalsView from './GoalsView';
 
 export default function Menu({ water, setWater }: { water: number; setWater: Function }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
@@ -17,9 +16,6 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
   if (!menuOpen) {
     return null;
   }
-
-  // TODO: Get goals from API
-  const goals = { water: 10, steps: 7000 };
 
   return (
     <View
@@ -41,36 +37,16 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
               </Button>
             )}
           </CardHeader>
-          {goalsViewActive ? (
-            // Goals edit view
-            <CardContent className="w-full max-w-full items-start">
-              <AppText className="text-lg font-bold">Goals:</AppText>
-              <View className="flex flex-row items-center gap-2 p-2">
-                <Glass height={30} width={30} />
-                <TextInput
-                  keyboardType="numeric"
-                  inputMode="numeric"
-                  className="rounded-xl border-2 bg-slate-300 px-2"
-                  defaultValue={`${goals['water']}`}
-                />
-              </View>
-              <View className="flex flex-row items-center gap-2 p-2">
-                <Shoe height={30} width={30} />
-                <TextInput
-                  keyboardType="numeric"
-                  inputMode="numeric"
-                  className="rounded-xl border-2 bg-slate-300 px-2"
-                  defaultValue={`${goals['steps']}`}
-                />
-              </View>
-            </CardContent>
-          ) : (
-            // Normal view
-            <CardContent className="w-full max-w-full items-center">
-              <WaterWidget water={water} setWater={setWater} />
-              <StepsWidget />
-            </CardContent>
-          )}
+          <CardContent className="w-full max-w-full items-start">
+            {goalsViewActive ? (
+              <GoalsView />
+            ) : (
+              <>
+                <WaterWidget water={water} setWater={setWater} />
+                <StepsWidget />
+              </>
+            )}
+          </CardContent>
         </Card>
       </View>
     </View>
