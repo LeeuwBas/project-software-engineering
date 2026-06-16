@@ -99,6 +99,7 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  *
  * @param statName Name of the goal to change
  * @param goal new value for the goal
+ * @param date The date to set the goal for
  */
 export async function setNewGoal(statName: string, goal: number, date: Date = new Date()) {
     const today = calculateDate(date, false);
