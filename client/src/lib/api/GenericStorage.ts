@@ -83,36 +83,6 @@ export async function getStatistic<K extends keyof StatLine>(name: K, date: Date
     return server;
 }
 
-/**
- * Loads the given goal from the backend storage.
- *
- * @param name the name of the goal to load.
- * @param date the date to load the value of.
- *
- * @returns The loaded goal
- */
-export async function getGoals<K extends keyof StatLine>(name: K | null, date: Date = new Date()) {
-    const storage = await getCurrentGoal(name, date);
-
-    if (storage !== null) {
-        return storage;
-    }
-    const server = await loadGoalServer(name, date);
-
-    if (server === null) {
-        return null;
-    }
-
-    (Object.entries(server) as [keyof StatLine, number][]).forEach(([key, val]) => {
-        updateStat(key, val);
-    });
-
-    if (name !== null) {
-        return server[name]
-    }
-
-    return server
-}
 
 /**
  * Sets a statistic in the backend storage.
@@ -238,6 +208,96 @@ export async function loadCalender(startDate: Date, endDate: Date) {
     return server;
 }
 
+/**
+ * Loads a given statistic into the given zustand.
+ *
+ * @param state The state to load into
+ * @param name The name of the statistic to load
+ *
+ * @returns The loaded value
+ * @throws Error when the value is already loaded
+ */
+export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
+    if (state.getState().value !== null) {
+        throw Error(`${name} already loaded`);
+    }
+
+    // For the current day we can default to 0. For other days we cannot.
+    const loadedValue = (await getGoals(name)) ?? 0;
+
+    state.getState().setValue(loadedValue);
+    return loadedValue;
+}
+
+/**
+ * Loads the given goal from the backend storage.
+ *
+ * @param name the name of the goal to load.
+ * @param date the date to load the value of.
+ *
+ * @returns The loaded goal
+ */
+export async function getGoals<K extends keyof StatLine>(name: K, date: Date = new Date()): Promise<number | null> {
+    const storage = await getCurrentGoal(name, date);
+
+    if (storage !== null) {
+        if (typeof storage !== 'number') {
+            throw Error(`Storage returned something unexpected.`)
+        }
+        return storage;
+    }
+    const server = await loadGoalServer(name, date);
+
+    if (server === null) {
+        return null;
+    }
+
+    if (date == new Date()) {
+        setNewGoal(name, server)
+    }
+
+    return server
+}
+
+/**
+ * Sets a new goal in the backend storage.
+ *
+ * @param name the name of the goal to save.
+ * @param value the value to set the goal to.
+ * @param date the date to save under.
+ *
+ * @returns true if successful, false otherwise.
+ */
+export async function setGoal<K extends keyof StatLine>(
+    name: K,
+    value: number,
+    date: Date = new Date()
+) {
+    await setNewGoal(name, value, date)
+}
+
+/**
+ * Sets a value to the given zustand, and propagates the change to the backend storage
+ *
+ * @param state The state to set the value in.
+ * @param name The name of the goal.
+ * @param value The value to set.
+ *
+ * @throws Error if the stat is not loaded.
+ */
+export async function setGoalZustand<K extends keyof StatLine>(
+    state: ValueZustand,
+    name: K,
+    value: number
+) {
+    if (state.getState().value === null) {
+        throw Error(`Stat ${name} not loaded yet`);
+    }
+
+    state.getState().setValue(value);
+    await setGoal(name, value);
+}
+
 async function loadServerCalendar(startDate: Date, endDate: Date) {
     //TODO when on main
     return null;
@@ -291,7 +351,7 @@ async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Da
 }
 
 async function loadGoalServer<K extends keyof StatLine>(name: K | null, date: Date = new Date()):
-                                                            Promise<StatLine | null>{
+                                                            Promise<number | null>{
     //TODO when on main
     return null;
 
