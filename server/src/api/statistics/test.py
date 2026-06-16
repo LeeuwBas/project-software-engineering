@@ -104,7 +104,7 @@ class StatisticsTests(TestCase):
             'average': sum(get_vals)/days
         }
 
-        res = self.client.get(self.summaryURL("water", "2026-06-10",
+        res = self.client.get(self.summaryURL("water", self.validDateLower,
                                               self.validDateUpper))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertDictEqual(check, res.json())
