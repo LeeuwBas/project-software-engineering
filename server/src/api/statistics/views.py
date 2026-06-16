@@ -85,6 +85,9 @@ class StatManageView(APIView):
 
         returnVal = getDay(request.user, statName, day)
 
+        if type(returnVal) is not dict:
+            returnVal = {statName: returnVal}
+
         return Response(returnVal, 200)
 
     @extend_schema(
@@ -201,7 +204,7 @@ class BarchartView(APIView):
         if days % bins != 0:
             return Response(f"Invalid input days%bins = {days % bins}", 400)
 
-        returnData = getBarChart(days, bins, request.user, statName)
+        returnData = getBarChart(startDate, endDate, bins, request.user, statName)
         return Response(returnData, 200)
 
 
