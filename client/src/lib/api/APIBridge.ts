@@ -1,4 +1,4 @@
-import { createWaterBridge } from '@/lib/api/WaterBridge';
+import { createWaterBridge, createWaterGoalBridge } from '@/lib/api/WaterBridge';
 import { loadCalender } from '@/lib/api/GenericStorage';
 
 export type LoadableBridge<T> = T & Loadable;
@@ -11,6 +11,11 @@ export interface StatisticBridge {
     getRaw: (date?: Date) => Promise<number>;
     set: (value: number, date?: Date) => Promise<any>;
     getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+}
+
+export interface GoalsBridge {
+    get: (date?: Date) => Promise<number>;
+    set: (value: number, date?: Date) => Promise<any>;
 }
 
 const loaders: Loadable[] = [];
@@ -56,3 +61,4 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 }
 
 export const waterBridge = register(createWaterBridge());
+export const waterGoalBridge = register(createWaterGoalBridge());
