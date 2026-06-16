@@ -109,15 +109,20 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  * @param goal new value for the goal
  * @param date The date to set the goal for
  */
-export async function setNewGoal(statName: string, goal: number, date: Date = new Date()) {
+export async function setNewGoal<K extends keyof StatLine>(
+    statName: K,
+    goal: number,
+    date: Date = new Date()
+) {
     const today = calculateDate(date, goalPrefix);
 
-    var oldGoal = await getCurrentGoal(null);
+    let oldGoal = await getCurrentGoal(null);
     if (oldGoal === null || typeof oldGoal === 'number') {
         oldGoal = createStatLine();
     }
     oldGoal[statName as keyof StatLine] = goal;
     AsyncStorage.setItem(today, JSON.stringify(oldGoal));
+    await markSyncRequired(statName, true, date);
 }
 
 /**
@@ -290,6 +295,7 @@ export async function updateStat<K extends keyof StatLine>(
     line[statName] = oldVal + change;
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await markSyncRequired(statName, false, day);
     return true;
 }
 
@@ -369,6 +375,7 @@ export async function setStat<K extends keyof StatLine>(
 
     line[statName] = value;
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await markSyncRequired(statName, false, day);
     return true;
 }
 
@@ -397,6 +404,7 @@ export async function insertStat<K extends keyof StatLine>(
         line[statName] = value;
     }
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await markSyncRequired(statName, false, day);
     return true;
 }
 
