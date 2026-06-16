@@ -105,12 +105,12 @@ def setDay(user: str, statistic: dict[str, int], day: datetime | None = None):
     if day is None:
         day = datetime.now()
 
-    statistic.update({
+    filter = {
         'user': user,
         'date': day.date()
-    })
+    }
 
-    Stats.objects.update_or_create(**statistic)
+    Stats.objects.update_or_create(**filter, defaults=statistic)
 
 def getGoal(user: str, statName: str | None, day: datetime | None = None):
     """
@@ -149,12 +149,13 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
     oldLine = getGoal(user, None, day)
     for statName, value in goal_data.items():
         oldLine[statName] = value
-    oldLine.update({
+
+    filter = {
         'date': day.date(),
         'user': user
-    })
+    }
 
-    Goals.objects.update_or_create(**oldLine)
+    Goals.objects.update_or_create(**filter, defaults=oldLine)
 
 def getCalender(user: str, startDay: datetime, endDay: datetime):
     """

@@ -13,6 +13,8 @@ interface Settings {
 export interface StatLine {
     water: number | null;
     sleep: number | null;
+    stress: number | null;
+    food: number | null;
 }
 
 export interface StatisticsSummary {
@@ -36,6 +38,8 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
         water: null,
         sleep: null,
+        stress: null,
+        food: null,
         ...overrides,
     } as StatLine;
 }
@@ -59,7 +63,7 @@ function calculateDate(date: Date, stat: string = statPrefix) {
 /**
  * Returns the statistic data interface of the given day.
  */
-async function getStat(day: Date) {
+export async function getStat(day: Date = new Date()) {
     const date = calculateDate(day);
     return getStatOn(date);
 }
@@ -84,16 +88,20 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
         (key) => key.startsWith(goalPrefix) && key < calculateDate(day, goalPrefix)
     );
-    goalDates.sort();
 
-    const date = goalDates[-1];
+    let data: StatLine | null = null;
 
-    if (!date) {
-        throw Error('No goals set yet');
+    if (goalDates.length == 0) {
+        data = createStatLine()
+    } else {
+
+        goalDates.sort();
+
+        const date = goalDates[-1];
+
+        const raw = await AsyncStorage.getItem(date);
+        data = raw ? JSON.parse(raw) : null;
     }
-
-    const raw = await AsyncStorage.getItem(date);
-    const data: StatLine | null = raw ? JSON.parse(raw) : null;
 
     if (data === null) {
         return null;
