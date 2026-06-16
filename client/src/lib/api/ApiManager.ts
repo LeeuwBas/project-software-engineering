@@ -23,7 +23,6 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
     }
 
     if (!response.ok) {
-        console.log(response, internalAuth.refreshToken);
         throw new Error('Request failed');
     }
 
