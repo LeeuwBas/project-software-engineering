@@ -4,6 +4,23 @@ import { useAppContext } from '@/lib/AppContext';
 import { View, Text } from 'react-native';
 import StressButtons from './StressButtons';
 
+import { stressBridge } from '@/lib/api/APIBridge'
+
+function saveStress(score1: number, score2: number, score3: number) {
+  const score = score1 + score2 + score3
+  let level = 0
+
+  if (score < 8) {
+    level = 0
+  } else if (score < 12) {
+    level = 1
+  } else {
+    level = 2
+  }
+
+  stressBridge.set(level);
+}
+
 export default function StressMenu() {
   const { stressMenuOpen } = useAppContext();
   

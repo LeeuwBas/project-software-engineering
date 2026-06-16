@@ -14,8 +14,8 @@ import StressMenu from './StressMenu';
 
 export default function Toolbar({}: {}) {
   const water = useWater() ?? 0;
-  const { statsOpen, menuOpen, settingsOpen, changeMenu, changeSettings, changeStats, stressMenuOpen, changeStressMenu } =
-    useAppContext();
+  const { statsOpen, menuOpen, settingsOpen, changeMenu, changeSettings, changeStats, stressMenuOpen, changeStressMenu,
+    sendStress } = useAppContext();
   const [draftWater, setDraftWater] = useState(water);
 
   function closeMenu() {
@@ -54,10 +54,13 @@ export default function Toolbar({}: {}) {
         <Pressable
           disabled={statsOpen || settingsOpen}
           className={`absolute -top-[25px] size-16 items-center justify-center border-4 border-primary-dark bg-primary shadow-block transition-opacity duration-200 ${statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'}`}
-          onPress={() => closeMenu()}>
-          if (condition) {
-            
-          }
+          onPress={() => {
+            if (stressMenuOpen) {
+              sendStress 
+            }
+            closeMenu()
+          }}>
+
           {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
 
           {(!menuOpen && !stressMenuOpen) && <PlusIcon width={50} height={50} color={'white'} />}

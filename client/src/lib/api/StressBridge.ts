@@ -1,6 +1,6 @@
 import { LoadableBridge, StatisticBridge } from '@/lib/api/APIBridge';
 import { createNewState, useValue } from '@/lib/api/ValueState';
-import { getStatistic, getStatisticChart, loadZustand, setZustand } from '@/lib/api/GenericStorage';
+import { getStatistic, loadZustand, setZustand } from '@/lib/api/GenericStorage';
 
 // Use the water bridge when the values need to be manipulated.
 export interface StressBridge extends StatisticBridge {}
@@ -22,10 +22,10 @@ export function useStress() {
     return useValue(StressState);
 }
 
-export function createWaterBridge(): LoadableBridge<StressBridge> {
+export function createStressBridge(): LoadableBridge<StressBridge> {
     return {
         load: () => loadZustand(StressState, 'stress'),
         getRaw: async (date) => (await getStatistic('stress', date ?? new Date())) ?? 0,
-        set: (value) => setZustand(StressState, 'stress', Math.max(Math.min(value, 100), 0)),
+        set: (value) => setZustand(StressState, 'stress', Math.max(Math.min(value, 3), -1)),
     };
 }

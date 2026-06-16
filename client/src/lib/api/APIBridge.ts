@@ -56,3 +56,4 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 }
 
 export const waterBridge = register(createWaterBridge());
+export const stressBridge = register(createWaterBridge())
