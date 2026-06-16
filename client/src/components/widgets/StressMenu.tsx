@@ -5,6 +5,7 @@ import { View, Text } from 'react-native';
 import StressButtons from './StressButtons';
 
 import { stressBridge } from '@/lib/api/APIBridge'
+import { useStress } from '@/lib/api/StressBridge';
 
 function saveStress(score1: number, score2: number, score3: number) {
   const score = score1 + score2 + score3
@@ -19,6 +20,8 @@ function saveStress(score1: number, score2: number, score3: number) {
   }
 
   stressBridge.set(level);
+
+  console.log(useStress())
 }
 
 export default function StressMenu() {
