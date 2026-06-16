@@ -8,6 +8,8 @@ import {
     setStat,
     StatLine,
     updateStat,
+    getCurrentGoal,
+    setNewGoal,
 } from '@/lib/storage';
 
 /**
@@ -79,6 +81,37 @@ export async function getStatistic<K extends keyof StatLine>(name: K, date: Date
         throw Error('Value set while loading from server');
     }
     return server;
+}
+
+/**
+ * Loads the given goal from the backend storage.
+ *
+ * @param name the name of the goal to load.
+ * @param date the date to load the value of.
+ *
+ * @returns The loaded goal
+ */
+export async function getGoals<K extends keyof StatLine>(name: K | null, date: Date = new Date()) {
+    const storage = await getCurrentGoal(name, date);
+
+    if (storage !== null) {
+        return storage;
+    }
+    const server = await loadGoalServer(name, date);
+
+    if (server === null) {
+        return null;
+    }
+
+    (Object.entries(server) as [keyof StatLine, number][]).forEach(([key, val]) => {
+        updateStat(key, val);
+    });
+
+    if (name !== null) {
+        return server[name]
+    }
+
+    return server
 }
 
 /**
@@ -256,3 +289,20 @@ async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Da
 
     return +result.stats[name];
 }
+
+async function loadGoalServer<K extends keyof StatLine>(name: K | null, date: Date = new Date()):
+                                                            Promise<StatLine | null>{
+    //TODO when on main
+    return null;
+
+    const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`;
+
+    const result = await getAPI(endpoint);
+
+    if (result === null) {
+        return null;
+    }
+
+    // return +result.stats;
+}
+
