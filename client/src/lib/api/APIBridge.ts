@@ -16,7 +16,6 @@ export interface StatisticBridge {
 export interface GoaledStatisticBridge extends StatisticBridge {
     getGoal: (date?: Date) => Promise<number>;
     setGoal: (value: number, date?: Date) => Promise<any>;
-    loadGoal: () => Promise<any>;
 }
 
 const loaders: Loadable[] = [];
