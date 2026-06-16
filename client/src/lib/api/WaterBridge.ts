@@ -1,10 +1,9 @@
-import { GoalsBridge, LoadableBridge, StatisticBridge } from '@/lib/api/APIBridge';
+import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
 import { createNewState, useValue } from '@/lib/api/ValueState';
 import { getGoals, getStatistic, getStatisticChart, loadGoalZustand, loadZustand, setGoalZustand, setZustand } from '@/lib/api/GenericStorage';
 
 // Use the water bridge when the values need to be manipulated.
-export interface WaterBridge extends StatisticBridge {}
-export interface waterGoalBridge extends GoalsBridge {}
+export interface WaterBridge extends GoaledStatisticBridge {}
 
 const waterState = createNewState();
 const waterGoalState = createNewState()
@@ -26,7 +25,7 @@ export function useWater() {
 
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
-        load: () => loadZustand(waterState, 'waterDrank'),
+        load: () => Promise.all([loadZustand(waterState, 'waterDrank'), loadGoalZustand(waterGoalState, "waterDrank")]),
         getRaw: async (date) => (await getStatistic('waterDrank', date ?? new Date())) ?? 0,
         set: (value) => setZustand(waterState, 'waterDrank', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
@@ -35,18 +34,7 @@ export function createWaterBridge(): LoadableBridge<WaterBridge> {
                 new Array<number>(bins).fill(0)
             );
         },
+        getGoal: async (date) => (await getGoals("waterDrank", date) ?? 0),
+        setGoal: (value) => setGoalZustand(waterGoalState, "waterDrank", value),
     };
 }
-
-export function useWaterGoal() {
-    return useValue(waterGoalState);
-}
-
-export function createWaterGoalBridge(): LoadableBridge<waterGoalBridge> {
-    return {
-        load: () => loadGoalZustand(waterGoalState, "waterDrank"),
-        get: async (date) => (await getGoals("waterDrank", date) ?? 0),
-        set: (value) => setGoalZustand(waterGoalState, "waterDrank", value),
-    }
-}
-
