@@ -5,6 +5,7 @@ import GoalsView from '@/components/widgets/GoalsView';
 import StepsWidget from '@/components/widgets/StepsWidget';
 import WaterWidget from '@/components/widgets/WaterWidget';
 import { useAppContext } from '@/lib/AppContext';
+import { Modules } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
@@ -15,7 +16,7 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
   const { menuOpen } = useAppContext();
 
   // TODO: Get goals from API
-  const [goals, setGoals] = useState({ water: 10, steps: 7000 });
+  const [goals, setGoals] = useState<Modules>({ water: 10, steps: 7000 });
 
   useEffect(() => {
     if (!menuOpen) {
@@ -47,7 +48,7 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
             <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
             {goalsViewActive ? (
               <Button onPress={submitGoals} className="py-0" variant="secondary">
-                <AppText className="font-bold text-white">Confirm</AppText>
+                <AppText className="font-bold text-white">Save changes</AppText>
               </Button>
             ) : (
               <Button onPress={() => setGoalsViewActive(!goalsViewActive)} className="py-0">

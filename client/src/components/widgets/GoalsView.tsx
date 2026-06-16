@@ -1,64 +1,52 @@
 import { AppText } from '@/components/AppText';
+import { Modules } from '@/lib/types';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
 import { TextInput, View } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 
-export default function GoalsView({
-  goals,
-  setGoals,
-}: {
-  goals: { water: number; steps: number };
-  setGoals: Function;
-}) {
+interface GoalInput {
+  id: string;
+  icon: React.FC<SvgProps>;
+  maxValue: number;
+}
+
+const GOALS: GoalInput[] = [
+  { id: 'water', icon: Glass, maxValue: 99 },
+  { id: 'steps', icon: Shoe, maxValue: 99999 },
+];
+
+export default function GoalsView({ goals, setGoals }: { goals: Modules; setGoals: Function }) {
   return (
     <View>
       <AppText className="text-lg font-bold">Goals:</AppText>
-      <View className="flex flex-row items-center gap-2 p-2">
-        <Glass height={30} width={30} />
-        <TextInput
-          keyboardType="numeric"
-          inputMode="numeric"
-          className="rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
-          value={goals.water.toString()}
-          onChangeText={(text) => {
-            if (Number(text) > 99) text = '99';
-            if (text.length > 10) return;
-            setGoals((prev) => ({
-              ...prev,
-              water: text,
-            }));
-          }}
-          onBlur={() =>
-            setGoals((prev) => ({
-              ...prev,
-              water: Math.ceil(prev.water),
-            }))
-          }
-        />
-      </View>
-      <View className="flex flex-row items-center gap-2 p-2">
-        <Shoe height={30} width={30} />
-        <TextInput
-          keyboardType="numeric"
-          inputMode="numeric"
-          className="rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
-          value={goals.steps.toString()}
-          onChangeText={(text) => {
-            if (Number(text) > 99999) text = '99999';
-            if (text.length > 10) return;
-            setGoals((prev) => ({
-              ...prev,
-              steps: text,
-            }));
-          }}
-          onBlur={() =>
-            setGoals((prev) => ({
-              ...prev,
-              steps: Math.ceil(prev.steps),
-            }))
-          }
-        />
-      </View>
+      {GOALS.map(({ id, icon: Icon, maxValue }) => (
+        <View className="flex flex-row items-center gap-2 p-2" key={id}>
+          <Icon height={30} width={30} />
+          <TextInput
+            keyboardType="numeric"
+            inputMode="numeric"
+            className="rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
+            value={String(goals[id as keyof Modules])}
+            // On each key stroke, limit value and length
+            onChangeText={(text) => {
+              if (Number(text) > maxValue) text = String(maxValue);
+              if (text.length > 10) return;
+              setGoals((prev: Modules) => ({
+                ...prev,
+                [id]: text,
+              }));
+            }}
+            // On exit keyboard
+            onBlur={() =>
+              setGoals((prev: Modules) => ({
+                ...prev,
+                [id]: Math.ceil(Number(prev[id as keyof Modules])),
+              }))
+            }
+          />
+        </View>
+      ))}
     </View>
   );
 }

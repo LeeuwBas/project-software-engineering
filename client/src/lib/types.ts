@@ -14,3 +14,8 @@ export interface PetType {
     setPet: Function;
     savePet: Function;
 }
+
+export interface Modules {
+    water: number;
+    steps: number;
+}
