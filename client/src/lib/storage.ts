@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react';
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
 
-interface Settings {
-    chosenPet: String;
+export interface Settings {
+    chosenPet: string;
+    has_done_tutorial: boolean;
 }
 
 export interface StatLine {
@@ -392,6 +393,35 @@ export async function insertStat<K extends keyof StatLine>(
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
+
+export async function getSettings(): Promise<Settings> {
+    try {
+        const chosenPet = await AsyncStorage.getItem('chosenPet');
+        const hasDoneTutorial = await AsyncStorage.getItem('has_done_tutorial');
+        return {
+            chosenPet: chosenPet ?? '',
+            has_done_tutorial: hasDoneTutorial !== null,
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            chosenPet: '',
+            has_done_tutorial: false,
+        };
+    }
+}
+
+export async function setSettings(settings: Settings) {
+    try {
+        await AsyncStorage.setItem('chosenPet', settings.chosenPet);
+        await AsyncStorage.setItem(
+            'has_done_tutorial',
+            settings.has_done_tutorial ? 'true' : 'false'
+        );
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 

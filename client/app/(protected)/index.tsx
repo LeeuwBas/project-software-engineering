@@ -19,6 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { useTutorial } from '@/lib/settings';
 
 export default function App() {
   const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
@@ -42,13 +43,16 @@ export default function App() {
     //Backup logic
   };
 
+  const { setTutorialDone } = useTutorial();
+
   function closePopup() {
+    setTutorialDone();
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();
     if (statsOpen) changeStats();
   }
 
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 
   const mySteps: TourStep[] = [
@@ -222,16 +226,16 @@ export default function App() {
 function TutorialStarter() {
   const { start } = useSpotlightTour();
   const { menuOpen, statsOpen, settingsOpen } = useAppContext();
+  const { done } = useTutorial();
   const startedRef = useRef(false);
 
   useEffect(() => {
     if (startedRef.current) return; // only ever start the tour once
-    const done = false; // TODO: replace with async storage func
     if (!done && !menuOpen && !statsOpen && !settingsOpen) {
       startedRef.current = true;
       start();
     }
-  }, [menuOpen, statsOpen, settingsOpen, start]);
+  }, [menuOpen, statsOpen, settingsOpen, start, done]);
 
   return null; // Nothing to be rendered, just starts the tour because the start function needs to be called in a child component.
 }
