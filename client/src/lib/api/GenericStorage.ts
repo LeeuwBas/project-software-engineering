@@ -226,7 +226,7 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
-    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}`;
+    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}?bins=${bins}`;
 
     const result = await getAPI(endpoint);
     const loaded: number[] = Object.keys(result).map((value, index, _) => +result[value]);
