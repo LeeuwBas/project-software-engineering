@@ -85,6 +85,9 @@ class StatManageView(APIView):
 
         returnVal = getDay(request.user, statName, day)
 
+        if type(returnVal) is not dict:
+            returnVal = {statName: returnVal}
+
         return Response(returnVal, 200)
 
     @extend_schema(
@@ -161,6 +164,13 @@ class BarchartView(APIView):
                     location=OpenApiParameter.PATH,
                     required=True
                 ),
+                OpenApiParameter(
+                    name="bins",
+                    description="Amount of bins to put the data in, defaults to the amount of days",
+                    type=OpenApiTypes.INT,
+                    location=OpenApiParameter.QUERY,
+                    required=True
+                ),
             ],
             responses={
                 200: {
@@ -189,12 +199,12 @@ class BarchartView(APIView):
         endDate = datetime.fromisoformat(endDate)
 
         days = (endDate - startDate).days
-        bins = request.query_params.get('bins', days)
+        bins = int(request.query_params.get('bins', days))
 
         if days % bins != 0:
-            return Response("Invalid input", 400)
+            return Response(f"Invalid input days%bins = {days % bins}", 400)
 
-        returnData = getBarChart(days, bins, request.user, statName)
+        returnData = getBarChart(startDate, endDate, bins, request.user, statName)
         return Response(returnData, 200)
 
 
