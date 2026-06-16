@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
+const syncDataKey = 'sync';
 
 interface Settings {
     chosenPet: String;
@@ -47,12 +48,12 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
  *
  * Key format is: "Stats-yyyy-mm-dd"
  */
-function calculateDate(date: Date, stat: boolean = true) {
+function calculateDate(date: Date, stat: string = statPrefix) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
-    return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`;
+    return `${stat}${year}-${month}-${day}`;
 }
 
 /**
@@ -60,7 +61,14 @@ function calculateDate(date: Date, stat: boolean = true) {
  */
 async function getStat(day: Date) {
     const date = calculateDate(day);
-    const raw = await AsyncStorage.getItem(date);
+    return getStatOn(date);
+}
+
+/**
+ * Returns the statistic data interface of the given day.
+ */
+async function getStatOn(day: string) {
+    const raw = await AsyncStorage.getItem(day);
 
     return (raw ? JSON.parse(raw) : null) as StatLine | null;
 }
@@ -74,7 +82,7 @@ async function getStat(day: Date) {
  */
 export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false)
+        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, goalPrefix)
     );
     goalDates.sort();
 
@@ -101,7 +109,7 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  * @param goal new value for the goal
  */
 export async function setNewGoal(statName: string, goal: number) {
-    const today = calculateDate(new Date(), false);
+    const today = calculateDate(new Date(), goalPrefix);
 
     var oldGoal = await getCurrentGoal(null);
     if (oldGoal === null || typeof oldGoal === 'number') {
@@ -389,6 +397,96 @@ export async function insertStat<K extends keyof StatLine>(
     }
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     return true;
+}
+
+// ---------------------------------Server Sync functions----------------------------------
+
+/**
+ * Mark some stat and date such that it should be synced to the server at the next sync moment.
+ *
+ * @param statName The stat to mark as sync required
+ * @param isGoal Weather the stat to be synced is a goal
+ * @param date The date to mark the stat as sync required.
+ */
+export async function markSyncRequired<K extends keyof StatLine>(
+    statName: K,
+    isGoal: boolean,
+    date: Date = new Date()
+) {
+    const storageKey = syncDataKey + (isGoal ? 'Goals' : '');
+
+    const currentSync = await AsyncStorage.getItem(storageKey);
+    const dateString = calculateDate(date, '');
+
+    if (currentSync === null) {
+        console.log(JSON.stringify({ [dateString]: new Array(statName) }));
+        AsyncStorage.setItem(storageKey, JSON.stringify({ [dateString]: new Array(statName) }));
+        return;
+    }
+
+    const storage = JSON.parse(currentSync);
+    console.log('loaded: ', storage);
+
+    const currentDay = storage[dateString];
+
+    if (currentDay) {
+        const dayData: any[] = currentDay;
+        dayData.push(statName);
+    } else {
+        storage[dateString] = new Array(statName);
+    }
+
+    console.log('updated: ', storage);
+
+    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+}
+
+export async function getSyncData(forGoals: boolean) {
+    const storageKey = syncDataKey + (forGoals ? 'Goals' : '');
+    const currentSync = await AsyncStorage.getItem(storageKey);
+
+    if (currentSync == null) {
+        return {};
+    }
+
+    const syncData: { [date: string]: { [id: string]: number } } = {};
+    const storage = JSON.parse(currentSync);
+    const promises: Promise<void>[] = [];
+    const keysToDelete: string[] = [];
+
+    for (const key of Object.keys(storage)) {
+        const valuesForDate = storage[key];
+        const dateData: { [id: string]: number } = {};
+        syncData[key] = dateData;
+
+        promises.push(
+            getStatOn((forGoals ? goalPrefix : statPrefix) + key).then((stats) => {
+                console.log('loaded stats:', stats);
+
+                if (stats === null) {
+                    return;
+                }
+
+                for (const statName of valuesForDate) {
+                    const value = stats[statName as keyof StatLine];
+                    if (value !== null) {
+                        dateData[statName] = value;
+                    }
+                }
+
+                keysToDelete.push(key); // Delete if we could load from storage.
+            })
+        );
+    }
+
+    await Promise.allSettled(promises);
+
+    for (const key of keysToDelete) {
+        delete storage[key];
+    }
+
+    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+    return syncData;
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
