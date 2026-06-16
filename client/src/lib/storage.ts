@@ -10,9 +10,10 @@ interface Settings {
 }
 
 export interface StatLine {
-    waterDrank: number | null;
+    water: number | null;
     sleep: number | null;
     stress: number | null;
+    food: number | null;
 }
 
 export interface StatisticsSummary {
@@ -34,9 +35,10 @@ export interface StatisticsBarChart {
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
-        waterDrank: null,
+        water: null,
         sleep: null,
         stress: null,
+        food: null,
         ...overrides,
     } as StatLine;
 }
@@ -60,7 +62,7 @@ function calculateDate(date: Date, stat: boolean = true) {
 /**
  * Returns the statistic data interface of the given day.
  */
-async function getStat(day: Date) {
+export async function getStat(day: Date = new Date()) {
     const date = calculateDate(day);
     const raw = await AsyncStorage.getItem(date);
 
@@ -78,12 +80,20 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
         (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false)
     );
-    goalDates.sort();
 
-    const date = goalDates[-1];
+    var data: StatLine | null = null;
 
-    const raw = await AsyncStorage.getItem(date);
-    const data: StatLine | null = raw ? JSON.parse(raw) : null;
+    if (goalDates.length == 0) {
+        data = createStatLine()
+    } else {
+
+        goalDates.sort();
+
+        const date = goalDates[-1];
+
+        const raw = await AsyncStorage.getItem(date);
+        data = raw ? JSON.parse(raw) : null;
+    }
 
     if (data === null) {
         return null;
@@ -101,9 +111,10 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  *
  * @param statName Name of the goal to change
  * @param goal new value for the goal
+ * @param date The date to set the goal for
  */
-export async function setNewGoal(statName: string, goal: number) {
-    const today = calculateDate(new Date(), false);
+export async function setNewGoal(statName: string, goal: number, date: Date = new Date()) {
+    const today = calculateDate(date, false);
 
     var oldGoal = await getCurrentGoal(null);
     if (oldGoal === null || typeof oldGoal === 'number') {
