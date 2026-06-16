@@ -13,10 +13,12 @@ class Stats(models.Model):
             date: holds date of the statistic
 
             water: glasses of water drank on the given day
+            steps: the amount of steps walked on a day
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     water = models.IntegerField(default=0)
+    steps = models.IntegerField(default=0)
 
 class Goals(models.Model):
     """
@@ -27,7 +29,10 @@ class Goals(models.Model):
             date: holds start date of the goal
 
             water: glasses of water drank on the given day
+            steps: the amount of steps walked on a day
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     water = models.IntegerField(default=0)
+    steps = models.IntegerField(default=0)
+

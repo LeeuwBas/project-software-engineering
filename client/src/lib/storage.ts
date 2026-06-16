@@ -12,6 +12,7 @@ interface Settings {
 export interface StatLine {
     waterDrank: number | null;
     sleep: number | null;
+    steps: number | null;
     stress: number | null;
     food: number | null;
 }
@@ -37,6 +38,7 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
         waterDrank: null,
         sleep: null,
+        steps: null,
         stress: null,
         food: null,
         ...overrides,
@@ -84,9 +86,8 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
     var data: StatLine | null = null;
 
     if (goalDates.length == 0) {
-        data = createStatLine()
+        data = createStatLine();
     } else {
-
         goalDates.sort();
 
         const date = goalDates[-1];
