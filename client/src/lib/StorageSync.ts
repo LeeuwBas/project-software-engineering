@@ -26,5 +26,6 @@ async function syncStats(goals: boolean = false) {
         );
     }
 
+    // Wait for all API calls at the end to not sync everything serial.
     await Promise.all(promises);
 }

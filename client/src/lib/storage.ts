@@ -438,26 +438,37 @@ export async function markSyncRequired<K extends keyof StatLine>(
     const dateString = calculateDate(date, '');
 
     if (currentSync === null) {
+        // Insert if this is the first time
         AsyncStorage.setItem(storageKey, JSON.stringify({ [dateString]: new Array(statName) }));
         return;
     }
 
     const storage = JSON.parse(currentSync);
-    const currentDay = storage[dateString];
+    const currentData = storage[dateString];
 
-    if (currentDay) {
-        const dayData: any[] = currentDay;
+    // Add to existing data if not present,
+    if (currentData) {
+        const dayData: any[] = currentData;
         if (!dayData.includes(statName)) {
             dayData.push(statName);
         }
     } else {
+        // else create new data for day.
         storage[dateString] = new Array(statName);
     }
 
     AsyncStorage.setItem(storageKey, JSON.stringify(storage));
 }
 
-export async function getSyncData(forGoals: boolean) {
+/**
+ * Gets all data that should be synced to the server.
+ *
+ * @param forGoals If this data is goal data (true) or statistic data (false, default)
+ *
+ * @returns The data that should be synced. In the form of a directory of the dates of the data,
+ * mapped to an object with key/value pairs of all values that should be synced.
+ */
+export async function getSyncData(forGoals: boolean = false) {
     const storageKey = syncDataKey + (forGoals ? 'Goals' : '');
     const currentSync = await AsyncStorage.getItem(storageKey);
 
@@ -476,11 +487,13 @@ export async function getSyncData(forGoals: boolean) {
         syncData[key] = dateData;
 
         promises.push(
+            // Load the stats for the given day
             getStatOn((forGoals ? goalPrefix : statPrefix) + key).then((stats) => {
                 if (stats === null) {
                     return;
                 }
 
+                // Select all values that should be synced and are present.
                 for (const statName of valuesForDate) {
                     const value = stats[statName as keyof StatLine];
                     if (value !== null) {
