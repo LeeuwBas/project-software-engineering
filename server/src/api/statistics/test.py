@@ -128,3 +128,21 @@ class StatisticsTests(TestCase):
                                                self.validDateUpper))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertDictEqual(check, res.json())
+
+    def testNewInsert(self):
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(self.manageURL(self.validDateUpper), {
+            "stats": {"water": 5}
+        }, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        res = self.client.post(self.manageURL(self.validDateUpper), {
+            "stats": {"water": 10}
+        }, format="json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        fetchres = self.client.get(self.manageURL(self.validDateUpper), {
+            "statName": "water"
+        })
+        self.assertEqual(fetchres.status_code, status.HTTP_200_OK)
+        self.assertEqual(fetchres.json()["water"], 10)
