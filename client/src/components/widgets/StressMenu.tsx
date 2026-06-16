@@ -7,7 +7,7 @@ import StressButtons from './StressButtons';
 import { stressBridge } from '@/lib/api/APIBridge'
 import { useStress } from '@/lib/api/StressBridge';
 
-function saveStress(score1: number, score2: number, score3: number) {
+async function saveStress(score1: number, score2: number, score3: number) {
   const score = score1 + score2 + score3
   let level = 0
 
@@ -19,9 +19,10 @@ function saveStress(score1: number, score2: number, score3: number) {
     level = 2
   }
 
-  stressBridge.set(level);
+  await stressBridge.set(level);
 
-  console.log(useStress())
+  const rawValue = await stressBridge.getRaw();
+  console.log(rawValue);
 }
 
 export default function StressMenu() {
