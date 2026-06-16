@@ -299,10 +299,7 @@ export async function setGoalZustand<K extends keyof StatLine>(
 }
 
 async function loadServerCalendar(startDate: Date, endDate: Date) {
-    //TODO when on main
-    return null;
-
-    const endpoint = `/api/calendar/${startDate.toISOString()}/${endDate.toISOString()}/`;
+    const endpoint = `/api/calendar/${formatDate(startDate)}/${formatDate(endDate)}`;
 
     const result: any[] = await getAPI(endpoint);
 
@@ -322,32 +319,27 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
-    //TODO when on main
-    return null;
-
-    const endpoint = `/api/barchart/${name}/${startDate.toISOString()}/${endDate.toISOString()}/?bins=${bins}`;
+    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}?bins=${bins}`;
 
     const result = await getAPI(endpoint);
-
-    const bin_data = result.bins;
-    const loaded: number[] = Object.keys(bin_data).map((value, index, _) => +bin_data[value]);
+    const loaded: number[] = Object.keys(result).map((value, index, _) => +result[value]);
 
     return loaded;
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
-    //TODO when on main
-    return 0;
-
-    const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`;
+    const endpoint = `/api/stats/${formatDate(date)}?statName=${name}`;
 
     const result = await getAPI(endpoint);
 
     if (result === null) {
         return null;
     }
+    return +result[name];
+}
 
-    return +result.stats[name];
+function formatDate(date: Date): string {
+    return date.toISOString().substring(0, 10);
 }
 
 async function loadGoalServer<K extends keyof StatLine>(name: K | null, date: Date = new Date()):

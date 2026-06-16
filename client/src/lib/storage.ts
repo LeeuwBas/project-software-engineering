@@ -10,7 +10,7 @@ interface Settings {
 }
 
 export interface StatLine {
-    waterDrank: number | null;
+    water: number | null;
     sleep: number | null;
     stress: number | null;
     food: number | null;
@@ -35,7 +35,7 @@ export interface StatisticsBarChart {
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
-        waterDrank: null,
+        water: null,
         sleep: null,
         stress: null,
         food: null,
@@ -111,6 +111,7 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  *
  * @param statName Name of the goal to change
  * @param goal new value for the goal
+ * @param date The date to set the goal for
  */
 export async function setNewGoal(statName: string, goal: number, date: Date = new Date()) {
     const today = calculateDate(date, false);
