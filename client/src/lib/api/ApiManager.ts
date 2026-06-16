@@ -1,5 +1,5 @@
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
-import { internalAuth } from '@/lib/auth/AuthManager';
+import { internalAuth } from '@/lib/auth/AuthService';
 
 /**
  * Sends a GET request to the given API endpoint, authenticated with the current session.
@@ -39,7 +39,6 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
  * @throws Error when the request has failed
  */
 export async function postAPI(endpoint: string, json: any, authenticate: boolean = true) {
-    console.log(endpoint, json);
     const response = await queryApi(
         endpoint,
         {
