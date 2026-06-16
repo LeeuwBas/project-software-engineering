@@ -12,6 +12,7 @@ interface Settings {
 export interface StatLine {
     waterDrank: number | null;
     sleep: number | null;
+    stress: number | null;
 }
 
 export interface StatisticsSummary {
@@ -35,6 +36,7 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
         waterDrank: null,
         sleep: null,
+        stress: null,
         ...overrides,
     } as StatLine;
 }
@@ -296,7 +298,7 @@ export async function updateStat<K extends keyof StatLine>(
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
-    let returnValue: [string, boolean][][] = [];
+    let returnValue: [string, boolean|number][][] = [];
     let isFull = true;
 
     for (
@@ -306,7 +308,7 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
     ) {
         let dayStat = await getStat(currentDay);
         const dayGoals = await getCurrentGoal(null, currentDay);
-        let today: [string, boolean][] = [];
+        let today: [string, boolean|number][] = [];
 
         if (dayGoals === null || typeof dayGoals === 'number') {
             // only possible if no goal was ever set, which would be an incorrect state
@@ -319,11 +321,17 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
         }
 
         for (let key in Object.keys(dayStat)) {
-            const achieved = dayStat[key as keyof StatLine] ?? -1;
-            const goal = dayGoals[key as keyof StatLine] ?? 0;
+            const typedKey = key as keyof StatLine;
+            const achieved = dayStat[typedKey] ?? -1;
+            const goal = dayGoals[typedKey] ?? 0;
 
-            const complete = achieved <= goal;
-            today.push([key, complete]);
+
+            if (typedKey === "stress") {
+                today.push([typedKey, achieved])
+            } else {
+                const complete = achieved <= goal;
+                today.push([typedKey, complete]);
+            }
         }
 
         returnValue.push(today);
