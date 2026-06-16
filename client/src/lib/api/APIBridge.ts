@@ -13,6 +13,11 @@ export interface StatisticBridge {
     getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
 }
 
+export interface GoaledStatisticBridge extends StatisticBridge {
+    getGoal: (date?: Date) => Promise<number>;
+    setGoal: (value: number, date?: Date) => Promise<any>;
+}
+
 const loaders: Loadable[] = [];
 let initPromise: Promise<void> | null = null;
 
