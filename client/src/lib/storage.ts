@@ -80,12 +80,20 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
         (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false)
     );
-    goalDates.sort();
 
-    const date = goalDates[-1];
+    var data: StatLine | null = null;
 
-    const raw = await AsyncStorage.getItem(date);
-    const data: StatLine | null = raw ? JSON.parse(raw) : null;
+    if (goalDates.length == 0) {
+        data = createStatLine()
+    } else {
+
+        goalDates.sort();
+
+        const date = goalDates[-1];
+
+        const raw = await AsyncStorage.getItem(date);
+        data = raw ? JSON.parse(raw) : null;
+    }
 
     if (data === null) {
         return null;
