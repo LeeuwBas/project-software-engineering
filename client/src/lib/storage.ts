@@ -10,7 +10,7 @@ interface Settings {
 }
 
 export interface StatLine {
-    waterDrank: number | null;
+    water: number | null;
     sleep: number | null;
 }
 
@@ -33,7 +33,7 @@ export interface StatisticsBarChart {
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
-        waterDrank: null,
+        water: null,
         sleep: null,
         ...overrides,
     } as StatLine;

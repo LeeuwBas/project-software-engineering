@@ -11,6 +11,7 @@ import {
 } from '@/lib/storage';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { waterBridge } from '@/lib/api/APIBridge';
 
 function generateData(bins: number): number[] {
   const values = Array(bins);
@@ -23,7 +24,7 @@ function generateData(bins: number): number[] {
 export function StatisticView({ stat }: { stat: StatName }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
   const [summary, setSummary] = useState<StatisticsSummary | null>(null);
-  const [bars, setBars] = useState<StatisticsBarChart | null>(null);
+  const [bars, setBars] = useState<number[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,9 +43,9 @@ export function StatisticView({ stat }: { stat: StatName }) {
         const now = new Date();
         const past = new Date();
         past.setTime(now.getTime() - 1000 * 60 * 60 * 24 * config.days);
-        const barsData = await getStatBarChart('waterDrank', past, now, config.bins);
+        const barsData = await waterBridge.getBarChart(config.bins, config.days / config.bins, now);
         setBars(barsData);
-        const summaryData = await getStatSummary('waterDrank', config.days);
+        const summaryData = await getStatSummary('water', config.days);
         setSummary(summaryData);
       } catch (err) {
         console.error(err);
@@ -60,7 +61,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
 
   // const values = bars ? Object.values(bars.bins) : [0]; // Placeholder for when fetching data fails
   const config = PERIOD_CONFIG[period];
-  const values = generateData(config.bins);
+  const values = bars ?? new Array<number>(config.bins).fill(0); //generateData(config.bins);
 
   const labels = getChartLabels(period);
 

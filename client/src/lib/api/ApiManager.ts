@@ -23,6 +23,7 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
     }
 
     if (!response.ok) {
+        console.log(response, internalAuth.refreshToken);
         throw new Error('Request failed');
     }
 
@@ -120,6 +121,7 @@ export async function queryApi(
         try {
             await auth.renewToken();
         } catch (err) {
+            console.log(err);
             await auth.signOut();
             return null;
         }
