@@ -4,6 +4,7 @@ import { FlatList, Pressable, View } from 'react-native';
 import { getGoalCalender } from '@/lib/api/APIBridge';
 import { useMemo, useState, useEffect } from 'react';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { useColorScheme } from 'nativewind';
 
 export interface calendarCell {
   id: string;
@@ -20,6 +21,8 @@ export default function CalendarOverview() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const today = useMemo(() => new Date(),[]);
 
   const [calendarData, updateCalendarData] = useState<any[]>([])
@@ -145,8 +148,8 @@ export default function CalendarOverview() {
     <View>
       {/* Month/year displaty with arrow buttons */}
       <View className="mb-6 flex-row items-center gap-x-4 self-center">
-        <Pressable onPress={toPrevMonth} hitSlop={12}>
-          <ArrowBigLeft size={24} />
+        <Pressable onPress={() => setCurrentDate(new Date(year, month - 1))} hitSlop={12}>
+          <ArrowBigLeft size={24} color={iconColor} />
         </Pressable>
 
         <AppText className="text-2xl font-bold">
@@ -155,8 +158,8 @@ export default function CalendarOverview() {
 
         <View style={{ width: 24 }}>
           {month !== today.getMonth() && (
-            <Pressable onPress={toNextMonth} hitSlop={12}>
-              <ArrowBigRight size={24} />
+            <Pressable onPress={() => setCurrentDate(new Date(year, month + 1))} hitSlop={12}>
+              <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
           )}
         </View>
@@ -181,7 +184,26 @@ export default function CalendarOverview() {
           style={{ maxHeight: (dayGrid.length / 7) * 72 }} // Necesarry for the spotlight tutorial
           renderItem={({ item, index }) => (
             <View
-              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2 
+<<<<<<< HEAD
+              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
+                    ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
+                    ${item.currentDay ? 'bg-secondary' : 'bg-card'}`}>
+              <AppText className="self-end text-sm font-bold">
+                {item.value || 'Placeholder'}
+              </AppText>
+              <View className="flex-row flex-wrap gap-1 self-start p-0.5">
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['sleep'] ? 'bg-red-500' : 'hidden'}`}
+                />
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['water'] ? 'bg-blue-500' : 'hidden'}`}
+                />
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['steps'] ? 'bg-green-500' : 'hidden'}`}
+                />
+              </View>
+=======
+              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
                       ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
                       ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
               <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
@@ -198,6 +220,7 @@ export default function CalendarOverview() {
                   />
                 </View>
               )}
+>>>>>>> dev
             </View>
           )}
         />
