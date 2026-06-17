@@ -12,9 +12,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { syncServer } from '@/lib/StorageSync';
 
 export default function App() {
-  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats, 
-    stressMenuOpen, changeStressMenu } =
-    useAppContext();
+  const {
+    statsOpen,
+    menuOpen,
+    settingsOpen,
+    popupOpen,
+    changeMenu,
+    changeSettings,
+    changeStats, 
+    stressMenuOpen,
+    changeStressMenu
+  } = useAppContext();
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
