@@ -86,7 +86,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   return (
     <View className={className} {...props}>
       <Pressable
-        className=" items-center justify-center self-center overflow-hidden"
+        className="max-h-72 items-center justify-center self-center overflow-hidden"
         onPress={() => {
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
           setAnimIteration(2);
