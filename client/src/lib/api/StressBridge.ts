@@ -25,7 +25,7 @@ export function useStress() {
 export function createStressBridge(): LoadableBridge<StressBridge> {
     return {
         load: () => loadZustand(StressState, 'stress'),
-        getRaw: async (date) => (await getStatistic('stress', date ?? new Date())) ?? 0,
+        useCurrent: () => useStress(),
         set: (value) => setZustand(StressState, 'stress', Math.max(Math.min(value, 3), -1)),
     };
 }
