@@ -25,11 +25,11 @@ export function WelcomeStep() {
       />
 
       <Button className="py-0" variant="default" onPress={() => {routeWithTutorial(true)}}>
-        <AppText>Go to Tutorial</AppText>
+        <AppText className="font-bold text-white">Go to Tutorial</AppText>
       </Button>
 
       <Button className="py-0" variant="secondary" onPress={() => {routeWithTutorial(false)}}>
-        <AppText>Skip Tutorial</AppText>
+        <AppText className="font-bold text-white">Skip Tutorial</AppText>
       </Button>
 
     </View>

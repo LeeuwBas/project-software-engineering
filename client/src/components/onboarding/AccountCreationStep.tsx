@@ -142,7 +142,7 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
                 variant="outline"
                 onPress={null}
               >
-                <AppText>Loading...</AppText>
+                <AppText className="font-bold">Loading...</AppText>
               </Button>
             )
             : (
@@ -151,14 +151,14 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
                 variant="default"
                 onPress={() => {onSubmit()}}
               >
-                <AppText>Continue</AppText>
+                <AppText className="font-bold text-white">Continue</AppText>
               </Button>
             )
           }
 
           {onBack && (
             <Button className="w-full py-0" onPress={onBack}>
-              <AppText>Back</AppText>
+              <AppText className="font-bold text-white">Back</AppText>
             </Button>
           )}
         </View>
