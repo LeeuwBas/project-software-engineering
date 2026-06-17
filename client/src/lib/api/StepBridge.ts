@@ -1,0 +1,38 @@
+import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
+import { createNewState, useValue } from '@/lib/api/ValueState';
+import {
+    getGoals,
+    getStatistic,
+    getStatisticChart,
+    loadGoalZustand,
+    loadZustand,
+    setGoalZustand,
+    setZustand,
+} from '@/lib/api/GenericStorage';
+
+// Use the step bridge when the values need to be manipulated.
+export interface StepBridge extends GoaledStatisticBridge {}
+
+const stepState = createNewState();
+const stepGoalState = createNewState();
+
+export function useSteps() {
+    return useValue(stepState);
+}
+
+export function createStepBridge(): LoadableBridge<StepBridge> {
+    return {
+        load: () =>
+            Promise.all([loadZustand(stepState, 'steps'), loadGoalZustand(stepGoalState, 'steps')]),
+        getRaw: async (date) => (await getStatistic('steps', date ?? new Date())) ?? 0,
+        set: (value) => setZustand(stepState, 'steps', Math.max(value, 0)),
+        getBarChart: async (bins, daysPerBin, endDate) => {
+            return (
+                (await getStatisticChart('steps', bins, daysPerBin, endDate)) ??
+                new Array<number>(bins).fill(0)
+            );
+        },
+        getGoal: async (date) => (await getGoals('steps', date)) ?? 0,
+        setGoal: (value) => setGoalZustand(stepState, 'steps', value),
+    };
+}

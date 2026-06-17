@@ -16,11 +16,13 @@ class Stats(models.Model):
             stress: stress level
                     -1: not set
                     0, 1, 2: low, medium, high
+            steps: the amount of steps walked on a day
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     water = models.IntegerField(default=0)
     stress = models.IntegerField(default=-1)
+    steps = models.IntegerField(default=0)
 
 class Goals(models.Model):
     """
@@ -34,8 +36,11 @@ class Goals(models.Model):
             stress: stress level. Added in goals for parity with Stats.
                     -1: not set
                     0, 1, 2: low, medium, high
+            steps: the amount of steps walked on a day
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     water = models.IntegerField(default=0)
     stress = models.IntegerField(default=-1)
+    steps = models.IntegerField(default=0)
+

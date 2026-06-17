@@ -11,6 +11,7 @@ import {
     getCurrentGoal,
     setNewGoal,
 } from '@/lib/storage';
+import { syncServer } from '@/lib/StorageSync';
 
 /**
  * Loads a given statistic into the given zustand.
@@ -82,7 +83,6 @@ export async function getStatistic<K extends keyof StatLine>(name: K, date: Date
     }
     return server;
 }
-
 
 /**
  * Sets a statistic in the backend storage.
@@ -162,6 +162,7 @@ export async function getStatisticChart<K extends keyof StatLine>(
         return storage.bins;
     }
 
+    await syncServer(false);
     const server = await loadServerChart(name, startDate, date, bins);
 
     if (server === null) {
@@ -199,6 +200,7 @@ export async function loadCalender(startDate: Date, endDate: Date) {
         return storage.vals;
     }
 
+    await syncServer(true);
     const server = await loadServerCalendar(startDate, endDate);
 
     if (server === null) {
@@ -237,12 +239,15 @@ export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZust
  *
  * @returns The loaded goal
  */
-export async function getGoals<K extends keyof StatLine>(name: K, date: Date = new Date()): Promise<number | null> {
+export async function getGoals<K extends keyof StatLine>(
+    name: K,
+    date: Date = new Date()
+): Promise<number | null> {
     const storage = await getCurrentGoal(name, date);
 
     if (storage !== null) {
         if (typeof storage !== 'number') {
-            throw Error(`Storage returned something unexpected.`)
+            throw Error(`Storage returned something unexpected.`);
         }
         return storage;
     }
@@ -253,10 +258,10 @@ export async function getGoals<K extends keyof StatLine>(name: K, date: Date = n
     }
 
     if (date == new Date()) {
-        setNewGoal(name, server)
+        setNewGoal(name, server);
     }
 
-    return server
+    return server;
 }
 
 /**
@@ -273,7 +278,7 @@ export async function setGoal<K extends keyof StatLine>(
     value: number,
     date: Date = new Date()
 ) {
-    await setNewGoal(name, value, date)
+    await setNewGoal(name, value, date);
 }
 
 /**
@@ -342,8 +347,10 @@ function formatDate(date: Date): string {
     return date.toISOString().substring(0, 10);
 }
 
-async function loadGoalServer<K extends keyof StatLine>(name: K | null, date: Date = new Date()):
-                                                            Promise<number | null>{
+async function loadGoalServer<K extends keyof StatLine>(
+    name: K | null,
+    date: Date = new Date()
+): Promise<number | null> {
     //TODO when on main
     return null;
 
@@ -357,4 +364,3 @@ async function loadGoalServer<K extends keyof StatLine>(name: K | null, date: Da
 
     // return +result.stats;
 }
-
