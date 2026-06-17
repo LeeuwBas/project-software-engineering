@@ -172,12 +172,13 @@ export default function CalendarOverview() {
       </View>
 
       {/* Calendar grid */}
-      <AttachStep>
+      <AttachStep index={6} fill>
         <FlatList
           data={dayGrid}
           numColumns={7}
           scrollEnabled={false}
           keyExtractor={(item) => item.id}
+          style={{ maxHeight: (dayGrid.length / 7) * 72 }} // Necesarry for the spotlight tutorial
           renderItem={({ item, index }) => (
             <View
               className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2 
