@@ -2,16 +2,16 @@ import { ValueZustand } from '@/lib/api/ValueState';
 import { getAPI } from '@/lib/api/ApiManager';
 import {
     getCalender,
+    getCurrentGoal,
     getNamedStat,
     getStatBarChart,
+    getStatSummary,
     insertStat,
+    setNewGoal,
     setStat,
+    StatisticsSummary,
     StatLine,
     updateStat,
-    getCurrentGoal,
-    setNewGoal,
-    getStatSummary,
-    StatisticsSummary,
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
 
@@ -360,9 +360,14 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
-    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}?bins=${bins}`;
+    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}/?bins=${bins}`;
 
     const result = await getAPI(endpoint);
+
+    if (!result) {
+        return null;
+    }
+
     const loaded: number[] = Object.keys(result).map((value, index, _) => +result[value]);
 
     return loaded;
