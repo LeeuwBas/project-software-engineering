@@ -18,7 +18,13 @@ import StressMenu from './StressMenu';
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
   const water = useWater() ?? 0;
+  const goals: Modules = {
+    water: waterBridge.useGoal() ?? 0,
+    steps: stepsBridge.useGoal() ?? 0,
+  };
+
   const {
     statsOpen,
     menuOpen,
@@ -30,11 +36,9 @@ export default function Toolbar({}: {}) {
     changeStressMenu,
     sendStress,
   } = useAppContext();
+
   const [draftWater, setDraftWater] = useState(water);
-  const [draftGoals, setDraftGoals] = useState<Modules>({
-    water: 10,
-    steps: 0,
-  });
+  const [draftGoals, setDraftGoals] = useState<Modules>(goals);
   const steps = 6000;
 
   function closeMenu() {
@@ -53,22 +57,9 @@ export default function Toolbar({}: {}) {
 
   // Refresh value in popup when retrieved from storage
   useEffect(() => {
-    async function loadGoals() {
-      const [waterGoal, stepsGoal] = await Promise.all([
-        waterBridge.getGoal(),
-        stepsBridge.getGoal(),
-      ]);
-      console.log('get water goal: ' + waterGoal);
-
-      setDraftGoals({
-        water: waterGoal,
-        steps: stepsGoal,
-      });
-    }
-
     if (menuOpen) {
       setDraftWater(water);
-      loadGoals();
+      setDraftGoals(goals);
     }
   }, [menuOpen, water]);
 
