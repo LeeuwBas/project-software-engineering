@@ -1,5 +1,5 @@
 import { loadCalender } from '@/lib/api/GenericStorage';
-import { createQuoteBridge } from '@/lib/api/QuoteBridge';
+import { createQuoteBridge, QuoteBridge } from '@/lib/api/QuoteBridge';
 import { createStepBridge } from '@/lib/api/StepBridge';
 import { createWaterBridge } from '@/lib/api/WaterBridge';
 
@@ -64,6 +64,6 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 
 export const waterBridge = register(createWaterBridge());
 
-// no register here since there is nothing to sync on startup yet
-export const quoteBridge = createQuoteBridge();
+/**{@link QuoteBridge}*/
+export const quoteBridge: QuoteBridge = createQuoteBridge();
 export const stepsBridge = register(createStepBridge());

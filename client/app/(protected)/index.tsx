@@ -1,15 +1,16 @@
+import QuoteBubble from '@/components/quotes/QuoteBubble';
 import PetHome from '@/components/widgets/PetHome';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useAppContext } from '@/lib/AppContext';
+import { syncServer } from '@/lib/StorageSync';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { syncServer } from '@/lib/StorageSync';
 
 export default function App() {
   const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
@@ -41,6 +42,9 @@ export default function App() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 
+  const [petHomeLayout, setPetHomeLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [topBarLayout, setTopBarLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient
@@ -55,11 +59,15 @@ export default function App() {
         {popupOpen && <Pressable className="absolute inset-0 z-10" onPress={closePopup} />}
 
         <View className="flex-1 p-4">
-          <Topbar />
-
-          <View className="flex-1 justify-center">
+          <View onLayout={(e) => setTopBarLayout(e.nativeEvent.layout)}>
+            <Topbar />
+          </View>
+          <View
+            className="flex-1 justify-center"
+            onLayout={(e) => setPetHomeLayout(e.nativeEvent.layout)}>
             <PetHome />
           </View>
+          <QuoteBubble petHomeLayout={petHomeLayout}, topBarLayout={topBarLayout} />
         </View>
 
         <BlurView
