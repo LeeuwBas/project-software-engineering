@@ -2,11 +2,11 @@
 export interface PopupConfigs {
     popupOpen: boolean;
     menuOpen: boolean;
-    changeMenu: Function;
+    changeMenu: () => void;
     settingsOpen: boolean;
-    changeSettings: Function;
+    changeSettings: () => void;
     statsOpen: boolean;
-    changeStats: Function;
+    changeStats: () => void;
 }
 
 export interface PetType {
