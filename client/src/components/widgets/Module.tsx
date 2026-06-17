@@ -9,36 +9,37 @@ export default function Module({
 }: {
   props: ModuleProps;
 }) {
+  const valueWidth = (goal?.toString().length ?? 0) * 3;
+  console.log('valueWidth ' + valueWidth);
+
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center gap-2">
         <Icon height={30} width={30} />
 
-        <View
-          className={`flex-1 flex-row items-center ${
-            setValue !== undefined ? 'justify-between' : 'justify-center'
-          }`}>
-          {/* Plus button */}
+        <View className="mx-auto flex-1 flex-row items-center justify-center">
+          {/* Minus button */}
           {setValue !== undefined && value !== undefined && (
-            <Button
-              variant={'outline'}
-              disabled={value === goal}
-              onPress={() => setValue(value + 1)}>
-              <Plus size={20} />
+            <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
+              <Minus size={20} />
             </Button>
           )}
           {/* Value */}
           {value !== undefined && goal !== undefined && (
             <View className="flex-row items-center">
-              <AppText className="w-10 text-right text-base font-bold">{value}</AppText>
+              <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
+                {value}
+              </AppText>
               <AppText className="w-4 text-center text-base font-bold"> / </AppText>
-              <AppText className="w-10 text-left text-base font-bold">{goal}</AppText>
+              <AppText style={{ width: valueWidth * 4 }} className="text-left text-base font-bold">
+                {goal}
+              </AppText>
             </View>
           )}
-          {/* Minus button */}
+          {/* Plus button */}
           {setValue !== undefined && value !== undefined && (
-            <Button variant="outline" disabled={value === 0} onPress={() => setValue(value - 1)}>
-              <Minus size={20} />
+            <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
+              <Plus size={20} />
             </Button>
           )}
           {onPress !== undefined && buttonString !== undefined && (
