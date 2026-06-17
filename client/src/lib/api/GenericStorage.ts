@@ -398,10 +398,7 @@ async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
 ): Promise<number | null> {
-    //TODO when on main
-    return null;
-
-    const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`;
+    const endpoint = `/api/goals/${formatDate(date)}/?goal_name=${name}`;
 
     const result = await getAPI(endpoint);
 
@@ -409,5 +406,5 @@ async function loadGoalServer<K extends keyof StatLine>(
         return null;
     }
 
-    // return +result.stats;
+    return +result.goals;
 }
