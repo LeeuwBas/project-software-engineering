@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { SvgProps } from 'react-native-svg';
 
 // state of popups and functions to open/close them.
@@ -12,7 +13,7 @@ export interface PopupConfigs {
     stressMenuOpen: boolean;
     changeStressMenu: () => void;
     sendStress: () => void;
-    setSendStress: () => void;
+    setSendStress: Dispatch<SetStateAction<() => void>>;
 }
 
 export interface PetType {

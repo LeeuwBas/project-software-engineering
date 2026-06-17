@@ -7,6 +7,7 @@ import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
 import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
 import StatsIcon from '@assets/icons/toolbar_icons/stats.svg';
+import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
@@ -15,6 +16,8 @@ import Stats from './Stats';
 import StressMenu from './StressMenu';
 
 export default function Toolbar({}: {}) {
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const water = useWater() ?? 0;
   const {
     statsOpen,
@@ -87,14 +90,14 @@ export default function Toolbar({}: {}) {
       <Settings />
 
       {/* The toolbar itself */}
-      <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-white p-1">
+      <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
         <AttachStep index={5}>
           <AttachStep index={7}>
             <Pressable
               disabled={menuOpen || settingsOpen || stressMenuOpen}
               className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
               onPress={() => changeStats()}>
-              <StatsIcon width={28} height={28} color="#555555" />
+              <StatsIcon width={28} height={28} color={iconColor} />
             </Pressable>
           </AttachStep>
         </AttachStep>
@@ -122,7 +125,7 @@ export default function Toolbar({}: {}) {
             disabled={statsOpen || menuOpen || stressMenuOpen}
             className={`p-2 transition-opacity  duration-200 ${statsOpen || menuOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
             onPress={() => changeSettings()}>
-            <ProfileIcon width={28} height={28} color="#555555" />
+            <ProfileIcon width={28} height={28} color={iconColor} />
           </Pressable>
         </AttachStep>
       </View>

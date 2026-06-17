@@ -1,5 +1,5 @@
 import { AppText } from '@/components/AppText';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import StressButtons from '@/components/widgets/StressButtons';
 import { stressBridge } from '@/lib/api/APIBridge';
 import { useAppContext } from '@/lib/AppContext';
@@ -19,9 +19,6 @@ async function saveStress(score1: number, score2: number, score3: number) {
   }
 
   await stressBridge.set(level);
-
-  const rawValue = await stressBridge.getRaw();
-  console.log(rawValue);
 }
 
 export default function StressMenu() {
@@ -50,7 +47,7 @@ export default function StressMenu() {
       <View className="absolute bottom-full w-full items-center">
         <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
           <CardHeader className="items-center">
-            <CardTitle className="mx-6 mt-4 text-2xl font-bold">Today I felt...</CardTitle>
+            <AppText className="mx-6 mt-4 text-2xl font-bold">Today I felt...</AppText>
           </CardHeader>
           <CardContent className="w-full max-w-full">
             <AppText className="text-left">...nervous and stressed:</AppText>
@@ -67,6 +64,12 @@ export default function StressMenu() {
               ...difficulties were piling up so high that I could not overcome them:
             </AppText>
             <StressButtons value={score3} onChange={setScore3} />
+          </CardContent>
+          <CardContent className="flex-row items-center gap-2">
+            <View className="size-4 border-2 border-[#22a022] bg-[#81c381]"></View>
+            <AppText>Disagree</AppText>
+            <View className="size-4 border-2 border-[#b41b21] bg-[#ff9699]"></View>
+            <AppText>Agree</AppText>
           </CardContent>
         </Card>
       </View>

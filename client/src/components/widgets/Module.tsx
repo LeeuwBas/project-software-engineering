@@ -2,6 +2,7 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { ModuleProps } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 
@@ -10,12 +11,14 @@ export default function Module({
 }: {
   props: ModuleProps;
 }) {
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = (goal?.toString().length ?? 0) * 3;
 
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center gap-2">
-        <Icon height={30} width={30} />
+        <Icon height={30} width={30} color={iconColor} />
 
         <View className="mx-auto flex-1 flex-row items-center justify-center">
           {/* Minus button */}

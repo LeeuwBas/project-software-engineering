@@ -2,14 +2,16 @@ import { ValueZustand } from '@/lib/api/ValueState';
 import { getAPI } from '@/lib/api/ApiManager';
 import {
     getCalender,
+    getCurrentGoal,
     getNamedStat,
     getStatBarChart,
+    getStatSummary,
     insertStat,
+    setNewGoal,
     setStat,
+    StatisticsSummary,
     StatLine,
     updateStat,
-    getCurrentGoal,
-    setNewGoal,
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
 
@@ -23,9 +25,6 @@ import { syncServer } from '@/lib/StorageSync';
  * @throws Error when the value is already loaded
  */
 export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-    if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`);
-    }
 
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getStatistic(name)) ?? 0;
@@ -186,6 +185,36 @@ export async function getStatisticChart<K extends keyof StatLine>(
 }
 
 /**
+ * Calculates and loads a statistic summary from the backend storage.
+ *
+ * @param name The name of the statistic to load from
+ * @param startDate The date to start the summary at
+ * @param endDate The date to end the summary end.
+ *
+ * @returns {@link StatisticsSummary} containing the data, or null if the data does not exist.
+ */
+export async function getStatisticSummary<K extends keyof StatLine>(
+    name: K,
+    startDate: Date = new Date(),
+    endDate: Date = new Date()
+) {
+    const storage = await getStatSummary(name, startDate, endDate);
+
+    if (storage !== null && storage.isFull) {
+        return storage;
+    }
+
+    await syncServer(false);
+    const server = await loadServerSummary(name, startDate, endDate);
+
+    if (server === null) {
+        return storage;
+    }
+
+    return server;
+}
+
+/**
  * Load a calendar from the backend storage. If not in local storage it is requested from the server
  *
  * @param startDate The date to start at
@@ -194,7 +223,7 @@ export async function getStatisticChart<K extends keyof StatLine>(
  * @returns The loaded calendar, or null if unloaded. The calendar might not be complete if not all data is present.
  */
 export async function loadCalender(startDate: Date, endDate: Date) {
-    const storage = await getCalender(startDate, endDate);
+    const storage = await getCalender(new Date(startDate), new Date(endDate));
 
     if (storage !== null && storage.isFull) {
         return storage.vals;
@@ -220,9 +249,6 @@ export async function loadCalender(startDate: Date, endDate: Date) {
  * @throws Error when the value is already loaded
  */
 export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-    if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`);
-    }
 
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getGoals(name)) ?? 0;
@@ -328,12 +354,28 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
-    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}?bins=${bins}`;
+    const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}/?bins=${bins}`;
 
     const result = await getAPI(endpoint);
+
+    if (!result) {
+        return null;
+    }
+
     const loaded: number[] = Object.keys(result).map((value, index, _) => +result[value]);
 
     return loaded;
+}
+
+async function loadServerSummary<K extends keyof StatLine>(
+    name: K,
+    startDate: Date,
+    endDate: Date
+) {
+    const endpoint = `/api/summary/${name}/${formatDate(startDate)}/${formatDate(endDate)}/`;
+
+    const result = await getAPI(endpoint);
+    return result as StatisticsSummary | null;
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
@@ -355,10 +397,7 @@ async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
 ): Promise<number | null> {
-    //TODO when on main
-    return null;
-
-    const endpoint = `/api/stats/${date.toISOString()}/?statName=${name}`;
+    const endpoint = `/api/goals/${formatDate(date)}?goal_name=${name}`;
 
     const result = await getAPI(endpoint);
 
@@ -366,5 +405,5 @@ async function loadGoalServer<K extends keyof StatLine>(
         return null;
     }
 
-    // return +result.stats;
+    return +result.goals;
 }

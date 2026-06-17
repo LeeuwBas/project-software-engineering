@@ -27,7 +27,7 @@ export default function PetSelection() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="size-full justify-center">
+      <SafeAreaView className="size-full justify-center bg-background">
         <View className="flex-col gap-12">
           <View className="flex-row items-center justify-between">
             <View className="w-1/5">

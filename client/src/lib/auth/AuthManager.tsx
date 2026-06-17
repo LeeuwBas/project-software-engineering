@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setAuthenticated] = useState(false);
+  const [refreshing, setRefresh] = useState<Promise<void> | null>(null);
 
   useEffect(() => {
     async function init() {
@@ -109,7 +110,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     internalAuth.accessToken = accessToken;
     internalAuth.refreshToken = refreshToken;
     internalAuth.isLoading = isLoading;
-    internalAuth.renewToken = renewToken;
+    internalAuth.renewToken = () => {
+      if (refreshing) {
+        return refreshing;
+      }
+      setRefresh(
+        renewToken().then(
+          () => setRefresh(null),
+          () => setRefresh(null)
+        )
+      );
+      return refreshing ?? Promise.resolve();
+    };
     internalAuth.signOut = () => signOut(false);
   }, [accessToken, refreshToken]);
 

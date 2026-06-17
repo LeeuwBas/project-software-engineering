@@ -20,7 +20,7 @@ export interface StatLine {
 }
 
 export interface StatisticsSummary {
-    statisticName: string;
+    statisticName: keyof StatLine;
     isFull: boolean;
     total: number;
     count: number;
@@ -204,12 +204,12 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
  *
  * @returns StatisticsSummary object containing all data
  */
-export async function getStatSummary(statName: string, days: number) {
-    const today = new Date();
-    const lowerDay = new Date();
-    lowerDay.setDate(today.getDate() - days);
-
-    const values = await getNamedStatRange(statName, lowerDay, today);
+export async function getStatSummary<K extends keyof StatLine>(
+    statName: K,
+    start: Date,
+    end: Date
+) {
+    const values = await getNamedStatRange(statName, start, end);
 
     if (values == null) {
         return null;
@@ -223,7 +223,12 @@ export async function getStatSummary(statName: string, days: number) {
     returnValue.maximum = values.reduce((Acc, [d, x], _) => (Acc > +x ? Acc : +x), 0);
     returnValue.minimum = values.reduce((Acc, [d, x], _) => (Acc < +x ? Acc : +x), 0);
 
-    returnValue.isFull = returnValue.count == days;
+    const fullDate = new Date(start);
+    fullDate.setDate(start.getDate() + returnValue.count);
+    returnValue.isFull =
+        fullDate.getDate() == end.getDate() &&
+        fullDate.getMonth() == end.getMonth() &&
+        fullDate.getFullYear() == end.getFullYear();
 
     return returnValue as StatisticsSummary;
 }
@@ -334,23 +339,28 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
         currentDay.setDate(currentDay.getDate() + 1)
     ) {
         let dayStat = await getStat(currentDay);
-        const dayGoals = await getCurrentGoal(null, currentDay);
+        let dayGoals = await getCurrentGoal(null, currentDay);
         let today: StatLine = createStatLine();
+
+        let nodata = false;
 
         if (dayGoals === null || typeof dayGoals === 'number') {
             // only possible if no goal was ever set, which would be an incorrect state
-            return null;
+            nodata = true;
+            dayGoals = createStatLine();
         }
 
         if (dayStat === null) {
+            nodata = true;
             isFull = false;
             dayStat = createStatLine();
         }
 
-        for (let key of (Object.keys(dayStat) as (keyof StatLine)[])) {
+        for (let key of Object.keys(dayStat) as (keyof StatLine)[]) {
             const achieved = dayStat[key] ?? -1;
             const goal = dayGoals[key] ?? 0;
 
+            const complete = nodata ? 0 : achieved <= goal;
 
             if (key === "stress") {
                 today[key] = achieved

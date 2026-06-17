@@ -2,9 +2,13 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import { Minus, Plus } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 
 export default function WaterWidget({ water, setWater }: { water: number; setWater: Function }) {
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
   // TODO: get goal from API
   const goal = 10;
 
@@ -25,10 +29,10 @@ export default function WaterWidget({ water, setWater }: { water: number; setWat
 
         <View className="flex flex-row items-center gap-2">
           <Button variant={'outline'} disabled={water === goal} onPress={() => alterWaterValue(1)}>
-            <Plus size={20} />
+            <Plus size={20} color={iconColor} />
           </Button>
           <Button variant="outline" disabled={water === 0} onPress={() => alterWaterValue(-1)}>
-            <Minus size={20} />
+            <Minus size={20} color={iconColor} />
           </Button>
         </View>
       </View>

@@ -6,12 +6,16 @@ import { useAppContext } from '@/lib/AppContext';
 import { Tab, TabId } from '@/lib/stats/statistics-types';
 import Calender from '@assets/icons/module_icons/calendar.svg';
 import Glass from '@assets/icons/module_icons/glass.svg';
+import Shoe from '@assets/icons/module_icons/shoe.svg';
+import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 export default function Stats({}: {}) {
   const { statsOpen } = useAppContext();
   const [activeTab, setActiveTab] = useState<TabId>('calender');
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
   useEffect(() => {
     if (!statsOpen) {
@@ -26,6 +30,7 @@ export default function Stats({}: {}) {
   const labels: Tab[] = [
     { id: 'calender', icon: Calender },
     { id: 'water', icon: Glass },
+    { id: 'steps', icon: Shoe },
   ];
 
   return (
@@ -39,7 +44,7 @@ export default function Stats({}: {}) {
               variant={id === activeTab ? 'default' : 'outline'}
               className={id === activeTab ? '' : 'border-0 px-5 opacity-60'}
               onPress={() => setActiveTab(id)}>
-              <Icon width={30} height={30} />
+              <Icon width={30} height={30} color={iconColor} />
             </Button>
           ))}
         </View>
