@@ -34,8 +34,8 @@ def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime
     lines = Stats.objects.filter(**filter_dict)
 
     response:dict = lines.aggregate(total=Sum(statistic),
-                                    low=Min(statistic),
-                                    high=Max(statistic),
+                                    minimum=Min(statistic),
+                                    maximum=Max(statistic),
                                     count=Count(statistic))
 
     response['average'] = response['total']/day_amount
