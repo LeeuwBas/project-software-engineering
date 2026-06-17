@@ -4,7 +4,7 @@ import { AppText } from '../AppText';
 
 export default function StepsWidget() {
   return (
-    <View className="flex w-full flex-row items-center gap-2 p-2">
+    <View className="flex w-full flex-row items-center justify-start gap-2 self-stretch p-2">
       <SportShoe size={30} />
       <AppText className="text-base font-bold">9999</AppText>
     </View>
