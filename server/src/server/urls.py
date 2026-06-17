@@ -43,7 +43,6 @@ router.register(r"users", UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
-    path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/goals/<str:goal_date>", GoalManageView.as_view(), name="goal_endpoint"),
     path("api/calendar/<str:start_date>/<str:end_date>", CalendarView.as_view(), name="calendar_endpoint"),
     path("api/stats/<str:date>", StatManageView.as_view(), name="stat_manager"),

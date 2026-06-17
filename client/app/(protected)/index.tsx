@@ -13,8 +13,17 @@ import { syncServer } from '@/lib/StorageSync';
 import { scheduleCacheFlush } from '@/lib/timers';
 
 export default function App() {
-  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
-    useAppContext();
+  const {
+    statsOpen,
+    menuOpen,
+    settingsOpen,
+    popupOpen,
+    changeMenu,
+    changeSettings,
+    changeStats, 
+    stressMenuOpen,
+    changeStressMenu
+  } = useAppContext();
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -38,9 +47,10 @@ export default function App() {
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();
     if (statsOpen) changeStats();
+    if (stressMenuOpen) changeStressMenu();
   }
 
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 
   return (
