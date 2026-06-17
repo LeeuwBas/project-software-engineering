@@ -13,8 +13,8 @@ export interface Loadable {
 export interface StatisticBridge {
     getRaw: (date?: Date) => Promise<number>;
     set: (value: number, date?: Date) => Promise<any>;
-    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
-    getSummary: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
+    getBarChart?: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+    getSummary?: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
 }
 
 export interface GoaledStatisticBridge extends StatisticBridge {
