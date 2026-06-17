@@ -13,21 +13,21 @@ const foodGoalState = createNewState()
  *
  * Example:
  * ```tsx
- * const food = useWater() ?? 0
+ * const food = use() ?? 0
  * return <AppText>{food}</AppText>
  * ```
  *
  * This will update the food value whenever it is changed internally.
  */
-export function usefood() {
+export function useFood() {
     return useValue(foodState);
 }
 
-export function createfoodBridge(): LoadableBridge<WaterBridge> {
+export function createfoodBridge(): LoadableBridge<foodBridge> {
     return {
-        load: () => Promise.all([loadZustand(foodState, 'water'), loadGoalZustand(waterGoalState, "water")]),
+        load: () => Promise.all([loadZustand(foodState, 'food'), loadGoalZustand(foodGoalState, "food")]),
         getRaw: async (date) => (await getStatistic('food', date ?? new Date())) ?? 0,
-        set: (value) => setZustand(foodState, 'water', Math.max(Math.min(value, 100), 0)),
+        set: (value) => setZustand(foodState, 'food', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
             return (
                 (await getStatisticChart('food', bins, daysPerBin, endDate)) ??
@@ -35,6 +35,6 @@ export function createfoodBridge(): LoadableBridge<WaterBridge> {
             );
         },
         getGoal: async (date) => (await getGoals("food", date) ?? 0),
-        setGoal: (value) => setGoalZustand(foodGoalState, "water", value),
+        setGoal: (value) => setGoalZustand(foodGoalState, "food", value),
     };
 }

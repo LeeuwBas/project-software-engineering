@@ -13,21 +13,21 @@ const sleepGoalState = createNewState()
  *
  * Example:
  * ```tsx
- * const sleep = useWater() ?? 0
+ * const sleep = useSleep() ?? 0
  * return <AppText>{sleep}</AppText>
  * ```
  *
  * This will update the sleep value whenever it is changed internally.
  */
-export function usesleep() {
+export function useSleep() {
     return useValue(sleepState);
 }
 
-export function createsleepBridge(): LoadableBridge<WaterBridge> {
+export function createsleepBridge(): LoadableBridge<sleepBridge> {
     return {
-        load: () => Promise.all([loadZustand(sleepState, 'water'), loadGoalZustand(waterGoalState, "water")]),
+        load: () => Promise.all([loadZustand(sleepState, 'sleep'), loadGoalZustand(sleepGoalState, "sleep")]),
         getRaw: async (date) => (await getStatistic('sleep', date ?? new Date())) ?? 0,
-        set: (value) => setZustand(sleepState, 'water', Math.max(Math.min(value, 100), 0)),
+        set: (value) => setZustand(sleepState, 'sleep', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
             return (
                 (await getStatisticChart('sleep', bins, daysPerBin, endDate)) ??
@@ -35,6 +35,6 @@ export function createsleepBridge(): LoadableBridge<WaterBridge> {
             );
         },
         getGoal: async (date) => (await getGoals("sleep", date) ?? 0),
-        setGoal: (value) => setGoalZustand(sleepGoalState, "water", value),
+        setGoal: (value) => setGoalZustand(sleepGoalState, "sleep", value),
     };
 }
