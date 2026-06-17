@@ -14,6 +14,7 @@ class Stats(models.Model):
         date: holds date of the statistic
 
         water: glasses of water drank on the given day
+        steps: the amount of steps walked on a day
         sleep: good/bad sleep
         food: amount of meals eaten on the given day
     """
@@ -23,6 +24,7 @@ class Stats(models.Model):
     water = models.IntegerField(default=0)
     sleep = models.IntegerField(default=0)
     food = models.IntegerField(default=0)
+    steps = models.IntegerField(default=0)
 
 
 class Goals(models.Model):
@@ -34,6 +36,7 @@ class Goals(models.Model):
         date: holds start date of the goal
 
         water: glasses of water drank on the given day
+        steps: the amount of steps walked on a day
         sleep: good/bad sleep
         food: amount of meals eaten on the given day
     """
@@ -43,3 +46,4 @@ class Goals(models.Model):
     water = models.IntegerField(default=0)
     sleep = models.IntegerField(default=1)
     food = models.IntegerField(default=3)
+    steps = models.IntegerField(default=0)

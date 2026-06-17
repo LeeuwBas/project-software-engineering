@@ -9,6 +9,7 @@ import { useColorScheme } from 'nativewind';
 import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { syncServer } from '@/lib/StorageSync';
 
 export default function App() {
   const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
@@ -28,7 +29,7 @@ export default function App() {
   }, []);
 
   const triggerBackup = async () => {
-    //Backup logic
+    await syncServer(true);
   };
 
   function closePopup() {
