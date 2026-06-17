@@ -62,17 +62,18 @@ export default function App() {
           <View onLayout={(e) => setTopBarLayout(e.nativeEvent.layout)}>
             <Topbar />
           </View>
-          <View
-            className="flex-1 justify-center"
-            onLayout={(e) => setPetHomeLayout(e.nativeEvent.layout)}>
-            <PetHome />
+          <View className="flex-1 items-center justify-center">
+            <View className="flex-grow-0" onLayout={(e) => setPetHomeLayout(e.nativeEvent.layout)}>
+              <PetHome />
+            </View>
           </View>
-          <QuoteBubble petHomeLayout={petHomeLayout}, topBarLayout={topBarLayout} />
+          <QuoteBubble petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
         </View>
 
         <BlurView
           pointerEvents="none"
           className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
+          style={{ zIndex: 9 }}
           intensity={20}
           tint="regular"
           experimentalBlurMethod="dimezisBlurView"
