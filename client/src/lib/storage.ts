@@ -6,8 +6,9 @@ const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 
-interface Settings {
-    chosenPet: String;
+export interface Settings {
+    chosenPet: string;
+    has_done_tutorial: boolean;
 }
 
 export interface StatLine {
@@ -528,6 +529,30 @@ export async function getSyncData(forGoals: boolean = false) {
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
+
+export async function getSettings(): Promise<Settings> {
+    const defaults: Settings = {
+        chosenPet: '',
+        has_done_tutorial: false,
+    };
+    try {
+        const raw = await AsyncStorage.getItem('settings');
+
+        // The spread operator here makes this future proof, if the settings interface ever changes
+        return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
+    } catch (error) {
+        console.error(error);
+        return defaults;
+    }
+}
+
+export async function setSettings(settings: Settings) {
+    try {
+        await AsyncStorage.setItem('settings', JSON.stringify(settings));
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 
