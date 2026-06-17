@@ -2,11 +2,12 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
-import StepsWidget from '@/components/widgets/StepsWidget';
-import StressWidget from '@/components/widgets/StressWidget';
-import WaterWidget from '@/components/widgets/WaterWidget';
+import Widget from '@/components/widgets/Widget';
 import { useAppContext } from '@/lib/AppContext';
 import { Modules } from '@/lib/types';
+import Glass from '@assets/icons/module_icons/glass.svg';
+import Shoe from '@assets/icons/module_icons/shoe.svg';
+import Stress from '@assets/icons/module_icons/stress.svg';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
@@ -16,7 +17,7 @@ export default function Menu({
   onStressPress,
 }: {
   water: number;
-  setWater: Function;
+  setWater: (water: number) => void;
   onStressPress: () => void;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
@@ -26,6 +27,7 @@ export default function Menu({
 
   // TODO: Get goals from API
   const [goals, setGoals] = useState<Modules>({ water: 10, steps: 7000 });
+  const [steps, setSteps] = useState<number>(6000);
 
   useEffect(() => {
     if (!menuOpen) {
@@ -53,7 +55,7 @@ export default function Menu({
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
-          <CardHeader className="w-full flex-1 flex-row items-center justify-between">
+          <CardHeader className="w-full flex-1 flex-row items-center justify-between px-4">
             <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
             {goalsViewActive ? (
               <Button onPress={submitGoals} className="py-0" variant="secondary">
@@ -65,14 +67,14 @@ export default function Menu({
               </Button>
             )}
           </CardHeader>
-          <CardContent className="w-full max-w-full items-start">
+          <CardContent className="w-full max-w-full items-start px-2">
             {goalsViewActive ? (
               <GoalsView goals={goals} setGoals={setGoals} />
             ) : (
               <>
-                <WaterWidget water={water} setWater={setWater} />
-                <StepsWidget />
-                <StressWidget onPress={onStressPress} />
+                <Widget icon={Glass} value={water} setValue={setWater} goal={goals.water} />
+                <Widget icon={Shoe} value={steps} goal={goals.steps} />
+                <Widget icon={Stress} onPress={onStressPress} buttonString="Log Stress" />
               </>
             )}
           </CardContent>
