@@ -11,15 +11,18 @@ export interface Loadable {
 }
 
 export interface StatisticBridge {
-    getRaw: (date?: Date) => Promise<number>;
+    useCurrent: () => number | null;
     set: (value: number, date?: Date) => Promise<any>;
     getBarChart?: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
     getSummary?: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
 }
 
 export interface GoaledStatisticBridge extends StatisticBridge {
+    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+    getSummary: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
     getGoal: (date?: Date) => Promise<number>;
     setGoal: (value: number, date?: Date) => Promise<any>;
+    useGoal: () => number | null;
 }
 
 const loaders: Loadable[] = [];

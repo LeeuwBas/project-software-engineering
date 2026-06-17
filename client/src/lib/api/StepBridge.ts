@@ -9,7 +9,7 @@ import {
     loadZustand,
     setGoalZustand,
     setZustand,
-} from '@/lib/api/GenericStorage'; // Use the step bridge when the values need to be manipulated.
+} from '@/lib/api/GenericStorage';
 
 // Use the step bridge when the values need to be manipulated.
 export interface StepBridge extends GoaledStatisticBridge {}
@@ -25,7 +25,7 @@ export function createStepBridge(): LoadableBridge<StepBridge> {
     return {
         load: () =>
             Promise.all([loadZustand(stepState, 'steps'), loadGoalZustand(stepGoalState, 'steps')]),
-        getRaw: async (date) => (await getStatistic('steps', date ?? new Date())) ?? 0,
+        useCurrent: () => useSteps(),
         set: (value) => setZustand(stepState, 'steps', Math.max(value, 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
             return (
@@ -35,6 +35,7 @@ export function createStepBridge(): LoadableBridge<StepBridge> {
         },
         getSummary: async (start, end) => await getStatisticSummary('steps', start, end),
         getGoal: async (date) => (await getGoals('steps', date)) ?? 0,
-        setGoal: (value) => setGoalZustand(stepState, 'steps', value),
+        setGoal: (value) => setGoalZustand(stepGoalState, 'steps', value),
+        useGoal: () => useValue(stepGoalState),
     };
 }

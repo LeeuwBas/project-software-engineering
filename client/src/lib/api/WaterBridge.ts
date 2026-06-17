@@ -39,7 +39,7 @@ export function createWaterBridge(): LoadableBridge<WaterBridge> {
                 loadZustand(waterState, 'water'),
                 loadGoalZustand(waterGoalState, 'water'),
             ]),
-        getRaw: async (date) => (await getStatistic('water', date ?? new Date())) ?? 0,
+        useCurrent: () => useWater(),
         set: (value) => setZustand(waterState, 'water', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
             return (
@@ -50,5 +50,6 @@ export function createWaterBridge(): LoadableBridge<WaterBridge> {
         getSummary: async (start, end) => await getStatisticSummary('water', start, end),
         getGoal: async (date) => (await getGoals('water', date)) ?? 0,
         setGoal: (value) => setGoalZustand(waterGoalState, 'water', value),
+        useGoal: () => useValue(waterGoalState),
     };
 }
