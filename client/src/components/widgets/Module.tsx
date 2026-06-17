@@ -3,14 +3,14 @@ import { Button } from '@/components/ui/button';
 import { ModuleProps } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react-native';
 import { View } from 'react-native';
+import { AttachStep } from 'react-native-spotlight-tour';
 
 export default function Module({
-  props: { icon: Icon, value, setValue, goal, onPress, buttonString },
+  props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
 }: {
   props: ModuleProps;
 }) {
   const valueWidth = (goal?.toString().length ?? 0) * 3;
-  console.log('valueWidth ' + valueWidth);
 
   return (
     <View className="flex w-full flex-row items-center justify-between">
@@ -37,11 +37,25 @@ export default function Module({
             </View>
           )}
           {/* Plus button */}
-          {setValue !== undefined && value !== undefined && (
-            <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
-              <Plus size={20} />
-            </Button>
-          )}
+          {setValue !== undefined &&
+            value !== undefined &&
+            (id === 'water' ? (
+              <AttachStep index={3} style={{ alignSelf: 'center' }}>
+                <Button
+                  variant="outline"
+                  disabled={value === goal}
+                  onPress={() => setValue(value + 1)}>
+                  <Plus size={20} />
+                </Button>
+              </AttachStep>
+            ) : (
+              <Button
+                variant="outline"
+                disabled={value === goal}
+                onPress={() => setValue(value + 1)}>
+                <Plus size={20} />
+              </Button>
+            ))}
           {onPress !== undefined && buttonString !== undefined && (
             <Button variant="outline" className="py-0" onPress={onPress}>
               <AppText>{buttonString}</AppText>

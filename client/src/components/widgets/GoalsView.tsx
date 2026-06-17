@@ -18,10 +18,10 @@ const GOALS: GoalInput[] = [
 
 export default function GoalsView({ goals, setGoals }: { goals: Modules; setGoals: Function }) {
   return (
-    <View>
+    <View className="flex-col gap-2">
       <AppText className="text-lg font-bold">Goals:</AppText>
       {GOALS.map(({ id, icon: Icon, maxValue }) => (
-        <View className="flex flex-row items-center gap-2 p-2" key={id}>
+        <View className="flex flex-row items-center gap-2" key={id}>
           <Icon height={30} width={30} />
           <TextInput
             keyboardType="numeric"
