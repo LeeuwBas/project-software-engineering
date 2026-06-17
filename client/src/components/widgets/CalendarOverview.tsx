@@ -2,6 +2,7 @@ import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
 import { AppText } from '../AppText';
 import { FlatList, Pressable, View } from 'react-native';
 import { useMemo, useState } from 'react';
+import { AttachStep } from 'react-native-spotlight-tour';
 
 export interface calendarCell {
   id: string;
@@ -150,31 +151,36 @@ export default function CalendarOverview() {
       </View>
 
       {/* Calendar grid */}
-      <FlatList
-        data={dayGrid}
-        numColumns={7}
-        scrollEnabled={false}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View
-            className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2 
-                    ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'} 
+      <AttachStep index={6} fill>
+        <FlatList
+          data={dayGrid}
+          numColumns={7}
+          scrollEnabled={false}
+          keyExtractor={(item) => item.id}
+          style={{ maxHeight: (dayGrid.length / 7) * 72 }} // Necesarry for the spotlight tutorial
+          renderItem={({ item }) => (
+            <View
+              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
+                    ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
                     ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
-            <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
-            <View className="flex-row flex-wrap gap-1 self-start p-0.5">
-              <View
-                className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['sleep'] ? 'bg-red-500' : 'hidden'}`}
-              />
-              <View
-                className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['water'] ? 'bg-blue-500' : 'hidden'}`}
-              />
-              <View
-                className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['steps'] ? 'bg-green-500' : 'hidden'}`}
-              />
+              <AppText className="self-end text-sm font-bold">
+                {item.value || 'Placeholder'}
+              </AppText>
+              <View className="flex-row flex-wrap gap-1 self-start p-0.5">
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['sleep'] ? 'bg-red-500' : 'hidden'}`}
+                />
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['water'] ? 'bg-blue-500' : 'hidden'}`}
+                />
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['steps'] ? 'bg-green-500' : 'hidden'}`}
+                />
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </AttachStep>
     </View>
   );
 }

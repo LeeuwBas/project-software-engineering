@@ -9,8 +9,10 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
+import { useTutorial } from '@/lib/settings';
 
 export default function Settings() {
+  const { resetTutorial } = useTutorial();
   const { settingsOpen } = useAppContext();
   const auth = useAuth();
   const router = useRouter();
@@ -42,6 +44,12 @@ export default function Settings() {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,
       icon: dark ? Sunny : Moon,
+    },
+    {
+      label: 'Restart tutorial',
+      effect: () => {
+        resetTutorial();
+      },
     },
   ];
 

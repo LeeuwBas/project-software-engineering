@@ -10,6 +10,7 @@ import * as React from 'react';
 import { View, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
+import { useTutorial } from '@/lib/settings';
 
 export function SignUpForm() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export function SignUpForm() {
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
   const passwordInputRef = React.useRef<TextInput>(null);
+  const { resetTutorial } = useTutorial();
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
@@ -48,6 +50,8 @@ export function SignUpForm() {
         setErrors(errors);
         return;
       }
+
+      resetTutorial(); // Possibly need to require auth here?
 
       toast.success('Account created successfully!');
       router.replace('/login');
