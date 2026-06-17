@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/auth/AuthManager';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { toast } from 'sonner-native';
+import { useTutorial } from '@/lib/settings';
 
 type Props = {
   onNext?: () => void;
@@ -27,7 +28,11 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
+  const [loading, setLoading] = React.useState<Boolean>(false);
+
   const { signIn } = useAuth();
+
+  const { resetTutorial } = useTutorial()
 
   const passwordInputRef = React.useRef<TextInput>(null);
 
@@ -43,6 +48,8 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
     // If the server returns an error, we 'catch' it (using the try/catch JS syntax)
     // and update the error state. As soon as the error state is updated,
     // the page is 'reloaded' and the error message is displayed to the user.
+    setLoading(true)
+
     try {
       const response = await fetch(`${API_ENDPOINT}/users/`, {
         method: 'POST',
@@ -57,18 +64,21 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
         return;
       }
       
-      toast.success('Account created successfully!');
+      resetTutorial();
 
+      toast.success('Account created successfully!');
       const success = await signIn(email, password)
       if (!success) {
         toast.error('Sign in after sign up failed, please sign in again.')
         router.replace('/login')
         throw Error('Sign in failed')
       }
+      onNext?.()
     } catch (err) {
       console.error('Sign up request failed:', err);
       setErrors({ general: ['Could not reach the server.'] });
     }
+    setLoading(false)
   }
 
   return (
@@ -124,18 +134,30 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
             />
             {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
           </View>
-          <Button
-            className="w-full"
-            onPress={() => {
-              // ALTER CURRENT IMPLEMENTATION SO THAT IT CONTINUES ONLY AFTER SUCCESSFUL SIGNUP
-              onSubmit();
-              onNext?.(); // <== MOVE THIS CALL INSIDE OF THE TRY CATCH CONSTRUCTION
-            }}>
-            <AppText>Continue</AppText>
-          </Button>
+          {
+            loading
+            ? (
+              <Button
+                className="w-full py-0"
+                variant="outline"
+                onPress={null}
+              >
+                <AppText>Loading...</AppText>
+              </Button>
+            )
+            : (
+              <Button
+                className="w-full py-0"
+                variant="default"
+                onPress={() => {onSubmit()}}
+              >
+                <AppText>Continue</AppText>
+              </Button>
+            )
+          }
 
           {onBack && (
-            <Button className="w-full" onPress={onBack}>
+            <Button className="w-full py-0" onPress={onBack}>
               <AppText>Back</AppText>
             </Button>
           )}

@@ -13,13 +13,13 @@ export default function StepName({ onNext, onBack }: Props) {
       <AppText>Step Name</AppText>
 
       {onBack && (
-        <Button onPress={onBack}>
+        <Button className="py-0" onPress={onBack}>
           <AppText>Back</AppText>
         </Button>
       )}
 
       {onNext && (
-        <Button onPress={onNext}>
+        <Button className="py-0" onPress={onNext}>
           <AppText>Next</AppText>
         </Button>
       )}

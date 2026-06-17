@@ -56,7 +56,7 @@ export function PetSelectionStep({ onNext }: Props) {
 
       <View className="items-center gap-2">
         <Button
-          className="size-auto"
+          className="size-auto py-0"
           onPress={() => {
             confirm();
             onNext?.();
@@ -69,7 +69,7 @@ export function PetSelectionStep({ onNext }: Props) {
 
         <Button
           variant="outline"
-          className="size-auto"
+          className="size-auto py-0"
           onPress={() => router.push('/login')}
         >
           <AppText className="font-bold">
