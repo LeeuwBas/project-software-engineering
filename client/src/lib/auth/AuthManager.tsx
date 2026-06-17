@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setAccessToken(storedAccessToken);
         setRefreshToken(storedRefreshToken);
         setAuthenticated(true);
+        console.log('Authentication successful');
       }
       setLoading(false);
       console.log('Successfully loaded tokens from storage');
@@ -50,6 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     if (!res.ok) {
+      setAuthenticated(false);
       throw new Error('Session expired');
     }
 
@@ -59,6 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(data.accessToken);
     setRefreshToken(data.refreshToken);
     setAuthenticated(true);
+    console.log('Token renewed successfully');
   }
 
   async function signIn(email: string, password: string) {

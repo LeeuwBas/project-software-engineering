@@ -13,6 +13,7 @@ interface Settings {
 export interface StatLine {
     water: number | null;
     sleep: number | null;
+    steps: number | null;
     stress: number | null;
     food: number | null;
 }
@@ -38,6 +39,7 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
         water: null,
         sleep: null,
+        steps: null,
         stress: null,
         food: null,
         ...overrides,
