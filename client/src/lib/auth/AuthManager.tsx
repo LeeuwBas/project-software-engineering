@@ -2,14 +2,8 @@ import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-
-type AuthService = {
-  accessToken: string | null;
-  refreshToken: string | null;
-  isLoading: boolean;
-  renewToken: () => Promise<void>;
-  signOut: () => Promise<void>;
-};
+import { syncServer } from '@/lib/StorageSync';
+import { internalAuth } from '@/lib/auth/AuthService';
 
 type Auth = {
   isAuthenticated: boolean;
@@ -17,15 +11,6 @@ type Auth = {
 
   signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
-};
-
-export const internalAuth: AuthService = {
-  accessToken: null,
-  refreshToken: null,
-  isLoading: true,
-
-  renewToken: async () => {},
-  signOut: async () => {},
 };
 
 const AuthContext = createContext<Auth | null>(null);
@@ -102,7 +87,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return true;
   }
 
-  async function signOut() {
+  async function signOut(validSession: boolean = true) {
+    if (validSession) {
+      // Before signing out, first attempt to sync
+      await syncServer(true);
+    }
+
     await tokenStorage.clear();
     setAccessToken(null);
     setRefreshToken(null);
@@ -114,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     internalAuth.refreshToken = refreshToken;
     internalAuth.isLoading = isLoading;
     internalAuth.renewToken = renewToken;
-    internalAuth.signOut = signOut;
+    internalAuth.signOut = () => signOut(false);
   }, [accessToken, refreshToken]);
 
   return (
