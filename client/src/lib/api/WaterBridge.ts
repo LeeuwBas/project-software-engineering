@@ -25,16 +25,16 @@ export function useWater() {
 
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
-        load: () => Promise.all([loadZustand(waterState, 'waterDrank'), loadGoalZustand(waterGoalState, "waterDrank")]),
-        getRaw: async (date) => (await getStatistic('waterDrank', date ?? new Date())) ?? 0,
-        set: (value) => setZustand(waterState, 'waterDrank', Math.max(Math.min(value, 100), 0)),
+        load: () => Promise.all([loadZustand(waterState, 'water'), loadGoalZustand(waterGoalState, "water")]),
+        getRaw: async (date) => (await getStatistic('water', date ?? new Date())) ?? 0,
+        set: (value) => setZustand(waterState, 'water', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
             return (
-                (await getStatisticChart('waterDrank', bins, daysPerBin, endDate)) ??
+                (await getStatisticChart('water', bins, daysPerBin, endDate)) ??
                 new Array<number>(bins).fill(0)
             );
         },
-        getGoal: async (date) => (await getGoals("waterDrank", date) ?? 0),
-        setGoal: (value) => setGoalZustand(waterGoalState, "waterDrank", value),
+        getGoal: async (date) => (await getGoals("water", date) ?? 0),
+        setGoal: (value) => setGoalZustand(waterGoalState, "water", value),
     };
 }

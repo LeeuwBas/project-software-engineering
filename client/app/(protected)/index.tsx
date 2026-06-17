@@ -21,11 +21,23 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { useTutorial } from '@/lib/settings';
 import { createTutorialSteps } from '@/components/tutorial/tutorial-steps';
+import { syncServer } from '@/lib/StorageSync';
 
 export default function App() {
-  const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
-    useAppContext();
   const water = useWater() ?? 0;
+  const {
+    statsOpen,
+    menuOpen,
+    settingsOpen,
+    popupOpen,
+    changeMenu,
+    changeSettings,
+    changeStats, 
+    stressMenuOpen,
+    changeStressMenu
+  } = useAppContext();
+
+  
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -41,7 +53,7 @@ export default function App() {
   }, []);
 
   const triggerBackup = async () => {
-    //Backup logic
+    await syncServer(true);
   };
 
   const { done, setTutorialDone } = useTutorial();
@@ -51,6 +63,7 @@ export default function App() {
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();
     if (statsOpen) changeStats();
+    if (stressMenuOpen) changeStressMenu();
   }
 
   const { colorScheme } = useColorScheme();

@@ -7,6 +7,11 @@ export interface PopupConfigs {
     changeSettings: () => void;
     statsOpen: boolean;
     changeStats: () => void;
+    changeStats: () => void;
+    stressMenuOpen: boolean;
+    changeStressMenu: () => void;
+    sendStress: () => void;
+    setSendStress: () => void;
 }
 
 export interface PetType {

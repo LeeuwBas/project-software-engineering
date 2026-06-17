@@ -4,8 +4,17 @@ import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 import StepsWidget from './StepsWidget';
 import WaterWidget from './WaterWidget';
+import StressWidget from './StressWidget';
 
-export default function Menu({ water, setWater }: { water: number; setWater: Function }) {
+export default function Menu({
+  water,
+  setWater,
+  onStressPress,
+}: {
+  water: number;
+  setWater: Function;
+  onStressPress: () => void;
+}) {
   // TODO: Add backend for retrieving name
   const name = 'Alex';
   const { menuOpen } = useAppContext();
@@ -18,13 +27,14 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <AttachStep index={2} style={{ alignSelf: 'center' }}>
-          <Card className="mb-6 h-auto w-72 items-center justify-center shadow-block">
+          <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
             <CardHeader className="items-center">
               <CardTitle className="mx-6 my-4 text-2xl font-bold">{name}</CardTitle>
             </CardHeader>
             <CardContent className="w-full max-w-full items-center">
               <WaterWidget water={water} setWater={setWater} />
               <StepsWidget />
+              <StressWidget onPress={onStressPress} />
             </CardContent>
           </Card>
         </AttachStep>

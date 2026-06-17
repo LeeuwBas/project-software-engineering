@@ -1,5 +1,5 @@
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
-import { internalAuth } from '@/lib/auth/AuthManager';
+import { internalAuth } from '@/lib/auth/AuthService';
 
 /**
  * Sends a GET request to the given API endpoint, authenticated with the current session.
@@ -87,7 +87,7 @@ export async function queryApi(
         return null;
     }
 
-    let res;
+    let res: Response;
     try {
         const request = authenticate
             ? {
@@ -120,6 +120,7 @@ export async function queryApi(
         try {
             await auth.renewToken();
         } catch (err) {
+            console.log(err);
             await auth.signOut();
             return null;
         }
