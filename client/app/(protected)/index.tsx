@@ -20,7 +20,7 @@ export default function App() {
     popupOpen,
     changeMenu,
     changeSettings,
-    changeStats, 
+    changeStats,
     stressMenuOpen,
     changeStressMenu
   } = useAppContext();
