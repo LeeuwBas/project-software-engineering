@@ -85,6 +85,9 @@ class StatManageView(APIView):
 
         returnVal = getDay(request.user, statName, day)
 
+        if returnVal is None:
+            returnVal = Stats()
+
         if type(returnVal) is not dict:
             returnVal = {statName: returnVal}
 
