@@ -223,7 +223,7 @@ export async function getStatisticSummary<K extends keyof StatLine>(
  * @returns The loaded calendar, or null if unloaded. The calendar might not be complete if not all data is present.
  */
 export async function loadCalender(startDate: Date, endDate: Date) {
-    const storage = await getCalender(startDate, endDate);
+    const storage = await getCalender(new Date(startDate), new Date(endDate));
 
     if (storage !== null && storage.isFull) {
         return storage.vals;
