@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { syncServer } from '@/lib/StorageSync';
-import { scheduleCacheFlush } from '@/lib/timers';
+import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 
 export default function App() {
   const {
@@ -29,6 +29,11 @@ export default function App() {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'background') triggerBackup();
+      if (nextAppState === 'active') {
+        if (nextTimer.getDay() == (new Date()).getDay()) {
+          flushCache();
+        }
+      }
       appState.current = nextAppState;
     });
     return () => subscription.remove();

@@ -1,22 +1,24 @@
 import { initializeApiManager } from "./api/APIBridge";
 import { syncServer } from "./StorageSync";
 
+export let nextTimer = new Date();
+
 export function scheduleCacheFlush() {
     const now = new Date();
-    const midnight = new Date();
-    midnight.setHours(24, 0, 0);
+    nextTimer = new Date();
+    nextTimer.setHours(24, 0, 0);
 
-    const flushTimer = midnight.getTime() - now.getTime();
+    const flushTimer = nextTimer.getTime() - now.getTime();
 
     console.log(`start cache refresh time out, ${flushTimer/1000} seconds until midnight`)
 
     setTimeout(() => {
         flushCache();
-        scheduleCacheFlush();
     }, flushTimer)
 }
 
-async function flushCache() {
+export async function flushCache() {
     await initializeApiManager();
     await syncServer(true);
+    scheduleCacheFlush();
 }
