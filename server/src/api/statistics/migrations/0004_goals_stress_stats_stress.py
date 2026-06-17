@@ -4,20 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('statistics', '0003_goals_steps_stats_steps'),
+        ("statistics", "0003_goals_steps_stats_steps"),
+        ("statistics", "0003_goals_food_goals_sleep_stats_food_stats_sleep"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='goals',
-            name='stress',
+            model_name="goals",
+            name="stress",
             field=models.IntegerField(default=-1),
         ),
         migrations.AddField(
-            model_name='stats',
-            name='stress',
+            model_name="stats",
+            name="stress",
             field=models.IntegerField(default=-1),
         ),
     ]
