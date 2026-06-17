@@ -43,6 +43,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   // Sync animation when the pet or base idle animation changes
   useEffect(() => {
     setCurrentAnim(idleAnim);
+    setAnimIteration(0)
   }, [idleAnim, pet]);
 
   // When water value changes play water animation once
@@ -91,7 +92,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
           setAnimIteration(2);
         }}>
         <View pointerEvents="box-none">
-          <Animation animation={currentAnim} scale={9} />
+          <Animation animation={currentAnim} scale={9} iteration_count={animIteration} />
         </View>
       </Pressable>
     </View>
