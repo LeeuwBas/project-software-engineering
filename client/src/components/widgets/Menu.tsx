@@ -2,9 +2,9 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
-import Widget from '@/components/widgets/Widget';
+import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { Modules } from '@/lib/types';
+import { ModuleProps, Modules } from '@/lib/types';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
 import Stress from '@assets/icons/module_icons/stress.svg';
@@ -27,7 +27,29 @@ export default function Menu({
 
   // TODO: Get goals from API
   const [goals, setGoals] = useState<Modules>({ water: 10, steps: 7000 });
-  const [steps, setSteps] = useState<number>(6000);
+  const steps = 6000;
+
+  const modules: ModuleProps[] = [
+    {
+      id: 'water',
+      icon: Glass,
+      value: water,
+      setValue: setWater,
+      goal: goals.water,
+    },
+    {
+      id: 'steps',
+      icon: Shoe,
+      value: steps,
+      goal: goals.steps,
+    },
+    {
+      id: 'stress',
+      icon: Stress,
+      onPress: onStressPress,
+      buttonString: 'Log Stress',
+    },
+  ];
 
   useEffect(() => {
     if (!menuOpen) {
@@ -55,7 +77,7 @@ export default function Menu({
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
-          <CardHeader className="w-full flex-1 flex-row items-center justify-between px-4">
+          <CardHeader className="w-full flex-1 flex-row items-center justify-between">
             <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
             {goalsViewActive ? (
               <Button onPress={submitGoals} className="py-0" variant="secondary">
@@ -67,15 +89,15 @@ export default function Menu({
               </Button>
             )}
           </CardHeader>
-          <CardContent className="w-full max-w-full items-start px-2">
+          <CardContent className="w-full max-w-full items-start">
             {goalsViewActive ? (
               <GoalsView goals={goals} setGoals={setGoals} />
             ) : (
-              <>
-                <Widget icon={Glass} value={water} setValue={setWater} goal={goals.water} />
-                <Widget icon={Shoe} value={steps} goal={goals.steps} />
-                <Widget icon={Stress} onPress={onStressPress} buttonString="Log Stress" />
-              </>
+              <View className="flex-col gap-5">
+                {modules.map((module) => (
+                  <Module key={module.id} props={module} />
+                ))}
+              </View>
             )}
           </CardContent>
         </Card>

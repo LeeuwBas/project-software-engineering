@@ -1,3 +1,5 @@
+import { SvgProps } from 'react-native-svg';
+
 // state of popups and functions to open/close them.
 export interface PopupConfigs {
     popupOpen: boolean;
@@ -10,7 +12,7 @@ export interface PopupConfigs {
     stressMenuOpen: boolean;
     changeStressMenu: Function;
     sendStress: Function;
-    setSendStress: Function,
+    setSendStress: Function;
 }
 
 export interface PetType {
@@ -23,3 +25,13 @@ export interface Modules {
     water: number;
     steps: number;
 }
+
+export type ModuleProps = {
+    id: string;
+    icon: React.FC<SvgProps>;
+    value?: number;
+    setValue?: (value: number) => void;
+    goal?: number;
+    onPress?: () => void;
+    buttonString?: string;
+};

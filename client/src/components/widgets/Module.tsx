@@ -1,28 +1,16 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { ModuleProps } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react-native';
 import { View } from 'react-native';
-import { SvgProps } from 'react-native-svg';
 
-type WidgetProps = {
-  icon: React.FC<SvgProps>;
-  value?: number;
-  setValue?: (value: number) => void;
-  goal?: number;
-  onPress?: () => void;
-  buttonString?: string;
-};
-
-export default function Widget({
-  icon: Icon,
-  value,
-  setValue,
-  goal,
-  onPress,
-  buttonString,
-}: WidgetProps) {
+export default function Module({
+  props: { icon: Icon, value, setValue, goal, onPress, buttonString },
+}: {
+  props: ModuleProps;
+}) {
   return (
-    <View className="flex w-full flex-row items-center justify-between p-2">
+    <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center gap-2">
         <Icon height={30} width={30} />
 
