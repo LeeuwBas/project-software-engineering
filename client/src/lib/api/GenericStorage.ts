@@ -217,9 +217,6 @@ export async function loadCalender(startDate: Date, endDate: Date) {
  * @throws Error when the value is already loaded
  */
 export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-    if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`);
-    }
 
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getGoals(name)) ?? 0;

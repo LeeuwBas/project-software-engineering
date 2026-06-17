@@ -6,7 +6,9 @@ export function scheduleCacheFlush() {
     const midnight = new Date();
     midnight.setHours(24, 0, 0);
 
-    const flushTimer = midnight.getMilliseconds() - now.getMilliseconds();
+    const flushTimer = midnight.getTime() - now.getTime();
+
+    console.log(`start cache refresh time out, ${flushTimer/1000} seconds until midnight`)
 
     setTimeout(() => {
         flushCache();
