@@ -347,12 +347,16 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
         }
 
         for (let key of (Object.keys(dayStat) as (keyof StatLine)[])) {
-            const achieved = dayStat[key as keyof StatLine] ?? -1;
-            const goal = dayGoals[key as keyof StatLine] ?? 0;
+            const achieved = dayStat[key] ?? -1;
+            const goal = dayGoals[key] ?? 0;
 
-            const complete = achieved <= goal;
 
-            today[key] = +complete;
+            if (key === "stress") {
+                today[key] = achieved
+            } else {
+                const complete = achieved <= goal;
+                today[key] = +complete;
+            }
         }
 
         returnValue.push(today);
