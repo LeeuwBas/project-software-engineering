@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
+import { loadSettings } from '@/lib/settings';
 import '../global.css';
 
 export default function RootLayout() {
@@ -20,6 +21,10 @@ export default function RootLayout() {
   useEffect(() => {
     colorScheme.set(system ?? 'light');
   }, [system]);
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
   if (!loaded) return null;
 
