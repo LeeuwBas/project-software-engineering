@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { toast } from 'sonner-native';
 import { useTutorial } from '@/lib/settings';
+import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 
 type Props = {
   onNext?: () => void;
@@ -20,9 +21,6 @@ type Props = {
 export function AccountCreationStep({ onNext, onBack }: Props) {
   const router = useRouter();
 
-  // These are 'states', think of them like variables that re-render the page
-  // when they are changed. We use them to keep track of the user's input and
-  // errors in this case. In React, this is the single most used pattern.
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
@@ -32,7 +30,7 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
 
   const { signIn } = useAuth();
 
-  const { resetTutorial } = useTutorial()
+  const { resetTutorial } = useTutorial();
 
   const passwordInputRef = React.useRef<TextInput>(null);
 
@@ -48,7 +46,7 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
     // If the server returns an error, we 'catch' it (using the try/catch JS syntax)
     // and update the error state. As soon as the error state is updated,
     // the page is 'reloaded' and the error message is displayed to the user.
-    setLoading(true)
+    setLoading(true);
 
     try {
       const response = await fetch(`${API_ENDPOINT}/users/`, {
@@ -57,112 +55,109 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
         body: JSON.stringify({ email, username, password }),
       });
 
-      
       if (!response.ok) {
         const errors = await response.json();
         setErrors(errors);
         return;
       }
-      
+
       resetTutorial();
 
       toast.success('Account created successfully!');
-      const success = await signIn(email, password)
+      const success = await signIn(email, password);
       if (!success) {
-        toast.error('Sign in after sign up failed, please sign in again.')
-        router.replace('/login')
-        throw Error('Sign in failed')
+        toast.error('Sign in after sign up failed, please sign in again.');
+        router.replace('/login');
+        throw Error('Sign in failed');
       }
-      onNext?.()
+      onNext?.();
     } catch (err) {
       console.error('Sign up request failed:', err);
       setErrors({ general: ['Could not reach the server.'] });
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
-    <Card className="mx-4 border-border shadow-none">
-      <CardHeader>
-        <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
-      </CardHeader>
-      <CardContent className="gap-6">
-        <View className="gap-6">
-          {errors.general && <AppText className="font-bold">{errors.general[0]}</AppText>}
-          <View className="gap-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              placeholder="john@doe.com"
-              keyboardType="email-address"
-              autoComplete="email"
-              autoCapitalize="none"
-              onSubmitEditing={onEmailSubmitEditing}
-              returnKeyType="next"
-              submitBehavior="submit"
-              onChangeText={setEmail}
-            />
-            {errors.email && <AppText className="font-bold">{errors.email[0]}</AppText>}
-          </View>
-          <View className="gap-1.5">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              placeholder="Your username"
-              autoComplete="username"
-              autoCapitalize="none"
-              returnKeyType="next"
-              submitBehavior="submit"
-              onChangeText={setUsername}
-            />
-            {errors.username && <AppText className="font-bold">{errors.username[0]}</AppText>}
-          </View>
-          <View className="gap-1.5">
-            <View className="flex-row items-center">
-              <Label htmlFor="password">Password</Label>
-            </View>
-            <Input
-              ref={passwordInputRef}
-              id="password"
-              placeholder="••••••••"
-              secureTextEntry
-              returnKeyType="send"
-              onSubmitEditing={onSubmit}
-              onChangeText={setPassword}
-              autoComplete="new-password"
-              textContentType="newPassword"
-            />
-            {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
-          </View>
-          {
-            loading
-            ? (
-              <Button
-                className="w-full py-0"
-                variant="outline"
-                onPress={null}
-              >
-                <AppText className="font-bold">Loading...</AppText>
-              </Button>
-            )
-            : (
-              <Button
-                className="w-full py-0"
-                variant="default"
-                onPress={() => {onSubmit()}}
-              >
-                <AppText className="font-bold text-white">Continue</AppText>
-              </Button>
-            )
-          }
+    <KeyboardProvider>
+      <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={100} style={{ flex: 1 }}>
+        <View style={{ flex: 0.3 }}></View>
+        <Card className="mx-4 border-border shadow-none">
+          <CardHeader>
+            <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
+          </CardHeader>
+          <CardContent className="gap-6">
+            <View className="gap-6">
+              {errors.general && <AppText className="font-bold">{errors.general[0]}</AppText>}
+              <View className="gap-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  placeholder="john@doe.com"
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  onSubmitEditing={onEmailSubmitEditing}
+                  returnKeyType="next"
+                  submitBehavior="submit"
+                  onChangeText={setEmail}
+                />
+                {errors.email && <AppText className="font-bold">{errors.email[0]}</AppText>}
+              </View>
+              <View className="gap-1.5">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  placeholder="Your username"
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  submitBehavior="submit"
+                  onChangeText={setUsername}
+                />
+                {errors.username && <AppText className="font-bold">{errors.username[0]}</AppText>}
+              </View>
+              <View className="gap-1.5">
+                <View className="flex-row items-center">
+                  <Label htmlFor="password">Password</Label>
+                </View>
+                <Input
+                  ref={passwordInputRef}
+                  id="password"
+                  placeholder="••••••••"
+                  secureTextEntry
+                  returnKeyType="send"
+                  onSubmitEditing={onSubmit}
+                  onChangeText={setPassword}
+                  autoComplete="new-password"
+                  textContentType="newPassword"
+                />
+                {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
+              </View>
+              {loading ? (
+                <Button className="w-full py-0" variant="outline" onPress={null}>
+                  <AppText>Loading...</AppText>
+                </Button>
+              ) : (
+                <Button
+                  className="w-full py-0"
+                  variant="default"
+                  onPress={() => {
+                    onSubmit();
+                  }}>
+                  <AppText>Continue</AppText>
+                </Button>
+              )}
 
-          {onBack && (
+              {/* {onBack && (
             <Button className="w-full py-0" onPress={onBack}>
               <AppText className="font-bold text-white">Back</AppText>
             </Button>
-          )}
-        </View>
-      </CardContent>
-    </Card>
+          )} */}
+            </View>
+          </CardContent>
+        </Card>
+      </KeyboardAvoidingView>
+    </KeyboardProvider>
   );
 }
