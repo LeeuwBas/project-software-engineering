@@ -10,6 +10,8 @@ import {
     updateStat,
     getCurrentGoal,
     setNewGoal,
+    getStatSummary,
+    StatisticsSummary,
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
 
@@ -186,6 +188,36 @@ export async function getStatisticChart<K extends keyof StatLine>(
 }
 
 /**
+ * Calculates and loads a statistic summary from the backend storage.
+ *
+ * @param name The name of the statistic to load from
+ * @param startDate The date to start the summary at
+ * @param endDate The date to end the summary end.
+ *
+ * @returns {@link StatisticsSummary} containing the data, or null if the data does not exist.
+ */
+export async function getStatisticSummary<K extends keyof StatLine>(
+    name: K,
+    startDate: Date = new Date(),
+    endDate: Date = new Date()
+) {
+    const storage = await getStatSummary(name, startDate, endDate);
+
+    if (storage !== null && storage.isFull) {
+        return storage;
+    }
+
+    await syncServer(false);
+    const server = await loadServerSummary(name, startDate, endDate);
+
+    if (server === null) {
+        return storage;
+    }
+
+    return server;
+}
+
+/**
  * Load a calendar from the backend storage. If not in local storage it is requested from the server
  *
  * @param startDate The date to start at
@@ -334,6 +366,17 @@ async function loadServerChart<K extends keyof StatLine>(
     const loaded: number[] = Object.keys(result).map((value, index, _) => +result[value]);
 
     return loaded;
+}
+
+async function loadServerSummary<K extends keyof StatLine>(
+    name: K,
+    startDate: Date,
+    endDate: Date
+) {
+    const endpoint = `/api/summary/${name}/${formatDate(startDate)}/${formatDate(endDate)}/`;
+
+    const result = await getAPI(endpoint);
+    return result as StatisticsSummary | null;
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
