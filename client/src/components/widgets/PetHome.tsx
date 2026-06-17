@@ -1,9 +1,9 @@
 import { Animation } from '@/components/animations/renderer';
 import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
+import { useWater } from '@/lib/api/WaterBridge';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { useWater } from '@/lib/api/WaterBridge';
 
 /**
  * This component represents the pet with its associated animations for the homescreen.
@@ -43,7 +43,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   // Sync animation when the pet or base idle animation changes
   useEffect(() => {
     setCurrentAnim(idleAnim);
-    setAnimIteration(0)
+    setAnimIteration(0);
   }, [idleAnim, pet]);
 
   // When water value changes play water animation once
@@ -86,7 +86,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   return (
     <View className={className} {...props}>
       <Pressable
-        className="max-h-72 items-center justify-center self-center overflow-hidden"
+        className="max-h-72 items-center justify-center self-center"
         onPress={() => {
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
           setAnimIteration(2);
