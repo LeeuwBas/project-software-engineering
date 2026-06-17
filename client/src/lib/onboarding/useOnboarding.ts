@@ -6,7 +6,7 @@ const STEP_ORDER: OnboardingStep[] = [
   'account',
   'module-selection',
   'module-config',
-  'welcome',
+  // 'welcome',
 ];
 
 export function useOnboarding() {

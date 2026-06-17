@@ -27,7 +27,6 @@ export default function Onboarding() {
       currentStep = (
         <AccountCreationStep
           onNext={nextStep}
-          onBack={previousStep}
         />
       );
       break;
@@ -36,7 +35,6 @@ export default function Onboarding() {
       currentStep = (
         <ModuleSelectionStep
           onNext={nextStep}
-          onBack={previousStep}
         />
       );
       break;
@@ -50,9 +48,9 @@ export default function Onboarding() {
       );
       break;
 
-    case 'welcome':
-      currentStep = <WelcomeStep />;
-      break;
+    // case 'welcome':
+    //   currentStep = <WelcomeStep />;
+    //   break;
 
     default:
       currentStep = null;

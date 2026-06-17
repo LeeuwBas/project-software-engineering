@@ -15,10 +15,9 @@ import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-co
 
 type Props = {
   onNext?: () => void;
-  onBack?: () => void;
 };
 
-export function AccountCreationStep({ onNext, onBack }: Props) {
+export function AccountCreationStep({ onNext }: Props) {
   const router = useRouter();
 
   const [email, setEmail] = React.useState('');
@@ -74,8 +73,9 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
     } catch (err) {
       console.error('Sign up request failed:', err);
       setErrors({ general: ['Could not reach the server.'] });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -149,11 +149,6 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
                 </Button>
               )}
 
-              {/* {onBack && (
-            <Button className="w-full py-0" onPress={onBack}>
-              <AppText className="font-bold text-white">Back</AppText>
-            </Button>
-          )} */}
             </View>
           </CardContent>
         </Card>

@@ -16,7 +16,6 @@ type Props = {
 const NUM_PETS = 3;
 
 export function PetSelectionStep({ onNext }: Props) {
-
   const router = useRouter();
   const { pet, setPet, savePet } = usePet();
   const [draftPet, setPetId] = useState(pet);
@@ -59,20 +58,12 @@ export function PetSelectionStep({ onNext }: Props) {
           onPress={() => {
             confirm();
             onNext?.();
-          }}
-        >
-          <AppText className="font-bold text-white">
-            Sign Up
-          </AppText>
+          }}>
+          <AppText className="font-bold text-white">Sign Up</AppText>
         </Button>
 
-        <Button
-          variant="outline"
-          onPress={() => router.push('/login')}
-        >
-          <AppText className="font-bold">
-            I already have an account
-          </AppText>
+        <Button variant="outline" onPress={() => router.push('/login')}>
+          <AppText className="font-bold">I already have an account</AppText>
         </Button>
       </View>
     </View>
