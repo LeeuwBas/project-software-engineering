@@ -6,6 +6,7 @@ import { Text } from '@/components/ui/text';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { View, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +15,7 @@ import { useTutorial } from '@/lib/settings';
 
 export function SignUpForm() {
   const router = useRouter();
+  const { colorScheme } = useColorScheme();
 
   // These are 'states', think of them like variables that re-render the page
   // when they are changed. We use them to keep track of the user's input and
@@ -63,7 +65,11 @@ export function SignUpForm() {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>

@@ -34,14 +34,14 @@ def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime
     lines = Stats.objects.filter(**filter_dict)
 
     response:dict = lines.aggregate(total=Sum(statistic),
-                                    low=Min(statistic),
-                                    high=Max(statistic),
+                                    minimum=Min(statistic),
+                                    maximum=Max(statistic),
                                     count=Count(statistic))
 
     response['average'] = response['total']/day_amount
 
     if response['count'] < day_amount:
-        response['low'] = 0
+        response['minimum'] = 0
         response['count'] = day_amount
 
     return response
@@ -91,7 +91,7 @@ def getDay(user: str, statistic: str | None, day: datetime | None = None):
     line = Stats.objects.filter(**filter).first()
 
     if line is None:
-        line = Stats()
+        return None
 
     if statistic is None:
         return getStatDict(line)
@@ -131,7 +131,7 @@ def getGoal(user: str, statName: str | None, day: datetime | None = None):
     line = Goals.objects.filter(**filter).order_by('-date').first()
 
     if line is None:
-        line = Goals()
+        return None
 
     if statName is None:
         return getStatDict(line)
@@ -148,6 +148,9 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
         day = timezone.now()
 
     oldLine = getGoal(user, None, day)
+    if oldLine is None:
+        oldLine = Goals()
+
     for statName, value in goal_data.items():
         oldLine[statName] = value
 
@@ -169,14 +172,22 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
 
     currentDay = startDay
     while currentDay <= endDay:
+        nodata = False
 
         stats = getDay(user, None, currentDay)
+        if stats is None:
+            stats = getStatDict(Stats())
+            nodata = True
+
         goals = getGoal(user, None, currentDay)
+        if goals is None:
+            goals = getStatDict(Goals())
+            nodata = True
 
         for key in stats.keys():
             if key == 'stress':
                 continue
-            stats[key] = stats[key] >= goals[key]
+            stats[key] = stats[key] >= goals[key] if nodata else False
 
         returnList.append(stats)
 

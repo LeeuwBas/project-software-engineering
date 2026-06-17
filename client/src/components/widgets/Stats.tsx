@@ -4,13 +4,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import CalendarOverview from '@/components/widgets/CalendarOverview';
 import { useAppContext } from '@/lib/AppContext';
 import { Tab, TabId } from '@/lib/stats/statistics-types';
-import { CalendarDays, GlassWater } from 'lucide-react-native';
+import { CalendarDays, GlassWater, Footprints } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { useColorScheme } from 'nativewind';
 
 export default function Stats({}: {}) {
   const { statsOpen } = useAppContext();
   const [activeTab, setActiveTab] = useState<TabId>('calender');
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
   useEffect(() => {
     if (!statsOpen) {
@@ -25,6 +28,7 @@ export default function Stats({}: {}) {
   const labels: Tab[] = [
     { id: 'calender', icon: CalendarDays },
     { id: 'water', icon: GlassWater },
+    { id: 'steps', icon: Footprints },
   ];
 
   return (
@@ -38,7 +42,7 @@ export default function Stats({}: {}) {
               variant={id === activeTab ? 'default' : 'outline'}
               className={id === activeTab ? '' : 'border-0 px-5 opacity-60'}
               onPress={() => setActiveTab(id)}>
-              <Icon width={30} height={30} />
+              <Icon width={30} height={30} color={iconColor} />
             </Button>
           ))}
         </View>
