@@ -4,7 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import CalendarOverview from '@/components/widgets/CalendarOverview';
 import { useAppContext } from '@/lib/AppContext';
 import { Tab, TabId } from '@/lib/stats/statistics-types';
-import { CalendarDays, GlassWater } from 'lucide-react-native';
+import Calender from '@assets/icons/module_icons/calendar.svg';
+import Glass from '@assets/icons/module_icons/glass.svg';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
@@ -23,8 +24,8 @@ export default function Stats({}: {}) {
   }
 
   const labels: Tab[] = [
-    { id: 'calender', icon: CalendarDays },
-    { id: 'water', icon: GlassWater },
+    { id: 'calender', icon: Calender },
+    { id: 'water', icon: Glass },
   ];
 
   return (
