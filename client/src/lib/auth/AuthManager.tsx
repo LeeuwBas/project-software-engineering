@@ -57,9 +57,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const data = await res.json();
 
-    await tokenStorage.setTokens(data.accessToken, data.refreshToken);
-    setAccessToken(data.accessToken);
-    setRefreshToken(data.refreshToken);
+    const receivedAccessToken = data.access;
+    const receivedRefreshToken = data.refresh;
+
+    await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
+    setAccessToken(receivedAccessToken);
+    setRefreshToken(receivedRefreshToken);
     setAuthenticated(true);
     console.log('Token renewed successfully');
   }
