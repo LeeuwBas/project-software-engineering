@@ -7,7 +7,7 @@ import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
@@ -22,7 +22,7 @@ export function SignUpForm() {
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
-  const passwordInputRef = React.useRef<Input>(null);
+  const passwordInputRef = React.useRef<TextInput>(null);
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();

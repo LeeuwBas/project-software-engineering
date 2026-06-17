@@ -1,11 +1,12 @@
-import { View, TextInput } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { TextInput, View } from 'react-native';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
+import { useAuth } from '@/lib/auth/AuthManager';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { toast } from 'sonner-native';
@@ -16,51 +17,59 @@ type Props = {
 };
 
 export function AccountCreationStep({ onNext, onBack }: Props) {
-
   const router = useRouter();
-  
-    // These are 'states', think of them like variables that re-render the page
-    // when they are changed. We use them to keep track of the user's input and
-    // errors in this case. In React, this is the single most used pattern.
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [username, setUsername] = React.useState('');
-    const [errors, setErrors] = React.useState<Record<string, string[]>>({});
-  
-    const passwordInputRef = React.useRef<TextInput>(null);
-  
-    function onEmailSubmitEditing() {
-      passwordInputRef.current?.focus();
-    }
-  
-    async function onSubmit() {
-      // This function sends the form data to the server as JSON.
-      //
-      // On success, the server shows a toast (a popup) and redirects the user.
-      //
-      // If the server returns an error, we 'catch' it (using the try/catch JS syntax)
-      // and update the error state. As soon as the error state is updated,
-      // the page is 'reloaded' and the error message is displayed to the user.
-      try {
-        const response = await fetch(`${API_ENDPOINT}/users/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, username, password }),
-        });
-  
-        if (!response.ok) {
-          const errors = await response.json();
-          setErrors(errors);
-          return;
-        }
-  
-        toast.success('Account created successfully!');
-        router.replace('/login');
-      } catch (err) {
-        console.error('Sign up request failed:', err);
-        setErrors({ general: ['Could not reach the server.'] });
+
+  // These are 'states', think of them like variables that re-render the page
+  // when they are changed. We use them to keep track of the user's input and
+  // errors in this case. In React, this is the single most used pattern.
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState('');
+  const [errors, setErrors] = React.useState<Record<string, string[]>>({});
+
+  const { signIn } = useAuth();
+
+  const passwordInputRef = React.useRef<TextInput>(null);
+
+  function onEmailSubmitEditing() {
+    passwordInputRef.current?.focus();
+  }
+
+  async function onSubmit() {
+    // This function sends the form data to the server as JSON.
+    //
+    // On success, the server shows a toast (a popup) and redirects the user.
+    //
+    // If the server returns an error, we 'catch' it (using the try/catch JS syntax)
+    // and update the error state. As soon as the error state is updated,
+    // the page is 'reloaded' and the error message is displayed to the user.
+    try {
+      const response = await fetch(`${API_ENDPOINT}/users/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, username, password }),
+      });
+
+      
+      if (!response.ok) {
+        const errors = await response.json();
+        setErrors(errors);
+        return;
       }
+      
+      toast.success('Account created successfully!');
+
+      const success = await signIn(email, password)
+      if (!success) {
+        toast.error('Sign in after sign up failed, please sign in again.')
+        router.replace('/login')
+        throw Error('Sign in failed')
+      }
+    } catch (err) {
+      console.error('Sign up request failed:', err);
+      setErrors({ general: ['Could not reach the server.'] });
     }
+  }
 
   return (
     <Card className="mx-4 border-border shadow-none">
@@ -69,9 +78,7 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
       </CardHeader>
       <CardContent className="gap-6">
         <View className="gap-6">
-          {errors.general && (
-            <AppText className="font-bold">{errors.general[0]}</AppText>
-          )}
+          {errors.general && <AppText className="font-bold">{errors.general[0]}</AppText>}
           <View className="gap-1.5">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -85,9 +92,7 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
               submitBehavior="submit"
               onChangeText={setEmail}
             />
-            {errors.email && (
-              <AppText className="font-bold">{errors.email[0]}</AppText>
-            )}
+            {errors.email && <AppText className="font-bold">{errors.email[0]}</AppText>}
           </View>
           <View className="gap-1.5">
             <Label htmlFor="username">Username</Label>
@@ -100,9 +105,7 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
               submitBehavior="submit"
               onChangeText={setUsername}
             />
-            {errors.username && (
-              <AppText className="font-bold">{errors.username[0]}</AppText>
-            )}
+            {errors.username && <AppText className="font-bold">{errors.username[0]}</AppText>}
           </View>
           <View className="gap-1.5">
             <View className="flex-row items-center">
@@ -119,15 +122,15 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
               autoComplete="new-password"
               textContentType="newPassword"
             />
-            {errors.password && (
-              <AppText className="font-bold">{errors.password[0]}</AppText>
-            )}
+            {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
           </View>
-          <Button className="w-full" onPress={() => {
-            // ALTER CURRENT IMPLEMENTATION SO THAT IT CONTINUES ONLY AFTER SUCCESSFUL SIGNUP
-            onSubmit();
-            onNext?.();  // <== MOVE THIS CALL INSIDE OF THE TRY CATCH CONSTRUCTION
-          }}>
+          <Button
+            className="w-full"
+            onPress={() => {
+              // ALTER CURRENT IMPLEMENTATION SO THAT IT CONTINUES ONLY AFTER SUCCESSFUL SIGNUP
+              onSubmit();
+              onNext?.(); // <== MOVE THIS CALL INSIDE OF THE TRY CATCH CONSTRUCTION
+            }}>
             <AppText>Continue</AppText>
           </Button>
 
@@ -136,7 +139,6 @@ export function AccountCreationStep({ onNext, onBack }: Props) {
               <AppText>Back</AppText>
             </Button>
           )}
-
         </View>
       </CardContent>
     </Card>
