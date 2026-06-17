@@ -8,9 +8,10 @@ interface StatisticChartProps {
   values: number[];
   labels: string[];
   barconfig: barConfig;
+  goal: number;
 }
 
-export function StatisticChart({ values, labels, barconfig }: StatisticChartProps) {
+export function StatisticChart({ values, labels, barconfig, goal }: StatisticChartProps) {
   const data = values.map((value, index) => ({
     value: value,
     label: labels[index],
@@ -19,8 +20,6 @@ export function StatisticChart({ values, labels, barconfig }: StatisticChartProp
   const [width, setWidth] = useState(0);
   const barWidth = width / values.length;
   const topLabelSize = Math.max(10, Math.min(16, barWidth * 0.2));
-  // TODO: Add API call to retrieve goal
-  const goal = 8;
 
   return (
     <View className="w-full" onLayout={(e) => setWidth(e.nativeEvent.layout.width * 1.5)}>

@@ -2,15 +2,16 @@
 export interface PopupConfigs {
     popupOpen: boolean;
     menuOpen: boolean;
-    changeMenu: Function;
+    changeMenu: () => void;
     settingsOpen: boolean;
-    changeSettings: Function;
+    changeSettings: () => void;
     statsOpen: boolean;
-    changeStats: Function;
+    changeStats: () => void;
+    changeStats: () => void;
     stressMenuOpen: boolean;
-    changeStressMenu: Function;
-    sendStress: Function;
-    setSendStress: Function,
+    changeStressMenu: () => void;
+    sendStress: () => void;
+    setSendStress: () => void;
 }
 
 export interface PetType {
