@@ -324,7 +324,7 @@ export async function updateStat<K extends keyof StatLine>(
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
-    let returnValue: [string, boolean|number][][] = [];
+    let returnValue: StatLine[] = [];
     let isFull = true;
 
     for (
@@ -334,7 +334,7 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
     ) {
         let dayStat = await getStat(currentDay);
         const dayGoals = await getCurrentGoal(null, currentDay);
-        let today: [string, boolean|number][] = [];
+        let today: StatLine = createStatLine();
 
         if (dayGoals === null || typeof dayGoals === 'number') {
             // only possible if no goal was ever set, which would be an incorrect state
@@ -346,17 +346,16 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             dayStat = createStatLine();
         }
 
-        for (let key in Object.keys(dayStat)) {
-            const typedKey = key as keyof StatLine;
-            const achieved = dayStat[typedKey] ?? -1;
-            const goal = dayGoals[typedKey] ?? 0;
+        for (let key of (Object.keys(dayStat) as (keyof StatLine)[])) {
+            const achieved = dayStat[key] ?? -1;
+            const goal = dayGoals[key] ?? 0;
 
 
-            if (typedKey === "stress") {
-                today.push([typedKey, achieved])
+            if (key === "stress") {
+                today[key] = achieved
             } else {
                 const complete = achieved <= goal;
-                today.push([typedKey, complete]);
+                today[key] = +complete;
             }
         }
 

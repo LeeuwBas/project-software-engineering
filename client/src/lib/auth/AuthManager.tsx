@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       throw new Error('No refresh token available');
     }
 
-    const res = await fetch(`${API_ENDPOINT}/auth/token/refresh`, {
+    const res = await fetch(`${API_ENDPOINT}/auth/token/refresh/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh: refreshToken }),
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (!res.ok) {
       setAuthenticated(false);
-      throw new Error('Session expired');
+      throw new Error(`Session expired (${res.status})`);
     }
 
     const data = await res.json();
