@@ -51,7 +51,7 @@ export async function initializeApiManager() {
                 return Promise.resolve();
             }
         })
-    ).then()); // Map to void promise
+    ).then( () => {initPromise = null;})); // Map to void promise
 }
 
 /**
