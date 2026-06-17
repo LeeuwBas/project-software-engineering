@@ -6,8 +6,9 @@ const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 
-interface Settings {
-    chosenPet: String;
+export interface Settings {
+    chosenPet: string;
+    has_done_tutorial: boolean;
 }
 
 export interface StatLine {
@@ -324,7 +325,7 @@ export async function updateStat<K extends keyof StatLine>(
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
-    let returnValue: [string, boolean][][] = [];
+    let returnValue: StatLine[] = [];
     let isFull = true;
 
     for (
@@ -334,7 +335,7 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
     ) {
         let dayStat = await getStat(currentDay);
         const dayGoals = await getCurrentGoal(null, currentDay);
-        let today: [string, boolean][] = [];
+        let today: StatLine = createStatLine();
 
         if (dayGoals === null || typeof dayGoals === 'number') {
             // only possible if no goal was ever set, which would be an incorrect state
@@ -346,12 +347,17 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             dayStat = createStatLine();
         }
 
-        for (let key in Object.keys(dayStat)) {
-            const achieved = dayStat[key as keyof StatLine] ?? -1;
-            const goal = dayGoals[key as keyof StatLine] ?? 0;
+        for (let key of (Object.keys(dayStat) as (keyof StatLine)[])) {
+            const achieved = dayStat[key] ?? -1;
+            const goal = dayGoals[key] ?? 0;
 
-            const complete = achieved <= goal;
-            today.push([key, complete]);
+
+            if (key === "stress") {
+                today[key] = achieved
+            } else {
+                const complete = achieved <= goal;
+                today[key] = +complete;
+            }
         }
 
         returnValue.push(today);
@@ -519,6 +525,30 @@ export async function getSyncData(forGoals: boolean = false) {
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
+
+export async function getSettings(): Promise<Settings> {
+    const defaults: Settings = {
+        chosenPet: '',
+        has_done_tutorial: false,
+    };
+    try {
+        const raw = await AsyncStorage.getItem('settings');
+
+        // The spread operator here makes this future proof, if the settings interface ever changes
+        return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
+    } catch (error) {
+        console.error(error);
+        return defaults;
+    }
+}
+
+export async function setSettings(settings: Settings) {
+    try {
+        await AsyncStorage.setItem('settings', JSON.stringify(settings));
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 

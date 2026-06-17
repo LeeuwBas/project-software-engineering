@@ -6,17 +6,20 @@ from ..authentication.models import User
 
 class Stats(models.Model):
     """
-    Simple stats model.
-    Contains one line per user per day which holds the accumulated stats of
-    the day.
-    data held:
-        user: holds the user id for identification
-        date: holds date of the statistic
+        Simple stats model.
+        Contains one line per user per day which holds the accumulated stats of
+        the day.
+        data held:
+            user: holds the user id for identification
+            date: holds date of the statistic
 
-        water: glasses of water drank on the given day
-        steps: the amount of steps walked on a day
-        sleep: good/bad sleep
-        food: amount of meals eaten on the given day
+            water: glasses of water drank on the given day
+            stress: stress level
+                    -1: not set
+                    0, 1, 2: low, medium, high
+            steps: the amount of steps walked on a day
+            sleep: good/bad sleep
+            food: amount of meals eaten on the given day
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,21 +27,25 @@ class Stats(models.Model):
     water = models.IntegerField(default=0)
     sleep = models.IntegerField(default=0)
     food = models.IntegerField(default=0)
+    stress = models.IntegerField(default=-1)
     steps = models.IntegerField(default=0)
 
 
 class Goals(models.Model):
     """
-    Simple goal model.
-    Contains the goals the user wants to achieve starting on date.
-    data held:
-        user: holds the user id for identification
-        date: holds start date of the goal
+        Simple goal model.
+        Contains the goals the user wants to achieve starting on date.
+        data held:
+            user: holds the user id for identification
+            date: holds start date of the goal
 
-        water: glasses of water drank on the given day
-        steps: the amount of steps walked on a day
-        sleep: good/bad sleep
-        food: amount of meals eaten on the given day
+            water: glasses of water drank on the given day
+            stress: stress level. Added in goals for parity with Stats.
+                    -1: not set
+                    0, 1, 2: low, medium, high
+            steps: the amount of steps walked on a day
+            sleep: good/bad sleep
+            food: amount of meals eaten on the given day
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -46,4 +53,5 @@ class Goals(models.Model):
     water = models.IntegerField(default=0)
     sleep = models.IntegerField(default=1)
     food = models.IntegerField(default=3)
+    stress = models.IntegerField(default=-1)
     steps = models.IntegerField(default=0)

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { GlassWater, Minus, Plus } from 'lucide-react-native';
 import { View } from 'react-native';
+import { AttachStep } from 'react-native-spotlight-tour';
 import { AppText } from '../AppText';
 
 export default function WaterWidget({ water, setWater }: { water: number; setWater: Function }) {
@@ -18,9 +19,11 @@ export default function WaterWidget({ water, setWater }: { water: number; setWat
         </View>
 
         <View className="flex flex-row items-center gap-2">
-          <Button variant={'outline'} disabled={water === 8} onPress={() => alterWaterValue(1)}>
-            <Plus size={20} />
-          </Button>
+          <AttachStep index={3} style={{ alignSelf: 'center' }}>
+            <Button variant={'outline'} disabled={water === 8} onPress={() => alterWaterValue(1)}>
+              <Plus size={20} />
+            </Button>
+          </AttachStep>
           <Button variant="outline" disabled={water === 0} onPress={() => alterWaterValue(-1)}>
             <Minus size={20} />
           </Button>
