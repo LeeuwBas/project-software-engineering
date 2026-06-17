@@ -23,9 +23,6 @@ import { syncServer } from '@/lib/StorageSync';
  * @throws Error when the value is already loaded
  */
 export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-    if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`);
-    }
 
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getStatistic(name)) ?? 0;

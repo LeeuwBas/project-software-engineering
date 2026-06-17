@@ -10,6 +10,7 @@ import { useEffect, useRef } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { syncServer } from '@/lib/StorageSync';
+import { scheduleCacheFlush } from '@/lib/timers';
 
 export default function App() {
   const { statsOpen, menuOpen, settingsOpen, popupOpen, changeMenu, changeSettings, changeStats } =
@@ -26,6 +27,7 @@ export default function App() {
 
   useEffect(() => {
     initializeApiManager().then();
+    scheduleCacheFlush();
   }, []);
 
   const triggerBackup = async () => {
