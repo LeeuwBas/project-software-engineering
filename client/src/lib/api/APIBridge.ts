@@ -57,4 +57,6 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 }
 
 export const waterBridge = register(createWaterBridge());
+
+// no register here since there is nothing to sync on startup yet
 export const quoteBridge = createQuoteBridge();
