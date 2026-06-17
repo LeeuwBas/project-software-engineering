@@ -34,6 +34,7 @@ export default function CalendarOverview() {
     // Push filler cells to align correctly with weekdays
     for (let i = startDayOfWeek - 1; i >= 0; i--) {
       const newDate: Date = new Date(year, month - 1, totalPrev - i);
+      newDate.setHours(12, 0, 0, 0);
       const newCell: calendarCell = {
         id: `prevcell-${i}`,
         date: newDate,
@@ -48,6 +49,7 @@ export default function CalendarOverview() {
     // Push cells of current month
     for (let i = 1; i <= totalDays; i++) {
       const newDate: Date = new Date(year, month, i);
+      newDate.setHours(12, 0, 0, 0);
       const isToday: boolean =
         today.getDate() === i && today.getMonth() === month && today.getFullYear() === year;
       const newCell: calendarCell = {
@@ -64,6 +66,7 @@ export default function CalendarOverview() {
     // Push cells of coming month
     for (let i = 1; i <= grid.length % 7; i++) {
       const newDate: Date = new Date(year, month + 1, i);
+      newDate.setHours(12, 0, 0, 0);
       const newCell: calendarCell = {
         id: `nextCell-${i}`,
         date: newDate,
@@ -75,8 +78,8 @@ export default function CalendarOverview() {
       grid.push(newCell);
     }
 
-    const rangeStart = grid[0].date;
-    const rangeEnd = grid[grid.length - 1].date;
+    const rangeStart = grid[0].date.toISOString();
+    const rangeEnd = grid[grid.length - 1].date.toISOString();
 
     for (let i = grid.length; i < 42; i++) {
       const newCell: calendarCell = {
@@ -101,8 +104,8 @@ export default function CalendarOverview() {
 
         if (dayGrid && dayGrid.length > 0) {
           const data = await getGoalCalender(
-            rangeStart,
-            rangeEnd,
+            new Date(rangeStart),
+            new Date(rangeEnd),
           );
           updateCalendarData(data || []);
         }
