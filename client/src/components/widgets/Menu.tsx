@@ -80,7 +80,7 @@ export default function Menu({
 
   return (
     <View
-      className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
+      className={`absolute -top-60 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <AttachStep index={2} style={{ alignSelf: 'center' }}>
           <Card className="mb-6 h-auto w-3/4 justify-center shadow-block">

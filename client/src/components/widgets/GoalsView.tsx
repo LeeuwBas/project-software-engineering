@@ -26,12 +26,12 @@ export default function GoalsView({ goals, setGoals }: { goals: Modules; setGoal
           <TextInput
             keyboardType="numeric"
             inputMode="numeric"
-            className="rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
+            className="w-20 rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
             value={String(goals[id as keyof Modules])}
-            // On each key stroke, limit value and length
+            maxLength={maxValue.toString().length + 1}
+            // On each key stroke, limit value
             onChangeText={(text) => {
               if (Number(text) > maxValue) text = String(maxValue);
-              if (text.length > 10) return;
               setGoals((prev: Modules) => ({
                 ...prev,
                 [id]: text,
