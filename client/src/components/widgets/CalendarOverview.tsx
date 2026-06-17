@@ -3,6 +3,7 @@ import { AppText } from '../AppText';
 import { FlatList, Pressable, View } from 'react-native';
 import { useMemo, useState } from 'react';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { useColorScheme } from 'nativewind';
 
 export interface calendarCell {
   id: string;
@@ -20,6 +21,8 @@ export default function CalendarOverview() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const today = new Date();
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
   let last_day = null;
   let renderedDayAmount = 0;
@@ -125,7 +128,7 @@ export default function CalendarOverview() {
       {/* Month/year displaty with arrow buttons */}
       <View className="mb-6 flex-row items-center gap-x-4 self-center">
         <Pressable onPress={() => setCurrentDate(new Date(year, month - 1))} hitSlop={12}>
-          <ArrowBigLeft size={24} />
+          <ArrowBigLeft size={24} color={iconColor} />
         </Pressable>
 
         <AppText className="text-2xl font-bold">
@@ -135,7 +138,7 @@ export default function CalendarOverview() {
         <View style={{ width: 24 }}>
           {month !== today.getMonth() && (
             <Pressable onPress={() => setCurrentDate(new Date(year, month + 1))} hitSlop={12}>
-              <ArrowBigRight size={24} />
+              <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
           )}
         </View>
@@ -161,8 +164,8 @@ export default function CalendarOverview() {
           renderItem={({ item }) => (
             <View
               className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
-                    ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
-                    ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
+                    ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
+                    ${item.currentDay ? 'bg-secondary' : 'bg-card'}`}>
               <AppText className="self-end text-sm font-bold">
                 {item.value || 'Placeholder'}
               </AppText>

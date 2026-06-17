@@ -1,4 +1,5 @@
 import { barConfig } from '@/lib/stats/statistics-types';
+import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
@@ -12,10 +13,13 @@ interface StatisticChartProps {
 }
 
 export function StatisticChart({ values, labels, barconfig, goal }: StatisticChartProps) {
+  const { colorScheme } = useColorScheme();
+  const labelColor = colorScheme === 'dark' ? 'white' : '#555555';
+
   const data = values.map((value, index) => ({
     value: value,
     label: labels[index],
-    topLabelComponent: () => <AppText>{value}</AppText>,
+    topLabelComponent: () => <AppText style={{ color: labelColor }}>{value}</AppText>,
   }));
   const [width, setWidth] = useState(0);
   const barWidth = width / values.length;
@@ -34,7 +38,13 @@ export function StatisticChart({ values, labels, barconfig, goal }: StatisticCha
         initialSpacing={0}
         adjustToWidth={true}
         showValuesAsTopLabel={true}
-        topLabelTextStyle={{ fontFamily: 'IosevkaCharon', fontSize: topLabelSize }}
+        topLabelTextStyle={{
+          fontFamily: 'IosevkaCharon',
+          fontSize: topLabelSize,
+          color: labelColor,
+        }}
+        xAxisLabelTextStyle={{ color: labelColor }}
+        yAxisTextStyle={{ color: labelColor }}
         showReferenceLine1={true}
         referenceLine1Position={goal}
         referenceLine1Config={{

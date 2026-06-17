@@ -6,6 +6,7 @@ import { Text } from '@/components/ui/text';
 import { useAuth } from '@/lib/auth/AuthManager';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export function SignInForm() {
   const router = useRouter();
   const auth = useAuth();
+  const { colorScheme } = useColorScheme();
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -42,7 +44,11 @@ export function SignInForm() {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
