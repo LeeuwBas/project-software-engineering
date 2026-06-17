@@ -13,7 +13,8 @@ def getStatDict(line: Stats | Goals):
 
     """
     return {
-        'water': line.water
+        'water': line.water,
+        'stress': line.stress,
     }
 
 def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime):
@@ -173,6 +174,8 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
         goals = getGoal(user, None, currentDay)
 
         for key in stats.keys():
+            if key == 'stress':
+                continue
             stats[key] = stats[key] >= goals[key]
 
         returnList.append(stats)

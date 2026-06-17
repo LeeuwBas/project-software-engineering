@@ -308,6 +308,10 @@ async function loadServerCalendar(startDate: Date, endDate: Date) {
 
     const result: any[] = await getAPI(endpoint);
 
+    if (result === null) {
+        return null;
+    }
+
     result.forEach((dict, index, _) => {
         const keys = Object.keys(dict);
         keys.forEach((value, ix, _) => {
