@@ -398,7 +398,7 @@ async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
 ): Promise<number | null> {
-    const endpoint = `/api/goals/${formatDate(date)}/?goal_name=${name}`;
+    const endpoint = `/api/goals/${formatDate(date)}?goal_name=${name}`;
 
     const result = await getAPI(endpoint);
 
