@@ -20,15 +20,7 @@ from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
 from .models import Stats, Goals
 
-from .helpers import (
-    getBarChart,
-    getSummary,
-    getDay,
-    getGoal,
-    setGoal,
-    getCalender,
-    setDay,
-)
+from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender, setDay, getStatDict
 
 """
 /api/stats/<date>/
@@ -95,6 +87,9 @@ class StatManageView(APIView):
         day = datetime.fromisoformat(date)
 
         returnVal = getDay(request.user, statName, day)
+
+        if returnVal is None:
+            returnVal = getStatDict(Stats())
 
         if type(returnVal) is not dict:
             returnVal = {statName: returnVal}

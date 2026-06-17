@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { useTutorial } from '@/lib/settings';
 import { createTutorialSteps } from '@/components/tutorial/tutorial-steps';
 import { syncServer } from '@/lib/StorageSync';
+import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 
 export default function App() {
   const water = useWater() ?? 0;
@@ -32,7 +33,7 @@ export default function App() {
     popupOpen,
     changeMenu,
     changeSettings,
-    changeStats, 
+    changeStats,
     stressMenuOpen,
     changeStressMenu
   } = useAppContext();
@@ -43,6 +44,11 @@ export default function App() {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'background') triggerBackup();
+      if (nextAppState === 'active') {
+        if (nextTimer.getDay() == (new Date()).getDay()) {
+          flushCache();
+        }
+      }
       appState.current = nextAppState;
     });
     return () => subscription.remove();
@@ -50,6 +56,7 @@ export default function App() {
 
   useEffect(() => {
     initializeApiManager().then();
+    scheduleCacheFlush();
   }, []);
 
   const triggerBackup = async () => {

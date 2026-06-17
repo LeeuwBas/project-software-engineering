@@ -23,7 +23,7 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
     }
 
     if (!response.ok) {
-        throw new Error('Request failed');
+        throw new Error(`Request failed ('${endpoint}': ${response.status})`);
     }
 
     return await response.json();
@@ -125,7 +125,7 @@ export async function queryApi(
             return null;
         }
 
-        return queryApi(endpoint, init, false);
+        return queryApi(endpoint, init, authenticate, false);
     }
     return res;
 }

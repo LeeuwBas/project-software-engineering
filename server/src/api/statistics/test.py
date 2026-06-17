@@ -109,11 +109,11 @@ class StatisticsTests(TestCase):
         self.assertTrue(len(get_vals) > 0, "No stats found in DB, broken post?")
 
         check = {
-            "total": sum(get_vals),
-            "low": min(get_vals) if get_vals.count() == days else 0,
-            "high": max(get_vals),
-            "count": days,
-            "average": sum(get_vals) / days,
+            'total': sum(get_vals),
+            'minimum': min(get_vals) if get_vals.count() == days else 0,
+            'maximum': max(get_vals),
+            'count': days,
+            'average': sum(get_vals)/days
         }
 
         res = self.client.get(
