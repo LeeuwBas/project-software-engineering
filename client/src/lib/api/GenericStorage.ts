@@ -238,6 +238,7 @@ export async function loadCalender(startDate: Date, endDate: Date) {
     if (server === null) {
         return storage?.vals ?? null;
     }
+
     return server;
 }
 
