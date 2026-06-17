@@ -339,15 +339,19 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
         currentDay.setDate(currentDay.getDate() + 1)
     ) {
         let dayStat = await getStat(currentDay);
-        const dayGoals = await getCurrentGoal(null, currentDay);
+        let dayGoals = await getCurrentGoal(null, currentDay);
         let today: StatLine = createStatLine();
+
+        let nodata = false;
 
         if (dayGoals === null || typeof dayGoals === 'number') {
             // only possible if no goal was ever set, which would be an incorrect state
-            return null;
+            nodata = true;
+            dayGoals = createStatLine();
         }
 
         if (dayStat === null) {
+            nodata = true;
             isFull = false;
             dayStat = createStatLine();
         }
@@ -356,8 +360,10 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             const achieved = dayStat[key] ?? -1;
             const goal = dayGoals[key] ?? 0;
 
-            if (key === 'stress') {
-                today[key] = achieved;
+            const complete = nodata ? 0 : achieved <= goal;
+
+            if (key === "stress") {
+                today[key] = achieved
             } else {
                 const complete = achieved <= goal;
                 today[key] = +complete;

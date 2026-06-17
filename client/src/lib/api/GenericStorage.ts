@@ -25,9 +25,6 @@ import { syncServer } from '@/lib/StorageSync';
  * @throws Error when the value is already loaded
  */
 export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-    if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`);
-    }
 
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getStatistic(name)) ?? 0;
@@ -226,7 +223,7 @@ export async function getStatisticSummary<K extends keyof StatLine>(
  * @returns The loaded calendar, or null if unloaded. The calendar might not be complete if not all data is present.
  */
 export async function loadCalender(startDate: Date, endDate: Date) {
-    const storage = await getCalender(startDate, endDate);
+    const storage = await getCalender(new Date(startDate), new Date(endDate));
 
     if (storage !== null && storage.isFull) {
         return storage.vals;
@@ -252,9 +249,6 @@ export async function loadCalender(startDate: Date, endDate: Date) {
  * @throws Error when the value is already loaded
  */
 export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-    if (state.getState().value !== null) {
-        throw Error(`${name} already loaded`);
-    }
 
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getGoals(name)) ?? 0;
