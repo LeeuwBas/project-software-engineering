@@ -1,5 +1,6 @@
 import { loadCalender } from '@/lib/api/GenericStorage';
 import { createQuoteBridge } from '@/lib/api/QuoteBridge';
+import { createStepBridge } from '@/lib/api/StepBridge';
 import { createWaterBridge } from '@/lib/api/WaterBridge';
 
 export type LoadableBridge<T> = T & Loadable;
@@ -12,6 +13,11 @@ export interface StatisticBridge {
     getRaw: (date?: Date) => Promise<number>;
     set: (value: number, date?: Date) => Promise<any>;
     getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+}
+
+export interface GoaledStatisticBridge extends StatisticBridge {
+    getGoal: (date?: Date) => Promise<number>;
+    setGoal: (value: number, date?: Date) => Promise<any>;
 }
 
 const loaders: Loadable[] = [];
@@ -60,3 +66,4 @@ export const waterBridge = register(createWaterBridge());
 
 // no register here since there is nothing to sync on startup yet
 export const quoteBridge = createQuoteBridge();
+export const stepsBridge = register(createStepBridge());

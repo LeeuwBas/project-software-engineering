@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.db.models import Sum, Max, Min, Avg, F, Count
 
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 
 from .models import Stats, Goals
 
@@ -45,19 +45,18 @@ def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime
 
     return response
 
-def getBarChart(days: int, bins: int, user: str, statistic: str):
+def getBarChart(lowerDate: datetime, upperDate: datetime, bins: int, user: str, statistic: str):
     """
         Returns statistics data aggregated into a format to render a bar chart.
         days must be a multiple of bins.
     """
-    days_per_bin = days//bins
+    days_per_bin = (upperDate - lowerDate).days//bins
 
     bin_dict = {}
-    lower_date = timezone.now() - timedelta(days)
     filter = {
         'user': user,
-        'date__gt': lower_date,
-        'date__lte': lower_date + timedelta(days_per_bin)
+        'date__gt': lowerDate,
+        'date__lte': lowerDate + timedelta(days_per_bin)
     }
 
     for i in range(bins):
@@ -106,12 +105,12 @@ def setDay(user: str, statistic: dict[str, int], day: datetime | None = None):
     if day is None:
         day = datetime.now()
 
-    statistic.update({
+    filter = {
         'user': user,
         'date': day.date()
-    })
+    }
 
-    Stats.objects.update_or_create(**statistic)
+    Stats.objects.update_or_create(**filter, defaults=statistic)
 
 def getGoal(user: str, statName: str | None, day: datetime | None = None):
     """
@@ -150,12 +149,13 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
     oldLine = getGoal(user, None, day)
     for statName, value in goal_data.items():
         oldLine[statName] = value
-    oldLine.update({
+
+    filter = {
         'date': day.date(),
         'user': user
-    })
+    }
 
-    Goals.objects.update_or_create(**oldLine)
+    Goals.objects.update_or_create(**filter, defaults=oldLine)
 
 def getCalender(user: str, startDay: datetime, endDay: datetime):
     """
