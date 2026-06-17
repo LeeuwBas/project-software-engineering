@@ -4,14 +4,18 @@ import { useEffect, useState } from 'react';
 
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
+const syncDataKey = 'sync';
 
 interface Settings {
     chosenPet: String;
 }
 
 export interface StatLine {
-    waterDrank: number | null;
+    water: number | null;
     sleep: number | null;
+    steps: number | null;
+    stress: number | null;
+    food: number | null;
 }
 
 export interface StatisticsSummary {
@@ -33,8 +37,11 @@ export interface StatisticsBarChart {
 
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
-        waterDrank: null,
+        water: null,
         sleep: null,
+        steps: null,
+        stress: null,
+        food: null,
         ...overrides,
     } as StatLine;
 }
@@ -47,20 +54,27 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
  *
  * Key format is: "Stats-yyyy-mm-dd"
  */
-function calculateDate(date: Date, stat: boolean = true) {
+function calculateDate(date: Date, stat: string = statPrefix) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
 
-    return `${stat ? statPrefix : goalPrefix}${year}-${month}-${day}`;
+    return `${stat}${year}-${month}-${day}`;
 }
 
 /**
  * Returns the statistic data interface of the given day.
  */
-async function getStat(day: Date) {
+export async function getStat(day: Date = new Date()) {
     const date = calculateDate(day);
-    const raw = await AsyncStorage.getItem(date);
+    return getStatOn(date);
+}
+
+/**
+ * Returns the statistic data interface of the given day.
+ */
+async function getStatOn(day: string) {
+    const raw = await AsyncStorage.getItem(day);
 
     return (raw ? JSON.parse(raw) : null) as StatLine | null;
 }
@@ -74,14 +88,21 @@ async function getStat(day: Date) {
  */
 export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, false)
+        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, goalPrefix)
     );
-    goalDates.sort();
 
-    const date = goalDates[-1];
+    let data: StatLine | null = null;
 
-    const raw = await AsyncStorage.getItem(date);
-    const data: StatLine | null = raw ? JSON.parse(raw) : null;
+    if (goalDates.length == 0) {
+        data = createStatLine();
+    } else {
+        goalDates.sort();
+
+        const date = goalDates[-1];
+
+        const raw = await AsyncStorage.getItem(date);
+        data = raw ? JSON.parse(raw) : null;
+    }
 
     if (data === null) {
         return null;
@@ -99,16 +120,22 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
  *
  * @param statName Name of the goal to change
  * @param goal new value for the goal
+ * @param date The date to set the goal for
  */
-export async function setNewGoal(statName: string, goal: number) {
-    const today = calculateDate(new Date(), false);
+export async function setNewGoal<K extends keyof StatLine>(
+    statName: K,
+    goal: number,
+    date: Date = new Date()
+) {
+    const today = calculateDate(date, goalPrefix);
 
-    var oldGoal = await getCurrentGoal(null);
+    let oldGoal = await getCurrentGoal(null);
     if (oldGoal === null || typeof oldGoal === 'number') {
         oldGoal = createStatLine();
     }
     oldGoal[statName as keyof StatLine] = goal;
     AsyncStorage.setItem(today, JSON.stringify(oldGoal));
+    await markSyncRequired(statName, true, date);
 }
 
 /**
@@ -281,6 +308,7 @@ export async function updateStat<K extends keyof StatLine>(
     line[statName] = oldVal + change;
 
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await markSyncRequired(statName, false, day);
     return true;
 }
 
@@ -360,6 +388,7 @@ export async function setStat<K extends keyof StatLine>(
 
     line[statName] = value;
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await markSyncRequired(statName, false, day);
     return true;
 }
 
@@ -388,7 +417,105 @@ export async function insertStat<K extends keyof StatLine>(
         line[statName] = value;
     }
     AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await markSyncRequired(statName, false, day);
     return true;
+}
+
+// ---------------------------------Server Sync functions----------------------------------
+
+/**
+ * Mark some stat and date such that it should be synced to the server at the next sync moment.
+ *
+ * @param statName The stat to mark as sync required
+ * @param isGoal Weather the stat to be synced is a goal
+ * @param date The date to mark the stat as sync required.
+ */
+export async function markSyncRequired<K extends keyof StatLine>(
+    statName: K,
+    isGoal: boolean,
+    date: Date = new Date()
+) {
+    const storageKey = syncDataKey + (isGoal ? 'Goals' : '');
+    const currentSync = await AsyncStorage.getItem(storageKey);
+    const dateString = calculateDate(date, '');
+
+    if (currentSync === null) {
+        // Insert if this is the first time
+        AsyncStorage.setItem(storageKey, JSON.stringify({ [dateString]: new Array(statName) }));
+        return;
+    }
+
+    const storage = JSON.parse(currentSync);
+    const currentData = storage[dateString];
+
+    // Add to existing data if not present,
+    if (currentData) {
+        const dayData: any[] = currentData;
+        if (!dayData.includes(statName)) {
+            dayData.push(statName);
+        }
+    } else {
+        // else create new data for day.
+        storage[dateString] = new Array(statName);
+    }
+
+    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+}
+
+/**
+ * Gets all data that should be synced to the server.
+ *
+ * @param forGoals If this data is goal data (true) or statistic data (false, default)
+ *
+ * @returns The data that should be synced. In the form of a directory of the dates of the data,
+ * mapped to an object with key/value pairs of all values that should be synced.
+ */
+export async function getSyncData(forGoals: boolean = false) {
+    const storageKey = syncDataKey + (forGoals ? 'Goals' : '');
+    const currentSync = await AsyncStorage.getItem(storageKey);
+
+    if (currentSync == null) {
+        return {};
+    }
+
+    const syncData: { [date: string]: { [id: string]: number } } = {};
+    const storage = JSON.parse(currentSync);
+    const promises: Promise<void>[] = [];
+    const keysToDelete: string[] = [];
+
+    for (const key of Object.keys(storage)) {
+        const valuesForDate = storage[key];
+        const dateData: { [id: string]: number } = {};
+        syncData[key] = dateData;
+
+        promises.push(
+            // Load the stats for the given day
+            getStatOn((forGoals ? goalPrefix : statPrefix) + key).then((stats) => {
+                if (stats === null) {
+                    return;
+                }
+
+                // Select all values that should be synced and are present.
+                for (const statName of valuesForDate) {
+                    const value = stats[statName as keyof StatLine];
+                    if (value !== null) {
+                        dateData[statName] = value;
+                    }
+                }
+
+                keysToDelete.push(key); // Delete if we could load from storage.
+            })
+        );
+    }
+
+    await Promise.allSettled(promises);
+
+    for (const key of keysToDelete) {
+        delete storage[key];
+    }
+
+    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+    return syncData;
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
