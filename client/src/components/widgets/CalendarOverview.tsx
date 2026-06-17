@@ -1,7 +1,8 @@
-import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
+import { ArrowBigLeft, ArrowBigRight, Calendar } from 'lucide-react-native';
 import { AppText } from '../AppText';
 import { FlatList, Pressable, View } from 'react-native';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { getGoalCalender } from '@/lib/api/APIBridge';
 
 export interface calendarCell {
   id: string;
@@ -20,12 +21,11 @@ export default function CalendarOverview() {
   const month = currentDate.getMonth();
   const today = new Date();
 
-  let last_day = null;
-  let renderedDayAmount = 0;
+  const [calendarData, updateCalendarData] = useState<any[]>([])
 
   // Memoization for calendar grid to only change when year or month changes
   // Prevent rerender when parent rerenders
-  const dayGrid = useMemo(() => {
+  const { dayGrid, rangeStart, rangeEnd }  = useMemo(() => {
     const grid: calendarCell[] = [];
     const startDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
     const totalDays = new Date(year, month + 1, 0).getDate();
@@ -33,7 +33,7 @@ export default function CalendarOverview() {
 
     // Push filler cells to align correctly with weekdays
     for (let i = startDayOfWeek - 1; i >= 0; i--) {
-      const newDate: Date = new Date(year, month, totalPrev - i);
+      const newDate: Date = new Date(year, month - 1, totalPrev - i);
       const newCell: calendarCell = {
         id: `prevcell-${i}`,
         date: newDate,
@@ -75,8 +75,8 @@ export default function CalendarOverview() {
       grid.push(newCell);
     }
 
-    last_day = grid[-1];
-    renderedDayAmount = grid.length;
+    const rangeStart = grid[0].date;
+    const rangeEnd = grid[grid.length - 1].date;
 
     for (let i = grid.length; i < 42; i++) {
       const newCell: calendarCell = {
@@ -90,34 +90,30 @@ export default function CalendarOverview() {
       grid.push(newCell);
     }
 
-    return grid;
+    return {dayGrid: grid, rangeStart, rangeEnd};
   }, [year, month]);
 
-  // const calendarStatData = getCalender(dayGrid[0].date, dayGrid[dayGrid.length - 1].date)
-  // console.log(calendarStatData)
 
-  const dummy_data = useMemo(() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  useEffect(() => {
+    const fetchCalendarData = async () => {
+      try {
+        updateCalendarData([]);
 
-    return Object.fromEntries(
-      dayGrid.map((day) => {
-        const cellDate = new Date(day.date);
-        cellDate.setHours(0, 0, 0, 0);
+        if (dayGrid && dayGrid.length > 0) {
+          const data = await getGoalCalender(
+            rangeStart,
+            rangeEnd,
+          );
+          updateCalendarData(data || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch calendar:", error);
+      }
+    };
 
-        const isFuture = today < cellDate;
+    fetchCalendarData();
+  }, [dayGrid]);
 
-        return [
-          day.date.toDateString(),
-          {
-            water: isFuture ? false : Math.random() < 0.5,
-            steps: isFuture ? false : Math.random() < 0.5,
-            sleep: isFuture ? false : Math.random() < 0.5,
-          },
-        ];
-      })
-    );
-  }, [dayGrid, year, month]);
 
   return (
     <View>
@@ -155,23 +151,25 @@ export default function CalendarOverview() {
         numColumns={7}
         scrollEnabled={false}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View
             className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2 
-                    ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'} 
+                    ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
                     ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
             <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
-            <View className="flex-row flex-wrap gap-1 self-start p-0.5">
-              <View
-                className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['sleep'] ? 'bg-red-500' : 'hidden'}`}
-              />
-              <View
-                className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['water'] ? 'bg-blue-500' : 'hidden'}`}
-              />
-              <View
-                className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['steps'] ? 'bg-green-500' : 'hidden'}`}
-              />
-            </View>
+            {!item.hidden && (
+              <View className="flex-row flex-wrap gap-1 self-start p-0.5">
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.sleep === 1 ? 'bg-red-500' : 'hidden'}`}
+                />
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.water === 1 ? 'bg-blue-500' : 'hidden'}`}
+                />
+                <View
+                  className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1? 'bg-green-500' : 'hidden'}`}
+                />
+              </View>
+            )}
           </View>
         )}
       />
