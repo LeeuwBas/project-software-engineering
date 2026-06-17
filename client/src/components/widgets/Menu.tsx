@@ -3,13 +3,22 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import StepsWidget from '@/components/widgets/StepsWidget';
+import StressWidget from '@/components/widgets/StressWidget';
 import WaterWidget from '@/components/widgets/WaterWidget';
 import { useAppContext } from '@/lib/AppContext';
 import { Modules } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-export default function Menu({ water, setWater }: { water: number; setWater: Function }) {
+export default function Menu({
+  water,
+  setWater,
+  onStressPress,
+}: {
+  water: number;
+  setWater: Function;
+  onStressPress: () => void;
+}) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
   // TODO: Add backend for retrieving name
   const name = 'Alex';
@@ -63,6 +72,7 @@ export default function Menu({ water, setWater }: { water: number; setWater: Fun
               <>
                 <WaterWidget water={water} setWater={setWater} />
                 <StepsWidget />
+                <StressWidget onPress={onStressPress} />
               </>
             )}
           </CardContent>
