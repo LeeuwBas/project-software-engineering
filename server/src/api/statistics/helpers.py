@@ -41,7 +41,7 @@ def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime
     response['average'] = response['total']/day_amount
 
     if response['count'] < day_amount:
-        response['low'] = 0
+        response['minimum'] = 0
         response['count'] = day_amount
 
     return response
