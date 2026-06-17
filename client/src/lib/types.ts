@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react';
+
 // state of popups and functions to open/close them.
 export interface PopupConfigs {
     popupOpen: boolean;
@@ -7,11 +9,10 @@ export interface PopupConfigs {
     changeSettings: () => void;
     statsOpen: boolean;
     changeStats: () => void;
-    changeStats: () => void;
     stressMenuOpen: boolean;
     changeStressMenu: () => void;
     sendStress: () => void;
-    setSendStress: () => void;
+    setSendStress: Dispatch<SetStateAction<() => void>>;
 }
 
 export interface PetType {

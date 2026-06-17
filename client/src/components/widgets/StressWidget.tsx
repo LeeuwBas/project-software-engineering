@@ -1,13 +1,17 @@
 import { CloudLightningIcon } from 'lucide-react-native';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Button } from '../ui/button';
+import { useColorScheme } from 'nativewind';
+import { AppText } from '../AppText';
 
 export default function StressWidget({ onPress }: { onPress: () => void }) {
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   return (
     <View className="flex w-full flex-row items-center justify-between gap-2 p-2">
-      <CloudLightningIcon size={30} />
+      <CloudLightningIcon size={30} color={iconColor} />
       <Button variant="outline" onPress={onPress}>
-        <Text>Log Stress</Text>
+        <AppText>Log Stress</AppText>
       </Button>
     </View>
   );
