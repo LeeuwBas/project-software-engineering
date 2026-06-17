@@ -176,12 +176,12 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
 
         stats = getDay(user, None, currentDay)
         if stats is None:
-            stats = Stats()
+            stats = getStatDict(Stats())
             nodata = True
 
         goals = getGoal(user, None, currentDay)
         if goals is None:
-            goals = Goals()
+            goals = getStatDict(Goals())
             nodata = True
 
         for key in stats.keys():
