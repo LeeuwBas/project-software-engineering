@@ -19,7 +19,7 @@ export default function CalendarOverview() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  const today = new Date();
+  const today = useMemo(() => new Date(),[]);
 
   const [calendarData, updateCalendarData] = useState<any[]>([])
 
@@ -115,7 +115,7 @@ export default function CalendarOverview() {
     };
 
     fetchCalendarData();
-  }, [dayGrid]);
+  }, [rangeStart, rangeEnd]);
 
 
   const toPrevMonth = () => {
