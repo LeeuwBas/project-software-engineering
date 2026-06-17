@@ -5,7 +5,8 @@ import { View, Text } from 'react-native';
 import StressButtons from './StressButtons';
 
 import { stressBridge } from '@/lib/api/APIBridge';
-import { useStress } from '@/lib/api/StressBridge';
+import { Car } from 'lucide-react-native';
+import { AppText } from '../AppText';
 
 async function saveStress(score1: number, score2: number, score3: number) {
   const score = score1 + score2 + score3;
@@ -63,6 +64,12 @@ export default function StressMenu() {
               ...difficulties were piling up so high that I could not overcome them:
             </Text>
             <StressButtons value={score3} onChange={setScore3} />
+          </CardContent>
+          <CardContent className='flex-row gap-2 items-center'>
+            <View className='size-4 bg-[#81c381] border-2 border-[#22a022]'></View>
+            <AppText>Disagree</AppText>
+            <View className='size-4 bg-[#ff9699] border-2 border-[#b41b21]'></View>
+            <AppText>Agree</AppText>
           </CardContent>
         </Card>
       </View>
