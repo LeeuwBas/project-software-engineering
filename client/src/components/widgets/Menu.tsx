@@ -15,20 +15,22 @@ import { AttachStep } from 'react-native-spotlight-tour';
 export default function Menu({
   water,
   setWater,
+  steps,
   onStressPress,
+  goals,
+  setGoals,
 }: {
   water: number;
   setWater: (water: number) => void;
+  steps: number;
   onStressPress: () => void;
+  goals: Modules;
+  setGoals: (goals: Modules) => void;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
   // TODO: Add backend for retrieving name
   const name = 'Alex';
   const { menuOpen } = useAppContext();
-
-  // TODO: Get goals from API
-  const [goals, setGoals] = useState<Modules>({ water: 10, steps: 7000 });
-  const steps = 6000;
 
   const modules: ModuleProps[] = [
     {
@@ -58,14 +60,17 @@ export default function Menu({
     }
   }, [menuOpen]);
 
+  // Save input goals to goals view
+  // Doesn't send to storage
   function submitGoals() {
-    console.log(goals);
     const final_goals = {
       water: Math.ceil(goals.water),
       steps: Math.ceil(goals.steps),
     };
     setGoals(final_goals);
-    // TODO: Save final goals to storage
+    if (water > goals.water) {
+      setWater(goals.water);
+    }
     setGoalsViewActive(false);
   }
 
@@ -83,7 +88,7 @@ export default function Menu({
               <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
               {goalsViewActive ? (
                 <Button onPress={submitGoals} className="py-0" variant="secondary">
-                  <AppText className="font-bold text-white">Save changes</AppText>
+                  <AppText className="font-bold text-white">Back</AppText>
                 </Button>
               ) : (
                 <Button onPress={() => setGoalsViewActive(!goalsViewActive)} className="py-0">
