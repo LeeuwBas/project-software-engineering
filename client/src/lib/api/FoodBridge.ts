@@ -1,6 +1,6 @@
 import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
 import { createNewState, useValue } from '@/lib/api/ValueState';
-import { getGoals, getStatistic, getStatisticChart, loadGoalZustand, loadZustand, setGoalZustand, setZustand } from '@/lib/api/GenericStorage';
+import { getGoals, getStatisticSummary, getStatisticChart, loadGoalZustand, loadZustand, setGoalZustand, setZustand } from '@/lib/api/GenericStorage';
 
 // Use the food bridge when the values need to be manipulated.
 export interface foodBridge extends GoaledStatisticBridge {}
@@ -23,7 +23,7 @@ export function useFood() {
     return useValue(foodState);
 }
 
-export function createFoodBridge(): LoadableBridge<FoodBridge> {
+export function createFoodBridge(): LoadableBridge<foodBridge> {
     return {
         load: () =>
             Promise.all([

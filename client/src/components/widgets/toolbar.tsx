@@ -16,6 +16,7 @@ import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
 import { useSleep } from '@/lib/api/SleepBridge';
+import { useSteps } from '@/lib/api/StepBridge';
 
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
@@ -23,6 +24,8 @@ export default function Toolbar({}: {}) {
 
   const water = useWater() ?? 0;
   const food = useFood() ?? 0;
+  // const steps = useSteps() ?? 0;
+  const steps = 6000;
   const sleep = useSleep() ?? 0;
 
   const goals: GoalModules = {
@@ -47,14 +50,19 @@ export default function Toolbar({}: {}) {
   const [draftFood, setDraftFood] = useState(food);
   const [draftSleep, setDraftSleep] = useState(sleep)
   const [draftGoals, setDraftGoals] = useState<GoalModules>(goals);
-  const steps = 6000;
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
-      console.log('Save water goal: ' + draftGoals.water);
       await waterBridge.set(draftWater);
+      await foodBridge.set(draftFood);
+      await sleepBridge.set(draftSleep)
 
       await waterBridge.setGoal(draftGoals.water).then(() => stepsBridge.setGoal(draftGoals.steps));
+      await foodBridge.setGoal(draftGoals.food)
+      console.log('Save water goal: ' + draftGoals.water);
+      console.log("Save steps goal: " + draftGoals.steps);
+      console.log("Save food goal: " + draftGoals.food);
+
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
@@ -67,6 +75,8 @@ export default function Toolbar({}: {}) {
   useEffect(() => {
     if (menuOpen) {
       setDraftWater(water);
+      setDraftFood(food);
+      setDraftSleep(sleep)
       setDraftGoals(goals);
     }
   }, [menuOpen, water]);

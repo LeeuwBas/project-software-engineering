@@ -35,32 +35,46 @@ export const ANIMATIONS = {
 
     // Blob pet assets
     blob_blink: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 4,
         fps: 8,
         source: require('@assets/pets/blob/blob_blink.png'),
     },
     blob_breath_happy: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 40,
         fps: 8,
-        source: require('@assets/pets/blob/blob_breath_happy.png'),
+        source: require('@assets/pets/blob/blob_breathing_happy.png'),
     },
     blob_breath_neutral: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 40,
         fps: 8,
         source: require('@assets/pets/blob/blob_breath_neutral.png'),
     },
     blob_sleeping: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 40,
         fps: 8,
         source: require('@assets/pets/blob/blob_sleeping.png'),
+    },
+    blob_drinking: {
+        width: 64,
+        height: 64,
+        frameCount: 56,
+        fps: 8,
+        source: require('@assets/pets/blob/blob_drinking.png'),
+    },
+    blob_eating: {
+        width: 64,
+        height: 64,
+        frameCount: 45,
+        fps: 8,
+        source: require('@assets/pets/blob/blob_eating.png'),
     },
 
     // frog pet assets
@@ -86,8 +100,8 @@ export const ANIMATIONS = {
         source: require('@assets/pets/frog/frog_breath_neutral.png'),
     },
     frog_sleeping: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 40,
         fps: 8,
         source: require('@assets/pets/frog/frog_sleeping.png'),
@@ -95,14 +109,14 @@ export const ANIMATIONS = {
     frog_drinking: {
         width: 64,
         height: 64,
-        frameCount: 61,
+        frameCount: 60,
         fps: 8,
         source: require('@assets/pets/frog/frog_drinking.png'),
     },
     frog_eating: {
         width: 64,
         height: 64,
-        frameCount: 57,
+        frameCount: 56,
         fps: 8,
         source: require('@assets/pets/frog/frog_eating.png'),
     },
@@ -139,7 +153,7 @@ export const ANIMATIONS = {
     onigiri_drinking: {
         width: 64,
         height: 64,
-        frameCount: 57,
+        frameCount: 56,
         fps: 8,
         source: require('@assets/pets/onigiri/onigiri_drinking.png'),
     },
