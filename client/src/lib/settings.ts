@@ -42,3 +42,16 @@ export function savePetName(petName: string) {
 export function saveUserName(userName: string) {
     console.log(`not yet implemented, but ${userName} is an okay name`);
 }
+
+export function setActiveModules(modules: string[]) {
+    console.log(`you selected ${modules}`);
+}
+
+export function getActiveModules() {
+    return {
+        "water": true,
+        "steps": false, // step counter is scary
+        "sleep": true,
+        "food": true,
+    }
+}
