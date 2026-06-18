@@ -5,6 +5,7 @@ export interface WeatherData {
     status: string;
     id: number;
     temp: number;
+    sunset: number;
 }
 
 // Request location perms and return weather data
@@ -31,6 +32,7 @@ async function getWeatherStatus(): Promise<WeatherData | null> {
         status: data.weather[0].main,
         id: data.weather[0].id,
         temp: data.main.temp,
+        sunset: data.sys.sunset
     };
     return weather;
 }
