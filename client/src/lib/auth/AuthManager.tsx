@@ -5,10 +5,14 @@ import { createContext, ReactNode, useContext, useEffect, useRef, useState } fro
 import { syncServer } from '@/lib/StorageSync';
 import { internalAuth } from '@/lib/auth/AuthService';
 
+const GUEST_MODE = 'guest';
+
 type Auth = {
   isAuthenticated: boolean;
   isLoading: boolean;
+  isGuest: boolean;
 
+  setGuest: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
 };
@@ -20,6 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setAuthenticated] = useState(false);
+  const [isGuest, setGuest] = useState(false);
   const refreshingRef = useRef<boolean>(false);
   const refreshPromiseRef = useRef<Promise<void>>(Promise.resolve());
 
@@ -31,8 +36,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (storedAccessToken && storedRefreshToken) {
         setAccessToken(storedAccessToken);
         setRefreshToken(storedRefreshToken);
-        setAuthenticated(true);
-        console.log('Authentication successful');
+
+        const guestMode = storedAccessToken === GUEST_MODE && storedRefreshToken === GUEST_MODE;
+        setGuest(guestMode);
+        setAuthenticated(!guestMode);
+        console.log(`Authentication successful, (guest=${guestMode})`);
       }
       setLoading(false);
       console.log('Successfully loaded tokens from storage');
@@ -42,6 +50,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   async function renewToken() {
+    if (isGuest) {
+      return;
+    }
+
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
@@ -92,6 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
+    setGuest(false);
     setAuthenticated(true);
     console.log('Successfully logged in');
     return true;
@@ -108,6 +121,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(null);
     setRefreshToken(null);
     setAuthenticated(false);
+    setGuest(false);
+  }
+
+  async function guestMode() {
+    await syncServer(true);
+
+    await tokenStorage.setTokens(GUEST_MODE, GUEST_MODE);
+    setAccessToken(GUEST_MODE);
+    setRefreshToken(GUEST_MODE);
+    setGuest(true);
+    setAuthenticated(false);
   }
 
   useEffect(() => {
@@ -115,9 +139,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     internalAuth.accessToken = accessToken;
     internalAuth.refreshToken = refreshToken;
     internalAuth.isLoading = isLoading;
-  }, [accessToken, refreshToken, isLoading]);
+    internalAuth.isGuest = isGuest;
+  }, [accessToken, refreshToken, isLoading, isGuest]);
 
   internalAuth.renewToken = () => {
+    if (isGuest) {
+      return Promise.resolve();
+    }
+
     if (refreshingRef.current) {
       return refreshPromiseRef.current;
     }
@@ -142,6 +171,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         isAuthenticated,
         isLoading,
+        isGuest,
+        setGuest: guestMode,
         signIn,
         signOut,
       }}>

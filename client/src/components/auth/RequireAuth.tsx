@@ -1,4 +1,4 @@
-import { useIsAuth, useIsLoading } from '@/lib/auth/AuthManager';
+import { useAuth, useIsAuth, useIsLoading } from '@/lib/auth/AuthManager';
 import { Redirect } from 'expo-router';
 import { ReactNode } from 'react';
 
@@ -22,11 +22,12 @@ export default function RequireAuth({
 }) {
   const isAuth = useIsAuth();
   const isLoading = useIsLoading();
+  const isGuest = useAuth().isGuest;
   if (isLoading) {
     console.log('Auth still loading...');
     return loading;
   }
-  if (isAuth) return <>{children}</>;
+  if (isAuth || isGuest) return <>{children}</>;
 
   console.log('Redirecting to unauthenticated state.');
   return <Redirect href={href} />;
