@@ -109,7 +109,7 @@ export const ANIMATIONS = {
     frog_drinking: {
         width: 64,
         height: 64,
-        frameCount: 60,
+        frameCount: 59,
         fps: 8,
         source: require('@assets/pets/frog/frog_drinking.png'),
     },
