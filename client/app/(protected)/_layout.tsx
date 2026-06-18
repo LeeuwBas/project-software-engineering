@@ -4,7 +4,7 @@ import { Slot } from 'expo-router';
 
 export default function AppLayout() {
   return (
-    <RequireAuth href={'/pet-select'}>
+    <RequireAuth>
       <AppProvider>
         <Slot />
       </AppProvider>

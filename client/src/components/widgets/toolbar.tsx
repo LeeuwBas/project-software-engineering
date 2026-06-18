@@ -49,12 +49,12 @@ export default function Toolbar({}: {}) {
   const [draftGoals, setDraftGoals] = useState<GoalModules>(goals);
   const steps = 6000;
 
-  function closeMenu() {
+  async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
       console.log('Save water goal: ' + draftGoals.water);
-      waterBridge.set(draftWater);
-      waterBridge.setGoal(draftGoals.water);
-      stepsBridge.setGoal(draftGoals.steps);
+      await waterBridge.set(draftWater);
+
+      await waterBridge.setGoal(draftGoals.water).then(() => stepsBridge.setGoal(draftGoals.steps));
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();

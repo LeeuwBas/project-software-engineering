@@ -59,7 +59,6 @@ function calculateDate(date: Date, stat: string = statPrefix) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-
     return `${stat}${year}-${month}-${day}`;
 }
 
@@ -89,7 +88,7 @@ async function getStatOn(day: string) {
  */
 export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, goalPrefix)
+        (key) => key.startsWith(goalPrefix) && key <= calculateDate(day, goalPrefix)
     );
 
     let data: StatLine | null = null;
@@ -132,7 +131,7 @@ export async function setNewGoal<K extends keyof StatLine>(
     if (oldGoal === null || typeof oldGoal === 'number') {
         oldGoal = createStatLine();
     }
-    oldGoal[statName as keyof StatLine] = goal;
+    oldGoal[statName] = goal;
     AsyncStorage.setItem(today, JSON.stringify(oldGoal));
     await markSyncRequired(statName, true, date);
 }
