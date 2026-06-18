@@ -30,5 +30,7 @@ export default function RequireNoAuth({
     return loading;
   }
   if (!isAuth) return <>{children}</>;
+
+  console.log('Redirecting to authenticated state.');
   return <Redirect href={href} />;
 }

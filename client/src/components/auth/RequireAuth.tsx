@@ -22,7 +22,12 @@ export default function RequireAuth({
 }) {
   const isAuth = useIsAuth();
   const isLoading = useIsLoading();
-  if (isLoading) return loading;
+  if (isLoading) {
+    console.log('Auth still loading...');
+    return loading;
+  }
   if (isAuth) return <>{children}</>;
+
+  console.log('Redirecting to unauthenticated state.');
   return <Redirect href={href} />;
 }
