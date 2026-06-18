@@ -35,10 +35,10 @@ export function useTutorial() {
     return { done, setTutorialDone, resetTutorial };
 }
 
-export function setPetName(petName: string) {
+export function savePetName(petName: string) {
     console.log(`not yet implemented, but ${petName} is a good name`);
 }
 
-export function setUserName(userName: string) {
+export function saveUserName(userName: string) {
     console.log(`not yet implemented, but ${userName} is an okay name`);
 }
