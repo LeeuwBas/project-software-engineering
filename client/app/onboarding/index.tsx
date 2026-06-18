@@ -4,7 +4,7 @@ import { AccountCreationStep } from '@/components/onboarding/AccountCreationStep
 import ModuleConfigStep from '@/components/onboarding/ModuleConfigStep';
 import ModuleSelectionStep from '@/components/onboarding/ModuleSelectionStep';
 import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
-import { WelcomeStep } from '@/components/onboarding/WelcomeStep';
+// import { WelcomeStep } from '@/components/onboarding/WelcomeStep';
 
 import { ImageBackground } from 'expo-image';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'

@@ -24,11 +24,9 @@ export function AccountCreationStep({ onNext }: Props) {
   const [password, setPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
-
   const [loading, setLoading] = React.useState<Boolean>(false);
 
   const { signIn } = useAuth();
-
   const { resetTutorial } = useTutorial();
 
   const passwordInputRef = React.useRef<TextInput>(null);
