@@ -15,7 +15,7 @@ const NUM_PETS = 3;
 export default function PetSelection() {
   const router = useRouter();
   const auth = useAuth();
-  const isLoggedIn = auth.isAuthenticated;
+  const isLoggedIn = auth.isAuthenticated || auth.isGuest;
   const { pet, setPet, savePet } = usePet();
   const [draftPet, setPetId] = useState(pet);
 
