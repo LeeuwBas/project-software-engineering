@@ -15,6 +15,13 @@ export default function Module({
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = (goal?.toString().length ?? 0) * 3;
 
+  const PlusButton =
+    setValue !== undefined && value !== undefined ? (
+      <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
+        <Plus size={20} />
+      </Button>
+    ) : null;
+
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center gap-2">
@@ -40,25 +47,15 @@ export default function Module({
             </View>
           )}
           {/* Plus button */}
-          {setValue !== undefined &&
-            value !== undefined &&
+          {PlusButton &&
             (id === 'water' ? (
               <AttachStep index={3} style={{ alignSelf: 'center' }}>
-                <Button
-                  variant="outline"
-                  disabled={value === goal}
-                  onPress={() => setValue(value + 1)}>
-                  <Plus size={20} />
-                </Button>
+                {PlusButton}
               </AttachStep>
             ) : (
-              <Button
-                variant="outline"
-                disabled={value === goal}
-                onPress={() => setValue(value + 1)}>
-                <Plus size={20} />
-              </Button>
+              PlusButton
             ))}
+
           {onPress !== undefined && buttonString !== undefined && (
             <Button variant="outline" className="py-0" onPress={onPress}>
               <AppText>{buttonString}</AppText>
