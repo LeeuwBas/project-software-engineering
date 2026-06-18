@@ -22,11 +22,12 @@ export function AccountCreationStep({ onNext }: Props) {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
+
   const [loading, setLoading] = React.useState<Boolean>(false);
 
   const { signIn } = useAuth();
+
   const { resetTutorial } = useTutorial();
 
   const passwordInputRef = React.useRef<TextInput>(null);
@@ -44,6 +45,8 @@ export function AccountCreationStep({ onNext }: Props) {
     // and update the error state. As soon as the error state is updated,
     // the page is 'reloaded' and the error message is displayed to the user.
     setLoading(true);
+
+    const username = "placeholder"
 
     try {
       const response = await fetch(`${API_ENDPOINT}/users/`, {
@@ -85,69 +88,53 @@ export function AccountCreationStep({ onNext }: Props) {
             <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
           </CardHeader>
           <CardContent className="gap-6">
-            <View className="gap-6">
-              {errors.general && <AppText className="font-bold">{errors.general[0]}</AppText>}
-              <View className="gap-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  placeholder="john@doe.com"
-                  keyboardType="email-address"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  onSubmitEditing={onEmailSubmitEditing}
-                  returnKeyType="next"
-                  submitBehavior="submit"
-                  onChangeText={setEmail}
-                />
-                {errors.email && <AppText className="font-bold">{errors.email[0]}</AppText>}
-              </View>
-              <View className="gap-1.5">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  placeholder="Your username"
-                  autoComplete="username"
-                  autoCapitalize="none"
-                  returnKeyType="next"
-                  submitBehavior="submit"
-                  onChangeText={setUsername}
-                />
-                {errors.username && <AppText className="font-bold">{errors.username[0]}</AppText>}
-              </View>
-              <View className="gap-1.5">
-                <View className="flex-row items-center">
-                  <Label htmlFor="password">Password</Label>
-                </View>
-                <Input
-                  ref={passwordInputRef}
-                  id="password"
-                  placeholder="••••••••"
-                  secureTextEntry
-                  returnKeyType="send"
-                  onSubmitEditing={onSubmit}
-                  onChangeText={setPassword}
-                  autoComplete="new-password"
-                  textContentType="newPassword"
-                />
-                {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
-              </View>
-              {loading ? (
-                <Button className="w-full py-0" variant="outline" onPress={null}>
-                  <AppText>Loading...</AppText>
-                </Button>
-              ) : (
-                <Button
-                  className="w-full py-0"
-                  variant="default"
-                  onPress={() => {
-                    onSubmit();
-                  }}>
-                  <AppText>Continue</AppText>
-                </Button>
-              )}
-
+            {errors.general && <AppText className="font-bold">{errors.general[0]}</AppText>}
+            <View className="gap-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                placeholder="john@doe.com"
+                keyboardType="email-address"
+                autoComplete="email"
+                autoCapitalize="none"
+                onSubmitEditing={onEmailSubmitEditing}
+                returnKeyType="next"
+                submitBehavior="submit"
+                onChangeText={setEmail}
+              />
+              {errors.email && <AppText className="font-bold">{errors.email[0]}</AppText>}
             </View>
+            <View className="gap-1.5">
+              <View className="flex-row items-center">
+                <Label htmlFor="password">Password</Label>
+              </View>
+              <Input
+                ref={passwordInputRef}
+                id="password"
+                placeholder="••••••••"
+                secureTextEntry
+                returnKeyType="send"
+                onSubmitEditing={onSubmit}
+                onChangeText={setPassword}
+                autoComplete="new-password"
+                textContentType="newPassword"
+              />
+              {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
+            </View>
+            {loading ? (
+              <Button className="w-full py-0" variant="outline" onPress={null}>
+                <AppText>Loading...</AppText>
+              </Button>
+            ) : (
+              <Button
+                className="w-full py-0"
+                variant="default"
+                onPress={() => {
+                  onSubmit();
+                }}>
+                <AppText>Sign Up & Continue</AppText>
+              </Button>
+            )}
           </CardContent>
         </Card>
       </KeyboardAvoidingView>

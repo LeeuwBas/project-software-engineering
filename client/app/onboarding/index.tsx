@@ -4,7 +4,7 @@ import { AccountCreationStep } from '@/components/onboarding/AccountCreationStep
 import ModuleConfigStep from '@/components/onboarding/ModuleConfigStep';
 import ModuleSelectionStep from '@/components/onboarding/ModuleSelectionStep';
 import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
-// import { WelcomeStep } from '@/components/onboarding/WelcomeStep';
+import { PetNamingStep } from '@/components/onboarding/PetNamingStep';
 
 import { ImageBackground } from 'expo-image';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
@@ -19,6 +19,15 @@ export default function Onboarding() {
       currentStep = (
         <PetSelectionStep
           onNext={nextStep}
+        />
+      );
+      break;
+
+    case 'pet-naming':
+      currentStep = (
+        <PetNamingStep
+          onNext={nextStep}
+          onBack={previousStep}
         />
       );
       break;
@@ -47,10 +56,6 @@ export default function Onboarding() {
         />
       );
       break;
-
-    // case 'welcome':
-    //   currentStep = <WelcomeStep />;
-    //   break;
 
     default:
       currentStep = null;

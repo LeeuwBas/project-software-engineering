@@ -3,10 +3,10 @@ import { OnboardingStep } from '@/lib/onboarding/types';
 
 const STEP_ORDER: OnboardingStep[] = [
   'pet-selection',
+  'pet-naming',
   'account',
   'module-selection',
   'module-config',
-  // 'welcome',
 ];
 
 export function useOnboarding() {
