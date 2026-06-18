@@ -41,7 +41,7 @@ export type ModuleProps = {
 };
 
 export const MODULES = [
-    { id: 'water', icon: Glass, color: '#74ccf4', isGoaled: true },
-    { id: 'steps', icon: Shoe, color: '#b5ff00', isGoaled: true },
-    { id: 'stress', icon: Stress, color: 'red', isGoaled: false },
+    { id: 'Water', icon: Glass, color: '#74ccf4', isGoaled: true, borderColor: '#15a4e6' },
+    { id: 'Steps', icon: Shoe, color: '#81c381', isGoaled: true, borderColor: '#22a022' },
+    { id: 'Stress', icon: Stress, color: '#ff9699', isGoaled: false,  borderColor: '#b41b21' },
 ];
