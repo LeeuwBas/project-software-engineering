@@ -1,9 +1,9 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { ModuleProps } from '@/lib/types';
-import { Minus, Plus } from 'lucide-react-native';
+import { Minus, Plus, ThumbsDown, ThumbsUp } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
-import { View } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 
 export default function Module({
@@ -15,27 +15,17 @@ export default function Module({
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = (goal?.toString().length ?? 0) * 3;
 
-  const PlusButton =
-    setValue !== undefined && value !== undefined ? (
-      <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
-        <Plus size={20} />
-      </Button>
-    ) : null;
-
   return (
     <View className="flex w-full flex-row items-center justify-between">
-      <View className="flex flex-row items-center gap-2">
+      <View className="flex flex-row items-center gap-2 justify-between">
         <Icon height={30} width={30} color={iconColor} />
-
-        <View className="mx-auto flex-1 flex-row items-center justify-center">
-          {/* Minus button */}
-          {setValue !== undefined && value !== undefined && (
+        {/* Water module */}
+        {id === 'water' && setValue !== undefined && value !== undefined && goal !== undefined && (
+          <View className="mx-auto flex-1 flex-row items-center justify-center">
             <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
-          )}
-          {/* Value */}
-          {value !== undefined && goal !== undefined && (
+
             <View className="flex-row items-center">
               <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
                 {value}
@@ -45,23 +35,70 @@ export default function Module({
                 {goal}
               </AppText>
             </View>
-          )}
-          {/* Plus button */}
-          {PlusButton &&
-            (id === 'water' ? (
-              <AttachStep index={3} style={{ alignSelf: 'center' }}>
-                {PlusButton}
-              </AttachStep>
-            ) : (
-              PlusButton
-            ))}
 
-          {onPress !== undefined && buttonString !== undefined && (
+            <AttachStep index={3} style={{ alignSelf: 'center' }}>
+              <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
+                <Plus size={20} />
+              </Button>
+            </AttachStep>
+          </View>
+        )}
+
+        {id === 'steps' && (
+          <View className="mx-auto flex-1 flex-row items-center justify-center">
+              <AppText className="text-right text-base font-bold">
+                {value}
+              </AppText>
+              <AppText className="w-4 text-center text-base font-bold"> / </AppText>
+              <AppText className="text-left text-base font-bold">
+                {goal}
+              </AppText>
+            </View>
+        )}
+
+        {id === 'stress' && (
+          <View className="mx-auto flex-1 flex-row items-center justify-center">
             <Button variant="outline" className="py-0" onPress={onPress}>
               <AppText>{buttonString}</AppText>
             </Button>
-          )}
-        </View>
+          </View>
+        )}
+
+        {id === 'food' && setValue !== undefined && value !== undefined && goal !== undefined && (
+          <View className="mx-auto flex-1 flex-row items-center justify-center">
+            <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
+              <Minus size={20} />
+            </Button>
+
+            <View className="flex-row items-center">
+              <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
+                {value}
+              </AppText>
+              <AppText className="w-4 text-center text-base font-bold"> / </AppText>
+              <AppText style={{ width: valueWidth * 4 }} className="text-left text-base font-bold">
+                {goal}
+              </AppText>
+            </View>
+
+            <AttachStep index={3} style={{ alignSelf: 'center' }}>
+              <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
+                <Plus size={20} />
+              </Button>
+            </AttachStep>
+          </View>
+        )}
+
+        {id === 'sleep' && setValue !== undefined && (
+          <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
+            <Pressable onPress={() => setValue(0)} className={`${value === 1 ? 'opacity-15' : ''}`}>
+              <ThumbsDown fill={"#FF0000"} size={30} />
+            </Pressable>
+
+            <Pressable onPress={() => setValue(1)} className={`${value === 1 ? '' : 'opacity-15'}`}>
+              <ThumbsUp fill={"#00FF00"}  size={30}/>
+            </Pressable>
+          </View>
+        )}
       </View>
     </View>
   );

@@ -65,22 +65,22 @@ export const ANIMATIONS = {
 
     // frog pet assets
     frog_blink: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 4,
         fps: 8,
         source: require('@assets/pets/frog/frog_blink.png'),
     },
     frog_breath_happy: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 40,
         fps: 8,
         source: require('@assets/pets/frog/frog_breath_happy.png'),
     },
     frog_breath_neutral: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         frameCount: 40,
         fps: 8,
         source: require('@assets/pets/frog/frog_breath_neutral.png'),
@@ -98,6 +98,13 @@ export const ANIMATIONS = {
         frameCount: 61,
         fps: 8,
         source: require('@assets/pets/frog/frog_drinking.png'),
+    },
+    frog_eating: {
+        width: 64,
+        height: 64,
+        frameCount: 57,
+        fps: 8,
+        source: require('@assets/pets/frog/frog_eating.png'),
     },
 
     // onigiri pet assets

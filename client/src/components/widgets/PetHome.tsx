@@ -2,7 +2,9 @@ import { Animation } from '@/components/animations/renderer';
 import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
 import { useWater } from '@/lib/api/WaterBridge';
-import { useEffect, useState } from 'react';
+import { useFood } from '@/lib/api/FoodBridge';
+import { useSleep } from '@/lib/api/SleepBridge';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 /**
@@ -33,12 +35,17 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   const idleAnim = `${source}_breath_happy` as AnimationName;
   const blinkAnim = `${source}_blink` as AnimationName;
   const waterAnim = `${source}_drinking` as AnimationName;
+  const foodAnim = `${source}_eating` as AnimationName;
 
   const [currentAnim, setCurrentAnim] = useState<AnimationName>(idleAnim);
   const [animIteration, setAnimIteration] = useState(1);
 
   const waterValue = useWater() ?? null;
+  const foodValue = useFood() ?? null;
+  const sleepValue = useSleep() ?? null;
+  // const prevValues = useRef({ waterValue, foodValue, sleepValue})
   const [prevWater, setPrevWater] = useState<number | null>(null);
+  const [prevFood, setPrevFood] = useState<number | null>(null);
 
   // Sync animation when the pet or base idle animation changes
   useEffect(() => {
@@ -49,20 +56,43 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   // When water value changes play water animation once
   // Has exception for when watervalue is loaded at render and when water value is lower than previous value
   useEffect(() => {
+    let changed_anim: AnimationName[] = []
+
     if (
       prevWater !== null &&
       waterValue != null &&
       waterValue !== prevWater &&
       waterValue >= prevWater
     ) {
-      setAnimIteration(1);
-      setCurrentAnim(waterAnim);
+      // setAnimIteration(1);
+      // setCurrentAnim(waterAnim);
+      changed_anim.push(waterAnim)
+    } 
+
+    if (
+      prevFood !== null &&
+      foodValue != null &&
+      foodValue !== prevFood &&
+      foodValue >= prevFood
+    ) {
+      // setAnimIteration(1);
+      // setCurrentAnim(waterAnim);
+      changed_anim.push(foodAnim)
+    } 
+
+    if (changed_anim.length > 0) {
+      
+      setAnimIteration(1)
+      setCurrentAnim(changed_anim[Math.floor(Math.random() * changed_anim.length)])
     } else {
-      setCurrentAnim(idleAnim);
-      setAnimIteration(1);
+      setAnimIteration(1)
+      setCurrentAnim(idleAnim)
     }
+    
     setPrevWater(waterValue);
-  }, [waterValue]);
+    setPrevFood(foodValue);
+
+  }, [waterValue, foodValue, sleepValue]);
 
   // Goes back to idle after specified interation counts in animIteration
   // Starts new animation when either current animation, idle animation or watervalue changes
