@@ -1,7 +1,8 @@
 import { AppText } from '@/components/AppText';
-import { Modules } from '@/lib/types';
+import { GoalModules } from '@/lib/types';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
+import Food from '@assets/icons/module_icons/food.svg'
 import { TextInput, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
@@ -14,9 +15,10 @@ interface GoalInput {
 const GOALS: GoalInput[] = [
   { id: 'water', icon: Glass, maxValue: 99 },
   { id: 'steps', icon: Shoe, maxValue: 99999 },
+  { id: 'food', icon: Food, maxValue: 9}
 ];
 
-export default function GoalsView({ goals, setGoals }: { goals: Modules; setGoals: Function }) {
+export default function GoalsView({ goals, setGoals }: { goals: GoalModules; setGoals: Function }) {
   return (
     <View className="flex-col gap-2">
       <AppText className="text-lg font-bold">Goals:</AppText>
@@ -27,21 +29,21 @@ export default function GoalsView({ goals, setGoals }: { goals: Modules; setGoal
             keyboardType="numeric"
             inputMode="numeric"
             className="w-20 rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
-            value={String(goals[id as keyof Modules])}
+            value={String(goals[id as keyof GoalModules])}
             maxLength={maxValue.toString().length + 1}
             // On each key stroke, limit value
             onChangeText={(text) => {
               if (Number(text) > maxValue) text = String(maxValue);
-              setGoals((prev: Modules) => ({
+              setGoals((prev: GoalModules) => ({
                 ...prev,
                 [id]: text,
               }));
             }}
             // On exit keyboard
             onBlur={() =>
-              setGoals((prev: Modules) => ({
+              setGoals((prev: GoalModules) => ({
                 ...prev,
-                [id]: Math.ceil(Number(prev[id as keyof Modules])),
+                [id]: Math.ceil(Number(prev[id as keyof GoalModules])),
               }))
             }
           />

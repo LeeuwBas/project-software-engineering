@@ -1,8 +1,9 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { stepsBridge, waterBridge } from '@/lib/api/APIBridge';
+import { stepsBridge, waterBridge, foodBridge, sleepBridge } from '@/lib/api/APIBridge';
 import { useWater } from '@/lib/api/WaterBridge';
-import { Modules } from '@/lib/types';
+import { useFood } from '@/lib/api/FoodBridge';
+import { GoalModules} from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
 import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
@@ -14,15 +15,23 @@ import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
+import { useSleep } from '@/lib/api/SleepBridge';
+import { useSteps } from '@/lib/api/StepBridge';
 
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
   const water = useWater() ?? 0;
-  const goals: Modules = {
+  const food = useFood() ?? 0;
+  // const steps = useSteps() ?? 0;
+  const steps = 6000;
+  const sleep = useSleep() ?? 0;
+
+  const goals: GoalModules = {
     water: waterBridge.useGoal() ?? 0,
     steps: stepsBridge.useGoal() ?? 0,
+    food: foodBridge.useGoal() ?? 0,
   };
 
   const {
@@ -38,15 +47,22 @@ export default function Toolbar({}: {}) {
   } = useAppContext();
 
   const [draftWater, setDraftWater] = useState(water);
-  const [draftGoals, setDraftGoals] = useState<Modules>(goals);
-  const steps = 6000;
+  const [draftFood, setDraftFood] = useState(food);
+  const [draftSleep, setDraftSleep] = useState(sleep)
+  const [draftGoals, setDraftGoals] = useState<GoalModules>(goals);
 
-  function closeMenu() {
+  async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
+      await waterBridge.set(draftWater);
+      await foodBridge.set(draftFood);
+      await sleepBridge.set(draftSleep)
+
+      await waterBridge.setGoal(draftGoals.water).then(() => stepsBridge.setGoal(draftGoals.steps));
+      await foodBridge.setGoal(draftGoals.food)
       console.log('Save water goal: ' + draftGoals.water);
-      waterBridge.set(draftWater);
-      waterBridge.setGoal(draftGoals.water);
-      stepsBridge.setGoal(draftGoals.steps);
+      console.log("Save steps goal: " + draftGoals.steps);
+      console.log("Save food goal: " + draftGoals.food);
+
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
@@ -59,6 +75,8 @@ export default function Toolbar({}: {}) {
   useEffect(() => {
     if (menuOpen) {
       setDraftWater(water);
+      setDraftFood(food);
+      setDraftSleep(sleep)
       setDraftGoals(goals);
     }
   }, [menuOpen, water]);
@@ -75,6 +93,10 @@ export default function Toolbar({}: {}) {
           changeStressMenu();
           changeMenu();
         }}
+        food={draftFood}
+        setFood={setDraftFood}
+        sleep={draftSleep}
+        setSleep={setDraftSleep}
         goals={draftGoals}
         setGoals={setDraftGoals}
       />

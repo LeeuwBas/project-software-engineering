@@ -12,6 +12,7 @@ import { View, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 import { useTutorial } from '@/lib/settings';
+import { useAuth } from '@/lib/auth/AuthManager';
 
 export function SignUpForm() {
   const router = useRouter();
@@ -25,7 +26,8 @@ export function SignUpForm() {
   const [username, setUsername] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
-  const passwordInputRef = React.useRef<TextInput>(null);
+  const passwordInputRef = React.useRef<Input>(null);
+  const auth = useAuth();
   const { resetTutorial } = useTutorial();
 
   function onEmailSubmitEditing() {
@@ -61,6 +63,12 @@ export function SignUpForm() {
       console.error('Sign up request failed:', err);
       setErrors({ general: ['Could not reach the server.'] });
     }
+  }
+
+  async function onGuestSubmit() {
+    await auth.setGuest();
+    resetTutorial();
+    router.replace('/');
   }
 
   return (
@@ -135,6 +143,9 @@ export function SignUpForm() {
               </View>
               <Button className="w-full" onPress={onSubmit}>
                 <Text>Continue</Text>
+              </Button>
+              <Button className="w-full" onPress={onGuestSubmit}>
+                <Text>Continue as guest</Text>
               </Button>
 
               {/* - Begin placeholder for testing - */}

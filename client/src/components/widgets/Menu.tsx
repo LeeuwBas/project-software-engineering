@@ -4,19 +4,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { ModuleProps, Modules } from '@/lib/types';
+import { ModuleProps, GoalModules } from '@/lib/types';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
 import Stress from '@assets/icons/module_icons/stress.svg';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import Food from '@assets/icons/module_icons/food.svg';
+import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
 
 export default function Menu({
   water,
   setWater,
   steps,
   onStressPress,
+  food,
+  setFood,
+  sleep,
+  setSleep,
   goals,
   setGoals,
 }: {
@@ -24,8 +30,12 @@ export default function Menu({
   setWater: (water: number) => void;
   steps: number;
   onStressPress: () => void;
-  goals: Modules;
-  setGoals: (goals: Modules) => void;
+  food: number;
+  setFood: (food: number) => void;
+  sleep: number;
+  setSleep: (sleep: number) => void;
+  goals: GoalModules;
+  setGoals: (goals: GoalModules) => void;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
   // TODO: Add backend for retrieving name
@@ -52,6 +62,19 @@ export default function Menu({
       onPress: onStressPress,
       buttonString: 'Log Stress',
     },
+    {
+      id: 'food',
+      icon: Food,
+      value: food,
+      setValue: setFood,
+      goal: goals.food,
+    },
+    {
+      id: 'sleep',
+      icon: Sleep,
+      value: sleep,
+      setValue: setSleep,
+    }
   ];
 
   useEffect(() => {
@@ -66,6 +89,8 @@ export default function Menu({
     const final_goals = {
       water: Math.ceil(goals.water),
       steps: Math.ceil(goals.steps),
+      food: Math.ceil(goals.food),
+      sleep: false
     };
     setGoals(final_goals);
     if (water > goals.water) {

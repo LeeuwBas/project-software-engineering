@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('statistics', '0003_goals_steps_stats_steps'),
     ]

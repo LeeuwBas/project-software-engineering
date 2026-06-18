@@ -87,7 +87,7 @@ export async function queryApi(
 
     if (authenticate && (auth.isLoading || !auth.accessToken)) {
         console.log(
-            `Attempted authenticated request while unauthenticated (loading=${auth.isLoading})`
+            `Attempted authenticated request while unauthenticated (loading=${auth.isLoading},guest=${auth.isGuest})`
         );
         return null;
     }

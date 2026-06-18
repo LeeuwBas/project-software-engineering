@@ -27,9 +27,10 @@ export interface PetType {
     savePet: Function;
 }
 
-export interface Modules {
+export interface GoalModules {
     water: number;
     steps: number;
+    food: number;
 }
 
 export type ModuleProps = {
