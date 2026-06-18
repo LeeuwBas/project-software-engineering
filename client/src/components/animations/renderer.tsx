@@ -41,24 +41,24 @@ export function Animation({ animation, scale = 1, iteration_count=0 }: Animation
 
   // Calculates frame index in asset
   useFrameCallback(() => {
-  // const elapsed = performance.now() - startTime.value;
-  // const totalFramesElapsed = Math.floor((elapsed / 1000) * config.fps);
-
-  // const currentIteration = Math.floor(totalFramesElapsed / config.frameCount);
-  // iteration.value = currentIteration;
-
-  // // // Check if we have completed the requested non-zero iterations
-  // // if (iteration_count > 0 && currentIteration >= iteration_count) {
-  // //   // Lock strictly to the final frame of the final loop sequence
-  // //   frame.value = config.frameCount - 1;
-  // // } else {
-  // //   // Normal cycling logic for infinite (0) loops or uncompleted iterations
-  // //   frame.value = totalFramesElapsed % config.frameCount;
-  
-  // }
-
   const elapsed = performance.now() - startTime.value;
-  frame.value = Math.round((elapsed / 1000) * config.fps) % config.frameCount;
+  const totalFramesElapsed = Math.floor((elapsed / 1000) * config.fps);
+
+  const currentIteration = Math.floor(totalFramesElapsed / config.frameCount);
+  iteration.value = currentIteration;
+
+  // Check if we have completed the requested non-zero iterations
+  if (iteration_count > 0 && currentIteration >= iteration_count) {
+    // Lock strictly to the final frame of the final loop sequence
+    frame.value = config.frameCount - 1;
+  } else {
+    // Normal cycling logic for infinite (0) loops or uncompleted iterations
+    frame.value = totalFramesElapsed % config.frameCount;
+  
+  }
+
+  // const elapsed = performance.now() - startTime.value;
+  // frame.value = Math.round((elapsed / 1000) * config.fps) % config.frameCount;
   });
 
   // Samples frame based on index and frame size from asset
