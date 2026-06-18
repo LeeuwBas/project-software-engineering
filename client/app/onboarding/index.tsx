@@ -7,7 +7,7 @@ import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 import { PetNamingStep } from '@/components/onboarding/PetNamingStep';
 
 import { ImageBackground } from 'expo-image';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Onboarding() {
   const { step, nextStep, previousStep } = useOnboarding();
@@ -16,45 +16,23 @@ export default function Onboarding() {
 
   switch (step) {
     case 'pet-selection':
-      currentStep = (
-        <PetSelectionStep
-          onNext={nextStep}
-        />
-      );
+      currentStep = <PetSelectionStep onNext={nextStep} />;
       break;
 
     case 'pet-naming':
-      currentStep = (
-        <PetNamingStep
-          onNext={nextStep}
-          onBack={previousStep}
-        />
-      );
+      currentStep = <PetNamingStep onNext={nextStep} onBack={previousStep} />;
       break;
 
     case 'account':
-      currentStep = (
-        <AccountCreationStep
-          onNext={nextStep}
-        />
-      );
+      currentStep = <AccountCreationStep onNext={nextStep} />;
       break;
 
     case 'module-selection':
-      currentStep = (
-        <ModuleSelectionStep
-          onNext={nextStep}
-        />
-      );
+      currentStep = <ModuleSelectionStep onNext={nextStep} />;
       break;
 
     case 'module-config':
-      currentStep = (
-        <ModuleConfigStep
-          onNext={nextStep}
-          onBack={previousStep}
-        />
-      );
+      currentStep = <ModuleConfigStep onNext={nextStep} onBack={previousStep} />;
       break;
 
     default:
@@ -65,12 +43,9 @@ export default function Onboarding() {
     <ImageBackground
       source={require('@assets/background_login.png')}
       contentFit="cover"
-      style={{ flex: 1 }}
-    >
+      style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <SafeAreaView className="size-full justify-center">
-          {currentStep}
-        </SafeAreaView>
+        <SafeAreaView className="size-full justify-center">{currentStep}</SafeAreaView>
       </SafeAreaProvider>
     </ImageBackground>
   );

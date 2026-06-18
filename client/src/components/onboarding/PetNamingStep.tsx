@@ -29,7 +29,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
-        <View style={{ flex: 0.3 }}/>
+        <View style={{ flex: 0.3 }} />
 
         <Card className="mx-4 border-border shadow-none">
           <CardHeader>

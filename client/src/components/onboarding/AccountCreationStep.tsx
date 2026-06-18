@@ -46,7 +46,7 @@ export function AccountCreationStep({ onNext }: Props) {
     // the page is 'reloaded' and the error message is displayed to the user.
     setLoading(true);
 
-    const username = "placeholder"
+    const username = 'placeholder';
 
     try {
       const response = await fetch(`${API_ENDPOINT}/users/`, {
@@ -82,7 +82,7 @@ export function AccountCreationStep({ onNext }: Props) {
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={100} style={{ flex: 1 }}>
-        <View style={{ flex: 0.3 }}></View>
+        <View style={{ flex: 0.3 }} />
         <Card className="mx-4 border-border shadow-none">
           <CardHeader>
             <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
