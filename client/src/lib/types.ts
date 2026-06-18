@@ -1,6 +1,8 @@
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
 import Stress from '@assets/icons/module_icons/stress.svg';
+import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
+import Food from '@assets/icons/module_icons/food.svg';
 import { Dispatch, SetStateAction } from 'react';
 import { SvgProps } from 'react-native-svg';
 
@@ -40,8 +42,48 @@ export type ModuleProps = {
     buttonString?: string;
 };
 
-export const MODULES = [
-    { id: 'Water', icon: Glass, color: '#74ccf4', isGoaled: true, borderColor: '#15a4e6' },
-    { id: 'Steps', icon: Shoe, color: '#81c381', isGoaled: true, borderColor: '#22a022' },
-    { id: 'Stress', icon: Stress, color: '#ff9699', isGoaled: false,  borderColor: '#b41b21' },
+export type ModuleDefinition = {
+  id: string,
+  key: string;
+  icon: React.ComponentType<any>;
+  color: string;
+  borderColor: string;
+};
+
+export const MODULES: ModuleDefinition[] = [
+  {
+    id: 'Water',
+    key: 'water',
+    icon: Glass,
+    color: '#74ccf4',
+    borderColor: '#15a4e6',
+  },
+  {
+    id: 'Steps',
+    key: 'steps',
+    icon: Shoe,
+    color: '#81c381',
+    borderColor: '#22a022',
+  },
+  {
+    id: 'Stress',
+    key: 'stress',
+    icon: Stress,
+    color: '#ff9699',
+    borderColor: '#b41b21',
+  },
+  {
+    id: 'Sleep',
+    key: 'sleep',
+    icon: Sleep,
+    color: '#ff96f6',
+    borderColor: '#a21bb4',
+  },
+  {
+    id: 'Meals',
+    key: 'food',
+    icon: Food,
+    color: '#ffe396',
+    borderColor: '#b47e1b',
+  },
 ];

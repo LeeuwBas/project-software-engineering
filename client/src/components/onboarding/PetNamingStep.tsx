@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { savePetName, saveUserName } from '@/lib/settings';
 
 type Props = {
   onNext?: () => void;
@@ -19,9 +20,8 @@ export function PetNamingStep({ onNext, onBack }: Props) {
   const maxNameLength = 16;
 
   function confirm() {
-    // I am in dire need of API endpoints
-    // setPetName(petName);
-    // setUserName(userName);
+    savePetName(petName);
+    saveUserName(userName);
 
     onNext?.();
   }

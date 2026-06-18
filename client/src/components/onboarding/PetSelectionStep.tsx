@@ -23,6 +23,8 @@ export function PetSelectionStep({ onNext }: Props) {
   function confirm() {
     setPet(draftPet);
     savePet(draftPet);
+
+    onNext?.();
   }
 
   return (
@@ -57,7 +59,6 @@ export function PetSelectionStep({ onNext }: Props) {
         <Button
           onPress={() => {
             confirm();
-            onNext?.();
           }}>
           <AppText className="font-bold text-white">Choose companion</AppText>
         </Button>

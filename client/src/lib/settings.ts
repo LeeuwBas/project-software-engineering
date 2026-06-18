@@ -43,12 +43,13 @@ export function saveUserName(userName: string) {
     console.log(`not yet implemented, but ${userName} is an okay name`);
 }
 
-export function setActiveModules(modules: string[]) {
+export function setActiveModules(modules: any) {
     console.log(`you selected ${modules}`);
 }
 
 export function getActiveModules() {
     return {
+        "stress": false,
         "water": true,
         "steps": false, // step counter is scary
         "sleep": true,

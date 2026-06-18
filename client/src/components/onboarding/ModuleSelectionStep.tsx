@@ -1,49 +1,101 @@
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
+
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { getActiveModules, setActiveModules } from '@/lib/settings';
 import { MODULES } from '@/lib/types';
-import { Pressable, View } from 'react-native';
 
 type Props = {
   onNext?: () => void;
-  onBack?: () => void;
 };
 
+type ActiveModules = Record<string, boolean>;
+
 export default function ModuleSelectionStep({ onNext }: Props) {
-  const stressModule = MODULES.find((module) => module.id === 'Stress');
+  const [activeModules, setModuleState] = useState<ActiveModules>({});
+
+  useEffect(() => {
+    setModuleState(getActiveModules());
+  }, []);
+
+  function toggleModule(moduleKey: string) {
+    setModuleState((current) => ({
+      ...current,
+      [moduleKey]: !current[moduleKey],
+    }));
+  }
+
+  function isSelected(moduleKey: string) {
+    return activeModules[moduleKey] ?? false;
+  }
+
+  function saveModules() {
+    setActiveModules(activeModules);
+    onNext?.();
+  }
+
+  const selectedCount = Object.values(activeModules).filter(Boolean).length;
+
+  const stressModule = MODULES.find((module) => module.key === 'stress');
+  const habitModules = MODULES.filter((module) => module.key !== 'stress');
 
   return (
-    <View className="h-full items-center justify-center gap-4 px-4">
-      <AppText className="text-bold">Do you want to track stress?</AppText>
-      {stressModule && (
-        <View key={stressModule.id} className="w-full justify-center">
+    <View className="h-full justify-center gap-6 px-4">
+      <View className="gap-3">
+        <AppText className="text-center text-xl font-bold">
+          Would you like to keep track of stress?
+        </AppText>
+
+        {stressModule && (
           <Pressable
-            className={`w-full flex-row rounded-xl border-4 p-6 gap-4`}
-            style={{ backgroundColor: stressModule.color, borderColor: stressModule.borderColor }}>
-            <stressModule.icon width={32} height={32} style={{ marginTop: -4 }}></stressModule.icon>
+            onPress={() => toggleModule(stressModule.key)}
+            className="flex-row gap-4 rounded-xl border-4 p-6"
+            style={{
+              backgroundColor: isSelected(stressModule.key)
+                ? stressModule.borderColor
+                : stressModule.color,
+              borderColor: isSelected(stressModule.key)
+                ? stressModule.color
+                : stressModule.borderColor,
+              opacity: isSelected(stressModule.key) ? 1 : 0.75,
+            }}>
+            <stressModule.icon width={32} height={32} />
+
             <AppText className="text-xl font-bold">{stressModule.id}</AppText>
           </Pressable>
-        </View>
-      )}
-
-      <AppText>Which habits do you want to track?</AppText>
-      <View className="w-full gap-4">
-        {MODULES.filter((module) => module.id !== 'Stress').map((module) => (
-          <View key={module.id} className="w-full justify-center">
-            <Pressable
-              className={`w-full flex-row rounded-xl border-4 p-6 gap-4`}
-              style={{ backgroundColor: module.color, borderColor: module.borderColor }}>
-              <module.icon width={32} height={32} style={{ marginTop: -4 }}></module.icon>
-              <AppText className="text-xl font-bold">{module.id}</AppText>
-            </Pressable>
-          </View>
-        ))}
+        )}
       </View>
 
-      {onNext && (
-        <Button className="py-0" onPress={onNext}>
-          <AppText>Next</AppText>
+      <View className="gap-3">
+        <AppText className="text-center text-xl font-bold">
+          Which habits would you like to track?
+        </AppText>
+
+        <View className="gap-4">
+          {habitModules.map((module) => (
+            <Pressable
+              key={module.key}
+              onPress={() => toggleModule(module.key)}
+              className="flex-row gap-4 rounded-xl border-4 p-6"
+              style={{
+                backgroundColor: isSelected(module.key) ? module.borderColor : module.color,
+                borderColor: isSelected(module.key) ? module.color : module.borderColor,
+                opacity: isSelected(module.key) ? 1 : 0.75,
+              }}>
+              <module.icon width={32} height={32} />
+
+              <AppText className="text-xl font-bold">{module.id}</AppText>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
+      <View className="gap-2">
+        <Button className="py-0" disabled={selectedCount === 0} onPress={saveModules}>
+          <AppText>Continue</AppText>
         </Button>
-      )}
+      </View>
     </View>
   );
 }
