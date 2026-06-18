@@ -59,7 +59,7 @@ export function PetSelectionStep({ onNext }: Props) {
             confirm();
             onNext?.();
           }}>
-          <AppText className="font-bold text-white">Choose Pet</AppText>
+          <AppText className="font-bold text-white">Choose companion</AppText>
         </Button>
 
         <Button variant="outline" onPress={() => router.push('/login')}>
