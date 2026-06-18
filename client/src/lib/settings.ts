@@ -34,3 +34,11 @@ export function useTutorial() {
     const done = useSettingsStore((s) => s.settings.has_done_tutorial);
     return { done, setTutorialDone, resetTutorial };
 }
+
+export function setPetName(petName: string) {
+    console.log(`not yet implemented, but ${petName} is a good name`);
+}
+
+export function setUserName(userName: string) {
+    console.log(`not yet implemented, but ${userName} is an okay name`);
+}
