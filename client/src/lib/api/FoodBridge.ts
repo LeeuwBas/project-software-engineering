@@ -13,7 +13,7 @@ const foodGoalState = createNewState()
  *
  * Example:
  * ```tsx
- * const food = use() ?? 0
+ * const food = useFood() ?? 0
  * return <AppText>{food}</AppText>
  * ```
  *
@@ -23,10 +23,14 @@ export function useFood() {
     return useValue(foodState);
 }
 
-export function createfoodBridge(): LoadableBridge<foodBridge> {
+export function createFoodBridge(): LoadableBridge<FoodBridge> {
     return {
-        load: () => Promise.all([loadZustand(foodState, 'food'), loadGoalZustand(foodGoalState, "food")]),
-        getRaw: async (date) => (await getStatistic('food', date ?? new Date())) ?? 0,
+        load: () =>
+            Promise.all([
+                loadZustand(foodState, 'food'),
+                loadGoalZustand(foodGoalState, 'food'),
+            ]),
+        useCurrent: () => useFood(),
         set: (value) => setZustand(foodState, 'food', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
             return (
@@ -34,7 +38,9 @@ export function createfoodBridge(): LoadableBridge<foodBridge> {
                 new Array<number>(bins).fill(0)
             );
         },
-        getGoal: async (date) => (await getGoals("food", date) ?? 0),
-        setGoal: (value) => setGoalZustand(foodGoalState, "food", value),
+        getSummary: async (start, end) => await getStatisticSummary('food', start, end),
+        getGoal: async (date) => (await getGoals('food', date)) ?? 0,
+        setGoal: (value) => setGoalZustand(foodGoalState, 'food', value),
+        useGoal: () => useValue(foodGoalState),
     };
 }
