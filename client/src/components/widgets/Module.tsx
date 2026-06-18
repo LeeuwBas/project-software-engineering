@@ -1,10 +1,12 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { ModuleProps } from '@/lib/types';
-import { Minus, Plus, ThumbsDown, ThumbsUp } from 'lucide-react-native';
+import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { View, Pressable } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg'
+import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg'
 
 export default function Module({
   props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
@@ -91,11 +93,11 @@ export default function Module({
         {id === 'sleep' && setValue !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
             <Pressable onPress={() => setValue(0)} className={`${value === 1 ? 'opacity-15' : ''}`}>
-              <ThumbsDown fill={"#FF0000"} size={30} />
+              <ThumbsDown width={30} height={30} color={"#b41b21"} />
             </Pressable>
 
             <Pressable onPress={() => setValue(1)} className={`${value === 1 ? '' : 'opacity-15'}`}>
-              <ThumbsUp fill={"#00FF00"}  size={30}/>
+              <ThumbsUp width={30} height={30} color={"#22a022"} />
             </Pressable>
           </View>
         )}
