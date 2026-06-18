@@ -4,10 +4,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import CalendarOverview from '@/components/widgets/CalendarOverview';
 import { useAppContext } from '@/lib/AppContext';
 import { Tab, TabId } from '@/lib/stats/statistics-types';
-import { CalendarDays, GlassWater, Footprints } from 'lucide-react-native';
+import Calender from '@assets/icons/module_icons/calendar.svg';
+import Glass from '@assets/icons/module_icons/glass.svg';
+import Shoe from '@assets/icons/module_icons/shoe.svg';
+import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useColorScheme } from 'nativewind';
 
 export default function Stats({}: {}) {
   const { statsOpen } = useAppContext();
@@ -26,9 +28,9 @@ export default function Stats({}: {}) {
   }
 
   const labels: Tab[] = [
-    { id: 'calender', icon: CalendarDays },
-    { id: 'water', icon: GlassWater },
-    { id: 'steps', icon: Footprints },
+    { id: 'calender', icon: Calender },
+    { id: 'water', icon: Glass },
+    { id: 'steps', icon: Shoe },
   ];
 
   return (
