@@ -1,7 +1,7 @@
-import { Pressable, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { MODULES } from '@/lib/types';
+import { Pressable, View } from 'react-native';
 
 type Props = {
   onNext?: () => void;
@@ -11,10 +11,14 @@ type Props = {
 export default function ModuleSelectionStep({ onNext, onBack }: Props) {
   return (
     <View className="flex-1 items-center justify-center gap-4 px-4">
-      <AppText>Do you want to track stress?</AppText>
-      <Pressable className="w-full rounded-xl flex-row bg-red-400 border-red-800 border-4 p-6">
-        <AppText className='text-xl font-bold'>Stress</AppText>
-      </Pressable>
+      {MODULES.map((module) => (
+        <View>
+          <AppText>Do you want to track {module.id}?</AppText>
+          <Pressable className={`w-full flex-row rounded-xl border-4 p-6 bg-[${module.color}]`}>
+            <AppText className="text-xl font-bold">{module.id}</AppText>
+          </Pressable>
+        </View>
+      ))}
 
       {onNext && (
         <Button className="py-0" onPress={onNext}>
