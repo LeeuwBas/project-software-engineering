@@ -1,7 +1,8 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { waterBridge } from '@/lib/api/APIBridge';
+import { stepsBridge, waterBridge } from '@/lib/api/APIBridge';
 import { useWater } from '@/lib/api/WaterBridge';
+import { Modules } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
 import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
@@ -9,15 +10,21 @@ import StatsIcon from '@assets/icons/toolbar_icons/stats.svg';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
-import { AttachStep } from 'react-native-spotlight-tour';
 import StressMenu from './StressMenu';
 
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
   const water = useWater() ?? 0;
+  const goals: Modules = {
+    water: waterBridge.useGoal() ?? 0,
+    steps: stepsBridge.useGoal() ?? 0,
+  };
+
   const {
     statsOpen,
     menuOpen,
@@ -29,11 +36,18 @@ export default function Toolbar({}: {}) {
     changeStressMenu,
     sendStress,
   } = useAppContext();
+
   const [draftWater, setDraftWater] = useState(water);
+  const [draftGoals, setDraftGoals] = useState<Modules>(goals);
+  const steps = 6000;
 
   function closeMenu() {
     if (menuOpen || stressMenuOpen) {
+      console.log('Save water goal: ' + draftGoals.water);
       waterBridge.set(draftWater);
+      waterBridge.setGoal(draftGoals.water);
+      stepsBridge.setGoal(draftGoals.steps);
+
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
     } else {
@@ -45,6 +59,7 @@ export default function Toolbar({}: {}) {
   useEffect(() => {
     if (menuOpen) {
       setDraftWater(water);
+      setDraftGoals(goals);
     }
   }, [menuOpen, water]);
 
@@ -55,10 +70,13 @@ export default function Toolbar({}: {}) {
       <Menu
         water={draftWater}
         setWater={setDraftWater}
+        steps={steps}
         onStressPress={() => {
           changeStressMenu();
           changeMenu();
         }}
+        goals={draftGoals}
+        setGoals={setDraftGoals}
       />
       <Settings />
 

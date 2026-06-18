@@ -1,23 +1,79 @@
+import { AppText } from '@/components/AppText';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import GoalsView from '@/components/widgets/GoalsView';
+import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
+import { ModuleProps, Modules } from '@/lib/types';
+import Glass from '@assets/icons/module_icons/glass.svg';
+import Shoe from '@assets/icons/module_icons/shoe.svg';
+import Stress from '@assets/icons/module_icons/stress.svg';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
-import StepsWidget from './StepsWidget';
-import WaterWidget from './WaterWidget';
-import StressWidget from './StressWidget';
 
 export default function Menu({
   water,
   setWater,
+  steps,
   onStressPress,
+  goals,
+  setGoals,
 }: {
   water: number;
-  setWater: Function;
+  setWater: (water: number) => void;
+  steps: number;
   onStressPress: () => void;
+  goals: Modules;
+  setGoals: (goals: Modules) => void;
 }) {
+  const [goalsViewActive, setGoalsViewActive] = useState(false);
   // TODO: Add backend for retrieving name
   const name = 'Alex';
   const { menuOpen } = useAppContext();
+
+  const modules: ModuleProps[] = [
+    {
+      id: 'water',
+      icon: Glass,
+      value: water,
+      setValue: setWater,
+      goal: goals.water,
+    },
+    {
+      id: 'steps',
+      icon: Shoe,
+      value: steps,
+      goal: goals.steps,
+    },
+    {
+      id: 'stress',
+      icon: Stress,
+      onPress: onStressPress,
+      buttonString: 'Log Stress',
+    },
+  ];
+
+  useEffect(() => {
+    if (!menuOpen) {
+      setGoalsViewActive(false);
+    }
+  }, [menuOpen]);
+
+  // Save input goals to goals view
+  // Doesn't send to storage
+  function submitGoals() {
+    const final_goals = {
+      water: Math.ceil(goals.water),
+      steps: Math.ceil(goals.steps),
+    };
+    setGoals(final_goals);
+    if (water > goals.water) {
+      setWater(goals.water);
+    }
+    setGoalsViewActive(false);
+  }
+
   if (!menuOpen) {
     return null;
   }
@@ -27,14 +83,29 @@ export default function Menu({
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <AttachStep index={2} style={{ alignSelf: 'center' }}>
-          <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
-            <CardHeader className="items-center">
-              <CardTitle className="mx-6 my-4 text-2xl font-bold">{name}</CardTitle>
+          <Card className="mb-6 h-auto w-3/4 justify-center shadow-block">
+            <CardHeader className="w-full flex-row items-center justify-between">
+              <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
+              {goalsViewActive ? (
+                <Button onPress={submitGoals} className="py-0" variant="secondary">
+                  <AppText className="font-bold text-white">Back</AppText>
+                </Button>
+              ) : (
+                <Button onPress={() => setGoalsViewActive(!goalsViewActive)} className="py-0">
+                  <AppText className="font-bold text-white">Change goals</AppText>
+                </Button>
+              )}
             </CardHeader>
-            <CardContent className="w-full max-w-full items-center">
-              <WaterWidget water={water} setWater={setWater} />
-              <StepsWidget />
-              <StressWidget onPress={onStressPress} />
+            <CardContent className="w-full">
+              {goalsViewActive ? (
+                <GoalsView goals={goals} setGoals={setGoals} />
+              ) : (
+                <View className="flex-col gap-5">
+                  {modules.map((module) => (
+                    <Module key={module.id} props={module} />
+                  ))}
+                </View>
+              )}
             </CardContent>
           </Card>
         </AttachStep>
