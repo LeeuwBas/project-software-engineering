@@ -1,6 +1,7 @@
 import { useAuth, useIsAuth, useIsLoading } from '@/lib/auth/AuthManager';
 import { Redirect } from 'expo-router';
 import { ReactNode } from 'react';
+import { useTutorial } from '@/lib/settings';
 
 /**
  * This component will instantly redirect to the given page if it is rendered when the user is
@@ -13,7 +14,7 @@ import { ReactNode } from 'react';
  */
 export default function RequireAuth({
   children,
-  href = '/login',
+  href = '',
   loading = null,
 }: {
   children: ReactNode;
@@ -23,6 +24,8 @@ export default function RequireAuth({
   const isAuth = useIsAuth();
   const isLoading = useIsLoading();
   const isGuest = useAuth().isGuest;
+  const { done } = useTutorial();
+
   if (isLoading) {
     console.log('Auth still loading...');
     return loading;
@@ -30,5 +33,5 @@ export default function RequireAuth({
   if (isAuth || isGuest) return <>{children}</>;
 
   console.log('Redirecting to unauthenticated state.');
-  return <Redirect href={href} />;
+  return <Redirect href={href !== '' ? href : done ? '/login' : '/pet-select'} />;
 }
