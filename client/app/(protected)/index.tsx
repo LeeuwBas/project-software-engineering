@@ -1,5 +1,5 @@
-import QuoteBubble from '@/components/quotes/QuoteBubble';
 import PetHome from '@/components/widgets/PetHome';
+import Quotes from '@/components/widgets/Quotes';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
@@ -67,7 +67,7 @@ export default function App() {
               <PetHome />
             </View>
           </View>
-          <QuoteBubble petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
+          <Quotes petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
         </View>
 
         <BlurView

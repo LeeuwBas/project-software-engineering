@@ -60,6 +60,7 @@ export function createQuoteBridge(): QuoteBridge {
     const setQuote = (q: string, durationMs: number = DEFAULT_QUOTE_DURATION_MS) => {
         clearTimer();
         setCurrentQuote(q);
+        console.log(`set quote: ${q}`);
         if (q !== null) {
             timerRef.current = setTimeout(() => {
                 setCurrentQuote(null);
@@ -74,7 +75,7 @@ export function createQuoteBridge(): QuoteBridge {
         durationMs: number = DEFAULT_QUOTE_DURATION_MS
     ) => {
         const data = await getAPI(
-            `api/get-quote/?mood=${mood}&action=${encodeURIComponent(action)}`
+            `/api/get-quote/?mood=${mood}&action=${encodeURIComponent(action)}`
         );
         setQuote(data?.quote ?? null);
     };

@@ -1,9 +1,10 @@
 import { Animation } from '@/components/animations/renderer';
 import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
+import { quoteBridge } from '@/lib/api/APIBridge';
+import { useWater } from '@/lib/api/WaterBridge';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { useWater } from '@/lib/api/WaterBridge';
 
 /**
  * This component represents the pet with its associated animations for the homescreen.
@@ -82,14 +83,17 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     return () => clearTimeout(timer);
   }, [currentAnim, idleAnim, animIteration, waterValue]);
 
+  const onPressPet = () => {
+    currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
+    setAnimIteration(2);
+    quoteBridge.quote ? quoteBridge.removeQuote : quoteBridge.requestQuote(0, 'a');
+  };
+
   return (
     <View className={className} {...props}>
       <Pressable
         className=" items-center justify-center self-center overflow-hidden"
-        onPress={() => {
-          currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
-          setAnimIteration(2);
-        }}>
+        onPress={onPressPet}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} />
         </View>

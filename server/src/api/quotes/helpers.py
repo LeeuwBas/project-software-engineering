@@ -20,6 +20,7 @@ def load_quotes():
 
 def get_json_quote(action, happiness):
     quotes = load_quotes()
+    return random.choice(quotes["Neutral"]["WaterLow"]) # temp for testing
 
     if action not in quotes:
         return "What do you want from me?"
