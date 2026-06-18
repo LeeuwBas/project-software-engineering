@@ -40,20 +40,8 @@ export type ModuleProps = {
     buttonString?: string;
 };
 
-export const MODULES = {
-    water: {
-        icon: Glass,
-        color: '#74ccf4',
-        isGoaled: true,
-    },
-    steps: {
-        icon: Shoe,
-        color: '#b5ff00',
-        isGoaled: true,
-    },
-    stress: {
-        icon: Stress,
-        color: 'red',
-        isGoaled: false,
-    },
-};
+export const MODULES = [
+    { id: 'water', icon: Glass, color: '#74ccf4', isGoaled: true },
+    { id: 'steps', icon: Shoe, color: '#b5ff00', isGoaled: true },
+    { id: 'stress', icon: Stress, color: 'red', isGoaled: false },
+];

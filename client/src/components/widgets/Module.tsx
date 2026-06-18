@@ -14,7 +14,7 @@ export default function Module({
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = (goal?.toString().length ?? 0) * 3;
-
+  
   const PlusButton =
     setValue !== undefined && value !== undefined ? (
       <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
