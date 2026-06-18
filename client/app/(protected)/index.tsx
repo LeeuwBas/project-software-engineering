@@ -15,11 +15,7 @@ import { useColorScheme } from 'nativewind';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  AttachStep,
-  SpotlightTourProvider,
-  useSpotlightTour
-} from 'react-native-spotlight-tour';
+import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-native-spotlight-tour';
 
 export default function App() {
   const water = useWater() ?? 0;
