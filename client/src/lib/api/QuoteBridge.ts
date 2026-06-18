@@ -1,17 +1,29 @@
 import { getAPI } from '@/lib/api/ApiManager';
-import { useRef, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
+
+// useState/useRef were executing outside a component and scrambling the hook order.
+let currentQuote: string | null = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
+const subscribers = new Set<() => void>();
+const emit = () => subscribers.forEach((cb) => cb());
+
+export function useQuote(): string | null {
+    return useSyncExternalStore(
+        (cb) => {
+            subscribers.add(cb);
+            return () => subscribers.delete(cb);
+        },
+        () => currentQuote
+    );
+}
 
 /**
  * @property {@link quote} readonly useState value that stores the current quote or null.
  * @function {@link requestQuote} request a quote from the backend, sets quote when the request returns.
  * @functoin {@link setQuote} manually set the quote.
  * @function {@link removeQuote} sets quote to null.
- * @example
- * import { quoteBridge } from '@/lib/api/APIBridge';
- * useEffect(() => {
- * }, [quoteBridge.quote]);
  */
 
 export interface QuoteBridge {
@@ -47,24 +59,23 @@ export interface QuoteBridge {
  * @returns the {@link QuoteBridge} that functions as the interface for getting quotes for the whole app.
  */
 export function createQuoteBridge(): QuoteBridge {
-    const [currentQuote, setCurrentQuote] = useState<string | null>(null);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
     const clearTimer = () => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-            timerRef.current = null;
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
         }
     };
 
     const setQuote = (q: string, durationMs: number = DEFAULT_QUOTE_DURATION_MS) => {
         clearTimer();
-        setCurrentQuote(q);
+        currentQuote = q;
+        emit();
         console.log(`set quote: ${q}`);
         if (q !== null) {
-            timerRef.current = setTimeout(() => {
-                setCurrentQuote(null);
-                timerRef.current = null;
+            timer = setTimeout(() => {
+                currentQuote = null;
+                timer = null;
+                emit();
             }, durationMs);
         }
     };
@@ -82,13 +93,16 @@ export function createQuoteBridge(): QuoteBridge {
 
     const removeQuote = () => {
         clearTimer();
-        setCurrentQuote(null);
+        currentQuote = null;
+        emit();
     };
 
     return {
-        quote: currentQuote,
-        requestQuote: requestQuote,
-        setQuote: setQuote,
-        removeQuote: removeQuote,
+        get quote() {
+            return currentQuote;
+        },
+        requestQuote,
+        setQuote,
+        removeQuote,
     };
 }

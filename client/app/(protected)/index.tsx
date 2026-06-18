@@ -131,6 +131,7 @@ export default function App() {
             <BlurView
               pointerEvents="none"
               className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
+              style={{ zIndex: 9 }}
               intensity={20}
               tint="regular"
               experimentalBlurMethod="dimezisBlurView"
