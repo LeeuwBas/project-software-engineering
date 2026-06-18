@@ -129,7 +129,7 @@ export default function CalendarOverview() {
     <View>
       {/* Month/year displaty with arrow buttons */}
       <View className="mb-6 flex-row items-center gap-x-4 self-center">
-        <Pressable onPress={() => setCurrentDate(new Date(year, month - 1))} hitSlop={12}>
+        <Pressable onPress={toPrevMonth} hitSlop={12}>
           <ArrowBigLeft size={24} color={iconColor} />
         </Pressable>
 
@@ -139,7 +139,7 @@ export default function CalendarOverview() {
 
         <View style={{ width: 24 }}>
           {month !== today.getMonth() && (
-            <Pressable onPress={() => setCurrentDate(new Date(year, month + 1))} hitSlop={12}>
+            <Pressable onPress={toNextMonth} hitSlop={12}>
               <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
           )}
