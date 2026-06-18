@@ -93,8 +93,6 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
 
     let data: StatLine | null = null;
 
-    console.log(goalDates);
-
     if (goalDates.length == 0) {
         data = createStatLine();
     } else {
