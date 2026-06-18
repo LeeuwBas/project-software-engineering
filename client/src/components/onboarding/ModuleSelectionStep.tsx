@@ -20,11 +20,14 @@ export default function ModuleSelectionStep({ onNext }: Props) {
   }, []);
 
   function toggleModule(moduleKey: string) {
-    setModuleState((current) => ({
-      ...current,
-      [moduleKey]: !current[moduleKey],
-    }));
-  }
+  setModuleState((current) => {
+    const updated = { ...current };
+
+    updated[moduleKey] = !updated[moduleKey];
+
+    return updated;
+  });
+}
 
   function isSelected(moduleKey: string) {
     return activeModules[moduleKey] ?? false;
