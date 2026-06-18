@@ -166,8 +166,8 @@ export default function CalendarOverview() {
           renderItem={({ item, index }) => (
             <View
               className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
-                    ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
-                    ${item.currentDay ? 'bg-secondary' : 'bg-card'}`}>
+                    ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
+                    ${item.currentDay ? 'bg-secondary' : 'bg-background'}`}>
               <AppText className="self-end text-sm font-bold">
                 {item.value || 'Placeholder'}
               </AppText>
