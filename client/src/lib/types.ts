@@ -1,3 +1,6 @@
+import Glass from '@assets/icons/module_icons/glass.svg';
+import Shoe from '@assets/icons/module_icons/shoe.svg';
+import Stress from '@assets/icons/module_icons/stress.svg';
 import { Dispatch, SetStateAction } from 'react';
 import { SvgProps } from 'react-native-svg';
 
@@ -35,4 +38,22 @@ export type ModuleProps = {
     goal?: number;
     onPress?: () => void;
     buttonString?: string;
+};
+
+export const MODULES = {
+    water: {
+        icon: Glass,
+        color: '#74ccf4',
+        isGoaled: true,
+    },
+    steps: {
+        icon: Shoe,
+        color: '#b5ff00',
+        isGoaled: true,
+    },
+    stress: {
+        icon: Stress,
+        color: 'red',
+        isGoaled: false,
+    },
 };
