@@ -1,7 +1,7 @@
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { syncServer } from '@/lib/StorageSync';
 import { internalAuth } from '@/lib/auth/AuthService';
 
@@ -20,7 +20,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [refreshing, setRefresh] = useState<Promise<void> | null>(null);
+  const refreshingRef = useRef<boolean>(false);
+  const refreshPromiseRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
     async function init() {
@@ -64,6 +65,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
+    internalAuth.accessToken = accessToken;
+    internalAuth.refreshToken = refreshToken;
     setAuthenticated(true);
     console.log('Token renewed successfully');
   }
@@ -100,6 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await syncServer(true);
     }
 
+    console.log('Signing out...');
     await tokenStorage.clear();
     setAccessToken(null);
     setRefreshToken(null);
@@ -107,23 +111,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   useEffect(() => {
+    console.log('Updating internal Auth');
     internalAuth.accessToken = accessToken;
     internalAuth.refreshToken = refreshToken;
     internalAuth.isLoading = isLoading;
-    internalAuth.renewToken = () => {
-      if (refreshing) {
-        return refreshing;
-      }
-      setRefresh(
-        renewToken().then(
-          () => setRefresh(null),
-          () => setRefresh(null)
-        )
-      );
-      return refreshing ?? Promise.resolve();
-    };
-    internalAuth.signOut = () => signOut(false);
-  }, [accessToken, refreshToken]);
+  }, [accessToken, refreshToken, isLoading]);
+
+  internalAuth.renewToken = () => {
+    if (refreshingRef.current) {
+      console.log('Attempted refresh while refreshing');
+      return refreshPromiseRef.current;
+    }
+    refreshingRef.current = true;
+    refreshPromiseRef.current = renewToken()
+      .then(() => {
+        console.log('refresh done');
+      })
+      .catch(() => {
+        console.log('refresh failed');
+      })
+      .finally(() => {
+        refreshingRef.current = false;
+        console.log('refreshing status false');
+      });
+    console.log('Refreshing token...');
+    return refreshPromiseRef.current;
+  };
+  internalAuth.signOut = () => signOut(false);
 
   return (
     <AuthContext.Provider

@@ -20,8 +20,16 @@ async function syncStats(goals: boolean = false) {
     for (const key of Object.keys(syncData)) {
         const endpoint = goals ? `/api/goals/${key}` : `/api/stats/${key}`;
         promises.push(
-            postAPI(endpoint, { ['stats']: syncData[key] }).then((response) =>
-                console.log(`Synced stats for ${key} (goals=${goals}) with response:`, response)
+            postAPI(endpoint, { ['stats']: syncData[key] }).then(
+                (response) => {
+                    console.log(
+                        `Synced stats for ${key} (goals=${goals}) with response:`,
+                        response
+                    );
+                },
+                (reason) => {
+                    console.log(`Failed to sync stats for ${key}: ${reason}`);
+                }
             )
         );
     }
