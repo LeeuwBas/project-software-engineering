@@ -17,6 +17,15 @@ export function StatisticView({ stat }: { stat: StatName }) {
   const statData = STATS[stat];
   const goal = statData.bridge.useGoal() ?? 0;
 
+  const getChartMax = (goal: number) => {
+    const magnitude = Math.pow(10, String(goal).length - 1);
+    const rounded = Math.ceil(goal / magnitude) * magnitude;
+
+    return rounded === goal ? goal + magnitude : rounded;
+  };
+
+  const maxValue = getChartMax(goal);
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -88,6 +97,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
           labels={labels}
           barconfig={statData.barconfig}
           goal={goal}
+          maxValue={maxValue}
         />
       )}
 
@@ -105,7 +115,10 @@ export function StatisticView({ stat }: { stat: StatName }) {
         </AppText>
 
         <AppText>
-          Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`}
+          Average:{' '}
+          {loading
+            ? 'Loading...'
+            : `${Math.round((summary?.average ?? 0) * 10) / 10} ${statData.unit}`}
           {/*Average:{' '}*/}
           {/*{loading*/}
           {/*  ? 'Loading...'*/}
