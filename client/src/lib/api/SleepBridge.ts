@@ -23,21 +23,6 @@ export function useSleep() {
     return useValue(sleepState);
 }
 
-export function createsleepBridge(): LoadableBridge<sleepBridge> {
-    return {
-        load: () => Promise.all([loadZustand(sleepState, 'sleep'), loadGoalZustand(sleepGoalState, "sleep")]),
-        getRaw: async (date) => (await getStatistic('sleep', date ?? new Date())) ?? 0,
-        set: (value) => setZustand(sleepState, 'sleep', Math.max(Math.min(value, 100), 0)),
-        getBarChart: async (bins, daysPerBin, endDate) => {
-            return (
-                (await getStatisticChart('sleep', bins, daysPerBin, endDate)) ??
-                new Array<number>(bins).fill(0)
-            );
-        },
-        getGoal: async (date) => (await getGoals("sleep", date) ?? 0),
-        setGoal: (value) => setGoalZustand(sleepGoalState, "sleep", value),
-    };
-}
 export function createSleepBridge(): LoadableBridge<SleepBridge> {
     return {
         load: () =>
