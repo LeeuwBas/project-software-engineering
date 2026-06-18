@@ -40,7 +40,7 @@ export interface QuoteBridge {
      * @param durationMs duration that the quote should display if not dismissed, defaults to
      * DEFAULT_QUOTE_DURATION_MS.
      */
-    requestQuote: (mood: number, action: string, durationMs?: number) => void;
+    requestQuote: () => void;
     /**
      * Manually set the quote.
      * @param quote string to set {@link quote} to.
@@ -70,7 +70,6 @@ export function createQuoteBridge(): QuoteBridge {
         clearTimer();
         currentQuote = q;
         emit();
-        console.log(`set quote: ${q}`);
         if (q !== null) {
             timer = setTimeout(() => {
                 currentQuote = null;
@@ -80,15 +79,12 @@ export function createQuoteBridge(): QuoteBridge {
         }
     };
 
-    const requestQuote = async (
-        mood: number,
-        action: string,
-        durationMs: number = DEFAULT_QUOTE_DURATION_MS
-    ) => {
+    const requestQuote = async () => {
+        const req = calculateQuoteRequest();
         const data = await getAPI(
-            `/api/get-quote/?mood=${mood}&action=${encodeURIComponent(action)}`
+            `/api/get-quote/?mood=${req.mood}&action=${encodeURIComponent(req.action)}`
         );
-        setQuote(data?.quote ?? null);
+        setQuote(data?.quote ?? null, req.durationMs);
     };
 
     const removeQuote = () => {
@@ -105,4 +101,14 @@ export function createQuoteBridge(): QuoteBridge {
         setQuote,
         removeQuote,
     };
+}
+
+//TODO calculate the correct quote to request
+function calculateQuoteRequest() {
+    // collect stats from different modules
+
+    const durationMs = DEFAULT_QUOTE_DURATION_MS;
+    const mood = 0; //calculate mood
+    const action = 'temp'; //calculate action
+    return { mood: mood, action: action, durationMs: durationMs };
 }

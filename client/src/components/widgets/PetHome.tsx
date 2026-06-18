@@ -129,7 +129,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
         onPress={() => {
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
           setAnimIteration(1);
-          quote ? quoteBridge.removeQuote() : quoteBridge.requestQuote(0, 'a');
+          quote ? quoteBridge.removeQuote() : quoteBridge.requestQuote();
         }}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} iteration_count={animIteration} />

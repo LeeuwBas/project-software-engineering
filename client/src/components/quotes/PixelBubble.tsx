@@ -15,7 +15,7 @@ interface PixelBubbleProps {
 
 const PixelBubble: React.FC<PixelBubbleProps> = ({
   pixelSize = 8,
-  fill = 'white',
+  fill = 'white', //TODO use dark/lightmode colors
   stroke = 'black',
   tail = true,
   tailSize = 3,
