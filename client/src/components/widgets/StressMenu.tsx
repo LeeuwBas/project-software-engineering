@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppContext } from '@/lib/AppContext';
-import { View } from 'react-native';
-import StressButtons from './StressButtons';
+import { AppText } from '@/components/AppText';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import StressButtons from '@/components/widgets/StressButtons';
 import { stressBridge } from '@/lib/api/APIBridge';
-import { AppText } from '../AppText';
+import { useAppContext } from '@/lib/AppContext';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 
 async function saveStress(score1: number, score2: number, score3: number) {
   const score = score1 + score2 + score3;
@@ -65,10 +65,10 @@ export default function StressMenu() {
             </AppText>
             <StressButtons value={score3} onChange={setScore3} />
           </CardContent>
-          <CardContent className='flex-row gap-2 items-center'>
-            <View className='size-4 bg-[#81c381] border-2 border-[#22a022]'></View>
+          <CardContent className="flex-row items-center gap-2">
+            <View className="size-4 border-2 border-[#22a022] bg-[#81c381]"></View>
             <AppText>Disagree</AppText>
-            <View className='size-4 bg-[#ff9699] border-2 border-[#b41b21]'></View>
+            <View className="size-4 border-2 border-[#b41b21] bg-[#ff9699]"></View>
             <AppText>Agree</AppText>
           </CardContent>
         </Card>
