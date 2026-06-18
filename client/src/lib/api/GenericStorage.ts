@@ -283,7 +283,7 @@ export async function getGoals<K extends keyof StatLine>(
     }
 
     if (date == new Date()) {
-        setNewGoal(name, server);
+        await setNewGoal(name, server);
     }
 
     return server;
