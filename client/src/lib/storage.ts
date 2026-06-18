@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { dateDifference } from './utils';
 import { useEffect, useState } from 'react';
+import { dateDifference } from './utils';
 
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
@@ -98,9 +98,7 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
         data = createStatLine();
     } else {
         goalDates.sort();
-
-        const date = goalDates[-1];
-
+        const date = goalDates.at(-1)!;
         const raw = await AsyncStorage.getItem(date);
         data = raw ? JSON.parse(raw) : null;
     }
@@ -362,8 +360,8 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
 
             const complete = nodata ? 0 : achieved <= goal;
 
-            if (key === "stress") {
-                today[key] = achieved
+            if (key === 'stress') {
+                today[key] = achieved;
             } else {
                 const complete = achieved <= goal;
                 today[key] = +complete;

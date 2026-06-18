@@ -1,10 +1,10 @@
-import { ArrowBigLeft, ArrowBigRight, Calendar } from 'lucide-react-native';
-import { AppText } from '../AppText';
-import { FlatList, Pressable, View } from 'react-native';
 import { getGoalCalender } from '@/lib/api/APIBridge';
-import { useMemo, useState, useEffect } from 'react';
-import { AttachStep } from 'react-native-spotlight-tour';
+import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
+import { useEffect, useMemo, useState } from 'react';
+import { FlatList, Pressable, View } from 'react-native';
+import { AttachStep } from 'react-native-spotlight-tour';
+import { AppText } from '../AppText';
 
 export interface calendarCell {
   id: string;
@@ -23,13 +23,13 @@ export default function CalendarOverview() {
   const month = currentDate.getMonth();
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
-  const today = useMemo(() => new Date(),[]);
+  const today = useMemo(() => new Date(), []);
 
-  const [calendarData, updateCalendarData] = useState<any[]>([])
+  const [calendarData, updateCalendarData] = useState<any[]>([]);
 
   // Memoization for calendar grid to only change when year or month changes
   // Prevent rerender when parent rerenders
-  const { dayGrid, rangeStart, rangeEnd }  = useMemo(() => {
+  const { dayGrid, rangeStart, rangeEnd } = useMemo(() => {
     const grid: calendarCell[] = [];
     const startDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
     const totalDays = new Date(year, month + 1, 0).getDate();
@@ -97,9 +97,8 @@ export default function CalendarOverview() {
       grid.push(newCell);
     }
 
-    return {dayGrid: grid, rangeStart, rangeEnd};
+    return { dayGrid: grid, rangeStart, rangeEnd };
   }, [year, month]);
-
 
   useEffect(() => {
     const fetchCalendarData = async () => {
@@ -107,41 +106,23 @@ export default function CalendarOverview() {
         updateCalendarData([]);
 
         if (dayGrid && dayGrid.length > 0) {
-          const data = await getGoalCalender(
-            new Date(rangeStart),
-            new Date(rangeEnd),
-          );
+          const data = await getGoalCalender(new Date(rangeStart), new Date(rangeEnd));
           updateCalendarData(data || []);
         }
       } catch (error) {
-        console.error("Failed to fetch calendar:", error);
+        console.error('Failed to fetch calendar:', error);
       }
     };
 
     fetchCalendarData();
   }, [rangeStart, rangeEnd]);
 
-
   const toPrevMonth = () => {
-    setCurrentDate(
-      prev =>
-        new Date(
-          prev.getFullYear(),
-          prev.getMonth() - 1,
-          1
-        )
-    );
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
 
   const toNextMonth = () => {
-    setCurrentDate(
-      prev =>
-        new Date(
-          prev.getFullYear(),
-          prev.getMonth() + 1,
-          1
-        )
-    );
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
   return (
@@ -190,17 +171,19 @@ export default function CalendarOverview() {
               <AppText className="self-end text-sm font-bold">
                 {item.value || 'Placeholder'}
               </AppText>
-              <View className="flex-row flex-wrap gap-1 self-start p-0.5">
-                <View
-                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['sleep'] ? 'bg-red-500' : 'hidden'}`}
-                />
-                <View
-                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['water'] ? 'bg-blue-500' : 'hidden'}`}
-                />
-                <View
-                  className={`aspect-square h-[7px] border-[1px] ${dummy_data[item.date.toDateString()]['steps'] ? 'bg-green-500' : 'hidden'}`}
-                />
-              </View>
+              {!item.hidden && (
+                <View className="flex-row flex-wrap gap-1 self-start p-0.5">
+                  <View
+                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.sleep === 1 ? 'bg-red-500' : 'hidden'}`}
+                  />
+                  <View
+                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.water === 1 ? 'bg-blue-500' : 'hidden'}`}
+                  />
+                  <View
+                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1 ? 'bg-green-500' : 'hidden'}`}
+                  />
+                </View>
+              )}
             </View>
           )}
         />
