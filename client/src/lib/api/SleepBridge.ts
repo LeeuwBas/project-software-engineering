@@ -3,7 +3,7 @@ import { createNewState, useValue } from '@/lib/api/ValueState';
 import { getGoals, getStatistic, getStatisticChart, loadGoalZustand, loadZustand, setGoalZustand, setZustand } from '@/lib/api/GenericStorage';
 
 // Use the sleep bridge when the values need to be manipulated.
-export interface sleepBridge extends GoaledStatisticBridge {}
+export interface sleepBridge extends StatisticBridge {}
 
 const sleepState = createNewState();
 const sleepGoalState = createNewState()
@@ -54,8 +54,5 @@ export function createSleepBridge(): LoadableBridge<SleepBridge> {
             );
         },
         getSummary: async (start, end) => await getStatisticSummary('sleep', start, end),
-        getGoal: async (date) => (await getGoals('sleep', date)) ?? 0,
-        setGoal: (value) => setGoalZustand(sleepGoalState, 'sleep', value),
-        useGoal: () => useValue(sleepGoalState),
     };
 }
