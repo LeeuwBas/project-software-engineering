@@ -65,8 +65,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
-    internalAuth.accessToken = accessToken;
-    internalAuth.refreshToken = refreshToken;
+    internalAuth.accessToken = receivedAccessToken;
+    internalAuth.refreshToken = receivedRefreshToken;
     setAuthenticated(true);
     console.log('Token renewed successfully');
   }
@@ -119,7 +119,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   internalAuth.renewToken = () => {
     if (refreshingRef.current) {
-      console.log('Attempted refresh while refreshing');
       return refreshPromiseRef.current;
     }
     refreshingRef.current = true;
@@ -132,7 +131,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       })
       .finally(() => {
         refreshingRef.current = false;
-        console.log('refreshing status false');
       });
     console.log('Refreshing token...');
     return refreshPromiseRef.current;
