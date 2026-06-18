@@ -1,13 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { dateDifference } from './utils';
 import { useEffect, useState } from 'react';
+import { dateDifference } from './utils';
 
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 
-interface Settings {
-    chosenPet: String;
+export interface Settings {
+    chosenPet: string;
+    has_done_tutorial: boolean;
 }
 
 export interface StatLine {
@@ -19,7 +20,7 @@ export interface StatLine {
 }
 
 export interface StatisticsSummary {
-    statisticName: string;
+    statisticName: keyof StatLine;
     isFull: boolean;
     total: number;
     count: number;
@@ -58,7 +59,6 @@ function calculateDate(date: Date, stat: string = statPrefix) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-
     return `${stat}${year}-${month}-${day}`;
 }
 
@@ -88,7 +88,7 @@ async function getStatOn(day: string) {
  */
 export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, goalPrefix)
+        (key) => key.startsWith(goalPrefix) && key <= calculateDate(day, goalPrefix)
     );
 
     let data: StatLine | null = null;
@@ -97,9 +97,7 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
         data = createStatLine();
     } else {
         goalDates.sort();
-
-        const date = goalDates[-1];
-
+        const date = goalDates.at(-1)!;
         const raw = await AsyncStorage.getItem(date);
         data = raw ? JSON.parse(raw) : null;
     }
@@ -133,7 +131,7 @@ export async function setNewGoal<K extends keyof StatLine>(
     if (oldGoal === null || typeof oldGoal === 'number') {
         oldGoal = createStatLine();
     }
-    oldGoal[statName as keyof StatLine] = goal;
+    oldGoal[statName] = goal;
     AsyncStorage.setItem(today, JSON.stringify(oldGoal));
     await markSyncRequired(statName, true, date);
 }
@@ -203,12 +201,12 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
  *
  * @returns StatisticsSummary object containing all data
  */
-export async function getStatSummary(statName: string, days: number) {
-    const today = new Date();
-    const lowerDay = new Date();
-    lowerDay.setDate(today.getDate() - days);
-
-    const values = await getNamedStatRange(statName, lowerDay, today);
+export async function getStatSummary<K extends keyof StatLine>(
+    statName: K,
+    start: Date,
+    end: Date
+) {
+    const values = await getNamedStatRange(statName, start, end);
 
     if (values == null) {
         return null;
@@ -222,7 +220,12 @@ export async function getStatSummary(statName: string, days: number) {
     returnValue.maximum = values.reduce((Acc, [d, x], _) => (Acc > +x ? Acc : +x), 0);
     returnValue.minimum = values.reduce((Acc, [d, x], _) => (Acc < +x ? Acc : +x), 0);
 
-    returnValue.isFull = returnValue.count == days;
+    const fullDate = new Date(start);
+    fullDate.setDate(start.getDate() + returnValue.count);
+    returnValue.isFull =
+        fullDate.getDate() == end.getDate() &&
+        fullDate.getMonth() == end.getMonth() &&
+        fullDate.getFullYear() == end.getFullYear();
 
     return returnValue as StatisticsSummary;
 }
@@ -324,7 +327,7 @@ export async function updateStat<K extends keyof StatLine>(
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
-    let returnValue: [string, boolean][][] = [];
+    let returnValue: StatLine[] = [];
     let isFull = true;
 
     for (
@@ -333,25 +336,35 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
         currentDay.setDate(currentDay.getDate() + 1)
     ) {
         let dayStat = await getStat(currentDay);
-        const dayGoals = await getCurrentGoal(null, currentDay);
-        let today: [string, boolean][] = [];
+        let dayGoals = await getCurrentGoal(null, currentDay);
+        let today: StatLine = createStatLine();
+
+        let nodata = false;
 
         if (dayGoals === null || typeof dayGoals === 'number') {
             // only possible if no goal was ever set, which would be an incorrect state
-            return null;
+            nodata = true;
+            dayGoals = createStatLine();
         }
 
         if (dayStat === null) {
+            nodata = true;
             isFull = false;
             dayStat = createStatLine();
         }
 
-        for (let key in Object.keys(dayStat)) {
-            const achieved = dayStat[key as keyof StatLine] ?? -1;
-            const goal = dayGoals[key as keyof StatLine] ?? 0;
+        for (let key of Object.keys(dayStat) as (keyof StatLine)[]) {
+            const achieved = dayStat[key] ?? -1;
+            const goal = dayGoals[key] ?? 0;
 
-            const complete = achieved <= goal;
-            today.push([key, complete]);
+            const complete = nodata ? 0 : achieved <= goal;
+
+            if (key === 'stress') {
+                today[key] = achieved;
+            } else {
+                const complete = achieved <= goal;
+                today[key] = +complete;
+            }
         }
 
         returnValue.push(today);
@@ -519,6 +532,30 @@ export async function getSyncData(forGoals: boolean = false) {
 }
 
 // ---------------------------------- Settings Functions ----------------------------------
+
+export async function getSettings(): Promise<Settings> {
+    const defaults: Settings = {
+        chosenPet: '',
+        has_done_tutorial: false,
+    };
+    try {
+        const raw = await AsyncStorage.getItem('settings');
+
+        // The spread operator here makes this future proof, if the settings interface ever changes
+        return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
+    } catch (error) {
+        console.error(error);
+        return defaults;
+    }
+}
+
+export async function setSettings(settings: Settings) {
+    try {
+        await AsyncStorage.setItem('settings', JSON.stringify(settings));
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 // ------------------------------- Deprecated Water Funtions ------------------------------
 

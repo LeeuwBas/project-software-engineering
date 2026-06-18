@@ -1,7 +1,11 @@
+import { createFoodBridge } from '@/lib/api/FoodBridge';
 import { loadCalender } from '@/lib/api/GenericStorage';
 import { createQuoteBridge, QuoteBridge } from '@/lib/api/QuoteBridge';
+import { createSleepBridge } from '@/lib/api/SleepBridge';
 import { createStepBridge } from '@/lib/api/StepBridge';
 import { createWaterBridge } from '@/lib/api/WaterBridge';
+import { StatisticsSummary } from '@/lib/storage';
+import { createStressBridge } from './StressBridge';
 
 export type LoadableBridge<T> = T & Loadable;
 
@@ -10,14 +14,18 @@ export interface Loadable {
 }
 
 export interface StatisticBridge {
-    getRaw: (date?: Date) => Promise<number>;
+    useCurrent: () => number | null;
     set: (value: number, date?: Date) => Promise<any>;
-    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+    getBarChart?: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+    getSummary?: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
 }
 
 export interface GoaledStatisticBridge extends StatisticBridge {
+    getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
+    getSummary: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
     getGoal: (date?: Date) => Promise<number>;
     setGoal: (value: number, date?: Date) => Promise<any>;
+    useGoal: () => number | null;
 }
 
 const loaders: Loadable[] = [];
@@ -46,7 +54,9 @@ export async function initializeApiManager() {
                 return Promise.resolve();
             }
         })
-    ).then()); // Map to void promise
+    ).then(() => {
+        initPromise = null;
+    })); // Map to void promise
 }
 
 /**
@@ -63,7 +73,10 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 }
 
 export const waterBridge = register(createWaterBridge());
+export const stressBridge = register(createStressBridge());
 
 /**{@link QuoteBridge}*/
 export const quoteBridge: QuoteBridge = createQuoteBridge();
 export const stepsBridge = register(createStepBridge());
+export const sleepBridge = register(createSleepBridge());
+export const foodBridge = register(createFoodBridge());

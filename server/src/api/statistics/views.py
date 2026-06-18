@@ -6,8 +6,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from drf_spectacular.utils import extend_schema, OpenApiParameter,\
-                                  OpenApiResponse, inline_serializer
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiResponse,
+    inline_serializer,
+)
 from drf_spectacular.types import OpenApiTypes
 
 from datetime import datetime
@@ -16,7 +20,7 @@ from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
 from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender, setDay
+from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender, setDay, getStatDict
 
 """
 /api/stats/<date>/
@@ -37,93 +41,93 @@ from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalen
 
 """
 
+
 class StatManageView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
     @extend_schema(
-            summary="Retrieves the statistics data of a given date.",
-            description="""Retrieves the statistics of a given date, if no name
+        summary="Retrieves the statistics data of a given date.",
+        description="""Retrieves the statistics of a given date, if no name
             for the statistic was provided, the API will return all known stats.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="date",
-                    description="date for which the requested goal was active",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="statName",
-                    description="Internal name of the goal. If not supplied, "\
-                            "the api will return all goals at the given date.",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.QUERY,
-                    required=False
-                )
-            ],
-            responses={
-                200: {
-                    'type': 'object',
-                    'properties': {
-                        'goals': {
-                            'type': 'object',
-                            'additionalProperties': {'type': 'integer'},
-                            'example': {
-                                'water': 5
-                            }
-                        }
+        parameters=[
+            OpenApiParameter(
+                name="date",
+                description="date for which the requested goal was active",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="statName",
+                description="Internal name of the goal. If not supplied, "
+                "the api will return all goals at the given date.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+            ),
+        ],
+        responses={
+            200: {
+                "type": "object",
+                "properties": {
+                    "goals": {
+                        "type": "object",
+                        "additionalProperties": {"type": "integer"},
+                        "example": {"water": 5},
                     }
                 },
-                400: OpenApiResponse(description="Invalid input.")
-            }
+            },
+            400: OpenApiResponse(description="Invalid input."),
+        },
     )
     def get(self, request, date):
-        statName = request.query_params.get('statName', None)
+        statName = request.query_params.get("statName", None)
         day = datetime.fromisoformat(date)
 
         returnVal = getDay(request.user, statName, day)
+
+        if returnVal is None:
+            returnVal = getStatDict(Stats())
 
         if type(returnVal) is not dict:
             returnVal = {statName: returnVal}
 
         return Response(returnVal, 200)
 
+    # TODO: Make POST request documentation (now GET)
     @extend_schema(
-            summary="Retrieves the statistics data of a given date.",
-            description="""Retrieves the statistics of a given date, if no name
+        summary="Retrieves the statistics data of a given date.",
+        description="""Retrieves the statistics of a given date, if no name
             for the statistic was provided, the API will return all known stats.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="date",
-                    description="date for which the requested goal was active",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                )
-            ],
-            request={
-                'application/json': {
-                    'type': 'object',
-                    'properties': {
-                        'stats': {
-                            'type': 'object',
-                            'description': "Statistics to be inserted. "
-                            "<internal_name>:<val>",
-                            'additionalProperties': {'type': 'number'}
-                        }
+        parameters=[
+            OpenApiParameter(
+                name="date",
+                description="date for which the requested goal was active",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            )
+        ],
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "stats": {
+                        "type": "object",
+                        "description": "Statistics to be inserted. "
+                        "<internal_name>:<val>",
+                        "additionalProperties": {"type": "number"},
                     }
-                }
-            },
-            responses={
-                200: "ok",
-                400: OpenApiResponse(description="Invalid input.")
+                },
             }
+        },
+        responses={200: "ok", 400: OpenApiResponse(description="Invalid input.")},
     )
     def post(self, request, date):
-        stat_data = request.data.get('stats')
+        stat_data = request.data.get("stats")
         day = datetime.fromisoformat(date)
 
         setDay(request.user, stat_data, day)
@@ -136,70 +140,66 @@ class BarchartView(APIView):
     serializer_class = StatsSerializer
 
     @extend_schema(
-            summary="Retrieves data for a bar chart between given dates.",
-            description="""Retrieves the bin data to create a bar chart for a
+        summary="Retrieves data for a bar chart between given dates.",
+        description="""Retrieves the bin data to create a bar chart for a
             given statistic at a given date range. If bins is supplied, it must
             be divider of the amount of days. Date is exclusive on the lower
             bound and inclusive on the upper bound.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="statName",
-                    description="name of the statistic to get the bar chart.",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="startDate",
-                    description="Start date of the bar chart. exclusive",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="endDate",
-                    description="End date of the bar chart. inclusive",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="bins",
-                    description="Amount of bins to put the data in, defaults to the amount of days",
-                    type=OpenApiTypes.INT,
-                    location=OpenApiParameter.QUERY,
-                    required=True
-                ),
-            ],
-            responses={
-                200: {
-                    'type': 'object',
-                    'properties': {
-                        'days_per_bin': {
-                            'type': 'integer',
-                            'example': 5,
-                        },
-                        'bins': {
-                            'type': 'object',
-                            'additionalProperties': {'type': 'integer'},
-                            'example': {
-                                '0': 5,
-                                '1': 8,
-                                '2': 3
-                            }
-                        }
-                    }
+        parameters=[
+            OpenApiParameter(
+                name="statName",
+                description="name of the statistic to get the bar chart.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="startDate",
+                description="Start date of the bar chart. exclusive",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="endDate",
+                description="End date of the bar chart. inclusive",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="bins",
+                description="Amount of bins to put the data in, defaults to the amount of days",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                required=True,
+            ),
+        ],
+        responses={
+            200: {
+                "type": "object",
+                "properties": {
+                    "days_per_bin": {
+                        "type": "integer",
+                        "example": 5,
+                    },
+                    "bins": {
+                        "type": "object",
+                        "additionalProperties": {"type": "integer"},
+                        "example": {"0": 5, "1": 8, "2": 3},
+                    },
                 },
-                400: OpenApiResponse(description="Invalid input.")
-            }
+            },
+            400: OpenApiResponse(description="Invalid input."),
+        },
     )
     def get(self, request, statName, startDate, endDate):
         startDate = datetime.fromisoformat(startDate)
         endDate = datetime.fromisoformat(endDate)
 
         days = (endDate - startDate).days
-        bins = int(request.query_params.get('bins', days))
+        bins = int(request.query_params.get("bins", days))
 
         if days % bins != 0:
             return Response(f"Invalid input days%bins = {days % bins}", 400)
@@ -213,48 +213,48 @@ class SummaryView(APIView):
     serializer_class = StatsSerializer
 
     @extend_schema(
-            summary="Retrieves the calendar view of a given date range.",
-            description="""Retrieves boolean data if all goals are completed
+        summary="Retrieves the calendar view of a given date range.",
+        description="""Retrieves boolean data if all goals are completed
             for a given date range. Inclusive on both sides of the date range
             (a <= b <= c).
 
             Element 0 of the return array is the oldest date.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="statName",
-                    description="name of the stat to summarize.",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="startDate",
-                    description="start date of the calendar view",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="endDate",
-                    description="end date of the calender view",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                )
-            ],
-            responses={
-                200: {
-                    'type': 'object',
-                    'properties': {
-                        'total_water':   {'type': 'integer'},
-                        'average_water': {'type': 'number'},
-                        'minimum_water': {'type': 'integer'},
-                        'maximum_water': {'type': 'integer'},
-                    }
+        parameters=[
+            OpenApiParameter(
+                name="statName",
+                description="name of the stat to summarize.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="startDate",
+                description="start date of the calendar view",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="endDate",
+                description="end date of the calender view",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+        ],
+        responses={
+            200: {
+                "type": "object",
+                "properties": {
+                    "total_water": {"type": "integer"},
+                    "average_water": {"type": "number"},
+                    "minimum_water": {"type": "integer"},
+                    "maximum_water": {"type": "integer"},
                 },
-                400: OpenApiResponse(description="Invalid input.")
-            }
+            },
+            400: OpenApiResponse(description="Invalid input."),
+        },
     )
     def get(self, request, statName, startDate, endDate):
         if endDate < startDate:
@@ -273,53 +273,50 @@ class GoalManageView(APIView):
     serializer_class = StatsSerializer
 
     @extend_schema(
-            summary="Retrieves the set goal at a given date.",
-            description="""Retrieves the goals of a given dat for a given
+        summary="Retrieves the set goal at a given date.",
+        description="""Retrieves the goals of a given dat for a given
             module. If the module is not supplied it will return all set goals.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="goal_date",
-                    description="date for which the requested goal was active",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="goal_name",
-                    description="Internal name of the goal. If not supplied, "\
-                            "the api will return all goals at the given date.",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.QUERY,
-                    required=False
-                )
-            ],
-            responses={
-                200: {
-                    'type': 'object',
-                    'properties': {
-                        'goals': {
-                            'type': 'object',
-                            'additionalProperties': {'type': 'integer'},
-                            'example': {
-                                'water': 5
-                            }
-                        }
+        parameters=[
+            OpenApiParameter(
+                name="goal_date",
+                description="date for which the requested goal was active",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="goal_name",
+                description="Internal name of the goal. If not supplied, "
+                "the api will return all goals at the given date.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+            ),
+        ],
+        responses={
+            200: {
+                "type": "object",
+                "properties": {
+                    "goals": {
+                        "type": "object",
+                        "additionalProperties": {"type": "integer"},
+                        "example": {"water": 5},
                     }
                 },
-                400: OpenApiResponse(description="Invalid input.")
-            }
+            },
+            400: OpenApiResponse(description="Invalid input."),
+        },
     )
     def get(self, request, goal_date):
-        goal_name = request.query_params.get('goal_name', None)
+        goal_name = request.query_params.get("goal_name", None)
         day = datetime.fromisoformat(goal_date)
 
         goals = getGoal(request.user, goal_name, day)
 
         if goals is None:
             return Response(
-                {'error': 'Invalid input.'},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": "Invalid input."}, status=status.HTTP_400_BAD_REQUEST
             )
 
         if type(goals) is dict:
@@ -328,38 +325,35 @@ class GoalManageView(APIView):
             return Response({goal_name: goals}, 200)
 
     @extend_schema(
-            summary="Sets a new goal",
-            description="""Updates or inserts a new goal to be followed.
+        summary="Sets a new goal",
+        description="""Updates or inserts a new goal to be followed.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="goal_date",
-                    description="date for which to set the goal",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                )
-            ],
-            request={
-                'application/json': {
-                    'type': 'object',
-                    'properties': {
-                        'goals': {
-                            'type': 'object',
-                            'description': "Goals that need to be updated. "
-                            "<internal_name>:<val>",
-                            'additionalProperties': {'type': 'number'}
-                        }
+        parameters=[
+            OpenApiParameter(
+                name="goal_date",
+                description="date for which to set the goal",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            )
+        ],
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "goals": {
+                        "type": "object",
+                        "description": "Goals that need to be updated. "
+                        "<internal_name>:<val>",
+                        "additionalProperties": {"type": "number"},
                     }
-                }
-            },
-            responses={
-                200: "ok",
-                400: "Invalid Input."
+                },
             }
+        },
+        responses={200: "ok", 400: "Invalid Input."},
     )
     def post(self, request, goal_date):
-        goal_data = request.data.get('goals')
+        goal_data = request.data.get("goals")
         day = datetime.fromisoformat(goal_date)
 
         if len(goal_data) == 0:
@@ -374,40 +368,40 @@ class CalendarView(APIView):
     serializer_class = StatsSerializer
 
     @extend_schema(
-            summary="Retrieves the calendar view of a given date range.",
-            description="""Retrieves boolean data if all goals are completed
+        summary="Retrieves the calendar view of a given date range.",
+        description="""Retrieves boolean data if all goals are completed
             for a given date range. Inclusive on both sides of the date range
             (a <= b <= c).
 
             Element 0 of the return array is the oldest date.
             """,
-            parameters=[
-                OpenApiParameter(
-                    name="start_date",
-                    description="start date of the calendar view",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                ),
-                OpenApiParameter(
-                    name="end_date",
-                    description="end date of the calender view",
-                    type=OpenApiTypes.STR,
-                    location=OpenApiParameter.PATH,
-                    required=True
-                )
-            ],
-            responses={
-                200: inline_serializer(
-                    name='MyResponse',
-                    fields={
-                        'key': serializers.CharField(),
-                        'val': serializers.FloatField(),
-                    },
-                    many=True
-                ),
-                400: OpenApiResponse(description="Invalid input.")
-            }
+        parameters=[
+            OpenApiParameter(
+                name="start_date",
+                description="start date of the calendar view",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="end_date",
+                description="end date of the calender view",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                required=True,
+            ),
+        ],
+        responses={
+            200: inline_serializer(
+                name="MyResponse",
+                fields={
+                    "key": serializers.CharField(),
+                    "val": serializers.FloatField(),
+                },
+                many=True,
+            ),
+            400: OpenApiResponse(description="Invalid input."),
+        },
     )
     def get(self, request, start_date, end_date):
         startDay = datetime.fromisoformat(start_date)

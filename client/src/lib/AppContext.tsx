@@ -7,7 +7,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [statsOpen, setStatsOpen] = useState(false);
-  const popupOpen = statsOpen || menuOpen || settingsOpen;
+  const [stressMenuOpen, setStressMenuOpen] = useState(false);
+  const popupOpen = statsOpen || menuOpen || settingsOpen || stressMenuOpen;
+  const [sendStress, setSendStress] = useState<() => void>(() => () => {});
 
   const popup: PopupConfigs = {
     popupOpen,
@@ -17,6 +19,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     changeSettings: () => setSettingsOpen(!settingsOpen),
     statsOpen,
     changeStats: () => setStatsOpen(!statsOpen),
+    stressMenuOpen,
+    changeStressMenu: () => setStressMenuOpen(!stressMenuOpen),
+    sendStress,
+    setSendStress,
   };
 
   return <AppContext.Provider value={popup}>{children}</AppContext.Provider>;

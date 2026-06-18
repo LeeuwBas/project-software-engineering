@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from ..authentication.models import User
 
+
 class Stats(models.Model):
     """
         Simple stats model.
@@ -13,12 +14,22 @@ class Stats(models.Model):
             date: holds date of the statistic
 
             water: glasses of water drank on the given day
+            stress: stress level
+                    -1: not set
+                    0, 1, 2: low, medium, high
             steps: the amount of steps walked on a day
+            sleep: good/bad sleep
+            food: amount of meals eaten on the given day
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     water = models.IntegerField(default=0)
+    sleep = models.IntegerField(default=0)
+    food = models.IntegerField(default=0)
+    stress = models.IntegerField(default=-1)
     steps = models.IntegerField(default=0)
+
 
 class Goals(models.Model):
     """
@@ -29,10 +40,18 @@ class Goals(models.Model):
             date: holds start date of the goal
 
             water: glasses of water drank on the given day
+            stress: stress level. Added in goals for parity with Stats.
+                    -1: not set
+                    0, 1, 2: low, medium, high
             steps: the amount of steps walked on a day
+            sleep: good/bad sleep
+            food: amount of meals eaten on the given day
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     water = models.IntegerField(default=0)
+    sleep = models.IntegerField(default=1)
+    food = models.IntegerField(default=3)
+    stress = models.IntegerField(default=-1)
     steps = models.IntegerField(default=0)
-

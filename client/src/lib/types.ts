@@ -1,12 +1,19 @@
+import { Dispatch, SetStateAction } from 'react';
+import { SvgProps } from 'react-native-svg';
+
 // state of popups and functions to open/close them.
 export interface PopupConfigs {
     popupOpen: boolean;
     menuOpen: boolean;
-    changeMenu: Function;
+    changeMenu: () => void;
     settingsOpen: boolean;
-    changeSettings: Function;
+    changeSettings: () => void;
     statsOpen: boolean;
-    changeStats: Function;
+    changeStats: () => void;
+    stressMenuOpen: boolean;
+    changeStressMenu: () => void;
+    sendStress: () => void;
+    setSendStress: Dispatch<SetStateAction<() => void>>;
 }
 
 export interface PetType {
@@ -14,3 +21,19 @@ export interface PetType {
     setPet: Function;
     savePet: Function;
 }
+
+export interface GoalModules {
+    water: number;
+    steps: number;
+    food: number;
+}
+
+export type ModuleProps = {
+    id: string;
+    icon: React.FC<SvgProps>;
+    value?: number;
+    setValue?: (value: number) => void;
+    goal?: number;
+    onPress?: () => void;
+    buttonString?: string;
+};

@@ -3,23 +3,9 @@ import { StatisticChart } from '@/components/stats/StatisticChart';
 import { Button } from '@/components/ui/button';
 import { getChartLabels } from '@/lib/stats/chart-labels';
 import { HistoryPeriod, PERIOD_CONFIG, StatName, STATS } from '@/lib/stats/statistics-types';
-import {
-  getStatBarChart,
-  getStatSummary,
-  StatisticsBarChart,
-  StatisticsSummary,
-} from '@/lib/storage';
+import { StatisticsSummary } from '@/lib/storage';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { waterBridge } from '@/lib/api/APIBridge';
-
-function generateData(bins: number): number[] {
-  const values = Array(bins);
-  for (let i = 0; i < values.length; i++) {
-    values[i] = Math.floor(Math.random() * 8) + 1;
-  }
-  return values;
-}
 
 export function StatisticView({ stat }: { stat: StatName }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
@@ -29,6 +15,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
   const [error, setError] = useState<string | null>(null);
 
   const statData = STATS[stat];
+  const goal = statData.bridge.useGoal() ?? 0;
 
   useEffect(() => {
     async function loadData() {
@@ -38,14 +25,16 @@ export function StatisticView({ stat }: { stat: StatName }) {
 
         const config = PERIOD_CONFIG[period];
 
-        // Temporary calls to storage.ts functions
-        // Use API bridge when it is done
         const now = new Date();
         const past = new Date();
         past.setTime(now.getTime() - 1000 * 60 * 60 * 24 * config.days);
-        const barsData = await waterBridge.getBarChart(config.bins, config.days / config.bins, now);
+        const barsData = await statData.bridge.getBarChart(
+          config.bins,
+          config.days / config.bins,
+          now
+        );
         setBars(barsData);
-        const summaryData = await getStatSummary('water', config.days);
+        const summaryData = await statData.bridge.getSummary(past, now);
         setSummary(summaryData);
       } catch (err) {
         console.error(err);
@@ -59,9 +48,8 @@ export function StatisticView({ stat }: { stat: StatName }) {
     loadData();
   }, [period, stat]);
 
-  // const values = bars ? Object.values(bars.bins) : [0]; // Placeholder for when fetching data fails
   const config = PERIOD_CONFIG[period];
-  const values = bars ?? new Array<number>(config.bins).fill(0); //generateData(config.bins);
+  const values = bars ?? new Array<number>(config.bins).fill(0);
 
   const labels = getChartLabels(period);
 
@@ -95,26 +83,33 @@ export function StatisticView({ stat }: { stat: StatName }) {
       </View>
 
       {!loading && (
-        <StatisticChart values={values} labels={labels} barconfig={statData.barconfig} />
+        <StatisticChart
+          values={values}
+          labels={labels}
+          barconfig={statData.barconfig}
+          goal={goal}
+        />
       )}
 
       <View className="mt-4 gap-2">
         <AppText>
-          {/* Highest: {loading ? 'Loading...' : `${summary?.maximum} ${statData.unit}`} */}
-          Highest: {loading ? 'Loading...' : `${Math.max(...values)} ${statData.unit}`}
-        </AppText>
-
-        {/* <AppText>Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${statData.unit}`}</AppText> */}
-        <AppText>
-          Lowest: {loading ? 'Loading...' : `${Math.min(...values)} ${statData.unit}`}
+          Highest: {loading ? 'Loading...' : `${summary?.maximum} ${statData.unit}`}
+          {/*Highest: {loading ? 'Loading...' : `${Math.max(...values)} ${statData.unit}`}*/}
         </AppText>
 
         <AppText>
-          {/* Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`} */}
-          Average:{' '}
-          {loading
-            ? 'Loading...'
-            : `${Math.round((values.reduce((Acc, x) => Acc + x) / values.length) * 10) / 10} ${statData.unit}`}
+          <AppText>
+            Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${statData.unit}`}
+          </AppText>
+          {/*Lowest: {loading ? 'Loading...' : `${Math.min(...values)} ${statData.unit}`}*/}
+        </AppText>
+
+        <AppText>
+          Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`}
+          {/*Average:{' '}*/}
+          {/*{loading*/}
+          {/*  ? 'Loading...'*/}
+          {/*  : `${Math.round((values.reduce((Acc, x) => Acc + x) / values.length) * 10) / 10} ${statData.unit}`}*/}
         </AppText>
 
         {error && <AppText className="text-red-500">Failed to load statistics: {error}</AppText>}

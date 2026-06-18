@@ -6,13 +6,17 @@ import { Text } from '@/components/ui/text';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
+import { useTutorial } from '@/lib/settings';
+import { useAuth } from '@/lib/auth/AuthManager';
 
 export function SignUpForm() {
   const router = useRouter();
+  const { colorScheme } = useColorScheme();
 
   // These are 'states', think of them like variables that re-render the page
   // when they are changed. We use them to keep track of the user's input and
@@ -23,6 +27,8 @@ export function SignUpForm() {
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
   const passwordInputRef = React.useRef<Input>(null);
+  const auth = useAuth();
+  const { resetTutorial } = useTutorial();
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
@@ -49,6 +55,8 @@ export function SignUpForm() {
         return;
       }
 
+      resetTutorial(); // Possibly need to require auth here?
+
       toast.success('Account created successfully!');
       router.replace('/login');
     } catch (err) {
@@ -57,9 +65,19 @@ export function SignUpForm() {
     }
   }
 
+  async function onGuestSubmit() {
+    await auth.setGuest();
+    resetTutorial();
+    router.replace('/');
+  }
+
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -125,6 +143,9 @@ export function SignUpForm() {
               </View>
               <Button className="w-full" onPress={onSubmit}>
                 <Text>Continue</Text>
+              </Button>
+              <Button className="w-full" onPress={onGuestSubmit}>
+                <Text>Continue as guest</Text>
               </Button>
 
               {/* - Begin placeholder for testing - */}

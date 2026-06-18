@@ -15,6 +15,7 @@ import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
 
 interface AnimationProps {
   animation: AnimationName;
+  iteration_count?: number;
   scale?: number;
 }
 
@@ -26,11 +27,12 @@ interface AnimationProps {
  * @param {number} scale scales the animation by this amount, defaults to 1
  * @returns A TSX element that renders the specified animation at the specified scale
  */
-export function Animation({ animation, scale = 1 }: AnimationProps) {
+export function Animation({ animation, scale = 1, iteration_count=0 }: AnimationProps) {
   const config = ANIMATIONS[animation] ? ANIMATIONS[animation] : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
   const frame = useSharedValue(0);
   const startTime = useSharedValue(0);
+  const iteration = useSharedValue(0)
 
   useEffect(() => {
     startTime.value = performance.now();
@@ -38,9 +40,19 @@ export function Animation({ animation, scale = 1 }: AnimationProps) {
   }, [animation]);
 
   // Calculates frame index in asset
-  useFrameCallback((info) => {
-    const elapsed = info.timestamp - startTime.value;
-    frame.value = Math.floor((elapsed / 1000) * config.fps) % config.frameCount;
+  useFrameCallback(() => {
+    const elapsed = performance.now() - startTime.value;
+    const totalFramesElapsed = Math.floor((elapsed / 1000) * config.fps);
+
+    iteration.value = Math.floor(totalFramesElapsed / config.frameCount);
+
+    // Fix overshoot frame on last iteration (J's phone)
+    if (iteration.value === iteration_count && iteration_count != 0) {
+      const calculatedFrame = Math.floor((elapsed / 1000) * config.fps);
+      frame.value = Math.min(calculatedFrame, config.frameCount - 1);
+    } else {
+      frame.value = Math.floor((elapsed / 1000) * config.fps) % config.frameCount;
+    }
   });
 
   // Samples frame based on index and frame size from asset
