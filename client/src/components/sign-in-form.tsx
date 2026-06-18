@@ -42,6 +42,11 @@ export function SignInForm() {
     }
   }
 
+  async function onCreateAccount() {
+    Keyboard.dismiss();
+    router.push('/pet-select');
+  }
+
   return (
     <ImageBackground
       source={
@@ -106,6 +111,9 @@ export function SignInForm() {
               </View>
               <Button className="w-full" onPress={onSubmit}>
                 <Text>Continue</Text>
+              </Button>
+              <Button className="w-full" onPress={onCreateAccount}>
+                <Text>Create Account</Text>
               </Button>
 
               {/* - Begin placeholder for testing - */}
