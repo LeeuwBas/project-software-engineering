@@ -12,7 +12,7 @@ def getStatDict(line: Stats | Goals):
     read from and update.
 
     """
-    return {"water": line.water, "sleep": line.sleep, "food": line.food, 'stress': line.stress}
+    return {"water": line.water, "steps": line.steps, "sleep": line.sleep, "food": line.food, 'stress': line.stress}
 
 def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime):
     """
@@ -144,7 +144,7 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
 
     oldLine = getGoal(user, None, day)
     if oldLine is None:
-        oldLine = Goals()
+        oldLine = getStatDict(Goals())
 
     for statName, value in goal_data.items():
         oldLine[statName] = value
@@ -187,3 +187,7 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
         currentDay += timedelta(1)
 
     return returnList
+
+
+def toISOFormat(date: datetime):
+    return date.strftime("%Y-%m-%d")

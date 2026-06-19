@@ -120,7 +120,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     );
 
     return () => clearTimeout(timer);
-  }, [currentAnim, idleAnim, animIteration, waterValue]);
+  }, [currentAnim, idleAnim, animIteration]);
 
   return (
     <View className={className} {...props}>
