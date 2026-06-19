@@ -112,12 +112,9 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     const oneIterationMs = (meta.frameCount / meta.fps) * 1000;
     const totalDurationMs = oneIterationMs * animIteration;
 
-    const timer = setTimeout(
-      () => {
-        setCurrentAnim(idleAnim);
-      },
-      Math.max(0, totalDurationMs)
-    );
+    const timer = setTimeout(() => {
+      setCurrentAnim(idleAnim);
+    }, totalDurationMs);
 
     return () => clearTimeout(timer);
   }, [currentAnim, idleAnim, animIteration]);
