@@ -27,7 +27,6 @@ export function AccountCreationStep({ onNext }: Props) {
   const [loading, setLoading] = React.useState<Boolean>(false);
 
   const { signIn } = useAuth();
-
   const { resetTutorial } = useTutorial();
 
   const passwordInputRef = React.useRef<TextInput>(null);
@@ -74,14 +73,19 @@ export function AccountCreationStep({ onNext }: Props) {
 
   return (
     <KeyboardProvider>
-      <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={100} style={{ flex: 1 }}>
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
         <View style={{ flex: 0.3 }} />
-        <Card className="mx-4 border-border shadow-none">
+
+        <Card className="mx-4 border-border bg-background/80 shadow-none">
           <CardHeader>
-            <CardTitle className="text-center text-xl sm:text-left">Create account</CardTitle>
+            <CardTitle className="text-center text-xl">Create account</CardTitle>
           </CardHeader>
-          <CardContent className="gap-6">
-            {errors.general && <AppText className="font-bold">{errors.general[0]}</AppText>}
+
+          <CardContent className="gap-5">
+            {errors.general && (
+              <AppText className="text-sm font-bold opacity-80">{errors.general[0]}</AppText>
+            )}
+
             <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -95,12 +99,12 @@ export function AccountCreationStep({ onNext }: Props) {
                 submitBehavior="submit"
                 onChangeText={setEmail}
               />
-              {errors.email && <AppText className="font-bold">{errors.email[0]}</AppText>}
+              {errors.email && <AppText className="text-sm opacity-80">{errors.email[0]}</AppText>}
             </View>
+
             <View className="gap-1.5">
-              <View className="flex-row items-center">
-                <Label htmlFor="password">Password</Label>
-              </View>
+              <Label htmlFor="password">Password</Label>
+
               <Input
                 ref={passwordInputRef}
                 id="password"
@@ -112,19 +116,18 @@ export function AccountCreationStep({ onNext }: Props) {
                 autoComplete="new-password"
                 textContentType="newPassword"
               />
-              {errors.password && <AppText className="font-bold">{errors.password[0]}</AppText>}
+
+              {errors.password && (
+                <AppText className="text-sm opacity-80">{errors.password[0]}</AppText>
+              )}
             </View>
+
             {loading ? (
               <Button className="w-full py-0" variant="outline" onPress={null}>
                 <AppText>Loading...</AppText>
               </Button>
             ) : (
-              <Button
-                className="w-full py-0"
-                variant="default"
-                onPress={() => {
-                  onSubmit();
-                }}>
+              <Button className="w-full py-0" variant="default" onPress={onSubmit}>
                 <AppText>Sign Up & Continue</AppText>
               </Button>
             )}

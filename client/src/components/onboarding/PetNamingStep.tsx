@@ -31,14 +31,14 @@ export function PetNamingStep({ onNext, onBack }: Props) {
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
         <View style={{ flex: 0.3 }} />
 
-        <Card className="mx-4 border-border shadow-none">
+        <Card className="mx-4 border-border bg-background/80 shadow-none">
           <CardHeader>
             <CardTitle className="text-center text-xl sm:text-left">
               <AppText className="font-bold">Making Acquaintance</AppText>
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="gap-3">
+          <CardContent className="gap-5">
             <View className="gap-1.5">
               <AppText>What is your companion's name?</AppText>
 
@@ -72,7 +72,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
                 {userName.length}/{maxNameLength}
               </AppText>
             </View>
-            <View className="gap-1.5">
+            <View className="gap-2">
               <Button
                 disabled={petName.trim().length === 0 || userName.trim().length === 0}
                 onPress={confirm}>

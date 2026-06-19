@@ -32,7 +32,7 @@ export default function Onboarding() {
       break;
 
     case 'module-config':
-      currentStep = <ModuleConfigStep onNext={nextStep} onBack={previousStep} />;
+      currentStep = <ModuleConfigStep onBack={previousStep} />;
       break;
 
     default:

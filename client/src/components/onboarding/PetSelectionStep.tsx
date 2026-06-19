@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, Pressable } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 
@@ -30,36 +30,37 @@ export function PetSelectionStep({ onNext }: Props) {
   return (
     <View className="flex-col gap-12">
       <View className="flex-row items-center justify-between">
-        <View className="w-1/5">
-          {draftPet !== 0 && (
-            <Button
-              variant="outline"
-              className="mx-2 flex h-auto items-center py-0"
-              onPress={() => setPetId(draftPet - 1)}>
-              <ChevronLeft width={80} height={80} />
-            </Button>
+        <View className="w-1/5 items-center justify-center">
+          {draftPet !== 0 ? (
+            <Pressable
+              onPress={() => setPetId(draftPet - 1)}
+              hitSlop={12}
+              className="h-12 w-12 items-center justify-center">
+              <ChevronLeft width={36} height={36} />
+            </Pressable>
+          ) : (
+            <View className="h-12 w-12" />
           )}
         </View>
 
         <Pet className="w-1/2" id={draftPet} />
 
-        <View className="w-1/5">
-          {draftPet !== NUM_PETS - 1 && (
-            <Button
-              variant="outline"
-              className="mx-2 flex h-auto items-center py-0"
-              onPress={() => setPetId(draftPet + 1)}>
-              <ChevronRight width={80} height={80} />
-            </Button>
+        <View className="w-1/5 items-center justify-center">
+          {draftPet !== NUM_PETS - 1 ? (
+            <Pressable
+              onPress={() => setPetId(draftPet + 1)}
+              hitSlop={12}
+              className="h-12 w-12 items-center justify-center">
+              <ChevronRight width={36} height={36} />
+            </Pressable>
+          ) : (
+            <View className="h-12 w-12" />
           )}
         </View>
       </View>
 
-      <View className="items-center gap-2">
-        <Button
-          onPress={() => {
-            confirm();
-          }}>
+      <View className="w-full gap-2 px-12">
+        <Button onPress={confirm}>
           <AppText className="font-bold text-white">Choose companion</AppText>
         </Button>
 
