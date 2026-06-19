@@ -260,3 +260,19 @@ class GoalsTests(TestCase):
             format="json",
         )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def testWrongRequests(self):
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"wrong_field": 0}},
+            format="json",
+        )
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        fetchres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "fake_goal"}
+        )
+        self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
