@@ -31,7 +31,7 @@ from api.quotes.views import RequestQuote
 
 from django.urls import path, include
 from rest_framework import routers
-from api.authentication.views import UserViewSet
+from api.authentication.views import UserViewSet, SettingsView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.contrib.rest_framework_simplejwt import SimpleJWTScheme
@@ -43,6 +43,7 @@ router.register(r"users", UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
+    path("users/settings", SettingsView.as_view(), name="settingsView"),
     path("api/goals/<str:goal_date>", GoalManageView.as_view(), name="goal_endpoint"),
     path("api/calendar/<str:start_date>/<str:end_date>", CalendarView.as_view(), name="calendar_endpoint"),
     path("api/stats/<str:date>", StatManageView.as_view(), name="stat_manager"),
