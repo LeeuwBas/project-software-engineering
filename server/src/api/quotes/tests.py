@@ -7,14 +7,14 @@ from rest_framework.test import APIClient
 
 MOCK_QUOTES = {
     "idle": {
-        "sad": ["Mock Idle Sad"],
-        "neutral": ["Mock Idle Neutral"],
-        "happy": ["Mock Idle Happy"],
+        "sad": {"Standard": ["Mock Idle Sad"]},
+        "neutral": {"Standard": ["Mock Idle Neutral"]},
+        "happy": {"Standard": ["Mock Idle Happy"]},
     },
     "click": {
-        "sad": ["Mock Click Sad"],
-        "neutral": ["Mock Click Neutral"],
-        "happy": ["Mock Click Happy"],
+        "sad": {"Standard": ["Mock Click Sad"]},
+        "neutral": {"Standard": ["Mock Click Neutral"]},
+        "happy": {"Standard": ["Mock Click Happy"]},
     },
 }
 
@@ -33,7 +33,7 @@ class QuotesApiTests(TestCase):
     @patch("api.quotes.helpers.load_quotes", return_value=MOCK_QUOTES)
     def test_get_quote_sad_idle(self, mock_load):
         self.client.force_authenticate(self.user)
-        payload = {"action": "idle", "mood": 15}
+        payload = {"action": "idle", "level": "sad", "context": "Standard"}
         res = self.client.get(self.quote_url, payload)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -44,7 +44,7 @@ class QuotesApiTests(TestCase):
     def test_get_quote_happy_click(self, mock_load):
         """Test picking a quote from the high-happiness 'happy' range during a click action."""
         self.client.force_authenticate(self.user)
-        payload = {"action": "click", "mood": 95}
+        payload = {"action": "click", "level": "happy", "context": "Standard"}
         res = self.client.get(self.quote_url, payload, format="json")
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -61,9 +61,11 @@ class QuotesApiTests(TestCase):
 
     @patch("api.quotes.helpers.load_quotes", return_value=MOCK_QUOTES)
     def test_get_quote_invalid_action(self, mock_load):
-        """Test that the API uses a fallback or returns a 400/404 if an unknown action is passed."""
+        """Test that the API returns a fallback quote when an unknown action is passed."""
         self.client.force_authenticate(self.user)
-        payload = {"action": "dance", "happiness": 50}
+        payload = {"action": "dance", "level": "happy", "context": "Standard"}
         res = self.client.get(self.quote_url, payload, format="json")
 
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        data = res.json()
+        self.assertEqual(data["quote"], "What do you want from me?")
