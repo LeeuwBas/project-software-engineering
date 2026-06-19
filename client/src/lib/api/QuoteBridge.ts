@@ -1,4 +1,5 @@
 import { getAPI } from '@/lib/api/ApiManager';
+import { getCurrentGoal, getStat } from '@/lib/storage';
 import { useSyncExternalStore } from 'react';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
@@ -84,7 +85,7 @@ export function createQuoteBridge(): QuoteBridge {
         const data = await getAPI(
             `/api/get-quote/?mood=${req.mood}&action=${encodeURIComponent(req.action)}`
         );
-        setQuote(data?.quote ?? null, req.durationMs);
+        setQuote(data?.quote ?? null);
     };
 
     const removeQuote = () => {
@@ -103,12 +104,48 @@ export function createQuoteBridge(): QuoteBridge {
     };
 }
 
-//TODO calculate the correct quote to request
-function calculateQuoteRequest() {
-    // collect stats from different modules
+async function getTodaysSnapshot() {
+    const currentStats = await getStat(); // StatLine | null
+    const currentGoals = await getCurrentGoal(null); // StatLine | number | null
 
-    const durationMs = DEFAULT_QUOTE_DURATION_MS;
-    const mood = 0; //calculate mood
-    const action = 'temp'; //calculate action
-    return { mood: mood, action: action, durationMs: durationMs };
+    if (currentStats === null || typeof currentGoals === 'number' || currentGoals === null)
+        return null;
+
+    return { currentStats, currentGoals };
+}
+
+function isGoodWeather(): boolean {
+    return true; //TODO
+}
+
+//TODO calculate the correct quote to request
+async function calculateQuoteRequest() {
+    const snap = await getTodaysSnapshot();
+    if (snap === null) return null;
+    const { currentStats, currentGoals } = snap;
+
+    const {
+        water: waterNow,
+        sleep: sleepNow,
+        steps: stepsNow,
+        stress: stressNow,
+        food: foodNow,
+    } = currentStats;
+
+    const {
+        water: waterGoal,
+        sleep: sleepGoal,
+        steps: stepsGoal,
+        stress: stressGoal,
+        food: foodGoal,
+    } = currentGoals;
+
+    const goodWeather: boolean = isGoodWeather();
+
+    // do the formula
+
+    const action = ''; //calculate action
+    const level = ''; //calculate level
+    const context = ''; // calculate context
+    return { action, level, context };
 }
