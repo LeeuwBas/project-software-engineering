@@ -19,6 +19,7 @@ type Props = {
 
 export function AccountCreationStep({ onNext }: Props) {
   const router = useRouter();
+  const auth = useAuth();
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -26,7 +27,6 @@ export function AccountCreationStep({ onNext }: Props) {
 
   const [loading, setLoading] = React.useState<Boolean>(false);
 
-  const { signIn } = useAuth();
   const { resetTutorial } = useTutorial();
 
   const passwordInputRef = React.useRef<TextInput>(null);
@@ -56,7 +56,7 @@ export function AccountCreationStep({ onNext }: Props) {
       resetTutorial();
 
       toast.success('Account created successfully!');
-      const success = await signIn(email, password);
+      const success = await auth.signIn(email, password);
       if (!success) {
         toast.error('Sign in after sign up failed, please sign in again.');
         router.replace('/login');
@@ -69,6 +69,12 @@ export function AccountCreationStep({ onNext }: Props) {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function onGuestSubmit() {
+    await auth.setGuest();
+    resetTutorial();
+    onNext?.();
   }
 
   return (
@@ -131,6 +137,9 @@ export function AccountCreationStep({ onNext }: Props) {
                 <AppText>Sign Up & Continue</AppText>
               </Button>
             )}
+            <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
+              <AppText>Continue as guest</AppText>
+            </Button>
           </CardContent>
         </Card>
       </KeyboardAvoidingView>
