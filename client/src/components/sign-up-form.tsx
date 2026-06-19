@@ -1,18 +1,22 @@
+/*
+ * DEPRECATED SIGN UP FORM. SEE AccountCreationStep.tsx in /onboarding
+ */
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
+import { useAuth } from '@/lib/auth/AuthManager';
+import { useTutorial } from '@/lib/settings';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { View, TextInput } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
-import { useTutorial } from '@/lib/settings';
-import { useAuth } from '@/lib/auth/AuthManager';
 
 export function SignUpForm() {
   const router = useRouter();

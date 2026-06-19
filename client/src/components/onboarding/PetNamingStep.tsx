@@ -1,12 +1,11 @@
-import { useState } from 'react';
-import { Keyboard, View, Pressable } from 'react-native';
-
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 import { savePetName, saveUserName } from '@/lib/settings';
+import { useState } from 'react';
+import { View } from 'react-native';
+import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 
 type Props = {
   onNext?: () => void;
@@ -87,7 +86,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
 
           <CardContent className="gap-5">
             <View className="gap-1.5">
-              <AppText>What is your companion's name?</AppText>
+              <AppText className="font-bold">What is your companion's name?</AppText>
 
               <Input
                 placeholder="Companion name"
@@ -114,7 +113,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
             </View>
 
             <View className="gap-1.5">
-              <AppText>What is your name?</AppText>
+              <AppText className="font-bold">What is your name?</AppText>
 
               <Input
                 placeholder="Your name"

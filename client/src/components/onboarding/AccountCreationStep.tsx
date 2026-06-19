@@ -84,13 +84,13 @@ export function AccountCreationStep({ onNext }: Props) {
         <Card className="mx-4 border-border bg-background/80 shadow-none">
           <CardHeader>
             <CardTitle className="text-center text-xl">
-              <AppText>Create account</AppText>
+              <AppText className="font-bold">Create account</AppText>
             </CardTitle>
           </CardHeader>
 
           <CardContent className="gap-5">
             {errors.general && (
-              <AppText className="text-sm font-bold text-red-500 opacity-80">
+              <AppText className="text-sm font-bold text-destructive opacity-80">
                 {errors.general[0]}
               </AppText>
             )}
@@ -109,7 +109,7 @@ export function AccountCreationStep({ onNext }: Props) {
                 onChangeText={setEmail}
               />
               {errors.email && (
-                <AppText className="text-sm text-red-500 opacity-80">{errors.email[0]}</AppText>
+                <AppText className="text-sm text-destructive opacity-80">{errors.email[0]}</AppText>
               )}
             </View>
 
@@ -134,15 +134,15 @@ export function AccountCreationStep({ onNext }: Props) {
 
             {loading ? (
               <Button className="w-full py-0" variant="outline" onPress={null}>
-                <AppText>Loading...</AppText>
+                <AppText className="font-bold">Loading...</AppText>
               </Button>
             ) : (
               <Button className="w-full py-0" variant="default" onPress={onSubmit}>
-                <AppText>Sign Up & Continue</AppText>
+                <AppText className="font-bold">Sign Up & Continue</AppText>
               </Button>
             )}
-            <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
-              <AppText>Continue as guest</AppText>
+            <Button className="w-full py-0" variant="outline" onPress={onGuestSubmit}>
+              <AppText className="font-bold">Continue as guest</AppText>
             </Button>
           </CardContent>
         </Card>

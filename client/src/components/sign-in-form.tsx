@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import { useAuth } from '@/lib/auth/AuthManager';
 import { ImageBackground } from 'expo-image';
@@ -10,6 +9,7 @@ import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppText } from './AppText';
 
 export function SignInForm() {
   const router = useRouter();
@@ -19,6 +19,7 @@ export function SignInForm() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
+  const [loading, setLoading] = React.useState<Boolean>(false);
 
   const passwordInputRef = React.useRef<TextInput>(null);
 
@@ -27,6 +28,8 @@ export function SignInForm() {
   }
 
   async function onSubmit() {
+    setLoading(true);
+
     try {
       const success = await auth.signIn(email, password);
       // on success, the RequireNoAuth in app/login/index will kick us to the homepage, and we can add a loading screen
@@ -39,6 +42,8 @@ export function SignInForm() {
     } catch (err) {
       console.log('Sign in request failed:', (err as Error).message);
       setErrors({ detail: ['Could not reach the server.'] });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -59,13 +64,17 @@ export function SignInForm() {
       <SafeAreaView style={{ flex: 1 }}>
         <Card className="m-6 mt-24 border-4 border-border shadow-none">
           <CardHeader>
-            <CardTitle className="text-center text-xl sm:text-left">Sign in</CardTitle>
+            <CardTitle className="text-center text-xl">
+              <AppText className="font-bold">Sign in</AppText>
+            </CardTitle>
           </CardHeader>
           <CardContent className="gap-6">
             <View className="gap-6">
-              {errors.detail && <Text className="text-sm text-destructive">{errors.detail}</Text>}
+              {errors.detail && (
+                <AppText className="text-sm text-destructive opacity-80">{errors.detail}</AppText>
+              )}
               <View className="gap-1.5">
-                <Label htmlFor="email">Email</Label>
+                <AppText className="font-bold">Email</AppText>
                 <Input
                   id="email"
                   placeholder="john@doe.com"
@@ -78,22 +87,11 @@ export function SignInForm() {
                   onChangeText={setEmail}
                 />
                 {errors.email && (
-                  <Text className="text-sm text-destructive">{errors.email[0]}</Text>
+                  <Text className="text-sm text-destructive opacity-80">{errors.email[0]}</Text>
                 )}
               </View>
               <View className="gap-1.5">
-                <View className="flex-row items-center">
-                  <Label htmlFor="password">Password</Label>
-                  {/* <Button
-                    variant="link"
-                    size="sm"
-                    className="ml-auto h-4 px-1 py-0 web:h-fit sm:h-4"
-                    onPress={() => {
-                      router.replace('/forgot-password');
-                    }}>
-                    <Text className="font-normal leading-4">Forgot your password?</Text>
-                  </Button> */}
-                </View>
+                <AppText className="font-bold">Password</AppText>
                 <Input
                   ref={passwordInputRef}
                   id="password"
@@ -109,11 +107,17 @@ export function SignInForm() {
                   <Text className="text-sm text-destructive">{errors.password[0]}</Text>
                 )}
               </View>
-              <Button className="w-full" onPress={onSubmit}>
-                <Text>Continue</Text>
-              </Button>
-              <Button className="w-full" onPress={onCreateAccount}>
-                <Text>Create Account</Text>
+              {loading ? (
+                <Button className="w-full py-0" variant="outline" onPress={null}>
+                  <AppText className="font-bold">Loading...</AppText>
+                </Button>
+              ) : (
+                <Button className="w-full py-0" variant="default" onPress={onSubmit}>
+                  <AppText className="font-bold">Continue</AppText>
+                </Button>
+              )}
+              <Button className="w-full py-0" onPress={onCreateAccount}>
+                <AppText className="font-bold">Create Account</AppText>
               </Button>
 
               {/* - Begin placeholder for testing - */}
