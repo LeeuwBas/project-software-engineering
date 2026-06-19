@@ -18,19 +18,19 @@ export async function loadSettings() {
 
 async function setTutorialDone() {
     const current = useSettingsStore.getState().settings;
-    current["hasDoneTutorial"] = true;
+    current.hasDoneTutorial = true;
     useSettingsStore.getState().setStore(current);
     await setSettings(current);
 }
 
 async function resetTutorial() {
     const current = useSettingsStore.getState().settings;
-    current["hasDoneTutorial"] = true;
+    current.hasDoneTutorial = true;
     useSettingsStore.getState().setStore(current);
     await setSettings(current);
 }
 
 export function useTutorial() {
-    const done = useSettingsStore((s) => s.settings["hasDoneTutorial"]);
+    const done = useSettingsStore((s) => s.settings.hasDoneTutorial);
     return { done, setTutorialDone, resetTutorial };
 }
