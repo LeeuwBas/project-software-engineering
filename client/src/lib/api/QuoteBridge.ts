@@ -81,9 +81,12 @@ export function createQuoteBridge(): QuoteBridge {
     };
 
     const requestQuote = async () => {
-        const req = calculateQuoteRequest();
+        const req = await calculateQuoteRequest();
+        if (req === null) return;
         const data = await getAPI(
-            `/api/get-quote/?mood=${req.mood}&action=${encodeURIComponent(req.action)}`
+            `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
+                `&level=${encodeURIComponent(req.level)}` +
+                `&context=${encodeURIComponent(req.context)}`
         );
         setQuote(data?.quote ?? null);
     };
@@ -114,7 +117,7 @@ async function getTodaysSnapshot() {
     return { currentStats, currentGoals };
 }
 
-function isGoodWeather(): boolean {
+async function isGoodWeather(): Promise<boolean> {
     return true; //TODO
 }
 
@@ -140,7 +143,10 @@ async function calculateQuoteRequest() {
         food: foodGoal,
     } = currentGoals;
 
-    const goodWeather: boolean = isGoodWeather();
+    console.log(JSON.stringify(currentStats));
+    console.log(JSON.stringify(currentGoals));
+
+    const goodWeather: boolean = await isGoodWeather();
 
     // do the formula
     const getRatio = (current: number | null, goal: number | null): number | null => {
@@ -154,39 +160,47 @@ async function calculateQuoteRequest() {
     const foodRatio = getRatio(foodNow, foodGoal);
 
     const stats = [
-        {action: "Water", ratio: waterRatio},
-        {action: "Walk", ratio: stepsRatio},
-        {action: "Sleep", ratio: sleepRatio},
-        {action: "Eat", ratio: foodRatio},
-        {action: "Stress", ratio: stressRatio != null ? 1 - stressRatio : null} //high and low are switched
-    ] 
+        { action: 'Water', ratio: waterRatio },
+        { action: 'Walk', ratio: stepsRatio },
+        { action: 'Sleep', ratio: sleepRatio },
+        { action: 'Eat', ratio: foodRatio },
+        { action: 'Stress', ratio: stressRatio != null ? 1 - stressRatio : null }, //high and low are switched
+    ];
 
-    //remove all null-values
-    const validStats = stats.filter((stat): stat is { action: string; ratio: number } => stat.ratio !== null);
-    
-    //retrieve worst stat
-    const worst = validStats.reduce((a, b) => a.ratio < b.ratio ? a : b);
-    
-    const getLevel = (ratio : number) => {
-        if (ratio < 0.33) return "Low";
-        if (ratio < 0.67) return "Medium";
-        return "High"
+    const validStats = stats.filter(
+        (stat): stat is { action: string; ratio: number } => stat.ratio !== null
+    );
+
+    if (validStats.length === 0) {
+        console.log('no valid stats found');
+        return null;
     }
+
+    //retrieve worst stat
+    const minRatio = Math.min(...validStats.map((s) => s.ratio));
+    const worstTied = validStats.filter((s) => s.ratio === minRatio);
+    const worst = worstTied[Math.floor(Math.random() * worstTied.length)];
+
+    const getLevel = (ratio: number) => {
+        if (ratio < 0.33) return 'Low';
+        if (ratio < 0.67) return 'Medium';
+        return 'High';
+    };
 
     const level = getLevel(worst.ratio);
 
-    let context = "Standard";
-    if (worst.action === "Water" && level === "Low") {
+    let context = 'Standard';
+    if (worst.action === 'Water' && level === 'Low') {
         if (stepsRatio != null) {
             //if steps are low
-            if (stepsRatio >= 0.8 && stepsRatio != null) context = "Exercise";
+            if (stepsRatio >= 0.8 && stepsRatio != null) context = 'Exercise';
         }
         //if weather is sunny
-        else if (goodWeather) context = "Sunny";
+        else if (goodWeather) context = 'Sunny';
     }
 
-    if (worst.action === "Walk" && level === "Medium" && goodWeather) {
-        context = "Sunny";
+    if (worst.action === 'Walk' && level === 'Medium' && goodWeather) {
+        context = 'Sunny';
     }
 
     const action = worst.action;
