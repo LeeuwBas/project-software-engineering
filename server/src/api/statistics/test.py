@@ -209,6 +209,35 @@ class GoalsTests(TestCase):
         )
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
+    def testGetGoal(self):
+        self.authenticate(self.firstuser)
+
+        self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 8}},
+            format="json",
+        )
+        self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"steps": 8000}},
+            format="json",
+        )
+        self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"food": 2}},
+            format="json",
+        )
+
+        fetchwaterres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "water"}
+        )
+        fetchstepsres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "steps"}
+        )
+        print(self.client.get(self.goalURL(self.validDateUpper)).json())
+        self.assertEqual(fetchwaterres.json()["water"], 8)
+        self.assertEqual(fetchstepsres.json()["steps"], 8000)
+
     def testEmptyRequests(self):
         self.authenticate(self.firstuser)
 
