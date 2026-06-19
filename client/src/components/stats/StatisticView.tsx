@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { getChartLabels } from '@/lib/stats/chart-labels';
 import { HistoryPeriod, PERIOD_CONFIG, StatName, STATS } from '@/lib/stats/statistics-types';
 import { StatisticsSummary } from '@/lib/storage';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
 export function StatisticView({ stat }: { stat: StatName }) {
@@ -14,17 +14,12 @@ export function StatisticView({ stat }: { stat: StatName }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const statData = STATS[stat];
-  const goal = statData.bridge.useGoal() ?? 0;
-
   const getChartMax = (goal: number) => {
     const magnitude = Math.pow(10, String(goal).length - 1);
     const rounded = Math.ceil(goal / magnitude) * magnitude;
 
     return rounded === goal ? goal + magnitude : rounded;
   };
-
-  const maxValue = getChartMax(goal);
 
   useEffect(() => {
     async function loadData() {
@@ -57,10 +52,14 @@ export function StatisticView({ stat }: { stat: StatName }) {
     loadData();
   }, [period, stat]);
 
-  const config = PERIOD_CONFIG[period];
-  const values = bars ?? new Array<number>(config.bins).fill(0);
+  const statData = STATS[stat];
+  const goal = statData.bridge.useGoal() ?? 0;
+  const maxValue = useMemo(() => getChartMax(goal), [goal]);
 
-  const labels = getChartLabels(period);
+  const config = useMemo(() => PERIOD_CONFIG[period], [period]);
+  const labels = useMemo(() => getChartLabels(period), [period]);
+
+  const values = useMemo(() => bars ?? new Array<number>(config.bins).fill(0), [bars, config]);
 
   return (
     <View className="w-full px-2">
