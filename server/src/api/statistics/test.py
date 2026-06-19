@@ -188,8 +188,19 @@ class GoalsTests(TestCase):
             username="test2", email="test2@test.com", password="passwordvery"
         )
 
+    def authenticate(self, user):
+        self.client.force_authenticate(user)
+
+    def testUnauthGet(self):
+        response = self.client.get(self.goalURL(self.validDateUpper))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def testUnauthPost(self):
+        response = self.client.post(self.goalURL(self.validDateUpper))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def testSetGoal(self):
-        self.client.force_authenticate(self.firstuser)
+        self.authenticate(self.firstuser)
 
         res = self.client.post(
             self.goalURL(self.validDateUpper),
@@ -199,7 +210,7 @@ class GoalsTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def testEmptyRequests(self):
-        self.client.force_authenticate(self.firstuser)
+        self.authenticate(self.firstuser)
 
         res = self.client.post(
             self.goalURL(self.validDateUpper),
