@@ -100,7 +100,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
               <View className="flex-row items-center justify-between">
                 <View className="flex-1 pr-2">
                   {errors.pet && (
-                    <AppText numberOfLines={1} className="text-sm text-red-500 opacity-80">
+                    <AppText numberOfLines={1} className="text-sm text-destructive opacity-80">
                       {errors.pet[0]}
                     </AppText>
                   )}
@@ -127,7 +127,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
               <View className="flex-row items-center justify-between">
                 <View className="flex-1 pr-2">
                   {errors.user && (
-                    <AppText numberOfLines={1} className="text-sm text-red-500 opacity-80">
+                    <AppText numberOfLines={1} className="text-sm text-destructive opacity-80">
                       {errors.user[0]}
                     </AppText>
                   )}
