@@ -34,3 +34,25 @@ export function useTutorial() {
     const done = useSettingsStore((s) => s.settings.has_done_tutorial);
     return { done, setTutorialDone, resetTutorial };
 }
+
+export function savePetName(petName: string) {
+    console.log(`not yet implemented, but ${petName} is a good name`);
+}
+
+export function saveUserName(userName: string) {
+    console.log(`not yet implemented, but ${userName} is an okay name`);
+}
+
+export function setActiveModules(modules: any) {
+    console.log(`you selected ${modules}`);
+}
+
+export function getActiveModules() {
+    return {
+        "stress": false,
+        "water": true,
+        "steps": false, // step counter is scary
+        "sleep": true,
+        "food": true,
+    }
+}

@@ -14,6 +14,7 @@ def getStatDict(line: Stats | Goals):
     """
     return {
         "water": line.water,
+        "steps": line.steps,
         "sleep": line.sleep,
         "food": line.food,
         "stress": line.stress,
@@ -195,3 +196,7 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
         currentDay += timedelta(1)
 
     return returnList
+
+
+def toISOFormat(date: datetime):
+    return date.strftime("%Y-%m-%d")

@@ -1,10 +1,10 @@
-import RequireAuth from '@/components/auth/RequireAuth';
+import RequireNoAuth from '@/components/auth/RequireNoAuth';
 import { Redirect } from 'expo-router';
 
 export default function Index() {
   return (
-    <RequireAuth>
-      <Redirect href="/(protected)" />
-    </RequireAuth>
+    <RequireNoAuth>
+      <Redirect href="/onboarding" />
+    </RequireNoAuth>
   );
 }

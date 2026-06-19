@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.db.models import F
 
 from rest_framework import status, serializers
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -14,7 +15,7 @@ from drf_spectacular.utils import (
 )
 from drf_spectacular.types import OpenApiTypes
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
@@ -29,6 +30,7 @@ from .helpers import (
     getCalender,
     setDay,
     getStatDict,
+    toISOFormat,
 )
 
 """
@@ -142,6 +144,115 @@ class StatManageView(APIView):
         setDay(request.user, stat_data, day)
 
         return Response("ok", 200)
+
+
+class StatBulkView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+        summary="Retrieves the set stat at a given date range",
+        description="""Retrieves the stats of a given date range for a given
+                module. If the module is not supplied it will return all stats.
+                """,
+        parameters=[
+            OpenApiParameter(
+                name="start_date",
+                description="start date for the stats",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="end_date",
+                description="End date of the stats",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="stat_name",
+                description="Internal name of the stat. If not supplied, "
+                "the api will return all stats at the given date.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+            ),
+        ],
+        responses={
+            200: {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "object",
+                        "additionalProperties": {"type": "integer"},
+                        "example": {"water": 5},
+                    }
+                },
+            },
+        },
+    )
+    def get(self, request):
+        stat_name = request.query_params.get("stat_name", None)
+        start_date = request.query_params.get("start_date", None)
+        end_date = request.query_params.get("end_date", None)
+        try:
+            day = datetime.fromisoformat(start_date)
+            end_day = datetime.fromisoformat(end_date)
+        except ValueError:
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+        if day + timedelta(days=90) < end_day:
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+        return_dict = {}
+
+        while day < end_day:
+            stats = getDay(request.user, stat_name, day)
+            if stats is None:
+                stats = getStatDict(Stats()) if stat_name is None else {stat_name: 0}
+
+            if type(stats) is dict:
+                return_dict[toISOFormat(day)] = stats
+            else:
+                return_dict[toISOFormat(day)] = {stat_name: stats}
+
+            day = day + timedelta(days=1)
+
+        return Response(return_dict, 200)
+
+    @extend_schema(
+        summary="Sets a new stat",
+        description="""Updates or inserts a new stat for a given date range
+                """,
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "object",
+                        "description": "Goals that need to be updated. "
+                        "<internal_name>:<val>",
+                        "additionalProperties": {"type": "number"},
+                    }
+                },
+            }
+        },
+        responses={200: "ok", 400: "Invalid Input."},
+    )
+    def post(self, request):
+        for date in request.data:
+            data = request.data[date]
+            if len(data) == 0:
+                return Response("Invalid input", 400)
+
+            try:
+                day = datetime.fromisoformat(date)
+            except ValueError:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            setDay(request.user, request.data[date], day)
+
+        return Response(status=200)
 
 
 class BarchartView(APIView):
@@ -324,9 +435,7 @@ class GoalManageView(APIView):
         goals = getGoal(request.user, goal_name, day)
 
         if goals is None:
-            return Response(
-                {"error": "Invalid input."}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(getStatDict(Goals()), status=status.HTTP_200_OK)
 
         if type(goals) is dict:
             return Response(goals, 200)
@@ -372,6 +481,118 @@ class GoalManageView(APIView):
 
         setGoal(request.user, goal_data, day)
         return Response("ok", 200)
+
+
+class GoalBulkView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+    serializer_class = StatsSerializer
+
+    @extend_schema(
+        summary="Retrieves the set goal at a given date range",
+        description="""Retrieves the goals of a given date range for a given
+                module. If the module is not supplied it will return all set goals.
+                """,
+        parameters=[
+            OpenApiParameter(
+                name="start_date",
+                description="start date for the goals",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="end_date",
+                description="End date of the goal",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=True,
+            ),
+            OpenApiParameter(
+                name="goal_name",
+                description="Internal name of the goal. If not supplied, "
+                "the api will return all goals at the given date.",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                required=False,
+            ),
+        ],
+        responses={
+            200: {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "object",
+                        "additionalProperties": {"type": "integer"},
+                        "example": {"water": 5},
+                    }
+                },
+            },
+        },
+    )
+    def get(
+        self,
+        request,
+    ):
+        goal_name = request.query_params.get("goal_name", None)
+        start_date = request.query_params.get("start_date", None)
+        end_date = request.query_params.get("end_date", None)
+        try:
+            day = datetime.fromisoformat(start_date)
+            end_day = datetime.fromisoformat(end_date)
+        except ValueError:
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+        if day + timedelta(days=90) < end_day:
+            return Response(status=HTTP_400_BAD_REQUEST)
+
+        return_dict = {}
+
+        while day < end_day:
+            goals = getGoal(request.user, goal_name, day)
+            if goals is None:
+                goals = getStatDict(Goals()) if goal_name is None else {goal_name: 0}
+
+            if type(goals) is dict:
+                return_dict[toISOFormat(day)] = goals
+            else:
+                return_dict[toISOFormat(day)] = {goal_name: goals}
+
+            day = day + timedelta(days=1)
+
+        return Response(return_dict, 200)
+
+    @extend_schema(
+        summary="Sets a new goal",
+        description="""Updates or inserts a new goal to be followed. for a given date range
+                """,
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "date": {
+                        "type": "object",
+                        "description": "Goals that need to be updated. "
+                        "<internal_name>:<val>",
+                        "additionalProperties": {"type": "number"},
+                    }
+                },
+            }
+        },
+        responses={200: "ok", 400: "Invalid Input."},
+    )
+    def post(self, request):
+        for date in request.data:
+            data = request.data[date]
+            if len(data) == 0:
+                return Response("Invalid input", 400)
+
+            try:
+                day = datetime.fromisoformat(date)
+            except ValueError:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            setGoal(request.user, request.data[date], day)
+
+        return Response(status=200)
 
 
 class CalendarView(APIView):
