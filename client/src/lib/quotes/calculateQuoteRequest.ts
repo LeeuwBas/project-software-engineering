@@ -35,11 +35,11 @@ export async function calculateQuoteRequest() {
 
     // Low, Medium, High boundaries
     const floors = {
-        water: { med: 0.33, high: 0.66 },
+        water: { med: 0.45, high: 0.99 },
         sleep: { med: 0.33, high: 0.66 },
-        steps: { med: 0.33, high: 0.66 },
+        steps: { med: 0.33, high: 0.99 },
         stress: { med: 0.33, high: 0.66, invert: true }, // high stays good
-        food: { med: 0.33, high: 0.66 },
+        food: { med: 0.45, high: 0.99 },
     };
     const getLevel = (
         current: number | null,
