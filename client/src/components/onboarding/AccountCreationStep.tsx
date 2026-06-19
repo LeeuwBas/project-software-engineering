@@ -84,12 +84,16 @@ export function AccountCreationStep({ onNext }: Props) {
 
         <Card className="mx-4 border-border bg-background/80 shadow-none">
           <CardHeader>
-            <CardTitle className="text-center text-xl">Create account</CardTitle>
+            <CardTitle className="text-center text-xl">
+              <AppText>Create account</AppText>
+            </CardTitle>
           </CardHeader>
 
           <CardContent className="gap-5">
             {errors.general && (
-              <AppText className="text-sm font-bold opacity-80">{errors.general[0]}</AppText>
+              <AppText className="text-sm font-bold text-red-500 opacity-80">
+                {errors.general[0]}
+              </AppText>
             )}
 
             <View className="gap-1.5">
@@ -105,7 +109,9 @@ export function AccountCreationStep({ onNext }: Props) {
                 submitBehavior="submit"
                 onChangeText={setEmail}
               />
-              {errors.email && <AppText className="text-sm opacity-80">{errors.email[0]}</AppText>}
+              {errors.email && (
+                <AppText className="text-sm text-red-500 opacity-80">{errors.email[0]}</AppText>
+              )}
             </View>
 
             <View className="gap-1.5">
@@ -124,7 +130,7 @@ export function AccountCreationStep({ onNext }: Props) {
               />
 
               {errors.password && (
-                <AppText className="text-sm opacity-80">{errors.password[0]}</AppText>
+                <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
               )}
             </View>
 
