@@ -30,11 +30,10 @@ export default function ModuleConfigStep({ onBack }: Props) {
     setGoals((current) => {
       const currentValue = current[module.key] ?? module.defaultGoal;
       const nextValue = Math.min(module.maxGoal, currentValue + module.stepSize);
-      const update = { ...current };
-
-      update[module.key] = nextValue;
-
-      return update;
+      return {
+        ...current,
+        [module.key]: nextValue,
+      };
     });
   }
 
@@ -42,11 +41,10 @@ export default function ModuleConfigStep({ onBack }: Props) {
     setGoals((current) => {
       const currentValue = current[module.key] ?? module.defaultGoal;
       const nextValue = Math.max(module.minGoal, currentValue - module.stepSize);
-      const update = { ...current };
-
-      update[module.key] = nextValue;
-
-      return update;
+      return {
+        ...current,
+        [module.key]: nextValue,
+      };
     });
   }
 
