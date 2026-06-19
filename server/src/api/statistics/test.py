@@ -234,7 +234,6 @@ class GoalsTests(TestCase):
         fetchstepsres = self.client.get(
             self.goalURL(self.validDateUpper), {"goal_name": "steps"}
         )
-        print(self.client.get(self.goalURL(self.validDateUpper)).json())
         self.assertEqual(fetchwaterres.json()["water"], 8)
         self.assertEqual(fetchstepsres.json()["steps"], 8000)
 

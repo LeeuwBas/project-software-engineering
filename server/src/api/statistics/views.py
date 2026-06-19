@@ -430,12 +430,14 @@ class GoalManageView(APIView):
     )
     def get(self, request, goal_date):
         goal_name = request.query_params.get("goal_name", None)
+        if goal_name is None:
+            return Response("Invalid input", 400)
         day = datetime.fromisoformat(goal_date)
 
         goals = getGoal(request.user, goal_name, day)
 
         if goals is None:
-            return Response(getStatDict(Goals()), status=status.HTTP_200_OK)
+            return Response(getStatDict(Goals()), 200)
 
         if type(goals) is dict:
             return Response(goals, 200)
