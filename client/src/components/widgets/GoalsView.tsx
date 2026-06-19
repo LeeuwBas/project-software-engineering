@@ -12,9 +12,8 @@ export default function GoalsView({
   goals: Record<string, number>;
   setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
 }) {
-  const activeModules = getActiveModules();
   const activeGoaledModules = MODULES.filter(
-    (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
   function incrementGoal(module: GoaledModule) {

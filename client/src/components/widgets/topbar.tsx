@@ -17,9 +17,8 @@ export default function Topbar() {
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });
 
-  const activeModules = getActiveModules();
   const activeGoaledModules = MODULES.filter(
-    (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
   const bars: BarType[] = activeGoaledModules.map((module) => ({

@@ -14,14 +14,13 @@ type Props = {
 };
 
 export default function ModuleConfigStep({ onBack }: Props) {
-  const activeModules = getActiveModules();
   const router = useRouter();
 
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
   const activeGoaledModules = MODULES.filter(
-    (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
   const [goals, setGoals] = useState<Record<string, number>>(() =>

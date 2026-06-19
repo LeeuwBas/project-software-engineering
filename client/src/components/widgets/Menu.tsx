@@ -5,7 +5,7 @@ import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
 import { getActiveModules } from '@/lib/settings';
-import { MenuConfig, ModuleDefinition, ModuleId, MODULES } from '@/lib/types';
+import { MenuConfig, ModuleId, MODULES } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
@@ -63,9 +63,7 @@ export default function Menu({
     },
   };
 
-  const activeModules: ModuleDefinition[] = MODULES.filter(
-    (module) => getActiveModules()[module.id]
-  );
+  const activeModules = MODULES.filter((module) => getActiveModules()[module.id]);
 
   useEffect(() => {
     if (!menuOpen) {
