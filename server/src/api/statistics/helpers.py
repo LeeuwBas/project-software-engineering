@@ -12,7 +12,13 @@ def getStatDict(line: Stats | Goals):
     read from and update.
 
     """
-    return {"water": line.water, "sleep": line.sleep, "food": line.food, 'stress': line.stress}
+    return {
+        "water": line.water,
+        "sleep": line.sleep,
+        "food": line.food,
+        "stress": line.stress,
+    }
+
 
 def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime):
     """
@@ -30,16 +36,18 @@ def getSummary(user: str, statistic: str, lowerDay: datetime, upperDay: datetime
 
     lines = Stats.objects.filter(**filter_dict)
 
-    response:dict = lines.aggregate(total=Sum(statistic),
-                                    minimum=Min(statistic),
-                                    maximum=Max(statistic),
-                                    count=Count(statistic))
+    response: dict = lines.aggregate(
+        total=Sum(statistic),
+        minimum=Min(statistic),
+        maximum=Max(statistic),
+        count=Count(statistic),
+    )
 
     response["average"] = response["total"] / day_amount
 
-    if response['count'] < day_amount:
-        response['minimum'] = 0
-        response['count'] = day_amount
+    if response["count"] < day_amount:
+        response["minimum"] = 0
+        response["count"] = day_amount
 
     return response
 
@@ -144,7 +152,7 @@ def setGoal(user: str, goal_data: dict[str, int], day: datetime | None = None):
 
     oldLine = getGoal(user, None, day)
     if oldLine is None:
-        oldLine = Goals()
+        oldLine = getStatDict(Goals())
 
     for statName, value in goal_data.items():
         oldLine[statName] = value
@@ -178,7 +186,7 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
             nodata = True
 
         for key in stats.keys():
-            if key == 'stress':
+            if key == "stress":
                 continue
             stats[key] = stats[key] >= goals[key] if nodata else False
 

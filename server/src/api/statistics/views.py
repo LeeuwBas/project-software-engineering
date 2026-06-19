@@ -20,7 +20,16 @@ from .serializers import StatsSerializer
 from ..authentication.permissions import IsSelf
 from .models import Stats, Goals
 
-from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender, setDay, getStatDict
+from .helpers import (
+    getBarChart,
+    getSummary,
+    getDay,
+    getGoal,
+    setGoal,
+    getCalender,
+    setDay,
+    getStatDict,
+)
 
 """
 /api/stats/<date>/
@@ -356,6 +365,8 @@ class GoalManageView(APIView):
         goal_data = request.data.get("goals")
         day = datetime.fromisoformat(goal_date)
 
+        if goal_data is None:
+            return Response("Invalid input", 400)
         if len(goal_data) == 0:
             return Response("Invalid input", 400)
 
