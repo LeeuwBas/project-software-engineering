@@ -57,7 +57,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
       bridge.setGoal(goals[module.key] ?? module.defaultGoal);
     }
 
-    router.push('/');
+    router.push('/(protected)');
   }
 
   return (
