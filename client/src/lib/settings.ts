@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { getSettings, setSettings, Settings } from '@/lib/storage';
+import { create } from 'zustand';
 
 type SettingsStore = {
     settings: Settings;
@@ -49,10 +49,10 @@ export function setActiveModules(modules: any) {
 
 export function getActiveModules() {
     return {
-        "stress": false,
-        "water": true,
-        "steps": false, // step counter is scary
-        "sleep": true,
-        "food": true,
-    }
+        stress: true,
+        water: true,
+        steps: true, // step counter is scary
+        sleep: true,
+        food: true,
+    };
 }

@@ -5,12 +5,7 @@ import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
 import { getActiveModules } from '@/lib/settings';
-import { GoalModules, ModuleProps } from '@/lib/types';
-import Food from '@assets/icons/module_icons/food.svg';
-import Glass from '@assets/icons/module_icons/glass.svg';
-import Shoe from '@assets/icons/module_icons/shoe.svg';
-import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
-import Stress from '@assets/icons/module_icons/stress.svg';
+import { MenuConfig, ModuleDefinition, ModuleId, MODULES } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
@@ -35,50 +30,42 @@ export default function Menu({
   setFood: (food: number) => void;
   sleep: number;
   setSleep: (sleep: number) => void;
-  goals: GoalModules;
-  setGoals: (goals: GoalModules) => void;
+  goals: Record<string, number>;
+  setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
   // TODO: Add backend for retrieving name
   const name = 'Alex';
   const { menuOpen } = useAppContext();
 
-  const modules: ModuleProps[] = [
-    {
-      id: 'water',
-      icon: Glass,
+  const menuConfig: Record<ModuleId, MenuConfig> = {
+    water: {
       value: water,
       setValue: setWater,
       goal: goals.water,
     },
-    {
-      id: 'steps',
-      icon: Shoe,
+    steps: {
       value: steps,
       goal: goals.steps,
     },
-    {
-      id: 'stress',
-      icon: Stress,
+    stress: {
       onPress: onStressPress,
       buttonString: 'Log Stress',
     },
-    {
-      id: 'food',
-      icon: Food,
+    food: {
       value: food,
       setValue: setFood,
       goal: goals.food,
     },
-    {
-      id: 'sleep',
-      icon: Sleep,
+    sleep: {
       value: sleep,
       setValue: setSleep,
     },
-  ];
+  };
 
-  const activeModules = modules.filter((module) => getActiveModules()[module.id]);
+  const activeModules: ModuleDefinition[] = MODULES.filter(
+    (module) => getActiveModules()[module.id]
+  );
 
   useEffect(() => {
     if (!menuOpen) {
@@ -89,16 +76,12 @@ export default function Menu({
   // Save input goals to goals view
   // Doesn't send to storage
   function submitGoals() {
-    const final_goals = {
-      water: Math.ceil(goals.water),
-      steps: Math.ceil(goals.steps),
-      food: Math.ceil(goals.food),
-      sleep: false,
-    };
-    setGoals(final_goals);
-    if (water > goals.water) {
-      setWater(goals.water);
-    }
+    // Applies Math.ceil to all goals to prevent decimal numbers
+    const finalGoals: Record<string, number> = Object.fromEntries(
+      Object.entries(goals).map(([id, goal]) => [id, Math.ceil(goal)])
+    );
+
+    setGoals(finalGoals);
     setGoalsViewActive(false);
   }
 
@@ -130,7 +113,12 @@ export default function Menu({
               ) : (
                 <View className="flex-col gap-5">
                   {activeModules.map((module) => (
-                    <Module key={module.id} props={module} />
+                    <Module
+                      key={module.id}
+                      id={module.id}
+                      icon={module.icon}
+                      props={menuConfig[module.id]}
+                    />
                   ))}
                 </View>
               )}

@@ -1,4 +1,4 @@
-import { barConfig } from '@/lib/stats/statistics-types';
+import { GoaledModule } from '@/lib/types';
 import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -6,22 +6,23 @@ import { BarChart } from 'react-native-gifted-charts';
 import { AppText } from '../AppText';
 
 interface StatisticChartProps {
+  module: GoaledModule;
   values: number[];
   labels: string[];
-  barconfig: barConfig;
-  goal: number;
 }
 
-export function StatisticChart({ values, labels, barconfig, goal }: StatisticChartProps) {
+export function StatisticChart({ module, values, labels }: StatisticChartProps) {
   const { colorScheme } = useColorScheme();
   const labelColor = colorScheme === 'dark' ? 'white' : '#555555';
+  const [width, setWidth] = useState(0);
+
+  const goal = module.bridge.useGoal() ?? 0;
 
   const data = values.map((value, index) => ({
     value: value,
     label: labels[index],
     topLabelComponent: () => <AppText style={{ color: labelColor }}>{value}</AppText>,
   }));
-  const [width, setWidth] = useState(0);
   const barWidth = width / values.length;
   const topLabelSize = Math.max(10, Math.min(16, barWidth * 0.2));
 
@@ -32,8 +33,7 @@ export function StatisticChart({ values, labels, barconfig, goal }: StatisticCha
         parentWidth={width}
         yAxisThickness={0}
         xAxisThickness={0}
-        frontColor={barconfig.barcolor}
-        maxValue={barconfig.maxValue}
+        frontColor={module.color}
         spacing={2}
         initialSpacing={0}
         adjustToWidth={true}
@@ -48,7 +48,7 @@ export function StatisticChart({ values, labels, barconfig, goal }: StatisticCha
         showReferenceLine1={true}
         referenceLine1Position={goal}
         referenceLine1Config={{
-          color: barconfig.goalcolor,
+          color: module.borderColor,
           type: 'solid',
           thickness: 4,
           zIndex: 1,
