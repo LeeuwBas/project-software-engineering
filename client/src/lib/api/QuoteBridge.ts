@@ -182,13 +182,11 @@ async function calculateQuoteRequest() {
     const nonNullStats = stats.filter(
         (stat): stat is { action: string; level: string } => stat.level !== null
     );
-    console.log(JSON.stringify(nonNullStats));
 
     const priority = ['Low', 'Medium', 'High'];
     const worstLevel = priority.find((level) => nonNullStats.some((stat) => stat.level === level));
     const validStats =
         worstLevel === undefined ? [] : nonNullStats.filter((stat) => stat.level === worstLevel);
-    console.log(JSON.stringify(validStats));
     if (validStats.length === 0) {
         console.log('no valid stats found');
         return null;
