@@ -44,7 +44,7 @@ export function SignInForm() {
 
   async function onCreateAccount() {
     Keyboard.dismiss();
-    router.push('/pet-select');
+    router.push('/onboarding');
   }
 
   return (
