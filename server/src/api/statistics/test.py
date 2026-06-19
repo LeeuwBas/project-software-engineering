@@ -109,11 +109,11 @@ class StatisticsTests(TestCase):
         self.assertTrue(len(get_vals) > 0, "No stats found in DB, broken post?")
 
         check = {
-            'total': sum(get_vals),
-            'minimum': min(get_vals) if get_vals.count() == days else 0,
-            'maximum': max(get_vals),
-            'count': days,
-            'average': sum(get_vals)/days
+            "total": sum(get_vals),
+            "minimum": min(get_vals) if get_vals.count() == days else 0,
+            "maximum": max(get_vals),
+            "count": days,
+            "average": sum(get_vals) / days,
         }
 
         res = self.client.get(
@@ -167,3 +167,57 @@ class StatisticsTests(TestCase):
         )
         self.assertEqual(fetchres.status_code, status.HTTP_200_OK)
         self.assertEqual(fetchres.json()["water"], 10)
+
+
+class GoalsTests(TestCase):
+    def setUp(self):
+        self.User = get_user_model()
+        self.client = APIClient()
+
+        self.validDateUpper = "2026-06-14"
+        self.validDateLower = "2026-05-14"
+        self.invalidDate = "2026-60-14"
+
+        self.goalURL = lambda date: reverse("goal_endpoint", args=[date])
+
+        self.firstuser = self.User.objects.create_user(
+            username="test1", email="test1@test.com", password="verypassword"
+        )
+
+        self.seconduser = self.User.objects.create_user(
+            username="test2", email="test2@test.com", password="passwordvery"
+        )
+
+    def testSetGoal(self):
+        self.client.force_authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 8}},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def testEmptyRequests(self):
+        self.client.force_authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"water": 10},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        res = self.client.get(
+            self.goalURL(self.validDateUpper),
+            {},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
