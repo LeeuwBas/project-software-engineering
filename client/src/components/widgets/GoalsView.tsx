@@ -1,4 +1,5 @@
 import { AppText } from '@/components/AppText';
+import { getActiveModules } from '@/lib/settings';
 import { GoaledModule, MODULES } from '@/lib/types';
 import { Minus, Plus } from 'lucide-react-native';
 import { View } from 'react-native';
@@ -11,7 +12,10 @@ export default function GoalsView({
   goals: Record<string, number>;
   setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
 }) {
-  const goaledModules = MODULES.filter((module) => 'goalConfig' in module);
+  const activeModules = getActiveModules();
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
+  );
 
   function incrementGoal(module: GoaledModule) {
     setGoals((current: Record<string, number>) => {
@@ -44,7 +48,7 @@ export default function GoalsView({
   return (
     <View className="flex-col gap-2">
       <AppText className="text-lg font-bold">Goals:</AppText>
-      {goaledModules.map((module) => (
+      {activeGoaledModules.map((module) => (
         <View className="flex-row items-center gap-2" key={module.id}>
           <module.icon height={30} width={30} />
           <View className="w-[85%] flex-row items-center justify-between gap-4">

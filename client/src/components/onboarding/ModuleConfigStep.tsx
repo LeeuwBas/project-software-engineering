@@ -20,13 +20,13 @@ export default function ModuleConfigStep({ onBack }: Props) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
-  const enabledGoalModules = MODULES.filter(
+  const activeGoaledModules = MODULES.filter(
     (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
   );
 
   const [goals, setGoals] = useState<Record<string, number>>(() =>
     Object.fromEntries(
-      enabledGoalModules.map((module) => [module.id, module.goalConfig.defaultGoal])
+      activeGoaledModules.map((module) => [module.id, module.goalConfig.defaultGoal])
     )
   );
 
@@ -59,7 +59,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
   }
 
   function saveGoals() {
-    for (const module of enabledGoalModules) {
+    for (const module of activeGoaledModules) {
       const bridge = module.bridge;
 
       bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
@@ -80,7 +80,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
         </CardHeader>
 
         <CardContent className="gap-5">
-          {enabledGoalModules.map((module) => {
+          {activeGoaledModules.map((module) => {
             const value = goals[module.id] ?? module.goalConfig.defaultGoal;
 
             return (

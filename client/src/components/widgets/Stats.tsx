@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import CalendarOverview from '@/components/widgets/CalendarOverview';
 import { useAppContext } from '@/lib/AppContext';
-import { ModuleId, MODULES } from '@/lib/types';
+import { getActiveModules } from '@/lib/settings';
+import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
 import Calender from '@assets/icons/module_icons/calendar.svg';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ export default function Stats({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
+  const activeModules = getActiveModules();
   useEffect(() => {
     if (!statsOpen) {
       setActiveTab('calendar');
@@ -32,13 +34,15 @@ export default function Stats({}: {}) {
     return null;
   }
 
-  const goaledModules = MODULES.filter((module) => 'goalConfig' in module);
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
+  );
   const labels: TabLabel[] = [
     {
       id: 'calendar',
       icon: Calender,
     },
-    ...goaledModules.map((module) => ({
+    ...activeGoaledModules.map((module) => ({
       id: module.id,
       icon: module.icon,
     })),

@@ -49,10 +49,10 @@ export function setActiveModules(modules: any) {
 
 export function getActiveModules() {
     return {
-        stress: true,
-        water: true,
-        steps: true, // step counter is scary
-        sleep: true,
-        food: true,
+        stress: false,
+        water: false,
+        steps: false, // step counter is scary
+        sleep: false,
+        food: false,
     };
 }
