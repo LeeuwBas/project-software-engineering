@@ -125,6 +125,8 @@ export default function CalendarOverview() {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
+  console.log(calendarData[today.getDate() - 1]); // Today
+
   return (
     <View>
       {/* Month/year displaty with arrow buttons */}
@@ -167,7 +169,8 @@ export default function CalendarOverview() {
             <View
               className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
                     ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
-                    ${item.currentDay ? 'bg-secondary' : 'bg-background'}`}>
+                    ${item.currentDay && 'border-primary-foreground'}
+                    ${calendarData[index]?.stress === 2 ? 'bg-[#b41b21]/30' : calendarData[index]?.stress === 1 ? 'bg-[#FFFF00]/30' : calendarData[index]?.stress === 0 ? 'bg-[#22a022]/30' : ''} `}>
               <AppText className="self-end text-sm font-bold">
                 {item.value || 'Placeholder'}
               </AppText>

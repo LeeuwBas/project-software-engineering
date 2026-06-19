@@ -116,10 +116,10 @@ export default function PetHome({ className = '', ...props }: { className?: stri
 
     const timer = setTimeout(() => {
       setCurrentAnim(idleAnim);
-    }, Math.max(0, totalDurationMs));
+    }, totalDurationMs);
 
     return () => clearTimeout(timer);
-  }, [currentAnim, idleAnim, animIteration, waterValue]);
+  }, [currentAnim, idleAnim, animIteration]);
 
   return (
     <View className={className} {...props}>
