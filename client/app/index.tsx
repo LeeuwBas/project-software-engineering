@@ -1,4 +1,4 @@
-import RequireNoAuth from '@/components/auth/RequireAuth';
+import RequireNoAuth from '@/components/auth/RequireNoAuth';
 import { Redirect } from 'expo-router';
 
 export default function Index() {
