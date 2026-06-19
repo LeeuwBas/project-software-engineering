@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getSettings, setSettings, Settings } from '@/lib/storage';
+import { getSettings, setSettings, Settings, createSettings } from '@/lib/storage';
 
 type SettingsStore = {
     settings: Settings;
@@ -7,7 +7,7 @@ type SettingsStore = {
 };
 
 const useSettingsStore = create<SettingsStore>((set) => ({
-    settings: { chosenPet: '', has_done_tutorial: false },
+    settings: createSettings(),
     setStore: (settings) => set({ settings }),
 }));
 
@@ -18,19 +18,19 @@ export async function loadSettings() {
 
 async function setTutorialDone() {
     const current = useSettingsStore.getState().settings;
-    const updated = { ...current, has_done_tutorial: true };
-    useSettingsStore.getState().setStore(updated);
-    await setSettings(updated);
+    current["hasDoneTutorial"] = true;
+    useSettingsStore.getState().setStore(current);
+    await setSettings(current);
 }
 
 async function resetTutorial() {
     const current = useSettingsStore.getState().settings;
-    const updated = { ...current, has_done_tutorial: false };
-    useSettingsStore.getState().setStore(updated);
-    await setSettings(updated);
+    current["hasDoneTutorial"] = true;
+    useSettingsStore.getState().setStore(current);
+    await setSettings(current);
 }
 
 export function useTutorial() {
-    const done = useSettingsStore((s) => s.settings.has_done_tutorial);
+    const done = useSettingsStore((s) => s.settings["hasDoneTutorial"]);
     return { done, setTutorialDone, resetTutorial };
 }
