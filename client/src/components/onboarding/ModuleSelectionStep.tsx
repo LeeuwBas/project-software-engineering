@@ -44,7 +44,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
   return (
     <View className="flex-1 justify-center px-4">
       <View className="gap-6 rounded-2xl border border-border/40 bg-card/80 p-5">
-        {/* STRESS */}
+
         <View className="gap-3">
           <AppText className="text-center text-xl font-bold">
             Would you like to keep track of stress?
@@ -69,7 +69,6 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           )}
         </View>
 
-        {/* HABITS */}
         <View className="gap-3">
           <AppText className="text-center text-xl font-bold">
             Which habits would you like to track?
@@ -83,7 +82,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
                 className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
                 style={{
                   backgroundColor: isSelected(module.key) ? module.borderColor : module.color,
-                  borderColor: isSelected(module.key) ? module.color : module.borderColor,
+                  borderColor: module.borderColor,
                   opacity: isSelected(module.key) ? 1 : 0.75,
                 }}>
                 <module.icon width={32} height={32} />
@@ -93,7 +92,6 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           </View>
         </View>
 
-        {/* CTA */}
         <View className="gap-2 pt-2">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
             <AppText className="font-bold text-white">Continue</AppText>
