@@ -3,8 +3,8 @@ import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { getActiveModules, setActiveModules } from '@/lib/settings';
 import { MODULES } from '@/lib/onboarding/types';
+import { getActiveModules, setActiveModules } from '@/lib/settings';
 
 type Props = {
   onNext?: () => void;
@@ -44,7 +44,6 @@ export default function ModuleSelectionStep({ onNext }: Props) {
   return (
     <View className="flex-1 justify-center px-4">
       <View className="gap-6 rounded-2xl border border-border/40 bg-card/80 p-5">
-
         <View className="gap-3">
           <AppText className="text-center text-xl font-bold">
             Would you like to keep track of stress?
@@ -55,13 +54,9 @@ export default function ModuleSelectionStep({ onNext }: Props) {
               onPress={() => toggleModule(stressModule.key)}
               className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
               style={{
-                backgroundColor: isSelected(stressModule.key)
-                  ? stressModule.borderColor
-                  : stressModule.color,
-                borderColor: isSelected(stressModule.key)
-                  ? stressModule.color
-                  : stressModule.borderColor,
-                opacity: isSelected(stressModule.key) ? 1 : 0.75,
+                backgroundColor: stressModule.color,
+                borderColor: stressModule.borderColor,
+                opacity: isSelected(stressModule.key) ? 1 : 0.4,
               }}>
               <stressModule.icon width={32} height={32} />
               <AppText className="text-xl font-bold">{stressModule.id}</AppText>
@@ -81,9 +76,9 @@ export default function ModuleSelectionStep({ onNext }: Props) {
                 onPress={() => toggleModule(module.key)}
                 className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
                 style={{
-                  backgroundColor: isSelected(module.key) ? module.borderColor : module.color,
+                  backgroundColor: module.color,
                   borderColor: module.borderColor,
-                  opacity: isSelected(module.key) ? 1 : 0.75,
+                  opacity: isSelected(module.key) ? 1 : 0.4,
                 }}>
                 <module.icon width={32} height={32} />
                 <AppText className="text-xl font-bold">{module.id}</AppText>
