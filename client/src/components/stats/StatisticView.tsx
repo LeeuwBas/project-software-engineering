@@ -112,9 +112,7 @@ export function StatisticView({ stat }: { stat: StatName }) {
           {/*  : `${Math.round((values.reduce((Acc, x) => Acc + x) / values.length) * 10) / 10} ${statData.unit}`}*/}
         </AppText>
 
-        {error && (
-          <AppText className="text-destructive">Failed to load statistics: {error}</AppText>
-        )}
+        {error && <AppText className="text-red-500">Failed to load statistics: {error}</AppText>}
       </View>
     </View>
   );

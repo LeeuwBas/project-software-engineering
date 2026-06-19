@@ -90,7 +90,7 @@ export function AccountCreationStep({ onNext }: Props) {
 
           <CardContent className="gap-5">
             {errors.general && (
-              <AppText className="text-sm font-bold text-destructive opacity-80">
+              <AppText className="text-sm font-bold text-red-500 opacity-80">
                 {errors.general[0]}
               </AppText>
             )}
@@ -109,7 +109,7 @@ export function AccountCreationStep({ onNext }: Props) {
                 onChangeText={setEmail}
               />
               {errors.email && (
-                <AppText className="text-sm text-destructive opacity-80">{errors.email[0]}</AppText>
+                <AppText className="text-sm text-red-500 opacity-80">{errors.email[0]}</AppText>
               )}
             </View>
 
@@ -128,9 +128,7 @@ export function AccountCreationStep({ onNext }: Props) {
               />
 
               {errors.password && (
-                <AppText className="text-sm text-destructive opacity-80">
-                  {errors.password[0]}
-                </AppText>
+                <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
               )}
             </View>
 
