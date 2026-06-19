@@ -4,14 +4,13 @@ import { TextInput, View } from 'react-native';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { useAuth } from '@/lib/auth/AuthManager';
+import { useTutorial } from '@/lib/settings';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { toast } from 'sonner-native';
-import { useTutorial } from '@/lib/settings';
 import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { toast } from 'sonner-native';
 
 type Props = {
   onNext?: () => void;
@@ -97,7 +96,7 @@ export function AccountCreationStep({ onNext }: Props) {
             )}
 
             <View className="gap-1.5">
-              <Label htmlFor="email">Email</Label>
+              <AppText className="font-bold">Email</AppText>
               <Input
                 id="email"
                 placeholder="john@doe.com"
@@ -115,8 +114,7 @@ export function AccountCreationStep({ onNext }: Props) {
             </View>
 
             <View className="gap-1.5">
-              <Label htmlFor="password">Password</Label>
-
+              <AppText className="font-bold">Password</AppText>
               <Input
                 ref={passwordInputRef}
                 id="password"
