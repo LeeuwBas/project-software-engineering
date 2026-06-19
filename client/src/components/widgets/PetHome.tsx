@@ -2,7 +2,9 @@ import { Animation } from '@/components/animations/renderer';
 import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
 import { useWater } from '@/lib/api/WaterBridge';
-import { useEffect, useState } from 'react';
+import { useFood } from '@/lib/api/FoodBridge';
+import { useSleep } from '@/lib/api/SleepBridge';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 /**
@@ -33,12 +35,21 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   const idleAnim = `${source}_breath_happy` as AnimationName;
   const blinkAnim = `${source}_blink` as AnimationName;
   const waterAnim = `${source}_drinking` as AnimationName;
+  const foodAnim = `${source}_eating` as AnimationName;
+  const sleepAnim = `${source}_sleeping` as AnimationName;
 
   const [currentAnim, setCurrentAnim] = useState<AnimationName>(idleAnim);
   const [animIteration, setAnimIteration] = useState(1);
 
   const waterValue = useWater() ?? null;
-  const [prevWater, setPrevWater] = useState<number | null>(null);
+  const foodValue = useFood() ?? null;
+  const sleepValue = useSleep() ?? null;
+
+  const prevValues = useRef<{ water: number | null; food: number | null; sleep: number | null }>({
+    water: null,
+    food: null,
+    sleep: null,
+  });
 
   // Sync animation when the pet or base idle animation changes
   useEffect(() => {
@@ -46,23 +57,50 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     setAnimIteration(0);
   }, [idleAnim, pet]);
 
-  // When water value changes play water animation once
-  // Has exception for when watervalue is loaded at render and when water value is lower than previous value
+  // Checks which module values have changed and plays animation accordingly.
+  // If more than one value has changed, random animation will be picked.
   useEffect(() => {
+    let changed_anim: AnimationName[] = []
+    const prev = prevValues.current
+
     if (
-      prevWater !== null &&
-      waterValue != null &&
-      waterValue !== prevWater &&
-      waterValue >= prevWater
+      prev.water !== null &&
+      waterValue !== null &&
+      waterValue !== prev.water &&
+      waterValue > prev.water
     ) {
-      setAnimIteration(1);
-      setCurrentAnim(waterAnim);
-    } else {
-      setCurrentAnim(idleAnim);
-      setAnimIteration(1);
+      changed_anim.push(waterAnim)
     }
-    setPrevWater(waterValue);
-  }, [waterValue]);
+
+    if (
+      prev.food !== null &&
+      foodValue !== null &&
+      foodValue !== prev.food &&
+      foodValue > prev.food
+    ) {
+      changed_anim.push(foodAnim)
+    }
+
+    if (
+      prev.sleep !== null &&
+      sleepValue !== null &&
+      sleepValue !== prev.sleep
+    ) {
+      changed_anim.push(sleepAnim)
+    }
+
+    if (changed_anim.length > 0) {
+      let random_anim = changed_anim[Math.floor(Math.random() * changed_anim.length)]
+      setAnimIteration(1)
+      setCurrentAnim(random_anim)
+    } else {
+      setAnimIteration(1)
+      setCurrentAnim(idleAnim)
+    }
+
+    prevValues.current = {water: waterValue, food: foodValue, sleep: sleepValue};
+
+  }, [waterValue, foodValue, sleepValue]);
 
   // Goes back to idle after specified interation counts in animIteration
   // Starts new animation when either current animation, idle animation or watervalue changes
@@ -78,7 +116,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
 
     const timer = setTimeout(() => {
       setCurrentAnim(idleAnim);
-    }, totalDurationMs);
+    }, Math.max(0, totalDurationMs));
 
     return () => clearTimeout(timer);
   }, [currentAnim, idleAnim, animIteration, waterValue]);
@@ -89,7 +127,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
         className="max-h-72 items-center justify-center self-center"
         onPress={() => {
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
-          setAnimIteration(2);
+          setAnimIteration(1);
         }}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} iteration_count={animIteration} />
