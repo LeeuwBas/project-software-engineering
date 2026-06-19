@@ -4,15 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { ModuleProps, GoalModules } from '@/lib/types';
+import { getActiveModules } from '@/lib/settings';
+import { GoalModules, ModuleProps } from '@/lib/types';
+import Food from '@assets/icons/module_icons/food.svg';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
+import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
 import Stress from '@assets/icons/module_icons/stress.svg';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
-import Food from '@assets/icons/module_icons/food.svg';
-import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
 
 export default function Menu({
   water,
@@ -74,8 +75,10 @@ export default function Menu({
       icon: Sleep,
       value: sleep,
       setValue: setSleep,
-    }
+    },
   ];
+
+  const activeModules = modules.filter((module) => getActiveModules()[module.id]);
 
   useEffect(() => {
     if (!menuOpen) {
@@ -90,7 +93,7 @@ export default function Menu({
       water: Math.ceil(goals.water),
       steps: Math.ceil(goals.steps),
       food: Math.ceil(goals.food),
-      sleep: false
+      sleep: false,
     };
     setGoals(final_goals);
     if (water > goals.water) {
@@ -126,7 +129,7 @@ export default function Menu({
                 <GoalsView goals={goals} setGoals={setGoals} />
               ) : (
                 <View className="flex-col gap-5">
-                  {modules.map((module) => (
+                  {activeModules.map((module) => (
                     <Module key={module.id} props={module} />
                   ))}
                 </View>
