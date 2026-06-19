@@ -143,9 +143,52 @@ async function calculateQuoteRequest() {
     const goodWeather: boolean = isGoodWeather();
 
     // do the formula
+    const getRatio = (current: number | null, goal: number | null): number | null => {
+        return current != null && goal != null ? current / goal : null;
+    };
 
-    const action = ''; //calculate action
-    const level = ''; //calculate level
-    const context = ''; // calculate context
+    const waterRatio = getRatio(waterNow, waterGoal);
+    const sleepRatio = getRatio(sleepNow, sleepGoal);
+    const stepsRatio = getRatio(stepsNow, stepsGoal);
+    const stressRatio = getRatio(stressNow, stressGoal);
+    const foodRatio = getRatio(foodNow, foodGoal);
+
+    const stats = [
+        {action: "Water", ratio: waterRatio},
+        {action: "Walk", ratio: stepsRatio},
+        {action: "Sleep", ratio: sleepRatio},
+        {action: "Eat", ratio: foodRatio},
+        {action: "Stress", ratio: stressRatio != null ? 1 - stressRatio : null} //high and low are switched
+    ] 
+
+    //remove all null-values
+    const validStats = stats.filter((stat): stat is { action: string; ratio: number } => stat.ratio !== null);
+    
+    //retrieve worst stat
+    const worst = validStats.reduce((a, b) => a.ratio < b.ratio ? a : b);
+    
+    const getLevel = (ratio : number) => {
+        if (ratio < 0.33) return "Low";
+        if (ratio < 0.67) return "Medium";
+        return "High"
+    }
+
+    const level = getLevel(worst.ratio);
+
+    let context = "Standard";
+    if (worst.action === "Water" && level === "Low") {
+        if (stepsRatio != null) {
+            //if steps are low
+            if (stepsRatio >= 0.8 && stepsRatio != null) context = "Exercise";
+        }
+        //if weather is sunny
+        else if (goodWeather) context = "Sunny";
+    }
+
+    if (worst.action === "Walk" && level === "Medium" && goodWeather) {
+        context = "Sunny";
+    }
+
+    const action = worst.action;
     return { action, level, context };
 }
