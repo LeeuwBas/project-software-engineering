@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAppContext } from '@/lib/AppContext';
-import { View, Text } from 'react-native';
-import StressButtons from './StressButtons';
-
+import { AppText } from '@/components/AppText';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import StressButtons from '@/components/widgets/StressButtons';
 import { stressBridge } from '@/lib/api/APIBridge';
-import { useStress } from '@/lib/api/StressBridge';
+import { useAppContext } from '@/lib/AppContext';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 
 async function saveStress(score1: number, score2: number, score3: number) {
   const score = score1 + score2 + score3;
@@ -48,21 +47,29 @@ export default function StressMenu() {
       <View className="absolute bottom-full w-full items-center">
         <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
           <CardHeader className="items-center">
-            <CardTitle className="mx-6 mt-4 text-2xl font-bold">Today I felt...</CardTitle>
+            <AppText className="mx-6 mt-4 text-2xl font-bold">Today I felt...</AppText>
           </CardHeader>
           <CardContent className="w-full max-w-full">
-            <Text className="text-left">...nervous and stressed:</Text>
+            <AppText className="text-left">...nervous and stressed:</AppText>
             <StressButtons value={score1} onChange={setScore1} />
           </CardContent>
           <CardContent className="w-full max-w-full">
-            <Text className="text-left">...I could not cope with all the things I had to do:</Text>
+            <AppText className="text-left">
+              ...I could not cope with all the things I had to do:
+            </AppText>
             <StressButtons value={score2} onChange={setScore2} />
           </CardContent>
           <CardContent className="w-full max-w-full">
-            <Text className="text-left">
+            <AppText className="text-left">
               ...difficulties were piling up so high that I could not overcome them:
-            </Text>
+            </AppText>
             <StressButtons value={score3} onChange={setScore3} />
+          </CardContent>
+          <CardContent className="flex-row items-center gap-2">
+            <View className="size-4 border-2 border-[#22a022] bg-[#81c381]"></View>
+            <AppText>Disagree</AppText>
+            <View className="size-4 border-2 border-[#b41b21] bg-[#ff9699]"></View>
+            <AppText>Agree</AppText>
           </CardContent>
         </Card>
       </View>

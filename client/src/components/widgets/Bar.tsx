@@ -1,19 +1,24 @@
-import { useWater } from '@/lib/api/WaterBridge';
-import Glass from '@assets/icons/module_icons/glass.svg';
 import { View } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 
-export default function WaterBar() {
-  const water = useWater() ?? 0;
+export default function Bar({
+  icon: Icon,
+  value,
+  goal,
+}: {
+  icon: React.FC<SvgProps>;
+  value: number;
+  goal: number;
+}) {
   return (
     <View className="w-1/2">
       <View className="flex-row justify-center gap-1">
-        <View className="h-4"></View>
-        <Glass />
+        <Icon />
         <View className="flex-1 flex-row overflow-hidden border-4 border-border-dark">
           <View
             className="mt-auto h-full"
             style={{
-              width: `${Math.min(Math.max(water, 0), 8) * 12.5}%`,
+              width: `${(Math.min(Math.max(value, 0), goal) * 100) / goal}%`,
               backgroundColor: '#74ccf4aa',
             }}
           />

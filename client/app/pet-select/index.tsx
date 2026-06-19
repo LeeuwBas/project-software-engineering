@@ -15,7 +15,7 @@ const NUM_PETS = 3;
 export default function PetSelection() {
   const router = useRouter();
   const auth = useAuth();
-  const isLoggedIn = auth.isAuthenticated;
+  const isLoggedIn = auth.isAuthenticated || auth.isGuest;
   const { pet, setPet, savePet } = usePet();
   const [draftPet, setPetId] = useState(pet);
 
@@ -27,7 +27,7 @@ export default function PetSelection() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="size-full justify-center">
+      <SafeAreaView className="size-full justify-center bg-background">
         <View className="flex-col gap-12">
           <View className="flex-row items-center justify-between">
             <View className="w-1/5">

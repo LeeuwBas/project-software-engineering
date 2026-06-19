@@ -19,6 +19,7 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
     );
 
     if (!response) {
+        console.log(`Failed to GET ${endpoint}`);
         return null;
     }
 
@@ -53,6 +54,7 @@ export async function postAPI(endpoint: string, json: any, authenticate: boolean
 
     // When we do not authenticate, we do not throw errors
     if (!response || (!authenticate && !response.ok)) {
+        console.log(`Failed to post ${endpoint}`);
         return null;
     }
 
@@ -83,7 +85,10 @@ export async function queryApi(
     const auth = internalAuth;
     const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 
-    if (authenticate && (!auth || auth.isLoading)) {
+    if (authenticate && (auth.isLoading || !auth.accessToken)) {
+        console.log(
+            `Attempted authenticated request while unauthenticated (loading=${auth.isLoading},guest=${auth.isGuest})`
+        );
         return null;
     }
 
@@ -114,6 +119,7 @@ export async function queryApi(
         if (!recurse_unauthenticated) {
             // Do not try to re-authenticate
             // This can prevent infinite recursion when the backend fails.
+            console.log('Authentication failed after refresh!');
             return null;
         }
 
@@ -125,6 +131,7 @@ export async function queryApi(
             return null;
         }
 
+        console.log(`Recurse-authenticating ${endpoint}`);
         return queryApi(endpoint, init, authenticate, false);
     }
     return res;

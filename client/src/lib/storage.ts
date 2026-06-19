@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { dateDifference } from './utils';
 import { useEffect, useState } from 'react';
+import { dateDifference } from './utils';
 
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
@@ -59,7 +59,6 @@ function calculateDate(date: Date, stat: string = statPrefix) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-
     return `${stat}${year}-${month}-${day}`;
 }
 
@@ -89,7 +88,7 @@ async function getStatOn(day: string) {
  */
 export async function getCurrentGoal(statName: string | null, day: Date = new Date()) {
     const goalDates = (await AsyncStorage.getAllKeys()).filter(
-        (key) => key.startsWith(goalPrefix) && key < calculateDate(day, goalPrefix)
+        (key) => key.startsWith(goalPrefix) && key <= calculateDate(day, goalPrefix)
     );
 
     let data: StatLine | null = null;
@@ -98,9 +97,7 @@ export async function getCurrentGoal(statName: string | null, day: Date = new Da
         data = createStatLine();
     } else {
         goalDates.sort();
-
-        const date = goalDates[-1];
-
+        const date = goalDates.at(-1)!;
         const raw = await AsyncStorage.getItem(date);
         data = raw ? JSON.parse(raw) : null;
     }
@@ -134,7 +131,7 @@ export async function setNewGoal<K extends keyof StatLine>(
     if (oldGoal === null || typeof oldGoal === 'number') {
         oldGoal = createStatLine();
     }
-    oldGoal[statName as keyof StatLine] = goal;
+    oldGoal[statName] = goal;
     AsyncStorage.setItem(today, JSON.stringify(oldGoal));
     await markSyncRequired(statName, true, date);
 }
@@ -360,12 +357,10 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             const achieved = dayStat[key] ?? -1;
             const goal = dayGoals[key] ?? 0;
 
-            const complete = nodata ? 0 : achieved <= goal;
-
-            if (key === "stress") {
-                today[key] = achieved
+            if (key === 'stress') {
+                today[key] = achieved;
             } else {
-                const complete = achieved <= goal;
+                const complete = nodata ? 0 : achieved >= goal;
                 today[key] = +complete;
             }
         }

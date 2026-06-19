@@ -3,23 +3,9 @@ import { StatisticChart } from '@/components/stats/StatisticChart';
 import { Button } from '@/components/ui/button';
 import { getChartLabels } from '@/lib/stats/chart-labels';
 import { HistoryPeriod, PERIOD_CONFIG, StatName, STATS } from '@/lib/stats/statistics-types';
-import {
-  getStatBarChart,
-  getStatSummary,
-  StatisticsBarChart,
-  StatisticsSummary,
-} from '@/lib/storage';
+import { StatisticsSummary } from '@/lib/storage';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { waterBridge } from '@/lib/api/APIBridge';
-
-function generateData(bins: number): number[] {
-  const values = Array(bins);
-  for (let i = 0; i < values.length; i++) {
-    values[i] = Math.floor(Math.random() * 8) + 1;
-  }
-  return values;
-}
 
 export function StatisticView({ stat }: { stat: StatName }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
@@ -39,8 +25,6 @@ export function StatisticView({ stat }: { stat: StatName }) {
 
         const config = PERIOD_CONFIG[period];
 
-        // Temporary calls to storage.ts functions
-        // Use API bridge when it is done
         const now = new Date();
         const past = new Date();
         past.setTime(now.getTime() - 1000 * 60 * 60 * 24 * config.days);
@@ -64,9 +48,8 @@ export function StatisticView({ stat }: { stat: StatName }) {
     loadData();
   }, [period, stat]);
 
-  // const values = bars ? Object.values(bars.bins) : [0]; // Placeholder for when fetching data fails
   const config = PERIOD_CONFIG[period];
-  const values = bars ?? new Array<number>(config.bins).fill(0); //generateData(config.bins);
+  const values = bars ?? new Array<number>(config.bins).fill(0);
 
   const labels = getChartLabels(period);
 

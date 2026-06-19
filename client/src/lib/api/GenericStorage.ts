@@ -14,6 +14,7 @@ import {
     updateStat,
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
+import { internalAuth } from '@/lib/auth/AuthService';
 
 /**
  * Loads a given statistic into the given zustand.
@@ -25,7 +26,6 @@ import { syncServer } from '@/lib/StorageSync';
  * @throws Error when the value is already loaded
  */
 export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getStatistic(name)) ?? 0;
 
@@ -249,7 +249,6 @@ export async function loadCalender(startDate: Date, endDate: Date) {
  * @throws Error when the value is already loaded
  */
 export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
-
     // For the current day we can default to 0. For other days we cannot.
     const loadedValue = (await getGoals(name)) ?? 0;
 
@@ -280,11 +279,11 @@ export async function getGoals<K extends keyof StatLine>(
     const server = await loadGoalServer(name, date);
 
     if (server === null) {
-        return null;
+        return 0;
     }
 
     if (date == new Date()) {
-        setNewGoal(name, server);
+        await setNewGoal(name, server);
     }
 
     return server;
@@ -330,6 +329,9 @@ export async function setGoalZustand<K extends keyof StatLine>(
 }
 
 async function loadServerCalendar(startDate: Date, endDate: Date) {
+    if (internalAuth.isGuest) {
+        return null;
+    }
     const endpoint = `/api/calendar/${formatDate(startDate)}/${formatDate(endDate)}`;
 
     const result: any[] = await getAPI(endpoint);
@@ -354,6 +356,9 @@ async function loadServerChart<K extends keyof StatLine>(
     endDate: Date,
     bins: number
 ) {
+    if (internalAuth.isGuest) {
+        return null;
+    }
     const endpoint = `/api/barchart/${name}/${formatDate(startDate)}/${formatDate(endDate)}/?bins=${bins}`;
 
     const result = await getAPI(endpoint);
@@ -372,6 +377,9 @@ async function loadServerSummary<K extends keyof StatLine>(
     startDate: Date,
     endDate: Date
 ) {
+    if (internalAuth.isGuest) {
+        return null;
+    }
     const endpoint = `/api/summary/${name}/${formatDate(startDate)}/${formatDate(endDate)}/`;
 
     const result = await getAPI(endpoint);
@@ -379,6 +387,9 @@ async function loadServerSummary<K extends keyof StatLine>(
 }
 
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
+    if (internalAuth.isGuest) {
+        return null;
+    }
     const endpoint = `/api/stats/${formatDate(date)}?statName=${name}`;
 
     const result = await getAPI(endpoint);
@@ -397,11 +408,16 @@ async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
 ): Promise<number | null> {
+    if (internalAuth.isGuest) {
+        return null;
+    }
+
     const endpoint = `/api/goals/${formatDate(date)}?goal_name=${name}`;
 
     const result = await getAPI(endpoint);
 
     if (result === null) {
+        console.log('goal result = null');
         return null;
     }
 

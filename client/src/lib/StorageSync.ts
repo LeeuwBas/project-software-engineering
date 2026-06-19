@@ -1,5 +1,6 @@
 import { getSyncData } from '@/lib/storage';
 import { postAPI } from '@/lib/api/ApiManager';
+import { internalAuth } from '@/lib/auth/AuthService';
 
 /**
  * Sends all local unsynced data to the server. in order to synchronize.
@@ -7,7 +8,12 @@ import { postAPI } from '@/lib/api/ApiManager';
  * @param includeGoals Weather goals should be synced too.
  */
 export async function syncServer(includeGoals: boolean) {
+    if (internalAuth.accessToken === null || internalAuth.isGuest) {
+        return;
+    }
+
     console.log('syncing...');
+
     if (includeGoals) {
         await Promise.all([syncStats(), syncStats(true)]);
     }
@@ -20,8 +26,16 @@ async function syncStats(goals: boolean = false) {
     for (const key of Object.keys(syncData)) {
         const endpoint = goals ? `/api/goals/${key}` : `/api/stats/${key}`;
         promises.push(
-            postAPI(endpoint, { ['stats']: syncData[key] }).then((response) =>
-                console.log(`Synced stats for ${key} (goals=${goals}) with response:`, response)
+            postAPI(endpoint, { ['stats']: syncData[key] }).then(
+                (response) => {
+                    console.log(
+                        `Synced stats for ${key} (goals=${goals}) with response:`,
+                        response
+                    );
+                },
+                (reason) => {
+                    console.log(`Failed to sync stats for ${key}: ${reason}`);
+                }
             )
         );
     }

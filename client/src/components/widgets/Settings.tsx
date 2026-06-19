@@ -35,7 +35,7 @@ export default function Settings() {
     { label: 'Change Username', effect: null },
     { label: 'More', effect: null },
     {
-      label: 'Sign out',
+      label: auth.isGuest ? 'Sign in' : 'Sign out',
       effect: () => {
         auth.signOut();
       },

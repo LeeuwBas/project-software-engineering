@@ -1,9 +1,10 @@
-import { ArrowBigLeft, ArrowBigRight, Calendar } from 'lucide-react-native';
-import { AppText } from '../AppText';
-import { FlatList, Pressable, View } from 'react-native';
 import { getGoalCalender } from '@/lib/api/APIBridge';
-import { useMemo, useState, useEffect } from 'react';
+import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
+import { useEffect, useMemo, useState } from 'react';
+import { FlatList, Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { AppText } from '../AppText';
 
 export interface calendarCell {
   id: string;
@@ -20,13 +21,15 @@ export default function CalendarOverview() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  const today = useMemo(() => new Date(),[]);
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+  const today = useMemo(() => new Date(), []);
 
-  const [calendarData, updateCalendarData] = useState<any[]>([])
+  const [calendarData, updateCalendarData] = useState<any[]>([]);
 
   // Memoization for calendar grid to only change when year or month changes
   // Prevent rerender when parent rerenders
-  const { dayGrid, rangeStart, rangeEnd }  = useMemo(() => {
+  const { dayGrid, rangeStart, rangeEnd } = useMemo(() => {
     const grid: calendarCell[] = [];
     const startDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
     const totalDays = new Date(year, month + 1, 0).getDate();
@@ -94,9 +97,8 @@ export default function CalendarOverview() {
       grid.push(newCell);
     }
 
-    return {dayGrid: grid, rangeStart, rangeEnd};
+    return { dayGrid: grid, rangeStart, rangeEnd };
   }, [year, month]);
-
 
   useEffect(() => {
     const fetchCalendarData = async () => {
@@ -104,49 +106,33 @@ export default function CalendarOverview() {
         updateCalendarData([]);
 
         if (dayGrid && dayGrid.length > 0) {
-          const data = await getGoalCalender(
-            new Date(rangeStart),
-            new Date(rangeEnd),
-          );
+          const data = await getGoalCalender(new Date(rangeStart), new Date(rangeEnd));
           updateCalendarData(data || []);
         }
       } catch (error) {
-        console.error("Failed to fetch calendar:", error);
+        console.error('Failed to fetch calendar:', error);
       }
     };
 
     fetchCalendarData();
   }, [rangeStart, rangeEnd]);
 
-
   const toPrevMonth = () => {
-    setCurrentDate(
-      prev =>
-        new Date(
-          prev.getFullYear(),
-          prev.getMonth() - 1,
-          1
-        )
-    );
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
 
   const toNextMonth = () => {
-    setCurrentDate(
-      prev =>
-        new Date(
-          prev.getFullYear(),
-          prev.getMonth() + 1,
-          1
-        )
-    );
+    setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
+
+  console.log(calendarData[today.getDate() - 1]); // Today
 
   return (
     <View>
       {/* Month/year displaty with arrow buttons */}
       <View className="mb-6 flex-row items-center gap-x-4 self-center">
         <Pressable onPress={toPrevMonth} hitSlop={12}>
-          <ArrowBigLeft size={24} />
+          <ArrowBigLeft size={24} color={iconColor} />
         </Pressable>
 
         <AppText className="text-2xl font-bold">
@@ -156,7 +142,7 @@ export default function CalendarOverview() {
         <View style={{ width: 24 }}>
           {month !== today.getMonth() && (
             <Pressable onPress={toNextMonth} hitSlop={12}>
-              <ArrowBigRight size={24} />
+              <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
           )}
         </View>
@@ -181,10 +167,13 @@ export default function CalendarOverview() {
           style={{ maxHeight: (dayGrid.length / 7) * 72 }} // Necesarry for the spotlight tutorial
           renderItem={({ item, index }) => (
             <View
-              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2 
-                      ${item.active ? 'border-neutral-300' : item.hidden ? 'border-transparent opacity-0' : 'border-transparent opacity-40'}
-                      ${item.currentDay ? 'bg-blue-300' : 'bg-slate-200'}`}>
-              <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
+              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
+                    ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
+                    ${item.currentDay && 'border-primary-foreground'}
+                    ${calendarData[index]?.stress === 2 ? 'bg-[#b41b21]/30' : calendarData[index]?.stress === 1 ? 'bg-[#FFFF00]/30' : calendarData[index]?.stress === 0 ? 'bg-[#22a022]/30' : ''} `}>
+              <AppText className="self-end text-sm font-bold">
+                {item.value || 'Placeholder'}
+              </AppText>
               {!item.hidden && (
                 <View className="flex-row flex-wrap gap-1 self-start p-0.5">
                   <View
@@ -194,7 +183,7 @@ export default function CalendarOverview() {
                     className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.water === 1 ? 'bg-blue-500' : 'hidden'}`}
                   />
                   <View
-                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1? 'bg-green-500' : 'hidden'}`}
+                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1 ? 'bg-green-500' : 'hidden'}`}
                   />
                 </View>
               )}

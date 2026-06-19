@@ -1,14 +1,18 @@
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { syncServer } from '@/lib/StorageSync';
 import { internalAuth } from '@/lib/auth/AuthService';
+
+const GUEST_MODE = 'guest';
 
 type Auth = {
   isAuthenticated: boolean;
   isLoading: boolean;
+  isGuest: boolean;
 
+  setGuest: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<boolean>;
   signOut: () => Promise<void>;
 };
@@ -20,7 +24,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [refreshing, setRefresh] = useState<Promise<void> | null>(null);
+  const [isGuest, setGuest] = useState(false);
+  const refreshingRef = useRef<boolean>(false);
+  const refreshPromiseRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
     async function init() {
@@ -30,8 +36,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (storedAccessToken && storedRefreshToken) {
         setAccessToken(storedAccessToken);
         setRefreshToken(storedRefreshToken);
-        setAuthenticated(true);
-        console.log('Authentication successful');
+
+        const guestMode = storedAccessToken === GUEST_MODE && storedRefreshToken === GUEST_MODE;
+        setGuest(guestMode);
+        setAuthenticated(!guestMode);
+        console.log(`Authentication successful, (guest=${guestMode})`);
       }
       setLoading(false);
       console.log('Successfully loaded tokens from storage');
@@ -41,6 +50,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   async function renewToken() {
+    if (isGuest) {
+      return;
+    }
+
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
@@ -64,6 +77,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
+    internalAuth.accessToken = receivedAccessToken;
+    internalAuth.refreshToken = receivedRefreshToken;
     setAuthenticated(true);
     console.log('Token renewed successfully');
   }
@@ -89,6 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
+    setGuest(false);
     setAuthenticated(true);
     console.log('Successfully logged in');
     return true;
@@ -100,36 +116,63 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await syncServer(true);
     }
 
+    console.log('Signing out...');
     await tokenStorage.clear();
     setAccessToken(null);
     setRefreshToken(null);
     setAuthenticated(false);
+    setGuest(false);
+  }
+
+  async function guestMode() {
+    await syncServer(true);
+
+    await tokenStorage.setTokens(GUEST_MODE, GUEST_MODE);
+    setAccessToken(GUEST_MODE);
+    setRefreshToken(GUEST_MODE);
+    setGuest(true);
+    setAuthenticated(false);
   }
 
   useEffect(() => {
+    console.log('Updating internal Auth');
     internalAuth.accessToken = accessToken;
     internalAuth.refreshToken = refreshToken;
     internalAuth.isLoading = isLoading;
-    internalAuth.renewToken = () => {
-      if (refreshing) {
-        return refreshing;
-      }
-      setRefresh(
-        renewToken().then(
-          () => setRefresh(null),
-          () => setRefresh(null)
-        )
-      );
-      return refreshing ?? Promise.resolve();
-    };
-    internalAuth.signOut = () => signOut(false);
-  }, [accessToken, refreshToken]);
+    internalAuth.isGuest = isGuest;
+  }, [accessToken, refreshToken, isLoading, isGuest]);
+
+  internalAuth.renewToken = () => {
+    if (isGuest) {
+      return Promise.resolve();
+    }
+
+    if (refreshingRef.current) {
+      return refreshPromiseRef.current;
+    }
+    refreshingRef.current = true;
+    refreshPromiseRef.current = renewToken()
+      .then(() => {
+        console.log('refresh done');
+      })
+      .catch(() => {
+        console.log('refresh failed');
+      })
+      .finally(() => {
+        refreshingRef.current = false;
+      });
+    console.log('Refreshing token...');
+    return refreshPromiseRef.current;
+  };
+  internalAuth.signOut = () => signOut(false);
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
         isLoading,
+        isGuest,
+        setGuest: guestMode,
         signIn,
         signOut,
       }}>
