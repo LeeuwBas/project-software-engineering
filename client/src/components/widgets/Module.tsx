@@ -7,7 +7,11 @@ import { View, Pressable } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg'
 import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg'
-
+import useStepValue from '@/lib/GetSteps'
+import { useHealthPermission } from '@/lib/StepsPermission';
+import { useEffect } from 'react';
+import StepsWidget from '@/components/widgets/StepsWidget'
+import App from 'app/(protected)';
 export default function Module({
   props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
 }: {
@@ -16,6 +20,12 @@ export default function Module({
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
+  // const steps = useStepValue();
+
+  // useEffect(() => {
+  //   if ( id === 'steps' && value !== undefined && setValue !== undefined && steps > value)
+  //     setValue(steps)
+  // }, [steps])
 
   return (
     <View className="flex w-full flex-row items-center justify-between">
@@ -46,16 +56,11 @@ export default function Module({
           </View>
         )}
 
-        {id === 'steps' && (
+        {id === 'steps' &&  (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-              <AppText className="text-right text-base font-bold">
-                {value}
-              </AppText>
-              <AppText className="w-4 text-center text-base font-bold"> / </AppText>
-              <AppText className="text-left text-base font-bold">
-                {goal}
-              </AppText>
-            </View>
+            <StepsWidget storedSteps={value}/>
+            <AppText className='text-base font-bold'> / {goal}</AppText>
+          </View>
         )}
 
         {id === 'stress' && (

@@ -23,9 +23,9 @@ export default function Stats({}: {}) {
     }
   }, [statsOpen]);
 
-  if (!statsOpen) {
-    return null;
-  }
+  // if (!statsOpen) {
+  //   return null;
+  // }
 
   const labels: Tab[] = [
     { id: 'calender', icon: Calender },
@@ -35,6 +35,7 @@ export default function Stats({}: {}) {
 
   return (
     <View
+      pointerEvents={statsOpen ? 'auto' : 'none'}
       className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
       <View className="bottom-full w-[90%] items-center">
         <View className="absolute -top-10 w-full flex-row gap-1">
