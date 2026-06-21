@@ -10,6 +10,7 @@ export interface Settings {
     chosenPet: number;
     hasDoneTutorial: boolean;
     petName: string;
+    userName: string;
     enabledModules: EnabledModules;
 }
 
@@ -61,10 +62,11 @@ export function createSettings(overrides: Partial<Settings> = {}) {
     return {
         chosenPet: 0,
         hasDoneTutorial: false,
-        petName: "Alex", // Fun easter egg for James
+        petName: 'Alex', // Fun easter egg for James
+        userName: 'testuser',
         enabledModules: createEnabledModules(),
         ...overrides,
-    } as Settings
+    } as Settings;
 }
 
 export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
@@ -75,7 +77,7 @@ export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
         stress: true,
         food: true,
         ...overrides,
-    } as EnabledModules
+    } as EnabledModules;
 }
 
 // ---------------------------------- Statistics Functions ----------------------------------
@@ -563,12 +565,11 @@ export async function getSyncData(forGoals: boolean = false) {
 // ---------------------------------- Settings Functions ----------------------------------
 
 export async function getSettings(): Promise<Settings> {
-
     try {
         const raw = await AsyncStorage.getItem('settings');
 
         const val = raw ? createSettings(JSON.parse(raw)) : createSettings();
-        return val
+        return val;
     } catch (error) {
         console.error(error);
         return createSettings();

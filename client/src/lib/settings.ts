@@ -50,7 +50,11 @@ async function saveSettingsServer(settings: Settings | null = null) {
  * @param settings new settings to store
  */
 async function setSyncSettings(settings: Settings) {
-    saveSettingsServer(settings);
+    try {
+        saveSettingsServer(settings);
+    } catch (error) {
+        console.log(`saving settings to server failed, reason: ${error}`);
+    }
     await setSettings(settings);
 }
 
@@ -63,6 +67,7 @@ export async function loadSettings() {
 }
 
 async function updateSettings<K extends keyof Settings>(key: K, value: Settings[K]) {
+    console.log(`saving new value for setting ${key}: ${value}`);
     const current = useSettingsStore.getState().settings;
     current[key] = value;
     useSettingsStore.getState().setStore(current);
@@ -83,15 +88,15 @@ export function useTutorial() {
     return { done, setTutorialDone, resetTutorial };
 }
 
-export async function savePetName(petName: string) {
+export function savePetName(petName: string) {
     updateSettings("petName", petName);
 }
 
 export function saveUserName(userName: string) {
-    console.log(`not yet implemented, but ${userName} is an okay name`);
+    updateSettings("userName", userName);
 }
 
-export async function setActiveModules(modules: EnabledModules) {
+export function setActiveModules(modules: EnabledModules) {
     updateSettings("enabledModules", modules);
 }
 
