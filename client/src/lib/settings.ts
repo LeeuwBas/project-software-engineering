@@ -58,6 +58,9 @@ async function setSyncSettings(settings: Settings) {
     await setSettings(settings);
 }
 
+/**
+ * Loads the settings from the server, does not await a response.
+ */
 export async function loadSettings() {
     const settings = await getSettings();
     useSettingsStore.getState().setStore(settings);
@@ -66,6 +69,12 @@ export async function loadSettings() {
     ));
 }
 
+/**
+ * Updates and saves a new value to the settings.
+ *
+ * @param key key of the Settings interface that needs to be updated.
+ * @param value new value of the setting
+ */
 async function updateSettings<K extends keyof Settings>(key: K, value: Settings[K]) {
     console.log(`saving new value for setting ${key}: ${value}`);
     const current = useSettingsStore.getState().settings;
@@ -88,18 +97,44 @@ export function useTutorial() {
     return { done, setTutorialDone, resetTutorial };
 }
 
+/**
+ * Save a new name for the pet.
+ * @param petName The new name
+ */
 export function savePetName(petName: string) {
     updateSettings("petName", petName);
 }
 
+/**
+ * Save a new name for the user, used in the quotes.
+ * @param userName The new name
+ */
 export function saveUserName(userName: string) {
     updateSettings("userName", userName);
 }
 
+/**
+ * Set a new value for the active modules.
+ * @param modules the modules that are active
+ */
 export function setActiveModules(modules: EnabledModules) {
     updateSettings("enabledModules", modules);
 }
 
-export function getActiveModules() {
+/**
+ * Retrieves the status of all modules.
+ * @returns Object containing the information about the modules.
+ */
+export function getActiveModules(): EnabledModules {
     return useSettingsStore.getState().settings.enabledModules
+}
+
+/**
+ * Toggles a specific module on and off.
+ * @param module the module anme that needs to be toggled.
+ */
+export function toggleActiveModule<K extends keyof EnabledModules>(module: K) {
+    const current = getActiveModules();
+    current[module] = !current[module];
+    setActiveModules(current);
 }
