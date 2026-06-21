@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getSettings, setSettings, Settings, createSettings } from '@/lib/storage';
+import { getSettings, setSettings, Settings, createSettings, EnabledModules } from '@/lib/storage';
 import { getAPI, postAPI } from './api/ApiManager';
 
 type SettingsStore = {
@@ -62,18 +62,20 @@ export async function loadSettings() {
     ));
 }
 
-async function setTutorialDone() {
+async function updateSettings<K extends keyof Settings>(key: K, value: Settings[K]) {
     const current = useSettingsStore.getState().settings;
-    current.hasDoneTutorial = true;
+    current[key] = value;
     useSettingsStore.getState().setStore(current);
     await setSyncSettings(current)
 }
 
+async function setTutorialDone() {
+    updateSettings("hasDoneTutorial", true);
+}
+
 async function resetTutorial() {
-    const current = useSettingsStore.getState().settings;
-    current.hasDoneTutorial = true;
-    useSettingsStore.getState().setStore(current);
-    await setSyncSettings(current);
+    //TODO reset also true?
+    updateSettings("hasDoneTutorial", true);
 }
 
 export function useTutorial() {
@@ -81,24 +83,18 @@ export function useTutorial() {
     return { done, setTutorialDone, resetTutorial };
 }
 
-export function savePetName(petName: string) {
-    console.log(`not yet implemented, but ${petName} is a good name`);
+export async function savePetName(petName: string) {
+    updateSettings("petName", petName);
 }
 
 export function saveUserName(userName: string) {
     console.log(`not yet implemented, but ${userName} is an okay name`);
 }
 
-export function setActiveModules(modules: any) {
-    console.log(`you selected ${modules}`);
+export async function setActiveModules(modules: EnabledModules) {
+    updateSettings("enabledModules", modules);
 }
 
 export function getActiveModules() {
-    return {
-        "stress": false,
-        "water": true,
-        "steps": false, // step counter is scary
-        "sleep": true,
-        "food": true,
-    }
+    return useSettingsStore.getState().settings.enabledModules
 }
