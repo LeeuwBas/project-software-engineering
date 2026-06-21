@@ -86,8 +86,7 @@ async function setTutorialDone() {
 }
 
 async function resetTutorial() {
-    //TODO reset also true?
-    updateSettings("hasDoneTutorial", true);
+    updateSettings("hasDoneTutorial", false);
 }
 
 export function useTutorial() {
