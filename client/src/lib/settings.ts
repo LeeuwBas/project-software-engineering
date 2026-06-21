@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { getSettings, setSettings, Settings, createSettings } from '@/lib/storage';
 import { getAPI, postAPI } from './api/ApiManager';
-import { Currency } from 'lucide-react-native';
 
 type SettingsStore = {
     settings: Settings;
