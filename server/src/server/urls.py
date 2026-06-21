@@ -25,7 +25,7 @@ from api.statistics.views import (
     CalendarView,
     StatManageView,
     BarchartView,
-    SummaryView
+    SummaryView, GoalBulkView, StatBulkView
 )
 from api.quotes.views import RequestQuote
 
@@ -45,8 +45,10 @@ urlpatterns = [
     path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
     path("users/settings", SettingsView.as_view(), name="settingsView"),
     path("api/goals/<str:goal_date>", GoalManageView.as_view(), name="goal_endpoint"),
+    path("api/goals/bulk/", GoalBulkView.as_view(), name="goal_bulk_endpoint"),
     path("api/calendar/<str:start_date>/<str:end_date>", CalendarView.as_view(), name="calendar_endpoint"),
     path("api/stats/<str:date>", StatManageView.as_view(), name="stat_manager"),
+    path("api/stats/bulk/", StatBulkView.as_view(), name="stat_bulk_endpoint"),
     path("api/barchart/<str:statName>/<str:startDate>/<str:endDate>/", BarchartView.as_view(), name="bar_chart"),
     path("api/summary/<str:statName>/<str:startDate>/<str:endDate>/", SummaryView.as_view(), name="summary_view"),
     path('', include(router.urls)),

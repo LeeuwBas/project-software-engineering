@@ -388,12 +388,10 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             const achieved = dayStat[key] ?? -1;
             const goal = dayGoals[key] ?? 0;
 
-            const complete = nodata ? 0 : achieved <= goal;
-
             if (key === 'stress') {
                 today[key] = achieved;
             } else {
-                const complete = achieved <= goal;
+                const complete = nodata ? 0 : achieved >= goal;
                 today[key] = +complete;
             }
         }
