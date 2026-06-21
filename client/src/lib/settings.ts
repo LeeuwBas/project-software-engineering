@@ -50,11 +50,9 @@ async function saveSettingsServer(settings: Settings | null = null) {
  * @param settings new settings to store
  */
 async function setSyncSettings(settings: Settings) {
-    try {
-        saveSettingsServer(settings);
-    } catch (error) {
-        console.log(`saving settings to server failed, reason: ${error}`);
-    }
+    saveSettingsServer(settings).catch(
+        (error) => console.log(`saving settings to server failed, reason: ${error}`)
+    );
     await setSettings(settings);
 }
 
