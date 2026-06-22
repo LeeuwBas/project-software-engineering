@@ -175,8 +175,6 @@ class GoalsTests(TestCase):
         self.client = APIClient()
 
         self.validDateUpper = "2026-06-14"
-        self.validDateLower = "2026-05-14"
-        self.invalidDate = "2026-60-14"
 
         self.goalURL = lambda date: reverse("goal_endpoint", args=[date])
 
@@ -314,8 +312,6 @@ class BulkGoalsTests(TestCase):
         self.client = APIClient()
 
         self.validDateUpper = "2026-06-14"
-        self.validDateLower = "2026-05-14"
-        self.invalidDate = "2026-60-14"
 
         self.goalURL = lambda date: reverse("goal_endpoint", args=[date])
 
