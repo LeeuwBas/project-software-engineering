@@ -35,8 +35,10 @@ export default function App() {
   // TODO (buenk): comment
   const appState = useRef(AppState.currentState);
 
-  // TODO (david): explain
   useEffect(() => {
+    // Adds event listeners for changing of app state.
+    // Back up all data when the app goes to the background.
+    // Check if caches need to be flushed when reopening the app.
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'background') triggerBackup();
       if (nextAppState === 'active') {
