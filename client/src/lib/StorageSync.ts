@@ -60,6 +60,7 @@ export async function syncServer(includeGoals: boolean) {
 async function syncStats(goals: boolean = false) {
     const syncData = await getSyncData(goals);
     const endpoint = goals ? `/api/goals/bulk/` : `/api/stats/bulk/`;
+
     await postAPI(endpoint, syncData).then(
         (response) => {
             console.log(`Synced stats (goals=${goals}) with response:`, response);

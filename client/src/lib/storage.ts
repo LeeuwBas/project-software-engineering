@@ -478,7 +478,6 @@ export async function setStatBulk(bulk: any, goals: boolean = false) {
     await Promise.allSettled(
         Object.keys(bulk).map((value) => {
             const line = makeStatline(bulk[value]);
-            console.log(`Line: ${line}`);
             if (line === undefined) {
                 console.log(`Could not bulk insert ${value}!`);
                 return Promise.reject('Incomplete stat line');
