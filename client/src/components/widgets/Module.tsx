@@ -17,12 +17,6 @@ export default function Module({
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
-  // const steps = useStepValue();
-
-  // useEffect(() => {
-  //   if ( id === 'steps' && value !== undefined && setValue !== undefined && steps > value)
-  //     setValue(steps)
-  // }, [steps])
 
   return (
     <View className="flex w-full flex-row items-center justify-between">
