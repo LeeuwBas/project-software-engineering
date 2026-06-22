@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth/AuthManager';
 import ChevronLeft from '@assets/icons/toolbar_icons/chevron_left.svg';
 import ChevronRight from '@assets/icons/toolbar_icons/chevron_right.svg';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -22,7 +22,7 @@ export default function PetSelection() {
   function confirm() {
     setPet(draftPet);
     savePet(draftPet);
-    isLoggedIn ? router.replace('/') : router.push('/signup');
+    isLoggedIn ? router.replace('/(protected)') : router.replace('/signup');
   }
 
   return (
@@ -60,7 +60,7 @@ export default function PetSelection() {
               <AppText className="font-bold text-white">Choose pet</AppText>
             </Button>
             {!isLoggedIn && (
-              <Button variant="outline" className="size-auto" onPress={() => router.push('/login')}>
+              <Button variant="outline" className="size-auto" onPress={() => router.replace('/login')}>
                 <AppText className="font-bold">I already have an account</AppText>
               </Button>
             )}

@@ -66,7 +66,7 @@ export default function Stats({}: {}) {
         </View>
         <Card className="w-full items-center justify-center py-3 shadow-block">
           <CardContent className="w-full items-center px-2">
-            {activeTab === 'calendar' ? <CalendarOverview /> : <StatisticView stat={activeTab} />}
+            {activeTab === 'calendar' ? (statsOpen ? <CalendarOverview /> : null) : <StatisticView stat={activeTab} />}
           </CardContent>
         </Card>
       </View>

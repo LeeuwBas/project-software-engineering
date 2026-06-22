@@ -140,7 +140,7 @@ export default function CalendarOverview() {
         </AppText>
 
         <View style={{ width: 24 }}>
-          {month !== today.getMonth() && (
+          {!(month === today.getMonth() && year === today.getFullYear()) && (
             <Pressable onPress={toNextMonth} hitSlop={12}>
               <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
@@ -184,6 +184,9 @@ export default function CalendarOverview() {
                   />
                   <View
                     className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1 ? 'bg-green-500' : 'hidden'}`}
+                  />
+                  <View
+                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.food === 1 ? 'bg-yellow-500' : 'hidden'}`}
                   />
                 </View>
               )}
