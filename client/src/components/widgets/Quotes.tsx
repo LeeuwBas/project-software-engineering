@@ -5,7 +5,13 @@ import { useColorScheme } from 'nativewind';
 import { ReactNode } from 'react';
 import { LayoutRectangle, View } from 'react-native';
 
-/** TODO (Keane te Velde): docstring */
+/** Component that renders quote bubbles in the space above the PetHome to suggest an activity to make progress toward
+ * today's goals if there are any that still need to be met, or if there aren't, display a congratulations for a
+ * specific met goal.
+ * @peram petHomeLayout should be the layout of the PetHome
+ * @peram topBarLayout should be the layout of the Topbar
+ * @returns either null or an absolute component that also does not effect the layout of the page. It displays whatever
+ * quote is currently set in {@link QuoteBridge}.  */
 export default function Quotes({
   className = '',
   petHomeLayout,
@@ -19,12 +25,18 @@ export default function Quotes({
   const quote = useQuote();
   const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
+
+  // if there is no quote, render nothing.
   if (quote == null) return null;
   return (
     <View
       className={`absolute left-4 right-4 items-center justify-end overflow-hidden ${className}`}
       style={{
-        top: topBarLayout.y + topBarLayout.height,
+        /* The PetHome component is approx. square, width fitted to the size of the screen, but the pet doesn't start
+        until about 15% below the top of the component. Width is used in place of height because the animation can
+        cause the height to change, resulting in a bouncing quote bubble.*/
+        top: topBarLayout.y + topBarLayout.height, // the bottom of the Topbar
+        // (the top of the pet to the top of the screen) - (the size of the Topbar)
         height:
           petHomeLayout.width * 0.15 + petHomeLayout.y - (topBarLayout.y + topBarLayout.height),
         zIndex: 5,
