@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { getActiveModules } from '@/lib/settings';
+import { getActiveModules, getPetName } from '@/lib/settings';
 import { MenuConfig, ModuleId, MODULES } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
@@ -34,8 +34,8 @@ export default function Menu({
   setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
-  // TODO: Add backend for retrieving name
-  const name = 'Alex';
+
+  const name = getPetName();
   const { menuOpen } = useAppContext();
 
   const menuConfig: Record<ModuleId, MenuConfig> = {

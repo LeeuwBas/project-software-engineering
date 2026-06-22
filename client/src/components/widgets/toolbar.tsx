@@ -1,6 +1,6 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { foodBridge, sleepBridge, waterBridge } from '@/lib/api/APIBridge';
+import { foodBridge, sleepBridge, stepsBridge, stressBridge, waterBridge } from '@/lib/api/APIBridge';
 import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
@@ -49,18 +49,23 @@ export default function Toolbar({}: {}) {
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
-      await Promise.allSettled([
-        waterBridge.set(draftWater),
-        foodBridge.set(draftFood),
-        sleepBridge.set(draftSleep),
-      ]);
 
-      await Promise.allSettled([
-        goaledModules.map((module) => {
-          module.bridge.setGoal(draftGoals[module.id]);
-          console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
-        }),
-      ]);
+      await waterBridge.set(draftWater),
+      await foodBridge.set(draftFood),
+      await sleepBridge.set(draftSleep)
+
+
+      // await Promise.allSettled([
+
+      // await goaledModules.map(async (module) => {
+      //     await module.bridge.setGoal(draftGoals[module.id]);
+      //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
+      // });
+
+      await foodBridge.setGoal(draftGoals['food'])
+      await stepsBridge.setGoal(draftGoals['steps'])
+      await waterBridge.setGoal(draftGoals['water'])
+      // ]);
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
@@ -118,11 +123,11 @@ export default function Toolbar({}: {}) {
             <Pressable
               disabled={statsOpen || settingsOpen}
               className={`size-16 items-center justify-center border-4 border-primary-dark bg-primary shadow-block transition-opacity duration-200 ${statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'}`}
-              onPress={() => {
+              onPress={async () => {
                 if (stressMenuOpen) {
-                  sendStress();
+                  await sendStress();
                 }
-                closeMenu();
+                await closeMenu();
               }}>
               {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
 
