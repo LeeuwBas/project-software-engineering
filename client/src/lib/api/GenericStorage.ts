@@ -418,7 +418,5 @@ async function loadGoalServer<K extends keyof StatLine>(
         return null;
     }
 
-    console.log(result);
-
     return +result[name];
 }
