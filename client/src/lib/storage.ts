@@ -228,8 +228,6 @@ export async function getNamedStat(statName: string, day: Date) {
         return null;
     }
 
-    console.log(JSON.stringify(line));
-
     return line[statName as keyof StatLine];
 }
 
