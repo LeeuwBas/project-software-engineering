@@ -226,8 +226,6 @@ export async function getStatisticSummary<K extends keyof StatLine>(
 export async function loadCalender(startDate: Date, endDate: Date) {
     const storage = await getCalender(new Date(startDate), new Date(endDate));
 
-    console.log(`storage: ${storage}`);
-
     if (storage !== null && storage.isFull) {
         return storage.vals;
     }
@@ -420,5 +418,7 @@ async function loadGoalServer<K extends keyof StatLine>(
         return null;
     }
 
-    return +result.goals;
+    console.log(result);
+
+    return +result[name];
 }

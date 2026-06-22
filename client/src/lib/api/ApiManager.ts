@@ -18,6 +18,8 @@ export async function getAPI(endpoint: string, authenticate: boolean = true) {
         authenticate
     );
 
+    console.log(`3: ${endpoint}`);
+
     if (!response) {
         console.log(`Failed to GET ${endpoint}`);
         return null;

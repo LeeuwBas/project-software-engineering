@@ -22,14 +22,14 @@ export const tokenStorage = {
     },
 
     setLoginID: async (loginId: string, email: string) => {
-        if (!(await SecureStore.getItemAsync(LOGIN_EMAIL))) {
-            throw Error('No loginId to delete!');
-        }
         await SecureStore.setItemAsync(LOGIN_ID, loginId);
         await SecureStore.setItemAsync(LOGIN_EMAIL, email);
     },
 
     removeLoginId: async () => {
+        if (!(await SecureStore.getItemAsync(LOGIN_EMAIL))) {
+            return Promise.reject('No loginId to delete!');
+        }
         return Promise.all([
             SecureStore.deleteItemAsync(LOGIN_ID),
             SecureStore.deleteItemAsync(LOGIN_EMAIL),

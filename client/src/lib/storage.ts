@@ -82,6 +82,7 @@ export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
 }
 
 export async function clearStorage() {
+    console.log('Clearing storage...');
     const keys = (await AsyncStorage.getAllKeys()).filter((value) => {
         return (
             value.startsWith(statPrefix) ||
@@ -108,6 +109,13 @@ function calculateDate(date: Date, stat: string = statPrefix) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${stat}${year}-${month}-${day}`;
+}
+
+function makeStatline(statLine: any): StatLine {
+    for (const key of Object.keys(statLine)) {
+        statLine[key] = +statLine[key];
+    }
+    return statLine as StatLine;
 }
 
 /**
@@ -219,6 +227,8 @@ export async function getNamedStat(statName: string, day: Date) {
     if (line === null) {
         return null;
     }
+
+    console.log(JSON.stringify(line));
 
     return line[statName as keyof StatLine];
 }
@@ -460,12 +470,14 @@ export async function setStat<K extends keyof StatLine>(
  */
 export async function setStatBulk(bulk: any, goals: boolean = false) {
     if (!bulk) {
+        console.log('no bulk');
         return false;
     }
 
     await Promise.allSettled(
         Object.keys(bulk).map((value) => {
-            const line = bulk[value] as StatLine;
+            const line = makeStatline(bulk[value]);
+            console.log(`Line: ${line}`);
             if (line === undefined) {
                 console.log(`Could not bulk insert ${value}!`);
                 return Promise.reject('Incomplete stat line');

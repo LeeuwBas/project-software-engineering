@@ -2,7 +2,7 @@ import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { syncServer } from '@/lib/StorageSync';
+import { loadServer, syncServer } from '@/lib/StorageSync';
 import { internalAuth } from '@/lib/auth/AuthService';
 import { clearStorage } from '@/lib/storage';
 
@@ -106,6 +106,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const cachedLogin = await tokenStorage.isCachedLogin(receivedLoginId, email);
     if (!cachedLogin) {
       await clearStorage();
+    } else {
+      console.log('Keeping local cache!');
     }
 
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
@@ -115,6 +117,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setRefreshToken(receivedRefreshToken);
     setGuest(false);
     setAuthenticated(true);
+
+    internalAuth.accessToken = receivedAccessToken;
+    internalAuth.refreshToken = receivedRefreshToken;
+    internalAuth.isGuest = false;
+
+    if (!cachedLogin) {
+      await loadServer(true)
+        .then(() => console.log('Successfully loaded from server'))
+        .catch((reason) => console.log(`Failed to load data from server: ${reason}`));
+    }
 
     console.log('Successfully logged in');
     return true;

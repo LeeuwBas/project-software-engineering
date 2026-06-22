@@ -16,7 +16,7 @@ export async function loadServer(includeGoals: boolean) {
     console.log('Loading from server...');
 
     if (includeGoals) {
-        await Promise.all([syncStats(false), syncStats(true)]);
+        await Promise.all([loadStats(false), loadStats(true)]);
     } else {
         await loadStats();
     }
@@ -33,6 +33,8 @@ async function loadStats(goals: boolean = false) {
     const response = await getAPI(endpoint);
     if (response) {
         await setStatBulk(response, goals);
+    } else {
+        console.log('No response!');
     }
 }
 
