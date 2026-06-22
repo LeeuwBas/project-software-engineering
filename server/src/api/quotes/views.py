@@ -1,12 +1,10 @@
-
 from drf_spectacular.utils import OpenApiResponse, extend_schema
-from rest_framework import status
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..statistics.serializers import (QuoteRequestSerializer,
-                                      QuoteResponseSerializer)
+from ..statistics.serializers import QuoteRequestSerializer, QuoteResponseSerializer
 from .helpers import get_json_quote
 
 
@@ -37,5 +35,5 @@ class RequestQuote(APIView):
             context = serializer.validated_data.get("context", "Standard")
             quote = get_json_quote(action, level, context)
 
-            return Response({"quote": quote}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"quote": quote}, HTTP_200_OK)
+        return Response(serializer.errors, HTTP_400_BAD_REQUEST)
