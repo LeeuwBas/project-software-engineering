@@ -1,282 +1,282 @@
 {
-    "Water" : {
-        "Low" : {
-            "Standard" : [
-                "Have you had anything to drink?",
-                "Have you had any water today?",
-                "Would you like a glass of water?",
-                "How about a drink of water?",
-                "It's a good time for some water.",
-                "A glass of water looks tasty.",
-                "I'm a bit dehydrated, I can use a glass of water.",
-                "I can use a glass of water.",
-                "I'm parched, I could use some water.",
-                "A drink would do me good.",
-                "Water sounds refreshing right now.",
-                "This is a reminder to drink a glass of water.",
-                "It's been a while since your last drink.",
-                "You have not logged any water yet today. A glass of water is a good next step."
-            ],
-            "Sunny" : [
-                "It's nice weather outside, have you had some water yet?",
-                "It's so sunny outside, let's get something to drink!",
-                "Sunny days can make you thirsty, how about a drink?",
-                "People need more water on hot days, how about it? Have you had enough?",
-                "Sun and sweat make me thirsty, I'd love a glass of water.",
-                "Sunny weather and water go well together, have you had anything to drink?",
-                "It might be a good moment for a water break.",
-                "A cold drink sounds nice on a sunny day.",
-                "It is warm today. A drink may help you feel more comfortable.",
-                "The sun is doing its best today. A little water break might be nice.",
-                "Bright skies, happy vibes, and maybe a glass of water?"
-            ],
-            "Exercise" : [
-                "You walked a lot! Remember to drink!",
-                "A glass of water might be helpful after all that movement!",
-                "A drink after exercise might be refreshing!",
-                "Movement uses up water. It is time to refill your glass.",
-                "You have been active today, don't forget to replace the fluids you lost.",
-                "Great work moving around, now let's take a water break.",
-                "Your body worked hard today, a glass of water would help.",
-                "Activity increases your water needs, time to drink something.",
-                "That was a lot of movement. How about some water?",
-                "Your body has been busy today. A drink might feel good.",
-                "After moving around, a few sips of water can be refreshing.",
-                "Big walk energy! Maybe it is time for a little water refill."
-            ]
-        },
-        "Medium" : {
-            "Standard" : [
-                "You did a good job drinking water.",
-                "You are part way to your water goal.",
-                "You are halfway to your water goal for today.",
-                "Keep on drinking, you are almost there.",
-                "Half a gallon a day keeps the kidney stones away.",
-                "Good progress, you are almost there, keep on drinking.",
-                "Keep going, another glass will bring you even closer!",
-                "Nice work! Your body appreciated the water.",
-                "You are building a healthy hydration habit.",
-                "You have had a good amount of water today.",
-                "Nice progress. A little more water later might feel good.",
-                "Your water goal is getting closer. Good work!"
-            ]
-        },
-        "High" : {
-            "Standard" : [
-                "You're looking hydrated!",
-                "Good job staying hydrated!",
-                "WOW! You reached your water goal.",
-                "Water goal completed, excellent job maintaining your physical health today!",
-                "Water goal completed, you did a great job!",
-                "Hydration goal achieved, fantastic work!",
-                "Your water intake is looking great today.",
-                "Nice work. You reached your water goal today!",
-                "Your hydration is looking strong today.",
-                "Splash-tastic! Your water goal is complete.",
-                "Your water meter is full. Great job!",
-                "Hydration level: happy and full!"
-            ]
-        }
+  "Water": {
+    "Low": {
+      "Standard": [
+        "Have you had anything to drink?",
+        "Have you had any water today?",
+        "Would you like a glass of water?",
+        "How about a drink of water?",
+        "It's a good time for some water.",
+        "A glass of water looks tasty.",
+        "I'm a bit dehydrated, I can use a glass of water.",
+        "I can use a glass of water.",
+        "I'm parched, I could use some water.",
+        "A drink would do me good.",
+        "Water sounds refreshing right now.",
+        "This is a reminder to drink a glass of water.",
+        "It's been a while since your last drink.",
+        "You have not logged any water yet today. A glass of water is a good next step."
+      ],
+      "Sunny": [
+        "It's nice weather outside, have you had some water yet?",
+        "It's so sunny outside, let's get something to drink!",
+        "Sunny days can make you thirsty, how about a drink?",
+        "People need more water on hot days, how about it? Have you had enough?",
+        "Sun and sweat make me thirsty, I'd love a glass of water.",
+        "Sunny weather and water go well together, have you had anything to drink?",
+        "It might be a good moment for a water break.",
+        "A cold drink sounds nice on a sunny day.",
+        "It is warm today. A drink may help you feel more comfortable.",
+        "The sun is doing its best today. A little water break might be nice.",
+        "Bright skies, happy vibes, and maybe a glass of water?"
+      ],
+      "Exercise": [
+        "You walked a lot! Remember to drink!",
+        "A glass of water might be helpful after all that movement!",
+        "A drink after exercise might be refreshing!",
+        "Movement uses up water. It is time to refill your glass.",
+        "You have been active today, don't forget to replace the fluids you lost.",
+        "Great work moving around, now let's take a water break.",
+        "Your body worked hard today, a glass of water would help.",
+        "Activity increases your water needs, time to drink something.",
+        "That was a lot of movement. How about some water?",
+        "Your body has been busy today. A drink might feel good.",
+        "After moving around, a few sips of water can be refreshing.",
+        "Big walk energy! Maybe it is time for a little water refill."
+      ]
     },
-    "Walk" : {
-        "Low" : {
-            "Standard" : [
-                "You have been sitting for a long time, moving your legs for a short time helps your blood circulation.",
-                "It is time for a short walk, let's get those legs moving!",
-                "Walking lowers stress, a short walk is enough.",
-                "Would you like to go for a short walk?",
-                "A short walk might feel nice right now.",
-                "How about a little walk to get your legs moving?",
-                "How would you feel about going for a slow walk for a few minutes?",
-                "A little walk around the room could be enough.",
-                "Would a short walk outside feel good?",
-                "A small walk may help your body feel more awake.",
-                "Your step count is low today. A short walk might help.",
-                "A quick walk could be a nice break from sitting.",
-                "Tiny walk, tiny win! How about a few steps?"
-            ]
-        },
-        "Medium" : {
-            "Standard" : [
-                "You are close to your movement goal! A short walk will get you there.",
-                "Keep going, some extra steps will bring you even closer!",
-                "You have done some walking today. A short walk could help you get closer to your goal.",
-                "Nice movement today. A few more steps might bring you closer.",
-                "You are making progress. How about a little walk?",
-                "A short walk now could help finish your movement goal.",
-                "You are part way there. A few extra steps may help.",
-                "Your steps are looking good. A small walk could add a nice boost.",
-                "You have already moved today. A little walk might keep the progress going.",
-                "Your movement goal is getting closer. How about a short walk?",
-                "A few more minutes of walking could help you reach your goal.",
-                "Almost there! A little walk might be enough."
-            ],
-            "Sunny" : [
-                "You are close to your movement goal, let's catch some sun!",
-                "Let's go outside, your movement goal is almost reached!",
-                "It's nice weather outside, let's go for a walk."
-            ]
-        },
-        "High" : {
-            "Standard" : [
-                "Step goal reached, yeah!",
-                "You completed your daily walk goal.",
-                "Movement goal reached, proud of us!",
-                "Great job. You reached your step goal today!",
-                "Your step goal is complete. Nice work!",
-                "Big step energy! You did it!",
-                "Your legs did a lot today. Well done!",
-                "Step goal achieved. That is excellent progress.",
-                "You walked enough to reach your goal today.",
-                "Nice walking today. Your movement goal is complete!",
-                "Your step count is looking great today.",
-                "Goal reached! Your steps are full for today.",
-                "Walk goal complete. Time for a happy little victory dance!"
-            ]
-        }
+    "Medium": {
+      "Standard": [
+        "You did a good job drinking water.",
+        "You are part way to your water goal.",
+        "You are halfway to your water goal for today.",
+        "Keep on drinking, you are almost there.",
+        "Half a gallon a day keeps the kidney stones away.",
+        "Good progress, you are almost there, keep on drinking.",
+        "Keep going, another glass will bring you even closer!",
+        "Nice work! Your body appreciated the water.",
+        "You are building a healthy hydration habit.",
+        "You have had a good amount of water today.",
+        "Nice progress. A little more water later might feel good.",
+        "Your water goal is getting closer. Good work!"
+      ]
     },
-    "Sleep" : {
-        "Low" : {
-            "Standard" : [
-                "You didn't sleep well. Focus on gentle tasks today.",
-                "Low sleep reduces energy. It is okay if things take more time today.",
-                "Your sleep log shows a deficit. Plan an early bedtime tonight to recover.",
-                "You did not get much sleep last night. A calm start might help today.",
-                "You may feel tired today. A gentle pace could be helpful.",
-                "Your body had less rest than usual. A quiet break might feel good.",
-                "Less sleep can make the day feel harder. Small tasks may be easier today.",
-                "You slept less than usual. It might help to keep things simple today.",
-                "Today might be a lower-energy day. That is okay.",
-                "A slower morning might feel good after a short night.",
-                "You may want to choose easier tasks today.",
-                "Less sleep can affect focus. Short breaks might help.",
-                "You had a shorter night. A restful evening might help later."
-            ]
-        },
-        "High" : {
-            "Standard" : [
-                "Your sleep was stable last night.",
-                "You reached your sleep goal.",
-                "You slept well.",
-                "I hope you are well rested.",
-                "Full sleep cycle completed!",
-                "Well rested? Let's get this day started.",
-                "Your sleep duration was stable last night.",
-                "You got a good amount of sleep."
-            ]
-        }
-    },
-    "Stress" : {
-        "Low" : {
-            "Standard" : [
-                "Your logged stress levels are low. This is a good time for complex tasks or learning.",
-                "Nice to see that your mind is calm today.",
-                "Enjoy this moment of balance.",
-                "Your stress level looks low today. That is nice to see.",
-                "Your mind seems calm today. Good job checking in.",
-                "This looks like a calm moment. You can enjoy it.",
-                "Your stress level is looking comfortable today.",
-                "Nice, today seems to have some calm space.",
-                "Your stress check-in looks peaceful today.",
-                "Calm day energy. That is a good feeling.",
-                "Your mind seems to have some peace today.",
-                "It looks like you are having a calmer moment.",
-                "Low stress logged. That is something to appreciate."
-            ]
-        },
-        "Medium" : {
-            "Standard" : [
-                "Your stress level is rising. Consider a two-minute breathing break.",
-                "You're feeling some tension. It might help to reduce sensory input.",
-                "Your stress level is in the middle today. A small pause might feel good.",
-                "You may be feeling some tension. A quiet moment could help.",
-                "Your stress check-in shows some pressure. A short break might be nice.",
-                "Things may feel a bit heavier today. You can take it one step at a time.",
-                "Your mind might be carrying extra noise today. A calm space could feel helpful.",
-                "Medium stress logged. A gentle reset might feel good.",
-                "You may want a softer pace today.",
-                "Some stress is showing today. A few slow breaths might help.",
-                "Your stress level is not too high, but a small break could still feel nice.",
-                "Today may need a little extra kindness."
-            ]
-        },
-        "High" : {
-            "Standard" : [
-                "Your stress level is high. You can stop your current task and find a quiet space to reset.",
-                "High stress is detected. You do not need to push through right now.",
-                "It seems you are stressed. Try taking things a little easier.",
-                "You are highly stressed. Taking some time for yourself may help.",
-                "Take a deep breath and give yourself a moment.",
-                "Your stress level is high. A short walk might help you calm down.",
-                "Your stress level looks high. A quiet break might help.",
-                "Things may feel like a lot right now. You can pause for a moment.",
-                "Your stress check-in is high. A safe, quiet space might feel better.",
-                "This might be a good moment to lower noise, light, or other sensory input.",
-                "You do not have to push through everything right now.",
-                "A short reset might help: sit down, breathe slowly, and reduce noise if you can.",
-                "Your body may need a calmer space right now.",
-                "A few minutes away from the current task might help.",
-                "It might help to choose one small next step, or pause if that feels better.",
-                "A gentle walk or quiet rest might help your body settle."
-            ]
-        }
-    },
-    "Eat" : {
-        "Low" : {
-            "Standard" : [
-                "Your brain needs fuel to think clearly.",
-                "Your body needs some food.",
-                "Maybe it is time to eat.",
-                "It is time for a boost. Let's eat something.",
-                "Listen to your hunger cues.",
-                "Have a break, have a KitKat!",
-                "Your focus and energy start with what you eat. What's on the menu?",
-                "Have you had something to eat today?",
-                "Would you like a small snack or meal?",
-                "A little food might help your energy.",
-                "Something simple to eat might feel good.",
-                "Your meal count is low today. Maybe a snack would help.",
-                "A small bite can be a good start.",
-                "Food can help your body feel more steady.",
-                "How about something easy to eat?",
-                "A snack break might be nice.",
-                "Your body might like some fuel soon."
-            ]
-        },
-        "Medium" : {
-            "Standard" : [
-                "A small snack will help keep your energy stable.",
-                "Your meal logs look steady. Keep it going!",
-                "Great job! You are halfway through your meals today!",
-                "A light meal or a protein-rich snack would fit perfectly here.",
-                "You have had some meals today. Nice progress.",
-                "You are part way through your meals for today.",
-                "A small snack later might help keep your energy steady.",
-                "You have made a good start with meals today.",
-                "Your body has had some fuel today. Nice work.",
-                "You are doing well with meals today.",
-                "A light meal might feel good when you are ready.",
-                "Your food log is in the middle range today.",
-                "Some food is already part of your day. That is good to see."
-            ]
-        },
-        "High" : {
-            "Standard" : [
-                "Nutritional goals met! You have given your body the fuel it needs today.",
-                "All meals are logged. Your body is nourished.",
-                "Well-fed and full of energy. You are completely on track with your meals.",
-                "You've given your body exactly what it needs. Goal achieved!",
-                "Meal goal reached. Nice work today!",
-                "Your meals are logged for today. Great job!",
-                "Food goal achieved. That is good to see.",
-                "You completed your meal goal today.",
-                "Meal log complete. Nice progress!",
-                "Your meal count is on track today.",
-                "You reached your meal goal. Well done!",
-                "Meals completed for today. Nice work!",
-                "Your food log looks complete today.",
-                "Goal reached. Thanks for checking in with your meals today."
-            ]
-        }
+    "High": {
+      "Standard": [
+        "You're looking hydrated!",
+        "Good job staying hydrated!",
+        "WOW! You reached your water goal.",
+        "Water goal completed, excellent job maintaining your physical health today!",
+        "Water goal completed, you did a great job!",
+        "Hydration goal achieved, fantastic work!",
+        "Your water intake is looking great today.",
+        "Nice work. You reached your water goal today!",
+        "Your hydration is looking strong today.",
+        "Splash-tastic! Your water goal is complete.",
+        "Your water meter is full. Great job!",
+        "Hydration level: happy and full!"
+      ]
     }
+  },
+  "Walk": {
+    "Low": {
+      "Standard": [
+        "You have been sitting for a long time, moving your legs for a short time helps your blood circulation.",
+        "It is time for a short walk, let's get those legs moving!",
+        "Walking lowers stress, a short walk is enough.",
+        "Would you like to go for a short walk?",
+        "A short walk might feel nice right now.",
+        "How about a little walk to get your legs moving?",
+        "How would you feel about going for a slow walk for a few minutes?",
+        "A little walk around the room could be enough.",
+        "Would a short walk outside feel good?",
+        "A small walk may help your body feel more awake.",
+        "Your step count is low today. A short walk might help.",
+        "A quick walk could be a nice break from sitting.",
+        "Tiny walk, tiny win! How about a few steps?"
+      ]
+    },
+    "Medium": {
+      "Standard": [
+        "You are close to your movement goal! A short walk will get you there.",
+        "Keep going, some extra steps will bring you even closer!",
+        "You have done some walking today. A short walk could help you get closer to your goal.",
+        "Nice movement today. A few more steps might bring you closer.",
+        "You are making progress. How about a little walk?",
+        "A short walk now could help finish your movement goal.",
+        "You are part way there. A few extra steps may help.",
+        "Your steps are looking good. A small walk could add a nice boost.",
+        "You have already moved today. A little walk might keep the progress going.",
+        "Your movement goal is getting closer. How about a short walk?",
+        "A few more minutes of walking could help you reach your goal.",
+        "Almost there! A little walk might be enough."
+      ],
+      "Sunny": [
+        "You are close to your movement goal, let's catch some sun!",
+        "Let's go outside, your movement goal is almost reached!",
+        "It's nice weather outside, let's go for a walk."
+      ]
+    },
+    "High": {
+      "Standard": [
+        "Step goal reached, yeah!",
+        "You completed your daily walk goal.",
+        "Movement goal reached, proud of us!",
+        "Great job. You reached your step goal today!",
+        "Your step goal is complete. Nice work!",
+        "Big step energy! You did it!",
+        "Your legs did a lot today. Well done!",
+        "Step goal achieved. That is excellent progress.",
+        "You walked enough to reach your goal today.",
+        "Nice walking today. Your movement goal is complete!",
+        "Your step count is looking great today.",
+        "Goal reached! Your steps are full for today.",
+        "Walk goal complete. Time for a happy little victory dance!"
+      ]
+    }
+  },
+  "Sleep": {
+    "Low": {
+      "Standard": [
+        "You didn't sleep well. Focus on gentle tasks today.",
+        "Low sleep reduces energy. It is okay if things take more time today.",
+        "Your sleep log shows a deficit. Plan an early bedtime tonight to recover.",
+        "You did not get much sleep last night. A calm start might help today.",
+        "You may feel tired today. A gentle pace could be helpful.",
+        "Your body had less rest than usual. A quiet break might feel good.",
+        "Less sleep can make the day feel harder. Small tasks may be easier today.",
+        "You slept less than usual. It might help to keep things simple today.",
+        "Today might be a lower-energy day. That is okay.",
+        "A slower morning might feel good after a short night.",
+        "You may want to choose easier tasks today.",
+        "Less sleep can affect focus. Short breaks might help.",
+        "You had a shorter night. A restful evening might help later."
+      ]
+    },
+    "High": {
+      "Standard": [
+        "Your sleep was stable last night.",
+        "You reached your sleep goal.",
+        "You slept well.",
+        "I hope you are well rested.",
+        "Full sleep cycle completed!",
+        "Well rested? Let's get this day started.",
+        "Your sleep duration was stable last night.",
+        "You got a good amount of sleep."
+      ]
+    }
+  },
+  "Stress": {
+    "Low": {
+      "Standard": [
+        "Your logged stress levels are low. This is a good time for complex tasks or learning.",
+        "Nice to see that your mind is calm today.",
+        "Enjoy this moment of balance.",
+        "Your stress level looks low today. That is nice to see.",
+        "Your mind seems calm today. Good job checking in.",
+        "This looks like a calm moment. You can enjoy it.",
+        "Your stress level is looking comfortable today.",
+        "Nice, today seems to have some calm space.",
+        "Your stress check-in looks peaceful today.",
+        "Calm day energy. That is a good feeling.",
+        "Your mind seems to have some peace today.",
+        "It looks like you are having a calmer moment.",
+        "Low stress logged. That is something to appreciate."
+      ]
+    },
+    "Medium": {
+      "Standard": [
+        "Your stress level is rising. Consider a two-minute breathing break.",
+        "You're feeling some tension. It might help to reduce sensory input.",
+        "Your stress level is in the middle today. A small pause might feel good.",
+        "You may be feeling some tension. A quiet moment could help.",
+        "Your stress check-in shows some pressure. A short break might be nice.",
+        "Things may feel a bit heavier today. You can take it one step at a time.",
+        "Your mind might be carrying extra noise today. A calm space could feel helpful.",
+        "Medium stress logged. A gentle reset might feel good.",
+        "You may want a softer pace today.",
+        "Some stress is showing today. A few slow breaths might help.",
+        "Your stress level is not too high, but a small break could still feel nice.",
+        "Today may need a little extra kindness."
+      ]
+    },
+    "High": {
+      "Standard": [
+        "Your stress level is high. You can stop your current task and find a quiet space to reset.",
+        "High stress is detected. You do not need to push through right now.",
+        "It seems you are stressed. Try taking things a little easier.",
+        "You are highly stressed. Taking some time for yourself may help.",
+        "Take a deep breath and give yourself a moment.",
+        "Your stress level is high. A short walk might help you calm down.",
+        "Your stress level looks high. A quiet break might help.",
+        "Things may feel like a lot right now. You can pause for a moment.",
+        "Your stress check-in is high. A safe, quiet space might feel better.",
+        "This might be a good moment to lower noise, light, or other sensory input.",
+        "You do not have to push through everything right now.",
+        "A short reset might help: sit down, breathe slowly, and reduce noise if you can.",
+        "Your body may need a calmer space right now.",
+        "A few minutes away from the current task might help.",
+        "It might help to choose one small next step, or pause if that feels better.",
+        "A gentle walk or quiet rest might help your body settle."
+      ]
+    }
+  },
+  "Eat": {
+    "Low": {
+      "Standard": [
+        "Your brain needs fuel to think clearly.",
+        "Your body needs some food.",
+        "Maybe it is time to eat.",
+        "It is time for a boost. Let's eat something.",
+        "Listen to your hunger cues.",
+        "Have a break, have a KitKat!",
+        "Your focus and energy start with what you eat. What's on the menu?",
+        "Have you had something to eat today?",
+        "Would you like a small snack or meal?",
+        "A little food might help your energy.",
+        "Something simple to eat might feel good.",
+        "Your meal count is low today. Maybe a snack would help.",
+        "A small bite can be a good start.",
+        "Food can help your body feel more steady.",
+        "How about something easy to eat?",
+        "A snack break might be nice.",
+        "Your body might like some fuel soon."
+      ]
+    },
+    "Medium": {
+      "Standard": [
+        "A small snack will help keep your energy stable.",
+        "Your meal logs look steady. Keep it going!",
+        "Great job! You are halfway through your meals today!",
+        "A light meal or a protein-rich snack would fit perfectly here.",
+        "You have had some meals today. Nice progress.",
+        "You are part way through your meals for today.",
+        "A small snack later might help keep your energy steady.",
+        "You have made a good start with meals today.",
+        "Your body has had some fuel today. Nice work.",
+        "You are doing well with meals today.",
+        "A light meal might feel good when you are ready.",
+        "Your food log is in the middle range today.",
+        "Some food is already part of your day. That is good to see."
+      ]
+    },
+    "High": {
+      "Standard": [
+        "Nutritional goals met! You have given your body the fuel it needs today.",
+        "All meals are logged. Your body is nourished.",
+        "Well-fed and full of energy. You are completely on track with your meals.",
+        "You've given your body exactly what it needs. Goal achieved!",
+        "Meal goal reached. Nice work today!",
+        "Your meals are logged for today. Great job!",
+        "Food goal achieved. That is good to see.",
+        "You completed your meal goal today.",
+        "Meal log complete. Nice progress!",
+        "Your meal count is on track today.",
+        "You reached your meal goal. Well done!",
+        "Meals completed for today. Nice work!",
+        "Your food log looks complete today.",
+        "Goal reached. Thanks for checking in with your meals today."
+      ]
+    }
+  }
 }

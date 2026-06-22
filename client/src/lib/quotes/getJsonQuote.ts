@@ -5,9 +5,9 @@ export default function getJsonQuote(req: {
     action: string;
     level: string;
     context?: string;
-}): string {
+}): string | null {
     if (!(req.action in quotes) || !(req.level in (quotes as any)[req.action])) {
-        return 'What do you want from me?';
+        return null;
     }
 
     if (!req?.context) req.context = 'Standard';

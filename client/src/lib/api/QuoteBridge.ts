@@ -1,7 +1,7 @@
 import { getAPI } from '@/lib/api/ApiManager';
-import calculateQuoteRequest from '@/lib/quotes/calculateQuoteRequest';
+import generateQuoteRequest from '@/lib/quotes/generateQuoteRequest';
+import getJsonQuote from '@/lib/quotes/getJsonQuote';
 import { useSyncExternalStore } from 'react';
-import getJsonQuote from '../quotes/getJsonQuote';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
 
@@ -82,7 +82,7 @@ export function createQuoteBridge(): QuoteBridge {
     };
 
     const requestQuote = async () => {
-        const req = await calculateQuoteRequest();
+        const req = await generateQuoteRequest();
         if (req === null) return;
         let data = { quote: getJsonQuote(req) };
 
@@ -93,6 +93,7 @@ export function createQuoteBridge(): QuoteBridge {
                     `&context=${encodeURIComponent(req.context)}`
             );
         }
+        if (!data?.quote) return;
         setQuote(data?.quote);
     };
 
