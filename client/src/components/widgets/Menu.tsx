@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { getActiveModules } from '@/lib/settings';
+import { getActiveModules, getPetName } from '@/lib/settings';
 import { MenuConfig, ModuleId, MODULES } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
@@ -34,8 +34,8 @@ export default function Menu({
   setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
-  // TODO: Add backend for retrieving name
-  const name = 'Alex';
+
+  const name = getPetName();
   const { menuOpen } = useAppContext();
 
   const menuConfig: Record<ModuleId, MenuConfig> = {
@@ -83,12 +83,15 @@ export default function Menu({
     setGoalsViewActive(false);
   }
 
-  if (!menuOpen) {
-    return null;
-  }
+  // Makes performance worse
+
+  // if (!menuOpen) {
+  //   return null;
+  // }
 
   return (
     <View
+      pointerEvents={menuOpen ? 'auto' : 'none'}
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <AttachStep index={2} style={{ alignSelf: 'center', width: '80%' }}>

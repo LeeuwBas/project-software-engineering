@@ -1,11 +1,11 @@
 import { Animation } from '@/components/animations/renderer';
-import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
 import { quoteBridge } from '@/lib/api/APIBridge';
 import { useFood } from '@/lib/api/FoodBridge';
 import { useQuote } from '@/lib/api/QuoteBridge';
 import { useSleep } from '@/lib/api/SleepBridge';
 import { useWater } from '@/lib/api/WaterBridge';
+import { getPetID } from '@/lib/settings';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -31,7 +31,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     }
   }
 
-  const { pet } = usePet();
+  const pet = getPetID();
   const quote = useQuote();
 
   const source = selection(pet); // derived, never stale
