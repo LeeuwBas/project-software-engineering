@@ -10,7 +10,7 @@ const WEATHER_POLLING = 15 * 60 * 1000;
  * @returns `{ action, level, context }` to pass to the quote API, or `null` if a
  * request cannot be made (missing data, no valid stats).
  */
-export async function calculateQuoteRequest() {
+export default async function calculateQuoteRequest() {
     const snap = await getTodaysSnapshot();
     if (snap === null) return null;
     const { currentStats, currentGoals } = snap;
