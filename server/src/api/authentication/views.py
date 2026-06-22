@@ -6,7 +6,15 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
+from rest_framework.views import APIView
 
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiResponse,
+    inline_serializer,
+)
+from drf_spectacular.types import OpenApiTypes
 
 from .serializers import UserSerializer
 from .permissions import IsSelf
@@ -34,3 +42,40 @@ class UserViewSet(
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
+class SettingsView(APIView):
+    permission_classes = [IsAuthenticated, IsSelf]
+
+    @extend_schema(
+        summary="Gets all active settings for the user",
+        description="""Gets all active settings for the user""",
+        responses={200: OpenApiResponse(description="the base64 settings")},
+    )
+    def get(self, request):
+        return Response({"settings": request.user.settings}, 200)
+
+    @extend_schema(
+        summary="Replaces the new active user settings",
+        description="Replaces the new active user settings",
+        request={
+            "application/json": {
+                "type": "object",
+                "properties": {
+                    "settings": {
+                        "type": "string",
+                        "description": "Base 64 string of the settings."
+                    }
+                },
+            }
+        },
+        responses={200: "ok"}
+    )
+    def post(self, request):
+        settings = request.data.get("settings", None)
+
+        if settings is None:
+            return Response("Bad input", 400)
+
+        request.user.settings = settings
+        request.user.save()
+        return Response("ok", 200)

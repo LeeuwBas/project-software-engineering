@@ -71,7 +71,7 @@ export function SignInForm() {
           <CardContent className="gap-6">
             <View className="gap-6">
               {errors.detail && (
-                <AppText className="text-sm text-destructive opacity-80">{errors.detail}</AppText>
+                <AppText className="text-sm text-red-500 opacity-80">{errors.detail}</AppText>
               )}
               <View className="gap-1.5">
                 <AppText className="font-bold">Email</AppText>
@@ -87,7 +87,7 @@ export function SignInForm() {
                   onChangeText={setEmail}
                 />
                 {errors.email && (
-                  <Text className="text-sm text-destructive opacity-80">{errors.email[0]}</Text>
+                  <Text className="text-sm text-red-500 opacity-80">{errors.email[0]}</Text>
                 )}
               </View>
               <View className="gap-1.5">
@@ -104,7 +104,7 @@ export function SignInForm() {
                   textContentType="password"
                 />
                 {errors.password && (
-                  <Text className="text-sm text-destructive">{errors.password[0]}</Text>
+                  <Text className="text-sm text-red-500">{errors.password[0]}</Text>
                 )}
               </View>
               {loading ? (
