@@ -6,14 +6,14 @@ export default function Bar({
   value,
   goal,
 }: {
-  icon: React.FC<SvgProps>;
+  icon?: React.FC<SvgProps>;
   value: number;
   goal: number;
 }) {
   return (
     <View className="w-1/2">
       <View className="flex-row justify-center gap-1">
-        <Icon />
+        {Icon && <Icon />}
         <View className="flex-1 flex-row overflow-hidden border-4 border-border-dark">
           <View
             className="mt-auto h-full"

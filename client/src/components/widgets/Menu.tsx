@@ -44,14 +44,6 @@ export default function Menu({
       setValue: setWater,
       goal: goals.water,
     },
-    steps: {
-      value: steps,
-      goal: goals.steps,
-    },
-    stress: {
-      onPress: onStressPress,
-      buttonString: 'Log Stress',
-    },
     food: {
       value: food,
       setValue: setFood,
@@ -60,6 +52,14 @@ export default function Menu({
     sleep: {
       value: sleep,
       setValue: setSleep,
+    },
+    steps: {
+      value: steps,
+      goal: goals.steps,
+    },
+    stress: {
+      onPress: onStressPress,
+      buttonString: 'Log Stress',
     },
   };
 
@@ -91,16 +91,19 @@ export default function Menu({
     <View
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
-        <AttachStep index={2} style={{ alignSelf: 'center' }}>
-          <Card className="mb-6 h-auto w-3/4 justify-center shadow-block">
+        <AttachStep index={2} style={{ alignSelf: 'center', width: '80%' }}>
+          <Card className="mb-6 h-auto w-full justify-center shadow-block">
             <CardHeader className="w-full flex-row items-center justify-between">
-              <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
+              <CardTitle className="my-4 flex-1 text-2xl font-bold">{name}</CardTitle>
               {goalsViewActive ? (
                 <Button onPress={submitGoals} className="py-0" variant="secondary">
                   <AppText className="font-bold text-white">Back</AppText>
                 </Button>
               ) : (
-                <Button onPress={() => setGoalsViewActive(!goalsViewActive)} className="py-0">
+                <Button
+                  onPress={() => setGoalsViewActive(!goalsViewActive)}
+                  className="py-0"
+                  variant={'secondary'}>
                   <AppText className="font-bold text-white">Change goals</AppText>
                 </Button>
               )}
