@@ -1,4 +1,5 @@
 import { getGoalCalender } from '@/lib/api/APIBridge';
+import { getActiveModules } from '@/lib/settings';
 import { ModuleDefinition, MODULES } from '@/lib/types';
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
@@ -29,7 +30,7 @@ export default function CalendarOverview() {
   const [calendarData, updateCalendarData] = useState<any[]>([]);
 
   const activeCalendarModules: ModuleDefinition[] = MODULES.filter(
-    (module) => module.id !== 'stress'
+    (module) => getActiveModules()[module.id] && module.id !== 'stress'
   );
 
   // Memoization for calendar grid to only change when year or month changes
