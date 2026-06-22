@@ -165,6 +165,48 @@ export const ANIMATIONS = {
         source: require('@assets/pets/onigiri/onigiri_eating.png'),
     },
 
+    // bober assets
+    bober_blink: {
+        width: 64,
+        height: 64,
+        frameCount: 4,
+        fps: 8,
+        source: require('@assets/pets/bober/BOBER_blink.png')
+    },
+
+    bober_breath_happy: {
+        width: 64,
+        height: 64,
+        frameCount: 40,
+        fps: 8,
+        source: require('@assets/pets/bober/BOBER_breath_happy.png')
+    },
+
+    bober_breath_neutral: {
+        width: 64,
+        height: 64,
+        frameCount: 40,
+        fps: 8,
+        source: require('@assets/pets/bober/BOBER_breath_neutral.png')
+    },
+
+    bober_sleeping: {
+        width: 64,
+        height: 64,
+        frameCount: 40,
+        fps: 8,
+        source: require('@assets/pets/bober/BOBER_sleeping.png')
+    },
+
+    bober_drinking: {
+        width: 64,
+        height: 64,
+        frameCount: 61,
+        fps: 8,
+        source: require('@assets/pets/bober/BOBER_drinking.png')
+    },
+
+
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;

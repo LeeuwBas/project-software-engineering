@@ -9,7 +9,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { PetSelector } from '@/components/widgets/PetSelector';
 import { ImageBackground } from 'expo-image';
 
-const NUM_PETS = 3;
+const NUM_PETS = 4;
 
 export default function PetSelection() {
   const router = useRouter();
