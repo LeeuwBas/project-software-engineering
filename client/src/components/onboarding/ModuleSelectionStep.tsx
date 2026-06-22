@@ -48,8 +48,8 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
   return (
     <View className="flex-1 justify-center px-4">
-      <View className="gap-6 rounded-2xl border border-border/40 bg-card/80 p-5">
-        <View className="gap-3">
+      <View className="gap-2 rounded-2xl border border-border/40 bg-card/80 p-5">
+        <View className="gap-2">
           <AppText className="text-center text-xl font-bold">
             Would you like to keep track of stress?
           </AppText>
@@ -57,7 +57,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           {stressModule && (
             <Pressable
               onPress={() => toggleModule(stressModule.id)}
-              className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
+              className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
               style={{
                 backgroundColor: stressModule.color,
                 borderColor: stressModule.borderColor,
@@ -69,17 +69,17 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           )}
         </View>
 
-        <View className="gap-3">
+        <View className="gap-2">
           <AppText className="text-center text-xl font-bold">
             Which habits would you like to track?
           </AppText>
 
-          <View className="gap-4">
+          <View className="gap-2">
             {habitModules.map((module) => (
               <Pressable
                 key={module.id}
                 onPress={() => toggleModule(module.id)}
-                className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
+                className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
                 style={{
                   backgroundColor: module.color,
                   borderColor: module.borderColor,
@@ -92,7 +92,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           </View>
         </View>
 
-        <View className="gap-2 pt-2">
+        <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
             <AppText className="font-bold text-white">Continue</AppText>
           </Button>
