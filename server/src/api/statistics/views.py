@@ -4,7 +4,7 @@ from django.db.models import F
 from django.core.exceptions import FieldError
 
 from rest_framework import status, serializers
-from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -107,7 +107,7 @@ class StatManageView(APIView):
         if type(returnVal) is not dict:
             returnVal = {statName: returnVal}
 
-        return Response(returnVal, 200)
+        return Response(returnVal, HTTP_200_OK)
 
     # TODO: Make POST request documentation (now GET)
     @extend_schema(
@@ -145,7 +145,7 @@ class StatManageView(APIView):
 
         setDay(request.user, stat_data, day)
 
-        return Response("ok", 200)
+        return Response("ok", HTTP_200_OK)
 
 
 class StatBulkView(APIView):
@@ -202,10 +202,10 @@ class StatBulkView(APIView):
             day = datetime.fromisoformat(start_date)
             end_day = datetime.fromisoformat(end_date)
         except ValueError:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         if day + timedelta(days=90) < end_day:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         return_dict = {}
 
@@ -221,7 +221,7 @@ class StatBulkView(APIView):
 
             day = day + timedelta(days=1)
 
-        return Response(return_dict, 200)
+        return Response(return_dict, HTTP_200_OK)
 
     @extend_schema(
         summary="Sets a new stat",
@@ -246,15 +246,15 @@ class StatBulkView(APIView):
         for date in request.data:
             data = request.data[date]
             if len(data) == 0:
-                return Response("Invalid input", 400)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
             try:
                 day = datetime.fromisoformat(date)
             except ValueError:
-                return Response(status=HTTP_400_BAD_REQUEST)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
             setDay(request.user, request.data[date], day)
 
-        return Response("ok", status=200)
+        return Response("ok", HTTP_200_OK)
 
 
 class BarchartView(APIView):
@@ -324,10 +324,12 @@ class BarchartView(APIView):
         bins = int(request.query_params.get("bins", days))
 
         if days % bins != 0:
-            return Response(f"Invalid input days%bins = {days % bins}", 400)
+            return Response(
+                f"Invalid input days%bins = {days % bins}", HTTP_400_BAD_REQUEST
+            )
 
         returnData = getBarChart(startDate, endDate, bins, request.user, statName)
-        return Response(returnData, 200)
+        return Response(returnData, HTTP_200_OK)
 
 
 class SummaryView(APIView):
@@ -380,14 +382,14 @@ class SummaryView(APIView):
     )
     def get(self, request, statName, startDate, endDate):
         if endDate < startDate:
-            Response("Invalid input", 400)
+            Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         startDate = datetime.fromisoformat(startDate)
         endDate = datetime.fromisoformat(endDate)
 
         returnDict = getSummary(request.user, statName, startDate, endDate)
 
-        return Response(returnDict, 200)
+        return Response(returnDict, HTTP_200_OK)
 
 
 class GoalManageView(APIView):
@@ -433,18 +435,18 @@ class GoalManageView(APIView):
     def get(self, request, goal_date):
         goal_name = request.query_params.get("goal_name", None)
         if goal_name is None:
-            return Response("Invalid input", 400)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
         day = datetime.fromisoformat(goal_date)
 
         goals = getGoal(request.user, goal_name, day)
 
         if goals is None:
-            return Response(getStatDict(Goals()), 200)
+            return Response(getStatDict(Goals()), HTTP_200_OK)
 
         if type(goals) is dict:
-            return Response(goals, 200)
+            return Response(goals, HTTP_200_OK)
         else:
-            return Response({goal_name: goals}, 200)
+            return Response({goal_name: goals}, HTTP_200_OK)
 
     @extend_schema(
         summary="Sets a new goal",
@@ -478,14 +480,12 @@ class GoalManageView(APIView):
         goal_data = request.data.get("goals")
         day = datetime.fromisoformat(goal_date)
 
-        if goal_data is None:
-            return Response("Invalid input", 400)
-        if len(goal_data) == 0:
-            return Response("Invalid input", 400)
+        if goal_data is None or len(goal_data) == 0:
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         try:
             setGoal(request.user, goal_data, day)
-            return Response("ok", 200)
+            return Response("ok", HTTP_200_OK)
         except FieldError:
             return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
@@ -547,10 +547,10 @@ class GoalBulkView(APIView):
             day = datetime.fromisoformat(start_date)
             end_day = datetime.fromisoformat(end_date)
         except ValueError:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         if day + timedelta(days=90) < end_day:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         return_dict = {}
 
@@ -566,7 +566,7 @@ class GoalBulkView(APIView):
 
             day = day + timedelta(days=1)
 
-        return Response(return_dict, 200)
+        return Response(return_dict, HTTP_200_OK)
 
     @extend_schema(
         summary="Sets a new goal",
@@ -591,18 +591,18 @@ class GoalBulkView(APIView):
         for date in request.data:
             data = request.data[date]
             if len(data) == 0:
-                return Response("Invalid input", 400)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
             try:
                 day = datetime.fromisoformat(date)
             except ValueError:
-                return Response(status=HTTP_400_BAD_REQUEST)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
             try:
                 setGoal(request.user, request.data[date], day)
             except FieldError:
-                return Response("Invalid input", 400)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
-        return Response("ok", status=200)
+        return Response("ok", HTTP_200_OK)
 
 
 class CalendarView(APIView):
@@ -650,8 +650,8 @@ class CalendarView(APIView):
         endDay = datetime.fromisoformat(end_date)
 
         if startDay >= endDay:
-            return Response("Invalid Input", 400)
+            return Response("Invalid Input", HTTP_400_BAD_REQUEST)
 
         returnList = getCalender(request.user, startDay, endDay)
 
-        return Response(returnList, 200)
+        return Response(returnList, HTTP_200_OK)
