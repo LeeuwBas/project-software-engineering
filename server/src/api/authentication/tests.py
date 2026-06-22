@@ -5,6 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+import base64
 
 class UserApiTests(TestCase):
     def setUp(self):
@@ -150,3 +151,45 @@ class AuthApiTests(TestCase):
         res_new_protected = self.client.get(protected_url, format="json")
         self.assertEqual(res_new_protected.status_code, status.HTTP_200_OK)
 
+class SettingsAPITests(TestCase):
+    def setUp(self):
+        self.User = get_user_model()
+        self.client = APIClient()
+
+        self.user = self.User.objects.create_user(
+            username="test1", email="test1@test.com", password="verypassword"
+        )
+
+        self.string = "this is a test string"
+        self.b64string = base64.b64encode(self.string.encode()).decode()
+
+    def authenticate(self, user):
+        self.client.force_authenticate(user)
+
+    def testSet(self):
+        self.authenticate(self.user)
+
+        res = self.client.post("/users/settings", {"settings": self.b64string})
+        self.user.refresh_from_db()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(
+            self.b64string, self.user.settings
+        )
+
+    def testGet(self):
+        self.authenticate(self.user)
+        self.user.settings = self.b64string
+        self.user.save()
+
+        res = self.client.get("/users/settings")
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json()["settings"], self.b64string)
+
+    def testSystem(self):
+        self.authenticate(self.user)
+
+        setres = self.client.post("/users/settings", {"settings": self.b64string})
+        self.assertEqual(setres.status_code, 200)
+
+        getres = self.client.get("/users/settings")
+        self.assertEqual(getres.json()["settings"], self.b64string)

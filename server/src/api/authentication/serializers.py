@@ -22,6 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SingleSessionTokenObtainPairSerializer(TokenObtainPairSerializer):
+    token_class = IDMarkedRefreshToken
     def validate(self, attrs):
         data = super().validate(attrs)
 
@@ -33,6 +34,7 @@ class SingleSessionTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
+        data["login_id"] = str(refresh["token_id"])
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
