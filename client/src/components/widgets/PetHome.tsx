@@ -21,9 +21,9 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   function selection(id: number) {
     switch (id) {
       case 0:
-        return 'onigiri';
-      case 1:
         return 'frog';
+      case 1:
+        return 'onigiri';
       case 2:
         return 'blob';
       default:
