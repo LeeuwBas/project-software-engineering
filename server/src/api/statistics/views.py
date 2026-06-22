@@ -1,27 +1,33 @@
-from django.utils import timezone
-from django.db.models import F
-
-from rest_framework import status, serializers
-from rest_framework.status import HTTP_400_BAD_REQUEST
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter,
-    OpenApiResponse,
-    inline_serializer,
-)
-from drf_spectacular.types import OpenApiTypes
 
 from datetime import datetime, timedelta
 
-from .serializers import StatsSerializer
-from ..authentication.permissions import IsSelf
-from .models import Stats, Goals
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+    inline_serializer,
+)
+from rest_framework import serializers, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
 
-from .helpers import getBarChart, getSummary, getDay, getGoal, setGoal, getCalender, setDay, getStatDict, toISOFormat
+from ..authentication.permissions import IsSelf
+from .helpers import (
+    getBarChart,
+    getCalender,
+    getDay,
+    getGoal,
+    getStatDict,
+    getSummary,
+    setDay,
+    setGoal,
+    toISOFormat,
+)
+from .models import Goals, Stats
+from .serializers import StatsSerializer
 
 """
 /api/stats/<date>/
@@ -97,7 +103,6 @@ class StatManageView(APIView):
 
         return Response(returnVal, 200)
 
-    # TODO: Make POST request documentation (now GET)
     @extend_schema(
         summary="Retrieves the statistics data of a given date.",
         description="""Retrieves the statistics of a given date, if no name
