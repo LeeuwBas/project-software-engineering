@@ -169,5 +169,6 @@ export function setPetID(petID: number) {
  * @returns The ID of the stored pet
  */
 export function getPetID() {
-    return useSettingsStore.getState().settings.chosenPet;
+    const ID = useSettingsStore.getState().settings.chosenPet;
+    return typeof ID === "number" ? ID : 0;
 }
