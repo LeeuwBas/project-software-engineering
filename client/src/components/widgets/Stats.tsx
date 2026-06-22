@@ -33,9 +33,9 @@ export default function Stats({}: {}) {
     }
   }, [statsOpen]);
 
-  // if (!statsOpen) {
-  //   return null;
-  // }
+  if (!statsOpen) {
+    return null;
+  }
 
   const labels: TabLabel[] = [
     {
@@ -50,7 +50,7 @@ export default function Stats({}: {}) {
 
   return (
     <View
-      pointerEvents={statsOpen ? 'auto' : 'none'}
+      // pointerEvents={statsOpen ? 'auto' : 'none'}
       className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
       <View className="bottom-full w-[90%] items-center">
         <View className="absolute -top-12 w-full flex-row gap-1">
@@ -59,7 +59,10 @@ export default function Stats({}: {}) {
               key={id}
               variant={id === activeTab ? 'default' : 'outline'}
               className={`${id === activeTab ? '' : 'border-0 px-5 opacity-60'} `}
-              onPress={() => setActiveTab(id)}>
+              onPress={() => {
+                console.log('Selected tab:', id);
+                setActiveTab(id);
+              }}>
               <Icon width={30} height={30} color={iconColor} />
             </Button>
           ))}
