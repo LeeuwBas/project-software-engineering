@@ -1,5 +1,6 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import StepsWidget from '@/components/widgets/StepsWidget';
 import { ModuleProps } from '@/lib/types';
 import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
@@ -7,13 +8,6 @@ import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
-import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg'
-import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg'
-import useStepValue from '@/lib/GetSteps'
-import { useHealthPermission } from '@/lib/StepsPermission';
-import { useEffect } from 'react';
-import StepsWidget from '@/components/widgets/StepsWidget'
-import App from 'app/(protected)';
 
 export default function Module({
   props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
@@ -62,10 +56,10 @@ export default function Module({
           </View>
         )}
 
-        {id === 'steps' &&  (
+        {id === 'steps' && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-            <StepsWidget storedSteps={value}/>
-            <AppText className='text-base font-bold'> / {goal}</AppText>
+            <StepsWidget storedSteps={value} />
+            <AppText className="text-base font-bold"> / {goal}</AppText>
           </View>
         )}
 
