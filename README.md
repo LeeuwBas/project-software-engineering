@@ -1,5 +1,6 @@
 # VirtuoPet
 
+TODO: fully comment our codebase!
 Our app description.
 <br>
 
