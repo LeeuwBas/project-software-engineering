@@ -132,6 +132,7 @@ export function SignUpForm() {
                   placeholder="••••••••"
                   secureTextEntry
                   returnKeyType="send"
+                  autoCapitalize="none"
                   onSubmitEditing={onSubmit}
                   onChangeText={setPassword}
                   autoComplete="new-password"
