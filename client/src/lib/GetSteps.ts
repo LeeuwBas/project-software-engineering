@@ -13,14 +13,19 @@ import { useAppContext } from './AppContext';
 
 import { useHealthPermission } from '@/lib/StepsPermission';
 import { colorScheme } from 'react-native-css-interop';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 
 export default function useStepValue() {
     const [steps, setSteps] = useState(0);
     const permissionGranted = useHealthPermission();
     const { menuOpen } = useAppContext()
 
+    const isRunningInExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
     useEffect(() => {
         const fetchSteps = async () => {
+            if (isRunningInExpoGo) return -1;
+
             const initialized = await initialize();
 
             if (!permissionGranted) return -1;
