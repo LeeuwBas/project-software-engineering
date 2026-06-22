@@ -50,6 +50,7 @@ async function saveSettingsServer(settings: Settings | null = null) {
  * @param settings new settings to store
  */
 async function setAndSyncSettings(settings: Settings) {
+    // Does not await a response from the server, because there will be no error handling if the server fails anyways.
     saveSettingsServer(settings).catch(
         (error) => console.log(`saving settings to server failed, reason: ${error}`)
     );
@@ -62,6 +63,7 @@ async function setAndSyncSettings(settings: Settings) {
 export async function loadSettings() {
     const settings = await getSettings();
     useSettingsStore.getState().setStore(settings);
+    // Does not await a response from the server, because there will be no error handling if the server fails anyways.
     loadSettingsServer().then((success) => console.log(
         success ? "collected settings from server" : "failed to collect settings from server"
     ));
