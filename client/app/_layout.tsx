@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
 import { loadSettings } from '@/lib/settings';
 import '../global.css';
+import { scheduleAt } from '@/lib/notificationScheduler';
 
 export default function RootLayout() {
   const [loaded] = useFonts({
