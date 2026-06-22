@@ -84,14 +84,14 @@ export function createQuoteBridge(): QuoteBridge {
     const requestQuote = async () => {
         const req = await calculateQuoteRequest();
         if (req === null) return;
-        let data = await getAPI(
-            `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
-                `&level=${encodeURIComponent(req.level)}` +
-                `&context=${encodeURIComponent(req.context)}`
-        );
+        let data = { quote: getJsonQuote(req) };
 
         if (!data?.quote) {
-            data = { quote: getJsonQuote(req) };
+            data = await getAPI(
+                `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
+                    `&level=${encodeURIComponent(req.level)}` +
+                    `&context=${encodeURIComponent(req.context)}`
+            );
         }
         setQuote(data?.quote);
     };
