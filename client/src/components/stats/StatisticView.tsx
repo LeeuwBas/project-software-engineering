@@ -9,8 +9,6 @@ import { View } from 'react-native';
 import { StatisticChart } from './StatisticChart';
 
 export function StatisticView({ stat }: { stat: ModuleId }) {
-  console.log('Rendering stat:', stat);
-
   const [period, setPeriod] = useState<HistoryPeriod>('week');
   const [summary, setSummary] = useState<StatisticsSummary | null>(null);
   const [bars, setBars] = useState<number[] | null>(null);

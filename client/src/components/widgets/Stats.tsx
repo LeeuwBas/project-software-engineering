@@ -59,10 +59,7 @@ export default function Stats({}: {}) {
               key={id}
               variant={id === activeTab ? 'default' : 'outline'}
               className={`${id === activeTab ? '' : 'border-0 px-5 opacity-60'} `}
-              onPress={() => {
-                console.log('Selected tab:', id);
-                setActiveTab(id);
-              }}>
+              onPress={() => setActiveTab(id)}>
               <Icon width={30} height={30} color={iconColor} />
             </Button>
           ))}
