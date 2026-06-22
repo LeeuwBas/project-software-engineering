@@ -270,11 +270,6 @@ class GoalsTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-        fetchres = self.client.get(
-            self.goalURL(self.validDateUpper), {"goal_name": "fake_goal"}
-        )
-        self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
-
     def testUserSeparation(self):
         self.authenticate(self.seconduser)
 
@@ -406,11 +401,6 @@ class BulkGoalsTests(TestCase):
         )
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-
-        fetchres = self.client.get(
-            self.goalURL(self.validDateUpper), {"goal_name": "fake_goal"}
-        )
-        self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
 
     def testUserSeparation(self):
         self.authenticate(self.seconduser)

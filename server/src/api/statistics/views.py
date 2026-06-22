@@ -1,5 +1,7 @@
+from django.forms.models import FieldError
 from django.utils import timezone
 from django.db.models import F
+from django.core.exceptions import FieldError
 
 from rest_framework import status, serializers
 from rest_framework.status import HTTP_400_BAD_REQUEST
@@ -481,8 +483,11 @@ class GoalManageView(APIView):
         if len(goal_data) == 0:
             return Response("Invalid input", 400)
 
-        setGoal(request.user, goal_data, day)
-        return Response("ok", 200)
+        try:
+            setGoal(request.user, goal_data, day)
+            return Response("ok", 200)
+        except FieldError:
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
 
 class GoalBulkView(APIView):
@@ -592,7 +597,10 @@ class GoalBulkView(APIView):
                 day = datetime.fromisoformat(date)
             except ValueError:
                 return Response(status=HTTP_400_BAD_REQUEST)
-            setGoal(request.user, request.data[date], day)
+            try:
+                setGoal(request.user, request.data[date], day)
+            except FieldError:
+                return Response("Invalid input", 400)
 
         return Response("ok", status=200)
 
