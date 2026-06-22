@@ -11,7 +11,7 @@ interface StatisticChartProps {
   labels: string[];
 }
 
-export async function StatisticChart({ module, values, labels }: StatisticChartProps) {
+export function StatisticChart({ module, values, labels }: StatisticChartProps) {
   const { colorScheme } = useColorScheme();
   const labelColor = colorScheme === 'dark' ? 'white' : '#555555';
   const [width, setWidth] = useState(0);
@@ -33,7 +33,7 @@ export async function StatisticChart({ module, values, labels }: StatisticChartP
     return rounded === goal ? goal + magnitude : rounded;
   };
 
-  const maxValue = getChartMax(await module.bridge.getGoal());
+  const maxValue = getChartMax(goal);
 
   return (
     <View className="w-full" onLayout={(e) => setWidth(e.nativeEvent.layout.width * 1.5)}>

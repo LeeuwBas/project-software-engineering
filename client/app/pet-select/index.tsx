@@ -37,7 +37,7 @@ export default function PetSelection() {
 
   function confirm() {
     setPetID(draftPet);
-    isLoggedIn ? router.replace('/') : router.push('/signup');
+    isLoggedIn ? router.replace('/(protected)') : router.replace('/signup');
   }
 
   return (
@@ -71,7 +71,10 @@ export default function PetSelection() {
               <AppText className="font-bold text-white">Choose pet</AppText>
             </Button>
             {!isLoggedIn && (
-              <Button variant="outline" className="size-auto" onPress={() => router.push('/login')}>
+              <Button
+                variant="outline"
+                className="size-auto"
+                onPress={() => router.replace('/login')}>
                 <AppText className="font-bold">I already have an account</AppText>
               </Button>
             )}

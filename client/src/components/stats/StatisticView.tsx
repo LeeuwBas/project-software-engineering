@@ -1,5 +1,4 @@
 import { AppText } from '@/components/AppText';
-import { StatisticChart } from '@/components/stats/StatisticChart';
 import { Button } from '@/components/ui/button';
 import { getChartLabels } from '@/lib/stats/chart-labels';
 import { HistoryPeriod, PERIOD_CONFIG } from '@/lib/stats/statistics-types';
@@ -7,6 +6,7 @@ import { StatisticsSummary } from '@/lib/storage';
 import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { StatisticChart } from './StatisticChart';
 
 export function StatisticView({ stat }: { stat: ModuleId }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
