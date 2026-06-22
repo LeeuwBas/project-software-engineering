@@ -1,21 +1,17 @@
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView
+
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from drf_spectacular.utils import (
     extend_schema,
-    OpenApiParameter,
     OpenApiResponse,
-    inline_serializer,
 )
-from drf_spectacular.types import OpenApiTypes
 
 from .serializers import UserSerializer
 from .permissions import IsSelf
