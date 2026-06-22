@@ -91,9 +91,7 @@ export function SignUpForm() {
           </CardHeader>
           <CardContent className="gap-6">
             <View className="gap-6">
-              {errors.general && (
-                <Text className="text-sm text-destructive">{errors.general[0]}</Text>
-              )}
+              {errors.general && <Text className="text-sm text-red-500">{errors.general[0]}</Text>}
               <View className="gap-1.5">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -107,9 +105,7 @@ export function SignUpForm() {
                   submitBehavior="submit"
                   onChangeText={setEmail}
                 />
-                {errors.email && (
-                  <Text className="text-sm text-destructive">{errors.email[0]}</Text>
-                )}
+                {errors.email && <Text className="text-sm text-red-500">{errors.email[0]}</Text>}
               </View>
               <View className="gap-1.5">
                 <Label htmlFor="username">Username</Label>
@@ -123,7 +119,7 @@ export function SignUpForm() {
                   onChangeText={setUsername}
                 />
                 {errors.username && (
-                  <Text className="text-sm text-destructive">{errors.username[0]}</Text>
+                  <Text className="text-sm text-red-500">{errors.username[0]}</Text>
                 )}
               </View>
               <View className="gap-1.5">
@@ -142,7 +138,7 @@ export function SignUpForm() {
                   textContentType="newPassword"
                 />
                 {errors.password && (
-                  <Text className="text-sm text-destructive">{errors.password[0]}</Text>
+                  <Text className="text-sm text-red-500">{errors.password[0]}</Text>
                 )}
               </View>
               <Button className="w-full" onPress={onSubmit}>
