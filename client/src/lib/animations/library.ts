@@ -157,6 +157,14 @@ export const ANIMATIONS = {
         fps: 8,
         source: require('@assets/pets/onigiri/onigiri_drinking.png'),
     },
+    onigiri_eating: {
+        width: 64,
+        height: 64,
+        frameCount: 75,
+        fps: 8,
+        source: require('@assets/pets/onigiri/onigiri_eating.png'),
+    },
+
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;

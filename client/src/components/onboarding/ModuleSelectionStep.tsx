@@ -1,6 +1,7 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { getActiveModules, setActiveModules } from '@/lib/settings';
+import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -9,23 +10,29 @@ type Props = {
   onNext?: () => void;
 };
 
-type ActiveModules = Record<string, boolean>;
+const DEFAULT_MODULES = {
+  water: true,
+  sleep: true,
+  steps: true,
+  stress: true,
+  food: true,
+};
 
 export default function ModuleSelectionStep({ onNext }: Props) {
-  const [activeModules, setModuleState] = useState<ActiveModules>({});
+  const [activeModules, setModuleState] = useState<EnabledModules>(DEFAULT_MODULES);
 
   useEffect(() => {
     setModuleState(getActiveModules());
   }, []);
 
-  function toggleModule(moduleId: string) {
+  function toggleModule(moduleId: keyof EnabledModules) {
     setModuleState((current) => ({
       ...current,
       [moduleId]: !current[moduleId],
     }));
   }
 
-  function isSelected(moduleId: string) {
+  function isSelected(moduleId: keyof EnabledModules) {
     return activeModules[moduleId] ?? false;
   }
 

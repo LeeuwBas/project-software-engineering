@@ -16,9 +16,9 @@ import {
 } from './api/APIBridge';
 import { useFood } from './api/FoodBridge';
 import { useSleep } from './api/SleepBridge';
-import { useSteps } from './api/StepBridge';
 import { useStress } from './api/StressBridge';
 import { useWater } from './api/WaterBridge';
+import useStepValue from './GetSteps';
 
 // state of popups and functions to open/close them.
 export interface PopupConfigs {
@@ -108,7 +108,7 @@ export const MODULES: ModuleDefinition[] = [
         id: 'steps',
         name: 'Walking',
         icon: Shoe,
-        useValue: useSteps,
+        useValue: useStepValue,
         unit: 'steps',
         color: '#b5ff00',
         borderColor: '#49e40c',

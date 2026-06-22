@@ -1,6 +1,7 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { initializeApiManager } from '@/lib/api/APIBridge';
 import { getActiveModules } from '@/lib/settings';
 import { GoaledModule, MODULES } from '@/lib/types';
 import { useRouter } from 'expo-router';
@@ -58,11 +59,13 @@ export default function ModuleConfigStep({ onBack }: Props) {
   }
 
   function saveGoals() {
-    for (const module of activeGoaledModules) {
-      const bridge = module.bridge;
+    initializeApiManager().then(() => {
+      for (const module of activeGoaledModules) {
+        const bridge = module.bridge;
 
-      bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
-    }
+        bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
+      }
+    })
 
     router.push('/(protected)');
   }

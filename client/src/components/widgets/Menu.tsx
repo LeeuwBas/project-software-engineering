@@ -83,12 +83,15 @@ export default function Menu({
     setGoalsViewActive(false);
   }
 
-  if (!menuOpen) {
-    return null;
-  }
+  // Makes performance worse
+
+  // if (!menuOpen) {
+  //   return null;
+  // }
 
   return (
     <View
+      pointerEvents={menuOpen ? 'auto' : 'none'}
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <AttachStep index={2} style={{ alignSelf: 'center' }}>

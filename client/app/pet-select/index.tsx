@@ -37,7 +37,7 @@ export default function PetSelection() {
 
   function confirm() {
     setPetID(draftPet);
-    isLoggedIn ? router.push('/') : router.push('/signup');
+    isLoggedIn ? router.replace('/') : router.push('/signup');
   }
 
   return (
