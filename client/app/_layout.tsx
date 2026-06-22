@@ -19,10 +19,10 @@ export default function RootLayout() {
     IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),
     'IosevkaCharon-Bold': require('@assets/fonts/IosevkaCharon-Bold.ttf'),
   });
-  const system = useColorScheme(); // This is the REACT NATIVE hook, but there's also a nativewind hook. nice :(
+  // const system = useColorScheme(); // This is the REACT NATIVE hook, but there's also a nativewind hook. nice :(
   useEffect(() => {
-    colorScheme.set(system ?? 'light');
-  }, [system]);
+    colorScheme.set('light'); // Temporarily forcing light mode
+  }, []);
 
   useEffect(() => {
     loadSettings();
