@@ -277,6 +277,36 @@ class GoalsTests(TestCase):
         )
         self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def testUserSeparation(self):
+        self.authenticate(self.seconduser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 4}},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 8}},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        fetchres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "water"}
+        )
+        self.assertEqual(fetchres.json()["water"], 8)
+
+        self.authenticate(self.seconduser)
+
+        fetchres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "water"}
+        )
+        self.assertEqual(fetchres.json()["water"], 4)
+
 
 class BulkGoalsTests(TestCase):
     def setUp(self):
@@ -385,3 +415,33 @@ class BulkGoalsTests(TestCase):
             self.goalURL(self.validDateUpper), {"goal_name": "fake_goal"}
         )
         self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def testUserSeparation(self):
+        self.authenticate(self.seconduser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 4}},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 8}},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        fetchres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "water"}
+        )
+        self.assertEqual(fetchres.json()["water"], 8)
+
+        self.authenticate(self.seconduser)
+
+        fetchres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "water"}
+        )
+        self.assertEqual(fetchres.json()["water"], 4)
