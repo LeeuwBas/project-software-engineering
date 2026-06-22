@@ -81,6 +81,9 @@ export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
     } as EnabledModules;
 }
 
+/**
+ * Removes all saved data from the storage.
+ */
 export async function clearStorage() {
     console.log('Clearing storage...');
     const keys = (await AsyncStorage.getAllKeys()).filter((value) => {
