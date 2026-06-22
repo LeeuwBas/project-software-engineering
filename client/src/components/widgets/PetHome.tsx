@@ -120,19 +120,11 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     return () => clearTimeout(timer);
   }, [currentAnim, idleAnim, animIteration]);
 
-  function sendNoti() {
-    const today = new Date();
-    today.setSeconds(today.getSeconds() + 3);
-    scheduleNotification(today, "Touch", "Hey! You touched me!");
-
-  }
-
   return (
     <View className={className} {...props}>
       <Pressable
         className="max-h-72 items-center justify-center self-center"
         onPress={() => {
-          sendNoti();
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
           setAnimIteration(1);
           quote ? quoteBridge.removeQuote() : quoteBridge.requestQuote();

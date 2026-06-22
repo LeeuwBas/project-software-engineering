@@ -13,6 +13,7 @@ import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
+import { cancelWaterNotification, setWaterNotifaction } from '@/lib/notificationSetter';
 
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
@@ -52,7 +53,7 @@ export default function Toolbar({}: {}) {
 
       await waterBridge.set(draftWater),
       await foodBridge.set(draftFood),
-      await sleepBridge.set(draftSleep)
+      await sleepBridge.set(draftSleep),
 
 
       // await Promise.allSettled([
@@ -65,6 +66,13 @@ export default function Toolbar({}: {}) {
       await foodBridge.setGoal(draftGoals['food'])
       await stepsBridge.setGoal(draftGoals['steps'])
       await waterBridge.setGoal(draftGoals['water'])
+
+      if (draftWater >= draftGoals['water']) {
+        cancelWaterNotification();
+      } else {
+        setWaterNotifaction();
+      }
+
       // ]);
 
       if (menuOpen) changeMenu();

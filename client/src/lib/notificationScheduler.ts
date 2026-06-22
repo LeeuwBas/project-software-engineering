@@ -1,7 +1,7 @@
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
-// Optional: foreground behavior
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldPlaySound: true,
@@ -11,6 +11,14 @@ Notifications.setNotificationHandler({
   }),
 });
 
+
+/**
+ * Function that schedules a notification with the OS to be displayed at a later date.
+ * @param date - JavaScript data object that specifies the time and date when the notification will be scheduled.
+ * @param title - Title of the notification that will be displayed (keep it short).
+ * @param body - Body text of the notification.
+ * @returns the notification ID that can be used to later interact with the scheduled notification.
+ */
 export async function scheduleNotification(date: Date, title: string, body: string) {
   // Request permissions for notifications if they haven't been granted yet
   const notificationPermission = await Notifications.getPermissionsAsync();
