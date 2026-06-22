@@ -67,7 +67,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
       }
     })
 
-    router.push('/(protected)');
+    router.replace('/(protected)');
   }
 
   return (

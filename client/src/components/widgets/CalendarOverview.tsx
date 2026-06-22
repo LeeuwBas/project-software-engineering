@@ -125,7 +125,7 @@ export default function CalendarOverview() {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
-  console.log(calendarData[today.getDate() - 1]); // Today
+  // console.log(calendarData[today.getDate() - 1]); // Today
 
   return (
     <View>
@@ -140,7 +140,7 @@ export default function CalendarOverview() {
         </AppText>
 
         <View style={{ width: 24 }}>
-          {month !== today.getMonth() && (
+          {!(month === today.getMonth() && year === today.getFullYear()) && (
             <Pressable onPress={toNextMonth} hitSlop={12}>
               <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
