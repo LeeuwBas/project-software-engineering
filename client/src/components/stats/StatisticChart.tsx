@@ -10,14 +10,15 @@ interface StatisticChartProps {
   labels: string[];
   barconfig: barConfig;
   goal: number;
+  maxValue: number;
 }
 
-export function StatisticChart({ values, labels, barconfig, goal }: StatisticChartProps) {
+export function StatisticChart({ values, labels, barconfig, goal, maxValue }: StatisticChartProps) {
   const { colorScheme } = useColorScheme();
   const labelColor = colorScheme === 'dark' ? 'white' : '#555555';
 
   const data = values.map((value, index) => ({
-    value: value,
+    value: Math.round(value * 10) / 10,
     label: labels[index],
     topLabelComponent: () => <AppText style={{ color: labelColor }}>{value}</AppText>,
   }));
@@ -32,8 +33,9 @@ export function StatisticChart({ values, labels, barconfig, goal }: StatisticCha
         parentWidth={width}
         yAxisThickness={0}
         xAxisThickness={0}
+        yAxisLabelWidth={String(maxValue).length * 10}
         frontColor={barconfig.barcolor}
-        maxValue={barconfig.maxValue}
+        maxValue={maxValue}
         spacing={2}
         initialSpacing={0}
         adjustToWidth={true}
@@ -53,6 +55,8 @@ export function StatisticChart({ values, labels, barconfig, goal }: StatisticCha
           thickness: 4,
           zIndex: 1,
         }}
+        disablePress={true}
+        noOfSections={maxValue / Math.pow(10, String(maxValue).length - 1)}
       />
     </View>
   );
