@@ -1,9 +1,11 @@
 import { Animation } from '@/components/animations/renderer';
 import { usePet } from '@/components/contexts/PetContext';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
-import { useWater } from '@/lib/api/WaterBridge';
+import { quoteBridge } from '@/lib/api/APIBridge';
 import { useFood } from '@/lib/api/FoodBridge';
+import { useQuote } from '@/lib/api/QuoteBridge';
 import { useSleep } from '@/lib/api/SleepBridge';
+import { useWater } from '@/lib/api/WaterBridge';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -30,6 +32,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   }
 
   const { pet } = usePet();
+  const quote = useQuote();
 
   const source = selection(pet); // derived, never stale
   const idleAnim = `${source}_breath_happy` as AnimationName;
@@ -60,8 +63,8 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   // Checks which module values have changed and plays animation accordingly.
   // If more than one value has changed, random animation will be picked.
   useEffect(() => {
-    let changed_anim: AnimationName[] = []
-    const prev = prevValues.current
+    let changed_anim: AnimationName[] = [];
+    const prev = prevValues.current;
 
     if (
       prev.water !== null &&
@@ -69,7 +72,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
       waterValue !== prev.water &&
       waterValue > prev.water
     ) {
-      changed_anim.push(waterAnim)
+      changed_anim.push(waterAnim);
     }
 
     if (
@@ -78,28 +81,23 @@ export default function PetHome({ className = '', ...props }: { className?: stri
       foodValue !== prev.food &&
       foodValue > prev.food
     ) {
-      changed_anim.push(foodAnim)
+      changed_anim.push(foodAnim);
     }
 
-    if (
-      prev.sleep !== null &&
-      sleepValue !== null &&
-      sleepValue !== prev.sleep
-    ) {
-      changed_anim.push(sleepAnim)
+    if (prev.sleep !== null && sleepValue !== null && sleepValue !== prev.sleep) {
+      changed_anim.push(sleepAnim);
     }
 
     if (changed_anim.length > 0) {
-      let random_anim = changed_anim[Math.floor(Math.random() * changed_anim.length)]
-      setAnimIteration(1)
-      setCurrentAnim(random_anim)
+      let random_anim = changed_anim[Math.floor(Math.random() * changed_anim.length)];
+      setAnimIteration(1);
+      setCurrentAnim(random_anim);
     } else {
-      setAnimIteration(1)
-      setCurrentAnim(idleAnim)
+      setAnimIteration(1);
+      setCurrentAnim(idleAnim);
     }
 
-    prevValues.current = {water: waterValue, food: foodValue, sleep: sleepValue};
-
+    prevValues.current = { water: waterValue, food: foodValue, sleep: sleepValue };
   }, [waterValue, foodValue, sleepValue]);
 
   // Goes back to idle after specified interation counts in animIteration
@@ -128,6 +126,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
         onPress={() => {
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
           setAnimIteration(1);
+          quote ? quoteBridge.removeQuote() : quoteBridge.requestQuote();
         }}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} iteration_count={animIteration} />

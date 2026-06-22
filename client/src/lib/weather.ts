@@ -10,7 +10,7 @@ export interface WeatherData {
 }
 
 // Request location perms and return weather data
-async function getWeatherStatus(): Promise<WeatherData | null> {
+export async function getWeatherStatus(): Promise<WeatherData | null> {
     const api_key = process.env.EXPO_PUBLIC_WEATHER_API_KEY;
 
     let { status } = await Location.requestForegroundPermissionsAsync();

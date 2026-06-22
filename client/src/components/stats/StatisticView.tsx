@@ -5,7 +5,7 @@ import { getChartLabels } from '@/lib/stats/chart-labels';
 import { HistoryPeriod, PERIOD_CONFIG } from '@/lib/stats/statistics-types';
 import { StatisticsSummary } from '@/lib/storage';
 import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
 export function StatisticView({ stat }: { stat: ModuleId }) {
@@ -50,10 +50,10 @@ export function StatisticView({ stat }: { stat: ModuleId }) {
     loadData();
   }, [period, stat]);
 
-  const config = PERIOD_CONFIG[period];
-  const values = bars ?? new Array<number>(config.bins).fill(0);
+  const config = useMemo(() => PERIOD_CONFIG[period], [period]);
+  const labels = useMemo(() => getChartLabels(period), [period]);
 
-  const labels = getChartLabels(period);
+  const values = useMemo(() => bars ?? new Array<number>(config.bins).fill(0), [bars, config]);
 
   return (
     <View className="w-full px-2">
@@ -98,7 +98,10 @@ export function StatisticView({ stat }: { stat: ModuleId }) {
         </AppText>
 
         <AppText>
-          Average: {loading ? 'Loading...' : `${summary?.average} ${module.unit}`}
+          Average:{' '}
+          {loading
+            ? 'Loading...'
+            : `${Math.round((summary?.average ?? 0) * 10) / 10} ${module.unit}`}
           {/*Average:{' '}*/}
           {/*{loading*/}
           {/*  ? 'Loading...'*/}

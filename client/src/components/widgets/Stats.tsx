@@ -23,7 +23,10 @@ export default function Stats({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
-  const activeModules = getActiveModules();
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
+  );
+
   useEffect(() => {
     if (!statsOpen) {
       setActiveTab('calendar');
@@ -34,9 +37,6 @@ export default function Stats({}: {}) {
     return null;
   }
 
-  const activeGoaledModules = MODULES.filter(
-    (module): module is GoaledModule => activeModules[module.id] && 'goalConfig' in module
-  );
   const labels: TabLabel[] = [
     {
       id: 'calendar',

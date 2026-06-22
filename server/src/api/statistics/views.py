@@ -242,7 +242,7 @@ class StatBulkView(APIView):
                 return Response(status=HTTP_400_BAD_REQUEST)
             setDay(request.user, request.data[date], day)
 
-        return Response(status=200)
+        return Response("ok", status=200)
 
 
 class BarchartView(APIView):
@@ -578,7 +578,7 @@ class GoalBulkView(APIView):
                 return Response(status=HTTP_400_BAD_REQUEST)
             setGoal(request.user, request.data[date], day)
 
-        return Response(status=200)
+        return Response("ok", status=200)
 
 
 class CalendarView(APIView):

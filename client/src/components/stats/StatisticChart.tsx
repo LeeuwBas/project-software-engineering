@@ -11,7 +11,7 @@ interface StatisticChartProps {
   labels: string[];
 }
 
-export function StatisticChart({ module, values, labels }: StatisticChartProps) {
+export async function StatisticChart({ module, values, labels }: StatisticChartProps) {
   const { colorScheme } = useColorScheme();
   const labelColor = colorScheme === 'dark' ? 'white' : '#555555';
   const [width, setWidth] = useState(0);
@@ -19,12 +19,21 @@ export function StatisticChart({ module, values, labels }: StatisticChartProps) 
   const goal = module.bridge.useGoal() ?? 0;
 
   const data = values.map((value, index) => ({
-    value: value,
+    value: Math.round(value * 10) / 10,
     label: labels[index],
     topLabelComponent: () => <AppText style={{ color: labelColor }}>{value}</AppText>,
   }));
   const barWidth = width / values.length;
   const topLabelSize = Math.max(10, Math.min(16, barWidth * 0.2));
+
+  const getChartMax = (goal: number) => {
+    const magnitude = Math.pow(10, String(goal).length - 1);
+    const rounded = Math.ceil(goal / magnitude) * magnitude;
+
+    return rounded === goal ? goal + magnitude : rounded;
+  };
+
+  const maxValue = getChartMax(await module.bridge.getGoal());
 
   return (
     <View className="w-full" onLayout={(e) => setWidth(e.nativeEvent.layout.width * 1.5)}>
@@ -33,7 +42,9 @@ export function StatisticChart({ module, values, labels }: StatisticChartProps) 
         parentWidth={width}
         yAxisThickness={0}
         xAxisThickness={0}
+        yAxisLabelWidth={String(maxValue).length * 10}
         frontColor={module.color}
+        maxValue={maxValue}
         spacing={2}
         initialSpacing={0}
         adjustToWidth={true}
@@ -53,6 +64,8 @@ export function StatisticChart({ module, values, labels }: StatisticChartProps) 
           thickness: 4,
           zIndex: 1,
         }}
+        disablePress={true}
+        noOfSections={maxValue / Math.pow(10, String(maxValue).length - 1)}
       />
     </View>
   );

@@ -1,4 +1,3 @@
-
 // export type StatName = 'water' | 'steps';
 
 // export interface barConfig {

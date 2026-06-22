@@ -97,11 +97,11 @@ export default function Module({
 
         {id === 'sleep' && setValue !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
-            <Pressable onPress={() => setValue(0)} className={`${value === 1 ? 'opacity-15' : ''}`}>
+            <Pressable onPress={() => setValue(-1)} className={`${value !== -1 && 'opacity-30'}`}>
               <ThumbsDown width={30} height={30} color={'#b41b21'} />
             </Pressable>
 
-            <Pressable onPress={() => setValue(1)} className={`${value === 1 ? '' : 'opacity-15'}`}>
+            <Pressable onPress={() => setValue(1)} className={`${value !== 1 && 'opacity-30'}`}>
               <ThumbsUp width={30} height={30} color={'#22a022'} />
             </Pressable>
           </View>
