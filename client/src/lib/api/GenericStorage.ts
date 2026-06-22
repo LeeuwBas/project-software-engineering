@@ -15,6 +15,7 @@ import {
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
 import { internalAuth } from '@/lib/auth/AuthService';
+import { formatDate } from '@/lib/utils';
 
 /**
  * Loads a given statistic into the given zustand.
@@ -225,6 +226,8 @@ export async function getStatisticSummary<K extends keyof StatLine>(
 export async function loadCalender(startDate: Date, endDate: Date) {
     const storage = await getCalender(new Date(startDate), new Date(endDate));
 
+    console.log(`storage: ${storage}`);
+
     if (storage !== null && storage.isFull) {
         return storage.vals;
     }
@@ -398,10 +401,6 @@ async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Da
         return null;
     }
     return +result[name];
-}
-
-function formatDate(date: Date): string {
-    return date.toISOString().substring(0, 10);
 }
 
 async function loadGoalServer<K extends keyof StatLine>(
