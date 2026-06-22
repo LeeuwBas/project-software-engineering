@@ -276,3 +276,112 @@ class GoalsTests(TestCase):
             self.goalURL(self.validDateUpper), {"goal_name": "fake_goal"}
         )
         self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class BulkGoalsTests(TestCase):
+    def setUp(self):
+        self.User = get_user_model()
+        self.client = APIClient()
+
+        self.validDateUpper = "2026-06-14"
+        self.validDateLower = "2026-05-14"
+        self.invalidDate = "2026-60-14"
+
+        self.goalURL = lambda date: reverse("goal_endpoint", args=[date])
+
+        self.firstuser = self.User.objects.create_user(
+            username="test1", email="test1@test.com", password="verypassword"
+        )
+
+        self.seconduser = self.User.objects.create_user(
+            username="test2", email="test2@test.com", password="passwordvery"
+        )
+
+    def authenticate(self, user):
+        self.client.force_authenticate(user)
+
+    def testUnauthGet(self):
+        response = self.client.get(self.goalURL(self.validDateUpper))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def testUnauthPost(self):
+        response = self.client.post(self.goalURL(self.validDateUpper))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def testSetGoal(self):
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 8}},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def testGetGoal(self):
+        self.authenticate(self.firstuser)
+
+        self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"water": 8}},
+            format="json",
+        )
+        self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"steps": 8000}},
+            format="json",
+        )
+        self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"food": 2}},
+            format="json",
+        )
+
+        fetchwaterres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "water"}
+        )
+        fetchstepsres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "steps"}
+        )
+        self.assertEqual(fetchwaterres.json()["water"], 8)
+        self.assertEqual(fetchstepsres.json()["steps"], 8000)
+
+    def testEmptyRequests(self):
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"water": 10},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        res = self.client.get(
+            self.goalURL(self.validDateUpper),
+            {},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def testWrongRequests(self):
+        self.authenticate(self.firstuser)
+
+        res = self.client.post(
+            self.goalURL(self.validDateUpper),
+            {"goals": {"wrong_field": 0}},
+            format="json",
+        )
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+        fetchres = self.client.get(
+            self.goalURL(self.validDateUpper), {"goal_name": "fake_goal"}
+        )
+        self.assertEqual(fetchres.status_code, status.HTTP_400_BAD_REQUEST)
