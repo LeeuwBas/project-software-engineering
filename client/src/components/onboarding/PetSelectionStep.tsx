@@ -17,7 +17,6 @@ const NUM_PETS = 3;
 export function PetSelectionStep({ onNext }: Props) {
   const router = useRouter();
   const pet = getPetID();
-  console.log('pet: ' + pet);
   const [draftPet, setDraftPet] = useState(pet);
 
   function previousPet() {

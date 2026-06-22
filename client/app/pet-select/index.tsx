@@ -49,7 +49,7 @@ export default function PetSelection() {
               <Button
                 variant="outline"
                 className="mx-2 flex h-auto items-center py-0"
-                onPress={() => previousPet}>
+                onPress={previousPet}>
                 <ChevronLeft width={80} height={80} />
               </Button>
             </View>
@@ -60,7 +60,7 @@ export default function PetSelection() {
               <Button
                 variant="outline"
                 className="mx-2 flex h-auto items-center py-0"
-                onPress={() => nextPet}>
+                onPress={nextPet}>
                 <ChevronRight width={80} height={80} />
               </Button>
             </View>
