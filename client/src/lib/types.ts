@@ -157,3 +157,12 @@ export const MODULES: ModuleDefinition[] = [
         },
     },
 ];
+
+export interface BarType {
+    id: ModuleId;
+    icon: React.FC<SvgProps>;
+    value: number;
+    goal: number;
+    color: string;
+    borderColor: string;
+}
