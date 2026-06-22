@@ -1,58 +1,67 @@
-import { useState } from 'react';
-import { View } from 'react-native';
-
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 import { getActiveModules } from '@/lib/settings';
-import { GOAL_MODULES, ConfigDefinition } from '@/lib/onboarding/types';
+import { GoaledModule, MODULES } from '@/lib/types';
 import { useRouter } from 'expo-router';
+import { Minus, Plus } from 'lucide-react-native';
+import { useColorScheme } from 'nativewind';
+import { useState } from 'react';
+import { View } from 'react-native';
 
 type Props = {
   onBack?: () => void;
 };
 
 export default function ModuleConfigStep({ onBack }: Props) {
-  const activeModules = getActiveModules();
   const router = useRouter();
 
-  // NO SAFETY GUARANTEE FOR KEYS, URGENTLY REQUIRES REFORMAT
-  const enabledGoalModules = GOAL_MODULES.filter(
-    (module) => activeModules[module.key as keyof typeof activeModules]
+  const { colorScheme } = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
   const [goals, setGoals] = useState<Record<string, number>>(() =>
-    Object.fromEntries(enabledGoalModules.map((module) => [module.key, module.defaultGoal]))
+    Object.fromEntries(
+      activeGoaledModules.map((module) => [module.id, module.goalConfig.defaultGoal])
+    )
   );
 
-  function incrementGoal(module: ConfigDefinition) {
+  function incrementGoal(module: GoaledModule) {
     setGoals((current) => {
-      const currentValue = current[module.key] ?? module.defaultGoal;
-      const nextValue = Math.min(module.maxGoal, currentValue + module.stepSize);
+      const currentValue = current[module.id] ?? module.goalConfig.defaultGoal;
+      const nextValue = Math.min(
+        module.goalConfig.maxGoal,
+        currentValue + module.goalConfig.stepSize
+      );
       return {
         ...current,
-        [module.key]: nextValue,
+        [module.id]: nextValue,
       };
     });
   }
 
-  function decrementGoal(module: ConfigDefinition) {
+  function decrementGoal(module: GoaledModule) {
     setGoals((current) => {
-      const currentValue = current[module.key] ?? module.defaultGoal;
-      const nextValue = Math.max(module.minGoal, currentValue - module.stepSize);
+      const currentValue = current[module.id] ?? module.goalConfig.defaultGoal;
+      const nextValue = Math.max(
+        module.goalConfig.minGoal,
+        currentValue - module.goalConfig.stepSize
+      );
       return {
         ...current,
-        [module.key]: nextValue,
+        [module.id]: nextValue,
       };
     });
   }
 
   function saveGoals() {
-    for (const module of enabledGoalModules) {
-      const bridge = module.bridge();
+    for (const module of activeGoaledModules) {
+      const bridge = module.bridge;
 
-      bridge.setGoal(goals[module.key] ?? module.defaultGoal);
+      bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
     }
 
     router.push('/(protected)');
@@ -70,19 +79,20 @@ export default function ModuleConfigStep({ onBack }: Props) {
         </CardHeader>
 
         <CardContent className="gap-5">
-          {enabledGoalModules.map((module) => {
-            const value = goals[module.key] ?? module.defaultGoal;
+          {activeGoaledModules.map((module) => {
+            const value = goals[module.id] ?? module.goalConfig.defaultGoal;
 
             return (
-              <View key={module.key} className="gap-2">
-                <AppText className="text-center text-lg font-bold">{module.label}</AppText>
+              <View key={module.id} className="gap-2">
+                <AppText className="text-center text-lg font-bold">{module.name}</AppText>
 
                 <View className="flex-row items-center justify-center gap-3">
                   <Button
                     variant="outline"
                     className="h-12 w-12"
+                    disabled={goals[module.id] <= module.goalConfig.minGoal}
                     onPress={() => decrementGoal(module)}>
-                    <AppText className="text-lg font-bold">−</AppText>
+                    <Minus size={20} color={iconColor} />
                   </Button>
 
                   <View className="min-w-24 items-center justify-center rounded-md border border-border px-4 py-3">
@@ -92,8 +102,9 @@ export default function ModuleConfigStep({ onBack }: Props) {
                   <Button
                     variant="outline"
                     className="h-12 w-12"
+                    disabled={goals[module.id] >= module.goalConfig.maxGoal}
                     onPress={() => incrementGoal(module)}>
-                    <AppText className="text-lg font-bold">+</AppText>
+                    <Plus size={20} color={iconColor} />
                   </Button>
                 </View>
 

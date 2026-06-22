@@ -1,52 +1,72 @@
 import { AppText } from '@/components/AppText';
-import { GoalModules } from '@/lib/types';
-import Glass from '@assets/icons/module_icons/glass.svg';
-import Shoe from '@assets/icons/module_icons/shoe.svg';
-import Food from '@assets/icons/module_icons/food.svg'
-import { TextInput, View } from 'react-native';
-import { SvgProps } from 'react-native-svg';
+import { getActiveModules } from '@/lib/settings';
+import { GoaledModule, MODULES } from '@/lib/types';
+import { Minus, Plus } from 'lucide-react-native';
+import { View } from 'react-native';
+import { Button } from '../ui/button';
 
-interface GoalInput {
-  id: string;
-  icon: React.FC<SvgProps>;
-  maxValue: number;
-}
+export default function GoalsView({
+  goals,
+  setGoals,
+}: {
+  goals: Record<string, number>;
+  setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+}) {
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
+  );
 
-const GOALS: GoalInput[] = [
-  { id: 'water', icon: Glass, maxValue: 99 },
-  { id: 'steps', icon: Shoe, maxValue: 99999 },
-  { id: 'food', icon: Food, maxValue: 9}
-];
+  function incrementGoal(module: GoaledModule) {
+    setGoals((current: Record<string, number>) => {
+      const currentValue = current[module.id] ?? module.goalConfig.defaultGoal;
+      const nextValue = Math.min(
+        module.goalConfig.maxGoal,
+        currentValue + module.goalConfig.stepSize
+      );
+      return {
+        ...current,
+        [module.id]: nextValue,
+      };
+    });
+  }
 
-export default function GoalsView({ goals, setGoals }: { goals: GoalModules; setGoals: Function }) {
+  function decrementGoal(module: GoaledModule) {
+    setGoals((current) => {
+      const currentValue = current[module.id] ?? module.goalConfig.defaultGoal;
+      const nextValue = Math.max(
+        module.goalConfig.minGoal,
+        currentValue - module.goalConfig.stepSize
+      );
+      return {
+        ...current,
+        [module.id]: nextValue,
+      };
+    });
+  }
+
   return (
     <View className="flex-col gap-2">
       <AppText className="text-lg font-bold">Goals:</AppText>
-      {GOALS.map(({ id, icon: Icon, maxValue }) => (
-        <View className="flex flex-row items-center gap-2" key={id}>
-          <Icon height={30} width={30} />
-          <TextInput
-            keyboardType="numeric"
-            inputMode="numeric"
-            className="w-20 rounded-xl border-2 bg-slate-300 px-2 py-1 text-right"
-            value={String(goals[id as keyof GoalModules])}
-            maxLength={maxValue.toString().length + 1}
-            // On each key stroke, limit value
-            onChangeText={(text) => {
-              if (Number(text) > maxValue) text = String(maxValue);
-              setGoals((prev: GoalModules) => ({
-                ...prev,
-                [id]: text,
-              }));
-            }}
-            // On exit keyboard
-            onBlur={() =>
-              setGoals((prev: GoalModules) => ({
-                ...prev,
-                [id]: Math.ceil(Number(prev[id as keyof GoalModules])),
-              }))
-            }
-          />
+      {activeGoaledModules.map((module) => (
+        <View className="flex-row items-center gap-2" key={module.id}>
+          <module.icon height={30} width={30} />
+          <View className="w-[85%] flex-row items-center justify-between gap-4">
+            <Button
+              variant={'outline'}
+              disabled={goals[module.id] === module.goalConfig.minGoal}
+              onPress={() => decrementGoal(module)}>
+              <Minus size={20} />
+            </Button>
+
+            <AppText className="text-right text-base font-bold">{goals[module.id]}</AppText>
+
+            <Button
+              variant="outline"
+              disabled={goals[module.id] === module.goalConfig.maxGoal}
+              onPress={() => incrementGoal(module)}>
+              <Plus size={20} />
+            </Button>
+          </View>
         </View>
       ))}
     </View>

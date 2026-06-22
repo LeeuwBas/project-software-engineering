@@ -1,35 +1,32 @@
 import { AppText } from '@/components/AppText';
 import Bar from '@/components/widgets/Bar';
 import Weather from '@/components/widgets/Weather';
-import { stepsBridge, waterBridge } from '@/lib/api/APIBridge';
-import { useSteps } from '@/lib/api/StepBridge';
-import { useWater } from '@/lib/api/WaterBridge';
-import Glass from '@assets/icons/module_icons/glass.svg';
-import Shoe from '@assets/icons/module_icons/shoe.svg';
+import { getActiveModules } from '@/lib/settings';
+import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
 import { View } from 'react-native';
+import { SvgProps } from 'react-native-svg';
+
+interface BarType {
+  id: ModuleId;
+  icon: React.FC<SvgProps>;
+  value: number;
+  goal: number;
+}
 
 export default function Topbar() {
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-  const water = useWater() ?? 0;
-  const waterGoal = waterBridge.useGoal() ?? 0;
-  const steps = useSteps() ?? 0;
-  const stepsGoal = stepsBridge.useGoal() ?? 0;
 
-  const bars = [
-    {
-      id: 'water',
-      icon: Glass,
-      value: water,
-      goal: waterGoal,
-    },
-    {
-      id: 'steps',
-      icon: Shoe,
-      value: steps,
-      goal: stepsGoal,
-    },
-  ];
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
+  );
+
+  const bars: BarType[] = activeGoaledModules.map((module) => ({
+    id: module.id,
+    icon: module.icon,
+    value: module.useValue() ?? 0,
+    goal: module.bridge.useGoal() ?? 0,
+  }));
 
   return (
     <View className="flex-row content-start">
