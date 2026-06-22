@@ -138,7 +138,7 @@ export function AccountCreationStep({ onNext }: Props) {
               </Button>
             ) : (
               <Button className="w-full" variant="default" onPress={onSubmit}>
-                <AppText className="font-bold">Sign Up & Continue</AppText>
+                <AppText className="font-bold text-white">Sign Up & Continue</AppText>
               </Button>
             )}
             <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
