@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from drf_spectacular.utils import (
@@ -20,6 +21,7 @@ from .serializers import UserSerializer
 from .permissions import IsSelf
 
 User = get_user_model()
+
 
 class UserViewSet(
     mixins.CreateModelMixin,
@@ -43,6 +45,7 @@ class UserViewSet(
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
 
+
 class SettingsView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
 
@@ -52,7 +55,7 @@ class SettingsView(APIView):
         responses={200: OpenApiResponse(description="the base64 settings")},
     )
     def get(self, request):
-        return Response({"settings": request.user.settings}, 200)
+        return Response({"settings": request.user.settings}, HTTP_200_OK)
 
     @extend_schema(
         summary="Replaces the new active user settings",
@@ -63,19 +66,19 @@ class SettingsView(APIView):
                 "properties": {
                     "settings": {
                         "type": "string",
-                        "description": "Base 64 string of the settings."
+                        "description": "Base 64 string of the settings.",
                     }
                 },
             }
         },
-        responses={200: "ok"}
+        responses={200: "ok", 400: "Invalid input"},
     )
     def post(self, request):
         settings = request.data.get("settings", None)
 
         if settings is None:
-            return Response("Bad input", 400)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         request.user.settings = settings
         request.user.save()
-        return Response("ok", 200)
+        return Response("ok", HTTP_200_OK)
