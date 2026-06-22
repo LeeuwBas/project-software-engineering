@@ -7,9 +7,9 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
   function selection(id: number) {
     switch (id) {
       case 0:
-        return <Onigiri width={'100%'} height={200} />;
-      case 1:
         return <Frog width={'100%'} height={200} />;
+        case 1:
+        return <Onigiri width={'100%'} height={200} />;
       case 2:
         return <Blob width={'100%'} height={200} />;
       default:
