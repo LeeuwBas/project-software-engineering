@@ -16,6 +16,7 @@ type Props = {
   onNext?: () => void;
 };
 
+/** TODO (AlexAugustijn): docstring */
 export function AccountCreationStep({ onNext }: Props) {
   const router = useRouter();
   const auth = useAuth();

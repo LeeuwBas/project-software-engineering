@@ -3,6 +3,7 @@ import Statbar from '@/components/widgets/Statbar';
 import { View } from 'react-native';
 import { usePet } from '../contexts/PetContext';
 
+/** TODO (ZJWeng): delete this file? */
 export default function Main({
   leftSideStat,
   leftSideValue,

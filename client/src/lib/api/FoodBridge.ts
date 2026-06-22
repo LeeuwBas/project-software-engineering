@@ -1,12 +1,20 @@
 import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
+import {
+    getGoals,
+    getStatisticChart,
+    getStatisticSummary,
+    loadGoalZustand,
+    loadZustand,
+    setGoalZustand,
+    setZustand,
+} from '@/lib/api/GenericStorage';
 import { createNewState, useValue } from '@/lib/api/ValueState';
-import { getGoals, getStatisticSummary, getStatisticChart, loadGoalZustand, loadZustand, setGoalZustand, setZustand } from '@/lib/api/GenericStorage';
 
-// Use the food bridge when the values need to be manipulated.
+/** Use the food bridge when the values need to be manipulated. */
 export interface foodBridge extends GoaledStatisticBridge {}
 
 const foodState = createNewState();
-const foodGoalState = createNewState()
+const foodGoalState = createNewState();
 
 /**
  * Can be used to get and subscribe to food value changes in the UI.
@@ -23,13 +31,11 @@ export function useFood() {
     return useValue(foodState);
 }
 
+/** TODO (Dorus-vda, WilliamBower): docstring, and some comments pleases */
 export function createFoodBridge(): LoadableBridge<foodBridge> {
     return {
         load: () =>
-            Promise.all([
-                loadZustand(foodState, 'food'),
-                loadGoalZustand(foodGoalState, 'food'),
-            ]),
+            Promise.all([loadZustand(foodState, 'food'), loadGoalZustand(foodGoalState, 'food')]),
         useCurrent: () => useFood(),
         set: (value) => setZustand(foodState, 'food', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {

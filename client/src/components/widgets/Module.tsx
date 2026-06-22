@@ -8,6 +8,7 @@ import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 
+/** TODO (ZJWeng): docstring */
 export default function Module({
   props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
 }: {
@@ -16,7 +17,7 @@ export default function Module({
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
-
+  // TODO (ZJWeng, Dorus-vda): explain component structure
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center justify-between gap-2">

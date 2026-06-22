@@ -1,9 +1,10 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { stepsBridge, waterBridge, foodBridge, sleepBridge } from '@/lib/api/APIBridge';
-import { useWater } from '@/lib/api/WaterBridge';
+import { foodBridge, sleepBridge, stepsBridge, waterBridge } from '@/lib/api/APIBridge';
 import { useFood } from '@/lib/api/FoodBridge';
-import { GoalModules} from '@/lib/types';
+import { useSleep } from '@/lib/api/SleepBridge';
+import { useWater } from '@/lib/api/WaterBridge';
+import { GoalModules } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
 import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
@@ -15,16 +16,15 @@ import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
-import { useSleep } from '@/lib/api/SleepBridge';
-import { useSteps } from '@/lib/api/StepBridge';
 
+/** TODO (ZJWeng, Dorus-vda, buenk): docstring */
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
   const water = useWater() ?? 0;
   const food = useFood() ?? 0;
-  // const steps = useSteps() ?? 0;
+  // const steps = useSteps() ?? 0; TODO (Dorus-vda): please add more comments to explain sections, also remove this if it's unused
   const steps = 6000;
   const sleep = useSleep() ?? 0;
 
@@ -48,21 +48,20 @@ export default function Toolbar({}: {}) {
 
   const [draftWater, setDraftWater] = useState(water);
   const [draftFood, setDraftFood] = useState(food);
-  const [draftSleep, setDraftSleep] = useState(sleep)
+  const [draftSleep, setDraftSleep] = useState(sleep);
   const [draftGoals, setDraftGoals] = useState<GoalModules>(goals);
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
       await waterBridge.set(draftWater);
       await foodBridge.set(draftFood);
-      await sleepBridge.set(draftSleep)
+      await sleepBridge.set(draftSleep);
 
       await waterBridge.setGoal(draftGoals.water).then(() => stepsBridge.setGoal(draftGoals.steps));
-      await foodBridge.setGoal(draftGoals.food)
+      await foodBridge.setGoal(draftGoals.food);
       console.log('Save water goal: ' + draftGoals.water);
-      console.log("Save steps goal: " + draftGoals.steps);
-      console.log("Save food goal: " + draftGoals.food);
-
+      console.log('Save steps goal: ' + draftGoals.steps);
+      console.log('Save food goal: ' + draftGoals.food);
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
@@ -76,7 +75,7 @@ export default function Toolbar({}: {}) {
     if (menuOpen) {
       setDraftWater(water);
       setDraftFood(food);
-      setDraftSleep(sleep)
+      setDraftSleep(sleep);
       setDraftGoals(goals);
     }
   }, [menuOpen, water]);
@@ -102,7 +101,7 @@ export default function Toolbar({}: {}) {
       />
       <Settings />
 
-      {/* The toolbar itself */}
+      {/* The toolbar itself TODO: (ZJWeng): add more comments explaing the structure, above and below this plz */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
         <AttachStep index={5}>
           <AttachStep index={7}>

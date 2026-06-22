@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 const ACCESS_TOKEN = 'access_token';
 const REFRESH_TOKEN = 'refresh_token';
 
+/** TODO (LeeuwBas): docstring */
 export const tokenStorage = {
     getAccessToken: () => SecureStore.getItemAsync(ACCESS_TOKEN),
     getRefreshToken: () => SecureStore.getItemAsync(REFRESH_TOKEN),

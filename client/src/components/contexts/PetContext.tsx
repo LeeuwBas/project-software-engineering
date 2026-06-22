@@ -4,6 +4,7 @@ import { createContext, ReactNode, useContext } from 'react';
 
 const petContext = createContext<PetType | undefined>(undefined);
 
+/** TODO (ZJWeng): docstring */
 export function PetProvider({ children }: { children: ReactNode }) {
   return <petContext.Provider value={storage.petContextInit()}>{children}</petContext.Provider>;
 }

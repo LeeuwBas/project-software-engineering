@@ -11,6 +11,14 @@ from .helpers import get_json_quote
 
 
 class RequestQuote(APIView):
+    """APIView to request quotes from the server.
+    arguments:
+    action: string
+    level: string
+    context: string
+    
+    returns
+    quote: string"""
     permission_classes = [IsAuthenticated]
 
     @extend_schema(

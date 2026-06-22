@@ -8,6 +8,7 @@ import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
 import { View } from 'react-native';
 
+/** TODO (ZJWeng): docstring, and maybe one or two other comments */
 export default function Topbar() {
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });

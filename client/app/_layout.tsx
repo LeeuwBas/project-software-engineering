@@ -1,17 +1,18 @@
 import { PetProvider } from '@/components/contexts/PetContext';
 import { AuthProvider } from '@/lib/auth/AuthManager';
+import { loadSettings } from '@/lib/settings';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { colorScheme } from 'nativewind';
 import { useEffect } from 'react';
-import { useColorScheme, View } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
-import { loadSettings } from '@/lib/settings';
 import '../global.css';
 
+/**TODO (buenk): docstring, this file is already pretty well comented so explain the main purpose */
 export default function RootLayout() {
   const [loaded] = useFonts({
     IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),

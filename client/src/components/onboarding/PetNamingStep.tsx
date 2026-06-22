@@ -12,6 +12,7 @@ type Props = {
   onBack?: () => void;
 };
 
+/** TODO (AlexAugustijn): docstring */
 export function PetNamingStep({ onNext, onBack }: Props) {
   const [petName, setPetName] = useState<string>('');
   const [userName, setUserName] = useState<string>('');

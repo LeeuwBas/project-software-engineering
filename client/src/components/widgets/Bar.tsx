@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
+/** TODO (ZJWeng): docstring */
 export default function Bar({
   icon: Icon,
   value,

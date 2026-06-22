@@ -11,16 +11,18 @@ import {
     setZustand,
 } from '@/lib/api/GenericStorage';
 
-// Use the step bridge when the values need to be manipulated.
+/** Use the step bridge when the values need to be manipulated. *//
 export interface StepBridge extends GoaledStatisticBridge {}
 
 const stepState = createNewState();
 const stepGoalState = createNewState();
 
+/** TODO (LeeuwBas): docstring */
 export function useSteps() {
     return useValue(stepState);
 }
 
+/** TODO (LeeuwBas): docstring */
 export function createStepBridge(): LoadableBridge<StepBridge> {
     return {
         load: () =>

@@ -3,6 +3,7 @@ import Shoe from '@assets/icons/module_icons/shoe.svg';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 
+/** TODO (Dorus-vda, JZWeng): docstring */
 export default function StepsWidget() {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';

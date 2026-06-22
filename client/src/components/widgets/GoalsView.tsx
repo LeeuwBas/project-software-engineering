@@ -1,8 +1,8 @@
 import { AppText } from '@/components/AppText';
 import { GoalModules } from '@/lib/types';
+import Food from '@assets/icons/module_icons/food.svg';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
-import Food from '@assets/icons/module_icons/food.svg'
 import { TextInput, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
@@ -15,9 +15,10 @@ interface GoalInput {
 const GOALS: GoalInput[] = [
   { id: 'water', icon: Glass, maxValue: 99 },
   { id: 'steps', icon: Shoe, maxValue: 99999 },
-  { id: 'food', icon: Food, maxValue: 9}
+  { id: 'food', icon: Food, maxValue: 9 },
 ];
 
+/** TODO (Dorus-vda): docstring */
 export default function GoalsView({ goals, setGoals }: { goals: GoalModules; setGoals: Function }) {
   return (
     <View className="flex-col gap-2">

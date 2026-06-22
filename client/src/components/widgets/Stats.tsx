@@ -11,6 +11,7 @@ import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
+/** TODO (ZJWeng): docstring and comments throughout */
 export default function Stats({}: {}) {
   const { statsOpen } = useAppContext();
   const [activeTab, setActiveTab] = useState<TabId>('calender');

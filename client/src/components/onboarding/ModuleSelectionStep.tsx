@@ -12,6 +12,7 @@ type Props = {
 
 type ActiveModules = Record<string, boolean>;
 
+/** TODO (hfgieter): docstring */
 export default function ModuleSelectionStep({ onNext }: Props) {
   const [activeModules, setModuleState] = useState<ActiveModules>({});
 

@@ -4,6 +4,7 @@ import { SvgProps } from 'react-native-svg';
 
 export type StatName = 'water' | 'steps';
 
+/** TODO (AlexAugustijn, ZJWeng): please add some comments & docstrings explaining the key sections in this file */
 export interface barConfig {
     barcolor: string;
     goalcolor: string;

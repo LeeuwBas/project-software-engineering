@@ -13,6 +13,7 @@ interface StatisticChartProps {
   maxValue: number;
 }
 
+/** TODO (AlexAugustijn): docstring, and some comments explaining each section */
 export function StatisticChart({ values, labels, barconfig, goal, maxValue }: StatisticChartProps) {
   const { colorScheme } = useColorScheme();
   const labelColor = colorScheme === 'dark' ? 'white' : '#555555';

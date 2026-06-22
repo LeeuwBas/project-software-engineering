@@ -1,12 +1,13 @@
+import { syncServer } from '@/lib/StorageSync';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
+import { internalAuth } from '@/lib/auth/AuthService';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { syncServer } from '@/lib/StorageSync';
-import { internalAuth } from '@/lib/auth/AuthService';
 
 const GUEST_MODE = 'guest';
 
+/** TODO (LeeuwBas): docstring */
 type Auth = {
   isAuthenticated: boolean;
   isLoading: boolean;

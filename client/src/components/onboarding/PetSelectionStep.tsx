@@ -1,6 +1,6 @@
-import { View, Pressable } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { Pressable, View } from 'react-native';
 
 import { usePet } from '@/components/contexts/PetContext';
 import Pet from '@/components/widgets/Pet';
@@ -15,18 +15,20 @@ type Props = {
 
 const NUM_PETS = 3;
 
+/** TODO (AlexAugustijn): docstring */
 export function PetSelectionStep({ onNext }: Props) {
   const router = useRouter();
   const { pet, setPet, savePet } = usePet();
   const [draftPet, setPetId] = useState(pet);
 
+  // TODO (AlexAugustijn): explain
   function confirm() {
     setPet(draftPet);
     savePet(draftPet);
 
     onNext?.();
   }
-
+  // TODO (AlexAugustijn): explain general layout
   return (
     <View className="flex-col gap-12">
       <View className="flex-row items-center justify-between">

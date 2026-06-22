@@ -4,16 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { ModuleProps, GoalModules } from '@/lib/types';
+import { GoalModules, ModuleProps } from '@/lib/types';
+import Food from '@assets/icons/module_icons/food.svg';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import Shoe from '@assets/icons/module_icons/shoe.svg';
+import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
 import Stress from '@assets/icons/module_icons/stress.svg';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
-import Food from '@assets/icons/module_icons/food.svg';
-import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
 
+/** TODO (ZJWeng): docstring */
 export default function Menu({
   water,
   setWater,
@@ -38,7 +39,7 @@ export default function Menu({
   setGoals: (goals: GoalModules) => void;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
-  // TODO: Add backend for retrieving name
+  // TODO (buenk, ZJWeng): Add backend for retrieving name
   const name = 'Alex';
   const { menuOpen } = useAppContext();
 
@@ -74,7 +75,7 @@ export default function Menu({
       icon: Sleep,
       value: sleep,
       setValue: setSleep,
-    }
+    },
   ];
 
   useEffect(() => {
@@ -90,7 +91,7 @@ export default function Menu({
       water: Math.ceil(goals.water),
       steps: Math.ceil(goals.steps),
       food: Math.ceil(goals.food),
-      sleep: false
+      sleep: false,
     };
     setGoals(final_goals);
     if (water > goals.water) {
@@ -102,7 +103,7 @@ export default function Menu({
   if (!menuOpen) {
     return null;
   }
-
+  // TODO (ZJWeng): explain the general structure of the component
   return (
     <View
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>

@@ -1,15 +1,12 @@
-import {
-  AttachStep,
-  SpotlightTourProvider,
-  TourStep,
-  useSpotlightTour,
-} from 'react-native-spotlight-tour';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { AppState, Pressable, View } from 'react-native';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { waterBridge } from '@/lib/api/APIBridge';
 import { type ReactNode } from 'react';
-import { initializeApiManager, waterBridge } from '@/lib/api/APIBridge';
+import { View } from 'react-native';
+import {
+  TourStep
+} from 'react-native-spotlight-tour';
 
 type TutorialStepParams = {
   menuOpen: boolean;
@@ -19,6 +16,7 @@ type TutorialStepParams = {
   water: number;
 };
 
+/** TODO (buenk): docstring */
 export function createTutorialSteps({
   menuOpen,
   statsOpen,
@@ -143,6 +141,7 @@ export function createTutorialSteps({
   ];
 }
 
+/** TODO (buenk): docstring */
 function StepCard({
   children,
   stop,

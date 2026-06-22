@@ -5,14 +5,15 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+import { ConfigDefinition, GOAL_MODULES } from '@/lib/onboarding/types';
 import { getActiveModules } from '@/lib/settings';
-import { GOAL_MODULES, ConfigDefinition } from '@/lib/onboarding/types';
 import { useRouter } from 'expo-router';
 
 type Props = {
   onBack?: () => void;
 };
 
+/** TODO (AlexAugustijn): docstring */
 export default function ModuleConfigStep({ onBack }: Props) {
   const activeModules = getActiveModules();
   const router = useRouter();

@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+/** TODO (ZJWeng): docstring */
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }

@@ -5,6 +5,7 @@ import { useColorScheme } from 'nativewind';
 import { ReactNode } from 'react';
 import { LayoutRectangle, View } from 'react-native';
 
+/** TODO (Keane te Velde): docstring */
 export default function Quotes({
   className = '',
   petHomeLayout,
