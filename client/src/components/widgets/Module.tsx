@@ -1,5 +1,6 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import useStepValue from '@/lib/GetSteps';
 import { MenuConfig, ModuleId } from '@/lib/types';
 import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
@@ -92,6 +93,7 @@ export default function Module({
                 {goal}
               </AppText>
             </View>
+
 
             <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
               <Plus size={20} />

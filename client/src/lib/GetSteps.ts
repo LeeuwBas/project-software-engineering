@@ -9,6 +9,7 @@ import {
   readRecords,
   aggregateRecord,
 } from 'react-native-health-connect';
+import { useAppContext } from './AppContext';
 
 import { useHealthPermission } from '@/lib/StepsPermission';
 import { colorScheme } from 'react-native-css-interop';
@@ -16,6 +17,7 @@ import { colorScheme } from 'react-native-css-interop';
 export default function useStepValue() {
     const [steps, setSteps] = useState(0);
     const permissionGranted = useHealthPermission();
+    const { menuOpen } = useAppContext()
 
     useEffect(() => {
         const fetchSteps = async () => {
@@ -50,8 +52,9 @@ export default function useStepValue() {
                 console.error('Failed to read step records:', error);
             }
         };
+
         fetchSteps();
-    }, [permissionGranted]);
+    }, [permissionGranted, menuOpen]);
 
     return steps;
 }
