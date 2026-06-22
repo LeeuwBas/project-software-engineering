@@ -1,13 +1,18 @@
 import { View } from 'react-native';
 import { cn } from '@/lib/utils';
 
-// `1` in NativeWind = 4px, which matches your `border-4`.
-// The corner chip is a 4x4 square left transparent at each corner.
+// `1` in NativeWind is 4 pixels, which matches `border-4`.
 type NotchedBorderProps = {
   fillClassName?: string;
   borderClassName?: string;
 };
 
+/*
+  Draws a pixel-art notched botder as an absolute overlay.
+
+  It stretches to the start of it's nearest parent, so the parent must be
+  `relative`. To prevent confusion, NotchedBox is advice to use in most cases.
+*/
 function NotchedBorder({ fillClassName, borderClassName }: NotchedBorderProps) {
   return (
     <View pointerEvents="none" className="absolute inset-0">
