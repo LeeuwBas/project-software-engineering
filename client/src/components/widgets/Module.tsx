@@ -1,6 +1,5 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import useStepValue from '@/lib/GetSteps';
 import { MenuConfig, ModuleId } from '@/lib/types';
 import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
@@ -9,6 +8,9 @@ import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 import { SvgProps } from 'react-native-svg';
+
+const MAX_WATER = 25;
+const MAX_FOOD = 12;
 
 export default function Module({
   id,
@@ -33,7 +35,7 @@ export default function Module({
         {/* Water module */}
         {id === 'water' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-            <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
+            <Button variant={'outline'} disabled={value <= 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
@@ -50,7 +52,7 @@ export default function Module({
             <AttachStep index={3} style={{ alignSelf: 'center' }}>
               <Button
                 variant="outline"
-                disabled={value === goal}
+                disabled={value >= MAX_WATER}
                 onPress={() => setValue(value + 1)}>
                 <Plus size={20} />
               </Button>
@@ -80,7 +82,7 @@ export default function Module({
 
         {id === 'food' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-            <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
+            <Button variant={'outline'} disabled={value <= 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
@@ -94,8 +96,10 @@ export default function Module({
               </AppText>
             </View>
 
-
-            <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
+            <Button
+              variant="outline"
+              disabled={value >= MAX_FOOD}
+              onPress={() => setValue(value + 1)}>
               <Plus size={20} />
             </Button>
           </View>
