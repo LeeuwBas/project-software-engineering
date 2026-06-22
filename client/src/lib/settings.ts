@@ -49,7 +49,7 @@ async function saveSettingsServer(settings: Settings | null = null) {
  *
  * @param settings new settings to store
  */
-async function setSyncSettings(settings: Settings) {
+async function setAndSyncSettings(settings: Settings) {
     saveSettingsServer(settings).catch(
         (error) => console.log(`saving settings to server failed, reason: ${error}`)
     );
@@ -78,7 +78,7 @@ async function updateSettings<K extends keyof Settings>(key: K, value: Settings[
     const current = useSettingsStore.getState().settings;
     current[key] = value;
     useSettingsStore.getState().setStore(current);
-    await setSyncSettings(current)
+    await setAndSyncSettings(current)
 }
 
 async function setTutorialDone() {
