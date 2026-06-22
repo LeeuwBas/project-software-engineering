@@ -10,6 +10,8 @@ import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
 import { loadSettings } from '@/lib/settings';
+import { getSdkStatus, requestPermission, SdkAvailabilityStatus, initialize } from 'react-native-health-connect';
+import Constants from 'expo-constants'
 import '../global.css';
 
 export default function RootLayout() {
@@ -24,6 +26,28 @@ export default function RootLayout() {
 
   useEffect(() => {
     loadSettings();
+  }, []);
+
+  useEffect(() => {
+    const healthConnectAvailable =  Constants.executionEnvironment !== 'storeClient';
+    if (!healthConnectAvailable) return;
+
+    const setup = async () => {
+      try {
+        const status = await getSdkStatus();
+        if (status !== SdkAvailabilityStatus.SDK_AVAILABLE) return;
+
+        const initialized = await initialize();
+        if (!initialized) return;
+
+        await requestPermission([
+          { accessType: 'read', recordType: 'Steps' },
+        ]);
+      } catch (e) {
+        console.error('Health Connect setup failed:', e);
+      }
+    };
+    setup();
   }, []);
 
   if (!loaded) return null;
