@@ -58,6 +58,7 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
+    settings = models.TextField(default="")
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
