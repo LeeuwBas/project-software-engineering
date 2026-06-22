@@ -1,8 +1,8 @@
 import { AppText } from '@/components/AppText';
-import { usePet } from '@/components/contexts/PetContext';
 import { Button } from '@/components/ui/button';
 import Pet from '@/components/widgets/Pet';
 import { useAuth } from '@/lib/auth/AuthManager';
+import { getPetID, setPetID } from '@/lib/settings';
 import ChevronLeft from '@assets/icons/toolbar_icons/chevron_left.svg';
 import ChevronRight from '@assets/icons/toolbar_icons/chevron_right.svg';
 import { useRouter } from 'expo-router';
@@ -16,12 +16,27 @@ export default function PetSelection() {
   const router = useRouter();
   const auth = useAuth();
   const isLoggedIn = auth.isAuthenticated || auth.isGuest;
-  const { pet, setPet, savePet } = usePet();
-  const [draftPet, setPetId] = useState(pet);
+  const pet = getPetID();
+  const [draftPet, setDraftPet] = useState(pet);
+
+  function previousPet() {
+    if (draftPet === 0) {
+      setDraftPet(NUM_PETS - 1);
+    } else {
+      setDraftPet(draftPet - 1);
+    }
+  }
+
+  function nextPet() {
+    if (draftPet === NUM_PETS - 1) {
+      setDraftPet(0);
+    } else {
+      setDraftPet(draftPet + 1);
+    }
+  }
 
   function confirm() {
-    setPet(draftPet);
-    savePet(draftPet);
+    setPetID(draftPet);
     isLoggedIn ? router.push('/') : router.push('/signup');
   }
 
@@ -31,27 +46,23 @@ export default function PetSelection() {
         <View className="flex-col gap-12">
           <View className="flex-row items-center justify-between">
             <View className="w-1/5">
-              {draftPet !== 0 && (
-                <Button
-                  variant="outline"
-                  className="mx-2 flex h-auto items-center py-0"
-                  onPress={() => setPetId(draftPet - 1)}>
-                  <ChevronLeft width={80} height={80} />
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                className="mx-2 flex h-auto items-center py-0"
+                onPress={() => previousPet}>
+                <ChevronLeft width={80} height={80} />
+              </Button>
             </View>
 
             <Pet className="w-1/2" id={draftPet} />
 
             <View className="w-1/5">
-              {draftPet !== NUM_PETS - 1 && (
-                <Button
-                  variant="outline"
-                  className="mx-2 flex h-auto items-center py-0"
-                  onPress={() => setPetId(draftPet + 1)}>
-                  <ChevronRight width={80} height={80} />
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                className="mx-2 flex h-auto items-center py-0"
+                onPress={() => nextPet}>
+                <ChevronRight width={80} height={80} />
+              </Button>
             </View>
           </View>
 

@@ -13,7 +13,7 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
       case 2:
         return <Blob width={'100%'} height={200} />;
       default:
-        console.error('Unknown pet id');
+        console.error('Unknown pet id: ' + id);
     }
   }
 
