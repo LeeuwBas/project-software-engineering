@@ -7,8 +7,19 @@ const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 
 export interface Settings {
-    chosenPet: string;
-    has_done_tutorial: boolean;
+    chosenPet: number;
+    hasDoneTutorial: boolean;
+    petName: string;
+    userName: string;
+    enabledModules: EnabledModules;
+}
+
+export interface EnabledModules {
+    water: boolean;
+    sleep: boolean;
+    steps: boolean;
+    stress: boolean;
+    food: boolean;
 }
 
 export interface StatLine {
@@ -45,6 +56,28 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
         food: null,
         ...overrides,
     } as StatLine;
+}
+
+export function createSettings(overrides: Partial<Settings> = {}) {
+    return {
+        chosenPet: 0,
+        hasDoneTutorial: false,
+        petName: 'Alex', // Fun easter egg for James
+        userName: 'testuser',
+        enabledModules: createEnabledModules(),
+        ...overrides,
+    } as Settings;
+}
+
+export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
+    return {
+        water: true,
+        sleep: true,
+        steps: true,
+        stress: true,
+        food: true,
+        ...overrides,
+    } as EnabledModules;
 }
 
 // ---------------------------------- Statistics Functions ----------------------------------
@@ -532,18 +565,14 @@ export async function getSyncData(forGoals: boolean = false) {
 // ---------------------------------- Settings Functions ----------------------------------
 
 export async function getSettings(): Promise<Settings> {
-    const defaults: Settings = {
-        chosenPet: '',
-        has_done_tutorial: false,
-    };
     try {
         const raw = await AsyncStorage.getItem('settings');
 
-        // The spread operator here makes this future proof, if the settings interface ever changes
-        return raw ? { ...defaults, ...JSON.parse(raw) } : defaults;
+        const val = raw ? createSettings(JSON.parse(raw)) : createSettings();
+        return val;
     } catch (error) {
         console.error(error);
-        return defaults;
+        return createSettings();
     }
 }
 

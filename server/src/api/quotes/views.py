@@ -1,13 +1,12 @@
-import random
 
-from drf_spectacular.utils import OpenApiParameter, OpenApiResponse, extend_schema
-from drf_spectacular.types import OpenApiTypes
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.views import APIView
-from ..statistics.serializers import QuoteRequestSerializer, QuoteResponseSerializer
+
+from ..statistics.serializers import (QuoteRequestSerializer,
+                                      QuoteResponseSerializer)
 from .helpers import get_json_quote
 
 
@@ -33,10 +32,10 @@ class RequestQuote(APIView):
         serializer = QuoteRequestSerializer(data=request.query_params)
 
         if serializer.is_valid():
-            mood = serializer.validated_data["mood"]
             action = serializer.validated_data["action"]
-
-            quote = get_json_quote(action, mood)
+            level = serializer.validated_data["level"]
+            context = serializer.validated_data.get("context", "Standard")
+            quote = get_json_quote(action, level, context)
 
             return Response({"quote": quote}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
