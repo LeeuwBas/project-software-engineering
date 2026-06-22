@@ -407,13 +407,8 @@ class GoalManageView(APIView):
         responses={
             200: {
                 "type": "object",
-                "properties": {
-                    "goals": {
-                        "type": "object",
-                        "additionalProperties": {"type": "integer"},
-                        "example": {"water": 5},
-                    }
-                },
+                "additionalProperties": {"type": "integer"},
+                "example": {"water": 5},
             },
             400: OpenApiResponse(description="Invalid input."),
         },
