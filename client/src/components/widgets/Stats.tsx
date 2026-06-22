@@ -50,6 +50,7 @@ export default function Stats({}: {}) {
 
   return (
     <View
+      // pointerEvents={statsOpen ? 'auto' : 'none'}
       className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
       <View className="bottom-full w-[90%] items-center">
         <View className="absolute -top-12 w-full flex-row gap-1">
@@ -65,7 +66,7 @@ export default function Stats({}: {}) {
         </View>
         <Card className="w-full items-center justify-center py-3 shadow-block">
           <CardContent className="w-full items-center px-2">
-            {activeTab === 'calendar' ? <CalendarOverview /> : <StatisticView stat={activeTab} />}
+            {activeTab === 'calendar' ? (statsOpen ? <CalendarOverview /> : null) : <StatisticView stat={activeTab} />}
           </CardContent>
         </Card>
       </View>

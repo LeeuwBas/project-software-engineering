@@ -2,17 +2,13 @@ import { AppText } from '@/components/AppText';
 import Bar from '@/components/widgets/Bar';
 import Weather from '@/components/widgets/Weather';
 import { getActiveModules } from '@/lib/settings';
-import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
+import { BarType, GoaledModule, MODULES } from '@/lib/types';
 import { View } from 'react-native';
-import { SvgProps } from 'react-native-svg';
 
-interface BarType {
-  id: ModuleId;
-  icon: React.FC<SvgProps>;
-  value: number;
-  goal: number;
-}
-
+/**
+ * The view on top of the homepage. Contains the weather, day of the week, and bars for active goaled modules.
+ * @returns the top view
+ */
 export default function Topbar() {
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -21,11 +17,14 @@ export default function Topbar() {
     (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
+  // Parameters for each module bar
   const bars: BarType[] = activeGoaledModules.map((module) => ({
     id: module.id,
     icon: module.icon,
     value: module.useValue() ?? 0,
     goal: module.bridge.useGoal() ?? 0,
+    color: module.color,
+    borderColor: module.borderColor,
   }));
 
   return (
@@ -37,7 +36,7 @@ export default function Topbar() {
 
       <View className="w-full flex-col gap-2">
         {bars.map((bar) => (
-          <Bar icon={bar.icon} value={bar.value} goal={bar.goal} key={bar.id} />
+          <Bar {...bar} key={bar.id} />
         ))}
       </View>
     </View>
