@@ -125,7 +125,7 @@ export default function CalendarOverview() {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
-  // console.log(calendarData[today.getDate() - 1]); // Today
+  console.log(calendarData[today.getDate() - 1]); // Today
 
   return (
     <View>
@@ -184,6 +184,9 @@ export default function CalendarOverview() {
                   />
                   <View
                     className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1 ? 'bg-green-500' : 'hidden'}`}
+                  />
+                  <View
+                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.food === 1 ? 'bg-yellow-500' : 'hidden'}`}
                   />
                 </View>
               )}
