@@ -103,11 +103,27 @@ export function savePetName(petName: string) {
 }
 
 /**
+ * Retrieves the stored pet name
+ * @returns the saved pet name
+ */
+export function getPetName() {
+    return useSettingsStore.getState().settings.petName
+}
+
+/**
  * Save a new name for the user, used in the quotes.
  * @param userName The new name
  */
 export function saveUserName(userName: string) {
     updateSettings("userName", userName);
+}
+
+/**
+ * Retrieves the stored username
+ * @returns The saved username
+ */
+export function getUserName() {
+    return useSettingsStore.getState().settings.userName
 }
 
 /**
@@ -128,10 +144,26 @@ export function getActiveModules(): EnabledModules {
 
 /**
  * Toggles a specific module on and off.
- * @param module the module anme that needs to be toggled.
+ * @param module the module name that needs to be toggled.
  */
 export function toggleActiveModule<K extends keyof EnabledModules>(module: K) {
     const current = getActiveModules();
     current[module] = !current[module];
     setActiveModules(current);
+}
+
+/**
+ * Change the selected pet ID.
+ * @param petID ID of the chosen pet
+ */
+export function setPetID(petID: number) {
+    updateSettings("chosenPet", petID);
+}
+
+/**
+ * Retrieves the stored pet ID.
+ * @returns The ID of the stored pet
+ */
+export function getPetID() {
+    return useSettingsStore.getState().settings.chosenPet
 }
