@@ -1,6 +1,7 @@
 import { createSettings, EnabledModules, getSettings, setSettings, Settings } from '@/lib/storage';
 import { create } from 'zustand';
 import { getAPI, postAPI } from './api/ApiManager';
+import { internalAuth } from '@/lib/auth/AuthService';
 
 type SettingsStore = {
     settings: Settings;
@@ -36,12 +37,16 @@ export async function loadSettingsServer() {
  * @param [settings=null] settings to save to the server, if not provided will store what is on local storage.
  */
 async function saveSettingsServer(settings: Settings | null = null) {
+    if (internalAuth.isGuest || internalAuth.accessToken === null) {
+        return;
+    }
+
     if (settings === null) {
         settings = await getSettings();
     }
 
     const b64Settings = btoa(JSON.stringify(settings));
-    postAPI('/users/settings', { settings: b64Settings });
+    postAPI('/users/settings', { settings: b64Settings }).then();
 }
 
 /**
@@ -169,5 +174,6 @@ export function setPetID(petID: number) {
  * @returns The ID of the stored pet
  */
 export function getPetID() {
-    return useSettingsStore.getState().settings.chosenPet;
+    const ID = useSettingsStore.getState().settings.chosenPet;
+    return typeof ID === 'number' ? ID : 0;
 }

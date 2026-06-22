@@ -1,17 +1,20 @@
-import { PetProvider } from '@/components/contexts/PetContext';
 import { AuthProvider } from '@/lib/auth/AuthManager';
+import { loadSettings } from '@/lib/settings';
+import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { colorScheme } from 'nativewind';
 import { useEffect } from 'react';
-import { useColorScheme, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {
+  getSdkStatus,
+  initialize,
+  requestPermission,
+  SdkAvailabilityStatus,
+} from 'react-native-health-connect';
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
-import { loadSettings } from '@/lib/settings';
-import { getSdkStatus, requestPermission, SdkAvailabilityStatus, initialize } from 'react-native-health-connect';
-import Constants from 'expo-constants'
 import '../global.css';
 
 export default function RootLayout() {
@@ -29,7 +32,7 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    const healthConnectAvailable =  Constants.executionEnvironment !== 'storeClient';
+    const healthConnectAvailable = Constants.executionEnvironment !== 'storeClient';
     if (!healthConnectAvailable) return;
 
     const setup = async () => {
@@ -40,9 +43,7 @@ export default function RootLayout() {
         const initialized = await initialize();
         if (!initialized) return;
 
-        await requestPermission([
-          { accessType: 'read', recordType: 'Steps' },
-        ]);
+        await requestPermission([{ accessType: 'read', recordType: 'Steps' }]);
       } catch (e) {
         console.error('Health Connect setup failed:', e);
       }
@@ -57,14 +58,12 @@ export default function RootLayout() {
     // Gesture handler wrapper to handle toasts using sonner library.
     // Toasts are 'pop-ups' that you can use after some action fails or succeeds.
     <AuthProvider>
-      <PetProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SafeAreaProvider>
-            <Stack screenOptions={{ headerShown: false }} />
-            <Toaster />
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </PetProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+          <Toaster />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     </AuthProvider>
   );
 }

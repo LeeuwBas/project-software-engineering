@@ -94,8 +94,8 @@ export const MODULES: ModuleDefinition[] = [
         icon: Glass,
         useValue: useWater,
         unit: 'glasses',
-        color: '#74ccf4',
-        borderColor: '#15a4e6',
+        color: '#aed8eb',
+        borderColor: '#5abce8',
         bridge: waterBridge,
         goalConfig: {
             defaultGoal: 8,
@@ -110,8 +110,8 @@ export const MODULES: ModuleDefinition[] = [
         icon: Shoe,
         useValue: useStepValue,
         unit: 'steps',
-        color: '#b5ff00',
-        borderColor: '#49e40c',
+        color: '#a5d9a5',
+        borderColor: '#69d669',
         bridge: stepsBridge,
         goalConfig: {
             defaultGoal: 5000,
@@ -126,8 +126,8 @@ export const MODULES: ModuleDefinition[] = [
         icon: Stress,
         useValue: useStress,
         unit: 'cortisol',
-        color: '#ff9699',
-        borderColor: '#b41b21',
+        color: '#fcada3',
+        borderColor: '#f67788',
         bridge: stressBridge,
     },
     {
@@ -136,8 +136,8 @@ export const MODULES: ModuleDefinition[] = [
         icon: Sleep,
         useValue: useSleep,
         unit: 'hours',
-        color: '#ff96f6',
-        borderColor: '#a21bb4',
+        color: '#bb9cd6',
+        borderColor: '#a772d6',
         bridge: sleepBridge,
     },
     {
@@ -146,8 +146,8 @@ export const MODULES: ModuleDefinition[] = [
         icon: Food,
         useValue: useFood,
         unit: 'meals',
-        color: '#ffe396',
-        borderColor: '#b47e1b',
+        color: '#fcdf8d',
+        borderColor: '#f7cc52',
         bridge: foodBridge,
         goalConfig: {
             defaultGoal: 3,
@@ -157,3 +157,12 @@ export const MODULES: ModuleDefinition[] = [
         },
     },
 ];
+
+export interface BarType {
+    id: ModuleId;
+    icon: React.FC<SvgProps>;
+    value: number;
+    goal: number;
+    color: string;
+    borderColor: string;
+}

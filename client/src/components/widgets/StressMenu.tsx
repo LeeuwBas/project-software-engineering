@@ -29,9 +29,9 @@ export default function StressMenu() {
   const [score3, setScore3] = useState<number | null>(null);
 
   useEffect(() => {
-    setSendStress(() => () => {
+    setSendStress(() => async () => {
       if (score1 !== null && score2 !== null && score3 !== null) {
-        saveStress(score1, score2, score3);
+        await saveStress(score1, score2, score3);
       }
     });
 

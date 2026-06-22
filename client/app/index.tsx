@@ -3,7 +3,7 @@ import { Redirect } from 'expo-router';
 
 export default function Index() {
   return (
-    <RequireNoAuth>
+    <RequireNoAuth loading={null}>
       <Redirect href="/onboarding" />
     </RequireNoAuth>
   );

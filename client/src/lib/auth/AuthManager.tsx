@@ -2,8 +2,9 @@ import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { syncServer } from '@/lib/StorageSync';
+import { loadServer, syncServer } from '@/lib/StorageSync';
 import { internalAuth } from '@/lib/auth/AuthService';
+import { clearStorage } from '@/lib/storage';
 
 const GUEST_MODE = 'guest';
 
@@ -100,12 +101,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const receivedAccessToken = data.access;
     const receivedRefreshToken = data.refresh;
+    const receivedLoginId = data.login_id;
+
+    const cachedLogin = await tokenStorage.isCachedLogin(receivedLoginId, email);
+    if (!cachedLogin) {
+      await clearStorage();
+    } else {
+      console.log('Keeping local cache!');
+    }
 
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
+    await tokenStorage.setLoginID(receivedLoginId, email);
+
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
     setGuest(false);
     setAuthenticated(true);
+
+    internalAuth.accessToken = receivedAccessToken;
+    internalAuth.refreshToken = receivedRefreshToken;
+    internalAuth.isGuest = false;
+
+    if (!cachedLogin) {
+      await loadServer(true)
+        .then(() => console.log('Successfully loaded from server'))
+        .catch((reason) => console.log(`Failed to load data from server: ${reason}`));
+    }
+
     console.log('Successfully logged in');
     return true;
   }
@@ -127,7 +149,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   async function guestMode() {
     await syncServer(true);
 
-    await tokenStorage.setTokens(GUEST_MODE, GUEST_MODE);
+    await Promise.allSettled([
+      // Concurrency!
+      tokenStorage.setTokens(GUEST_MODE, GUEST_MODE),
+      tokenStorage
+        .removeLoginId()
+        .then(() => clearStorage())
+        .catch(() => {}),
+    ]);
+
     setAccessToken(GUEST_MODE);
     setRefreshToken(GUEST_MODE);
     setGuest(true);
