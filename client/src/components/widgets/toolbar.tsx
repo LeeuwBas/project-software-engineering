@@ -13,6 +13,8 @@ import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
+import { NotchedBorder } from '../ui/notched-border';
+import { NotchedBox } from '../ui/notched-box';
 
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
@@ -115,19 +117,30 @@ export default function Toolbar({}: {}) {
 
         <AttachStep index={1} style={{ position: 'absolute', top: -25 }}>
           <AttachStep index={4}>
-            <Pressable
-              disabled={statsOpen || settingsOpen}
-              className={`size-16 items-center justify-center border-4 border-primary-dark bg-primary shadow-block transition-opacity duration-200 ${statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'}`}
-              onPress={() => {
-                if (stressMenuOpen) {
-                  sendStress();
-                }
-                closeMenu();
-              }}>
-              {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
+            <NotchedBox
+              className={`shadow-block transition-opacity duration-200 ${
+                statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
+              }`}
+              fillClassName="bg-primary"
+              borderClassName="bg-primary-dark">
+              <Pressable
+                disabled={statsOpen || settingsOpen}
+                className={`size-16 items-center justify-center`}
+                onPress={() => {
+                  if (stressMenuOpen) {
+                    sendStress();
+                  }
+                  closeMenu();
+                }}>
+                {(menuOpen || stressMenuOpen) && (
+                  <CheckIcon width={50} height={50} color={'white'} />
+                )}
 
-              {!menuOpen && !stressMenuOpen && <PlusIcon width={50} height={50} color={'white'} />}
-            </Pressable>
+                {!menuOpen && !stressMenuOpen && (
+                  <PlusIcon width={50} height={50} color={'white'} />
+                )}
+              </Pressable>
+            </NotchedBox>
           </AttachStep>
         </AttachStep>
 
