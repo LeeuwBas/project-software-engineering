@@ -256,7 +256,8 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
  * Gets the stat summary for the past 'days' time.
  *
  * @param statName - Name of the statistic to summarize.
- * @param days - Amount of days to summarize.
+ * @param start - Date object of the first day considered.
+ * @param end - Date object of the last day considered.
  *
  * @returns StatisticsSummary object containing all data
  */
