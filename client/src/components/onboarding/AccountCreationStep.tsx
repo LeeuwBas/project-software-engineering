@@ -121,6 +121,7 @@ export function AccountCreationStep({ onNext }: Props) {
                 placeholder="••••••••"
                 secureTextEntry
                 returnKeyType="send"
+                autoCapitalize="none"
                 onSubmitEditing={onSubmit}
                 onChangeText={setPassword}
                 autoComplete="new-password"
