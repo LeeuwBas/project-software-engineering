@@ -5,6 +5,10 @@ import { getActiveModules } from '@/lib/settings';
 import { BarType, GoaledModule, MODULES } from '@/lib/types';
 import { View } from 'react-native';
 
+/**
+ * The view on top of the homepage. Contains the weather, day of the week, and bars for active goaled modules.
+ * @returns the top view
+ */
 export default function Topbar() {
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -13,6 +17,7 @@ export default function Topbar() {
     (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
+  // Parameters for each module bar
   const bars: BarType[] = activeGoaledModules.map((module) => ({
     id: module.id,
     icon: module.icon,
