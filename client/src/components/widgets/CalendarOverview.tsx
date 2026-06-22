@@ -1,4 +1,5 @@
 import { getGoalCalender } from '@/lib/api/APIBridge';
+import { ModuleDefinition, MODULES } from '@/lib/types';
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useMemo, useState } from 'react';
@@ -26,6 +27,10 @@ export default function CalendarOverview() {
   const today = useMemo(() => new Date(), []);
 
   const [calendarData, updateCalendarData] = useState<any[]>([]);
+
+  const activeCalendarModules: ModuleDefinition[] = MODULES.filter(
+    (module) => module.id !== 'stress'
+  );
 
   // Memoization for calendar grid to only change when year or month changes
   // Prevent rerender when parent rerenders
@@ -176,18 +181,18 @@ export default function CalendarOverview() {
               </AppText>
               {!item.hidden && (
                 <View className="flex-row flex-wrap gap-1 self-start p-0.5">
-                  <View
-                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.sleep === 1 ? 'bg-red-500' : 'hidden'}`}
-                  />
-                  <View
-                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.water === 1 ? 'bg-blue-500' : 'hidden'}`}
-                  />
-                  <View
-                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.steps === 1 ? 'bg-green-500' : 'hidden'}`}
-                  />
-                  <View
-                    className={`aspect-square h-[7px] border-[1px] ${calendarData[index]?.food === 1 ? 'bg-yellow-500' : 'hidden'}`}
-                  />
+                  {activeCalendarModules.map(
+                    (module) =>
+                      calendarData[index]?.[module.id] === 1 && (
+                        <View
+                          key={module.id}
+                          className={`aspect-square h-[7px] border-[1px]`}
+                          style={{
+                            backgroundColor: module.borderColor,
+                          }}
+                        />
+                      )
+                  )}
                 </View>
               )}
             </View>
