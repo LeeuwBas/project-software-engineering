@@ -1,10 +1,11 @@
-import { createWaterBridge } from '@/lib/api/WaterBridge';
-import { createSleepBridge } from '@/lib/api/SleepBridge';
 import { createFoodBridge } from '@/lib/api/FoodBridge';
 import { loadCalender } from '@/lib/api/GenericStorage';
-import { createStressBridge } from './StressBridge';
+import { createQuoteBridge, QuoteBridge } from '@/lib/api/QuoteBridge';
+import { createSleepBridge } from '@/lib/api/SleepBridge';
 import { createStepBridge } from '@/lib/api/StepBridge';
+import { createWaterBridge } from '@/lib/api/WaterBridge';
 import { StatisticsSummary } from '@/lib/storage';
+import { createStressBridge } from './StressBridge';
 
 export type LoadableBridge<T> = T & Loadable;
 
@@ -53,7 +54,9 @@ export async function initializeApiManager() {
                 return Promise.resolve();
             }
         })
-    ).then( () => {initPromise = null;})); // Map to void promise
+    ).then(() => {
+        initPromise = null;
+    })); // Map to void promise
 }
 
 /**
@@ -71,6 +74,9 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 
 export const waterBridge = register(createWaterBridge());
 export const stressBridge = register(createStressBridge());
+
+/**{@link QuoteBridge}*/
+export const quoteBridge: QuoteBridge = createQuoteBridge();
 export const stepsBridge = register(createStepBridge());
 export const sleepBridge = register(createSleepBridge());
 export const foodBridge = register(createFoodBridge());

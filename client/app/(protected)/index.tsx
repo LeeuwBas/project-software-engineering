@@ -1,28 +1,21 @@
+import { createTutorialSteps } from '@/components/tutorial/tutorial-steps';
 import PetHome from '@/components/widgets/PetHome';
+import Quotes from '@/components/widgets/Quotes';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
-import { initializeApiManager, waterBridge } from '@/lib/api/APIBridge';
+import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
+import { useTutorial } from '@/lib/settings';
+import { syncServer } from '@/lib/StorageSync';
+import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
-import { useEffect, useRef, useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  AttachStep,
-  SpotlightTourProvider,
-  TourStep,
-  useSpotlightTour,
-} from 'react-native-spotlight-tour';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AppText } from '@/components/AppText';
-import { Button } from '@/components/ui/button';
-import { useTutorial } from '@/lib/settings';
-import { createTutorialSteps } from '@/components/tutorial/tutorial-steps';
-import { syncServer } from '@/lib/StorageSync';
-import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
+import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-native-spotlight-tour';
 
 export default function App() {
   const water = useWater() ?? 0;
@@ -35,17 +28,16 @@ export default function App() {
     changeSettings,
     changeStats,
     stressMenuOpen,
-    changeStressMenu
+    changeStressMenu,
   } = useAppContext();
 
-  
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'background') triggerBackup();
       if (nextAppState === 'active') {
-        if (nextTimer.getDay() == (new Date()).getDay()) {
+        if (nextTimer.getDay() == new Date().getDay()) {
           flushCache();
         }
       }
@@ -75,6 +67,9 @@ export default function App() {
 
   const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
+
+  const [petHomeLayout, setPetHomeLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [topBarLayout, setTopBarLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   const mySteps = useMemo(
     () =>
@@ -115,21 +110,28 @@ export default function App() {
           {popupOpen && <Pressable className="absolute inset-0 z-10" onPress={closePopup} />}
 
           <View className="flex-1 p-4">
-            <Topbar />
-
-            <View className="flex-1 justify-center">
-              <AttachStep index={0} fill>
-                <AttachStep index={9} fill>
-                  <PetHome />
-                </AttachStep>
-              </AttachStep>
+            <View onLayout={(e) => setTopBarLayout(e.nativeEvent.layout)}>
+              <Topbar />
             </View>
+            <View className="flex-1 items-center justify-center">
+              <View
+                className="flex-grow-0"
+                onLayout={(e) => setPetHomeLayout(e.nativeEvent.layout)}>
+                <AttachStep index={0} fill>
+                  <AttachStep index={9} fill>
+                    <PetHome />
+                  </AttachStep>
+                </AttachStep>
+              </View>
+            </View>
+            <Quotes petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
           </View>
 
           {done && (
             <BlurView
               pointerEvents="none"
               className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
+              style={{ zIndex: 9 }}
               intensity={20}
               tint="regular"
               experimentalBlurMethod="dimezisBlurView"
