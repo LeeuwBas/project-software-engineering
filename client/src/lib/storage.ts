@@ -275,7 +275,7 @@ export async function getStatSummary<K extends keyof StatLine>(
 
     returnValue.total = values.reduce((Acc, [d, x], _) => Acc + +x, 0);
     returnValue.count = values.length;
-    returnValue.average = returnValue.total / returnValue.count;
+    returnValue.average = returnValue.total / dateDifference(start, end);
     returnValue.maximum = values.reduce((Acc, [d, x], _) => (Acc > +x ? Acc : +x), 0);
     returnValue.minimum = values.reduce((Acc, [d, x], _) => (Acc < +x ? Acc : +x), 0);
 
