@@ -2,20 +2,22 @@ import { AppText } from '@/components/AppText';
 import { StatisticChart } from '@/components/stats/StatisticChart';
 import { Button } from '@/components/ui/button';
 import { getChartLabels } from '@/lib/stats/chart-labels';
-import { HistoryPeriod, PERIOD_CONFIG, StatName, STATS } from '@/lib/stats/statistics-types';
+import { HistoryPeriod, PERIOD_CONFIG } from '@/lib/stats/statistics-types';
 import { StatisticsSummary } from '@/lib/storage';
-import { useEffect, useState } from 'react';
+import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
-export function StatisticView({ stat }: { stat: StatName }) {
+export function StatisticView({ stat }: { stat: ModuleId }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
   const [summary, setSummary] = useState<StatisticsSummary | null>(null);
   const [bars, setBars] = useState<number[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const statData = STATS[stat];
-  const goal = statData.bridge.useGoal() ?? 0;
+  const module: GoaledModule = MODULES.find(
+    (module): module is GoaledModule => module.id === stat
+  )!;
 
   useEffect(() => {
     async function loadData() {
@@ -28,13 +30,13 @@ export function StatisticView({ stat }: { stat: StatName }) {
         const now = new Date();
         const past = new Date();
         past.setTime(now.getTime() - 1000 * 60 * 60 * 24 * config.days);
-        const barsData = await statData.bridge.getBarChart(
+        const barsData = await module.bridge.getBarChart(
           config.bins,
           config.days / config.bins,
           now
         );
         setBars(barsData);
-        const summaryData = await statData.bridge.getSummary(past, now);
+        const summaryData = await module.bridge.getSummary(past, now);
         setSummary(summaryData);
       } catch (err) {
         console.error(err);
@@ -48,15 +50,15 @@ export function StatisticView({ stat }: { stat: StatName }) {
     loadData();
   }, [period, stat]);
 
-  const config = PERIOD_CONFIG[period];
-  const values = bars ?? new Array<number>(config.bins).fill(0);
+  const config = useMemo(() => PERIOD_CONFIG[period], [period]);
+  const labels = useMemo(() => getChartLabels(period), [period]);
 
-  const labels = getChartLabels(period);
+  const values = useMemo(() => bars ?? new Array<number>(config.bins).fill(0), [bars, config]);
 
   return (
     <View className="w-full px-2">
       <View>
-        <AppText className="text-xl font-bold">{statData.title}</AppText>
+        <AppText className="text-xl font-bold">{module.name}</AppText>
         {/* <AppText>Today: {loading ? 'Loading...' : `${response?.today} ${statData.unit}`}</AppText> */}
       </View>
       <View className="mb-4 flex-row gap-2">
@@ -82,30 +84,24 @@ export function StatisticView({ stat }: { stat: StatName }) {
         </Button>
       </View>
 
-      {!loading && (
-        <StatisticChart
-          values={values}
-          labels={labels}
-          barconfig={statData.barconfig}
-          goal={goal}
-        />
-      )}
+      {!loading && <StatisticChart module={module} values={values} labels={labels} />}
 
       <View className="mt-4 gap-2">
         <AppText>
-          Highest: {loading ? 'Loading...' : `${summary?.maximum} ${statData.unit}`}
+          Highest: {loading ? 'Loading...' : `${summary?.maximum} ${module.unit}`}
           {/*Highest: {loading ? 'Loading...' : `${Math.max(...values)} ${statData.unit}`}*/}
         </AppText>
 
         <AppText>
-          <AppText>
-            Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${statData.unit}`}
-          </AppText>
+          <AppText>Lowest: {loading ? 'Loading...' : `${summary?.minimum} ${module.unit}`}</AppText>
           {/*Lowest: {loading ? 'Loading...' : `${Math.min(...values)} ${statData.unit}`}*/}
         </AppText>
 
         <AppText>
-          Average: {loading ? 'Loading...' : `${summary?.average} ${statData.unit}`}
+          Average:{' '}
+          {loading
+            ? 'Loading...'
+            : `${Math.round((summary?.average ?? 0) * 10) / 10} ${module.unit}`}
           {/*Average:{' '}*/}
           {/*{loading*/}
           {/*  ? 'Loading...'*/}

@@ -1,36 +1,32 @@
-import { LucideIcon } from 'lucide-react-native';
-import { SvgProps } from 'react-native-svg';
-import { GoaledStatisticBridge, stepsBridge, waterBridge } from '@/lib/api/APIBridge';
+// export type StatName = 'water' | 'steps';
 
-export type StatName = 'water' | 'steps';
+// export interface barConfig {
+//     barcolor: string;
+//     goalcolor: string;
+//     maxValue: number;
+// }
 
-export interface barConfig {
-    barcolor: string;
-    goalcolor: string;
-    maxValue: number;
-}
+// export interface StatInfo {
+//     title: string;
+//     unit: string;
+//     barconfig: barConfig;
+//     bridge: GoaledStatisticBridge;
+// }
 
-export interface StatInfo {
-    title: string;
-    unit: string;
-    barconfig: barConfig;
-    bridge: GoaledStatisticBridge;
-}
-
-export const STATS: Record<StatName, StatInfo> = {
-    water: {
-        title: 'Water drank',
-        unit: 'glasses',
-        barconfig: { barcolor: '#74ccf4', goalcolor: '#15a4e6', maxValue: 9 },
-        bridge: waterBridge,
-    },
-    steps: {
-        title: 'Steps walked',
-        unit: 'steps',
-        barconfig: { barcolor: '#b5ff00', goalcolor: '#49e40c', maxValue: 10000 },
-        bridge: stepsBridge,
-    },
-};
+// export const STATS: Record<StatName, StatInfo> = {
+//     water: {
+//         title: 'Water drank',
+//         unit: 'glasses',
+//         barconfig: { barcolor: '#74ccf4', goalcolor: '#15a4e6', maxValue: 9 },
+//         bridge: waterBridge,
+//     },
+//     steps: {
+//         title: 'Steps walked',
+//         unit: 'steps',
+//         barconfig: { barcolor: '#b5ff00', goalcolor: '#49e40c', maxValue: 10000 },
+//         bridge: stepsBridge,
+//     },
+// };
 
 export interface StatisticResponse {
     today: number;
@@ -58,9 +54,9 @@ export const PERIOD_CONFIG: Record<HistoryPeriod, any> = {
     },
 };
 
-export type TabId = 'calender' | StatName;
+// export type TabId = 'calender' | StatName;
 
-export type Tab = {
-    id: TabId;
-    icon: LucideIcon | React.FC<SvgProps>;
-};
+// export type Tab = {
+//     id: TabId;
+//     icon: LucideIcon | React.FC<SvgProps>;
+// };

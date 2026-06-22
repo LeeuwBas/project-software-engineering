@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
-
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { MODULES } from '@/lib/onboarding/types';
 import { getActiveModules, setActiveModules } from '@/lib/settings';
+import { MODULES } from '@/lib/types';
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 type Props = {
   onNext?: () => void;
@@ -19,15 +18,15 @@ export default function ModuleSelectionStep({ onNext }: Props) {
     setModuleState(getActiveModules());
   }, []);
 
-  function toggleModule(moduleKey: string) {
+  function toggleModule(moduleId: string) {
     setModuleState((current) => ({
       ...current,
-      [moduleKey]: !current[moduleKey],
+      [moduleId]: !current[moduleId],
     }));
   }
 
-  function isSelected(moduleKey: string) {
-    return activeModules[moduleKey] ?? false;
+  function isSelected(moduleId: string) {
+    return activeModules[moduleId] ?? false;
   }
 
   function saveModules() {
@@ -37,8 +36,8 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
   const selectedCount = Object.values(activeModules).filter(Boolean).length;
 
-  const stressModule = MODULES.find((module) => module.key === 'stress');
-  const habitModules = MODULES.filter((module) => module.key !== 'stress');
+  const stressModule = MODULES.find((module) => module.id === 'stress');
+  const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
     <View className="flex-1 justify-center px-4">
@@ -50,15 +49,15 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
           {stressModule && (
             <Pressable
-              onPress={() => toggleModule(stressModule.key)}
+              onPress={() => toggleModule(stressModule.id)}
               className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
               style={{
                 backgroundColor: stressModule.color,
                 borderColor: stressModule.borderColor,
-                opacity: isSelected(stressModule.key) ? 1 : 0.4,
+                opacity: isSelected(stressModule.id) ? 1 : 0.4,
               }}>
               <stressModule.icon width={32} height={32} />
-              <AppText className="text-xl font-bold">{stressModule.id}</AppText>
+              <AppText className="text-xl font-bold">{stressModule.name}</AppText>
             </Pressable>
           )}
         </View>
@@ -71,16 +70,16 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           <View className="gap-4">
             {habitModules.map((module) => (
               <Pressable
-                key={module.key}
-                onPress={() => toggleModule(module.key)}
+                key={module.id}
+                onPress={() => toggleModule(module.id)}
                 className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
                 style={{
                   backgroundColor: module.color,
                   borderColor: module.borderColor,
-                  opacity: isSelected(module.key) ? 1 : 0.4,
+                  opacity: isSelected(module.id) ? 1 : 0.4,
                 }}>
                 <module.icon width={32} height={32} />
-                <AppText className="text-xl font-bold">{module.id}</AppText>
+                <AppText className="text-xl font-bold">{module.name}</AppText>
               </Pressable>
             ))}
           </View>

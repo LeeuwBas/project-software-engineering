@@ -1,21 +1,29 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import StepsWidget from '@/components/widgets/StepsWidget';
-import { ModuleProps } from '@/lib/types';
+import { MenuConfig, ModuleId } from '@/lib/types';
 import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
 import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { SvgProps } from 'react-native-svg';
 
 export default function Module({
-  props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
+  id,
+  icon: Icon,
+  props,
 }: {
-  props: ModuleProps;
+  id: ModuleId;
+  icon: React.FC<SvgProps>;
+  props?: MenuConfig;
 }) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
+  const { value, setValue, goal, onPress, buttonString } = props ?? {};
+
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
 
   return (
@@ -81,14 +89,9 @@ export default function Module({
               </AppText>
             </View>
 
-            <AttachStep index={3} style={{ alignSelf: 'center' }}>
-              <Button
-                variant="outline"
-                disabled={value === goal}
-                onPress={() => setValue(value + 1)}>
-                <Plus size={20} />
-              </Button>
-            </AttachStep>
+            <Button variant="outline" disabled={value === goal} onPress={() => setValue(value + 1)}>
+              <Plus size={20} />
+            </Button>
           </View>
         )}
 

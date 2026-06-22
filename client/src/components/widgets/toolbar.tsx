@@ -1,9 +1,7 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { stepsBridge, waterBridge, foodBridge, sleepBridge } from '@/lib/api/APIBridge';
-import { useWater } from '@/lib/api/WaterBridge';
-import { useFood } from '@/lib/api/FoodBridge';
-import { GoalModules} from '@/lib/types';
+import { foodBridge, sleepBridge, waterBridge } from '@/lib/api/APIBridge';
+import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
 import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
@@ -15,24 +13,22 @@ import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
-import { useSleep } from '@/lib/api/SleepBridge';
-import { useSteps } from '@/lib/api/StepBridge';
 
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
-  const water = useWater() ?? 0;
-  const food = useFood() ?? 0;
-  // const steps = useSteps() ?? 0;
-  const steps = 6000;
-  const sleep = useSleep() ?? 0;
+  const moduleValues: Record<string, number> = Object.fromEntries(
+    MODULES.map((module) => [module.id, module.useValue() ?? 0])
+  );
 
-  const goals: GoalModules = {
-    water: waterBridge.useGoal() ?? 0,
-    steps: stepsBridge.useGoal() ?? 0,
-    food: foodBridge.useGoal() ?? 0,
-  };
+  const goaledModules: GoaledModule[] = MODULES.filter(
+    (module): module is GoaledModule => 'goalConfig' in module
+  );
+
+  const goals: Record<string, number> = Object.fromEntries(
+    goaledModules.map((module) => [module.id, module.bridge.useGoal() ?? 0])
+  );
 
   const {
     statsOpen,
@@ -46,23 +42,25 @@ export default function Toolbar({}: {}) {
     sendStress,
   } = useAppContext();
 
-  const [draftWater, setDraftWater] = useState(water);
-  const [draftFood, setDraftFood] = useState(food);
-  const [draftSleep, setDraftSleep] = useState(sleep)
-  const [draftGoals, setDraftGoals] = useState<GoalModules>(goals);
+  const [draftWater, setDraftWater] = useState(moduleValues.water);
+  const [draftFood, setDraftFood] = useState(moduleValues.food);
+  const [draftSleep, setDraftSleep] = useState(moduleValues.sleep);
+  const [draftGoals, setDraftGoals] = useState<Record<string, number>>(goals);
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
-      await waterBridge.set(draftWater);
-      await foodBridge.set(draftFood);
-      await sleepBridge.set(draftSleep)
+      await Promise.allSettled([
+        waterBridge.set(draftWater),
+        foodBridge.set(draftFood),
+        sleepBridge.set(draftSleep),
+      ]);
 
-      await waterBridge.setGoal(draftGoals.water).then(() => stepsBridge.setGoal(draftGoals.steps));
-      await foodBridge.setGoal(draftGoals.food)
-      console.log('Save water goal: ' + draftGoals.water);
-      console.log("Save steps goal: " + draftGoals.steps);
-      console.log("Save food goal: " + draftGoals.food);
-
+      await Promise.allSettled([
+        goaledModules.map((module) => {
+          module.bridge.setGoal(draftGoals[module.id]);
+          console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
+        }),
+      ]);
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
@@ -74,12 +72,12 @@ export default function Toolbar({}: {}) {
   // Refresh value in popup when retrieved from storage
   useEffect(() => {
     if (menuOpen) {
-      setDraftWater(water);
-      setDraftFood(food);
-      setDraftSleep(sleep)
+      setDraftWater(moduleValues.water);
+      setDraftFood(moduleValues.food);
+      setDraftSleep(moduleValues.sleep);
       setDraftGoals(goals);
     }
-  }, [menuOpen, water]);
+  }, [menuOpen]);
 
   return (
     <View className="relative left-0 right-0 z-20 mt-auto w-full items-center">
@@ -88,7 +86,7 @@ export default function Toolbar({}: {}) {
       <Menu
         water={draftWater}
         setWater={setDraftWater}
-        steps={steps}
+        steps={moduleValues.steps} // Steps doesn't need a draft because it is not changed in the menu.
         onStressPress={() => {
           changeStressMenu();
           changeMenu();
