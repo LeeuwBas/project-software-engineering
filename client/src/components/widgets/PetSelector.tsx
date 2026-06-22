@@ -12,6 +12,11 @@ type PetSelectorProps = {
 
 const VIRTUAL_LOOPS = 50;
 
+/**
+ * Widget of the menu for pet selection, with a swipable flatlist.
+ * @param currentPet index of the pet currently selected by user
+ * @param maxPets the total number of pets
+ */
 export function PetSelector({ currentPet, onPetChange, maxPets }: PetSelectorProps) {
   const listRef = useRef<FlatList>(null);
   const [width, setWidth] = useState(0);
