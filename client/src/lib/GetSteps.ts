@@ -60,7 +60,7 @@ export default function useStepValue() {
                 const totalSteps = response?.COUNT_TOTAL || -1;
 
                 await stepsBridge.set(totalSteps);
-                setSteps(totalSteps)
+                setSteps(totalSteps);
 
                 console.log('Total Steps Today:', totalSteps);
             } catch (error) {
