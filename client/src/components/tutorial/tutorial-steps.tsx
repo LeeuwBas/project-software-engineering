@@ -1,12 +1,15 @@
+import {
+  AttachStep,
+  SpotlightTourProvider,
+  TourStep,
+  useSpotlightTour,
+} from 'react-native-spotlight-tour';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { waterBridge } from '@/lib/api/APIBridge';
+import { AppState, Pressable, View } from 'react-native';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { type ReactNode } from 'react';
-import { View } from 'react-native';
-import {
-  TourStep
-} from 'react-native-spotlight-tour';
+import { initializeApiManager, waterBridge } from '@/lib/api/APIBridge';
 
 type TutorialStepParams = {
   menuOpen: boolean;
