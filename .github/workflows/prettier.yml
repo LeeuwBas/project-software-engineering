@@ -1,4 +1,5 @@
 name: Check code formatting
+
 on:
   pull_request:
     branches: [main, dev]
@@ -7,17 +8,28 @@ jobs:
   prettier:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: client
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          # Make sure the actual branch is checked out when running on pull requests
-          ref: ${{ github.head_ref }}
 
-      - name: Prettify code
-        uses: creyD/prettier_action@v4.6
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          prettier_options: '-c "**/*.{ts,tsx}"'
-          working_directory: 'client'
-          dry: false
+          version: 9
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: client/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Prettier check
+        run: pnpm prettier -c "**/*.{ts,tsx}"
