@@ -98,6 +98,7 @@ export function SignInForm() {
                   placeholder="••••••••"
                   secureTextEntry
                   returnKeyType="send"
+                  autoCapitalize="none"
                   onSubmitEditing={onSubmit}
                   onChangeText={setPassword}
                   autoComplete="current-password"
