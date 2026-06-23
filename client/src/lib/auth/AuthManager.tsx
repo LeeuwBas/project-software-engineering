@@ -1,12 +1,10 @@
-import { syncServer } from '@/lib/StorageSync';
+import { loadServer, syncServer } from '@/lib/StorageSync';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
 import { internalAuth } from '@/lib/auth/AuthService';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
+import { clearStorage } from '@/lib/storage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { loadServer, syncServer } from '@/lib/StorageSync';
-import { internalAuth } from '@/lib/auth/AuthService';
-import { clearStorage } from '@/lib/storage';
 
 const GUEST_MODE = 'guest';
 

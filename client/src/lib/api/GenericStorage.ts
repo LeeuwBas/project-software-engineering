@@ -15,7 +15,6 @@ import {
     updateStat,
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
-import { internalAuth } from '@/lib/auth/AuthService';
 import { formatDate } from '@/lib/utils';
 
 /**
