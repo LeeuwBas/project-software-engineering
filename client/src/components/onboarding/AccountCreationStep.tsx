@@ -9,7 +9,7 @@ import { useAuth } from '@/lib/auth/AuthManager';
 import { useTutorial } from '@/lib/settings';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { toast } from 'sonner-native';
 
 type Props = {
@@ -78,77 +78,75 @@ export function AccountCreationStep({ onNext }: Props) {
   }
 
   return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
-        <View style={{ flex: 0.3 }} />
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
+      <View style={{ flex: 0.4 }} />
 
-        <Card className="mx-4 border-border bg-background/80 shadow-none">
-          <CardHeader>
-            <CardTitle className="text-center text-xl">
-              <AppText className="font-bold">Create account</AppText>
-            </CardTitle>
-          </CardHeader>
+      <Card className="mx-4 border-border bg-background/80 shadow-none">
+        <CardHeader>
+          <CardTitle className="text-center text-xl">
+            <AppText className="font-bold">Create account</AppText>
+          </CardTitle>
+        </CardHeader>
 
-          <CardContent className="gap-5">
-            {errors.general && (
-              <AppText className="text-sm font-bold text-red-500 opacity-80">
-                {errors.general[0]}
-              </AppText>
+        <CardContent className="gap-5">
+          {errors.general && (
+            <AppText className="text-sm font-bold text-red-500 opacity-80">
+              {errors.general[0]}
+            </AppText>
+          )}
+
+          <View className="gap-1.5">
+            <AppText className="font-bold">Email</AppText>
+            <Input
+              id="email"
+              placeholder="john@doe.com"
+              keyboardType="email-address"
+              autoComplete="email"
+              autoCapitalize="none"
+              onSubmitEditing={onEmailSubmitEditing}
+              returnKeyType="next"
+              submitBehavior="submit"
+              onChangeText={setEmail}
+            />
+            {errors.email && (
+              <AppText className="text-sm text-red-500 opacity-80">{errors.email[0]}</AppText>
             )}
+          </View>
 
-            <View className="gap-1.5">
-              <AppText className="font-bold">Email</AppText>
-              <Input
-                id="email"
-                placeholder="john@doe.com"
-                keyboardType="email-address"
-                autoComplete="email"
-                autoCapitalize="none"
-                onSubmitEditing={onEmailSubmitEditing}
-                returnKeyType="next"
-                submitBehavior="submit"
-                onChangeText={setEmail}
-              />
-              {errors.email && (
-                <AppText className="text-sm text-red-500 opacity-80">{errors.email[0]}</AppText>
-              )}
-            </View>
+          <View className="gap-1.5">
+            <AppText className="font-bold">Password</AppText>
+            <Input
+              ref={passwordInputRef}
+              id="password"
+              placeholder="••••••••"
+              secureTextEntry
+              returnKeyType="send"
+              autoCapitalize="none"
+              onSubmitEditing={onSubmit}
+              onChangeText={setPassword}
+              autoComplete="new-password"
+              textContentType="newPassword"
+            />
 
-            <View className="gap-1.5">
-              <AppText className="font-bold">Password</AppText>
-              <Input
-                ref={passwordInputRef}
-                id="password"
-                placeholder="••••••••"
-                secureTextEntry
-                returnKeyType="send"
-                autoCapitalize="none"
-                onSubmitEditing={onSubmit}
-                onChangeText={setPassword}
-                autoComplete="new-password"
-                textContentType="newPassword"
-              />
-
-              {errors.password && (
-                <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
-              )}
-            </View>
-
-            {loading ? (
-              <Button className="w-full" variant="outline" onPress={null}>
-                <AppText className="font-bold">Loading...</AppText>
-              </Button>
-            ) : (
-              <Button className="w-full" variant="default" onPress={onSubmit}>
-                <AppText className="font-bold text-white">Sign Up & Continue</AppText>
-              </Button>
+            {errors.password && (
+              <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
             )}
-            <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
-              <AppText className="font-bold">Continue as guest</AppText>
+          </View>
+
+          {loading ? (
+            <Button className="w-full" variant="outline" onPress={null}>
+              <AppText className="font-bold">Loading...</AppText>
             </Button>
-          </CardContent>
-        </Card>
-      </KeyboardAvoidingView>
-    </KeyboardProvider>
+          ) : (
+            <Button className="w-full" variant="default" onPress={onSubmit}>
+              <AppText className="font-bold text-white">Sign Up & Continue</AppText>
+            </Button>
+          )}
+          <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
+            <AppText className="font-bold">Continue as guest</AppText>
+          </Button>
+        </CardContent>
+      </Card>
+    </KeyboardAvoidingView>
   );
 }

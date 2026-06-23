@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { savePetName, saveUserName } from '@/lib/settings';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 type Props = {
   onNext?: () => void;
@@ -75,87 +75,85 @@ export function PetNamingStep({ onNext, onBack }: Props) {
   }
 
   return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
-        <View style={{ flex: 0.3 }} />
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
+      <View style={{ flex: 0.3 }} />
 
-        <Card className="mx-4 border-border bg-background/80 shadow-none">
-          <CardHeader>
-            <CardTitle className="text-center text-xl sm:text-left">
-              <AppText className="font-bold">Making Acquaintance</AppText>
-            </CardTitle>
-          </CardHeader>
+      <Card className="mx-4 border-border bg-background/80 shadow-none">
+        <CardHeader>
+          <CardTitle className="text-center text-xl sm:text-left">
+            <AppText className="font-bold">Making Acquaintance</AppText>
+          </CardTitle>
+        </CardHeader>
 
-          <CardContent className="gap-5">
-            <View className="gap-1.5">
-              <AppText className="font-bold">What is your companion's name?</AppText>
+        <CardContent className="gap-5">
+          <View className="gap-1.5">
+            <AppText className="font-bold">What is your companion's name?</AppText>
 
-              <Input
-                placeholder="Companion name"
-                autoCapitalize="words"
-                returnKeyType="next"
-                value={petName}
-                onChangeText={setPetName}
-                maxLength={maxPetNameLength}
-              />
+            <Input
+              placeholder="Companion name"
+              autoCapitalize="words"
+              returnKeyType="next"
+              value={petName}
+              onChangeText={setPetName}
+              maxLength={maxPetNameLength}
+            />
 
-              <View className="flex-row items-center justify-between">
-                <View className="flex-1 pr-2">
-                  {errors.pet && (
-                    <AppText numberOfLines={1} className="text-sm text-red-500 opacity-80">
-                      {errors.pet[0]}
-                    </AppText>
-                  )}
-                </View>
-
-                <AppText className="text-right">
-                  {petName.length}/{maxPetNameLength}
-                </AppText>
+            <View className="flex-row items-center justify-between">
+              <View className="flex-1 pr-2">
+                {errors.pet && (
+                  <AppText numberOfLines={1} className="text-sm text-red-500 opacity-80">
+                    {errors.pet[0]}
+                  </AppText>
+                )}
               </View>
+
+              <AppText className="text-right">
+                {petName.length}/{maxPetNameLength}
+              </AppText>
             </View>
+          </View>
 
-            <View className="gap-1.5">
-              <AppText className="font-bold">What is your name?</AppText>
+          <View className="gap-1.5">
+            <AppText className="font-bold">What is your name?</AppText>
 
-              <Input
-                placeholder="Your name"
-                autoCapitalize="words"
-                returnKeyType="done"
-                value={userName}
-                onChangeText={setUserName}
-                maxLength={maxUserNameLength}
-              />
+            <Input
+              placeholder="Your name"
+              autoCapitalize="words"
+              returnKeyType="done"
+              value={userName}
+              onChangeText={setUserName}
+              maxLength={maxUserNameLength}
+            />
 
-              <View className="flex-row items-center justify-between">
-                <View className="flex-1 pr-2">
-                  {errors.user && (
-                    <AppText numberOfLines={1} className="text-sm text-red-500 opacity-80">
-                      {errors.user[0]}
-                    </AppText>
-                  )}
-                </View>
-
-                <AppText className="text-right">
-                  {userName.length}/{maxUserNameLength}
-                </AppText>
+            <View className="flex-row items-center justify-between">
+              <View className="flex-1 pr-2">
+                {errors.user && (
+                  <AppText numberOfLines={1} className="text-sm text-red-500 opacity-80">
+                    {errors.user[0]}
+                  </AppText>
+                )}
               </View>
-            </View>
-            <View className="gap-2">
-              <Button disabled={petName.length === 0 || userName.length === 0} onPress={confirm}>
-                <AppText className="font-bold text-white">Continue to Signup</AppText>
-              </Button>
 
-              <Button
-                variant="outline"
-                onPress={() => {
-                  onBack?.();
-                }}>
-                <AppText className="font-bold">Choose another companion</AppText>
-              </Button>
+              <AppText className="text-right">
+                {userName.length}/{maxUserNameLength}
+              </AppText>
             </View>
-          </CardContent>
-        </Card>
-      </KeyboardAvoidingView>
-    </KeyboardProvider>
+          </View>
+          <View className="gap-2">
+            <Button disabled={petName.length === 0 || userName.length === 0} onPress={confirm}>
+              <AppText className="font-bold text-white">Continue to Signup</AppText>
+            </Button>
+
+            <Button
+              variant="outline"
+              onPress={() => {
+                onBack?.();
+              }}>
+              <AppText className="font-bold">Choose another companion</AppText>
+            </Button>
+          </View>
+        </CardContent>
+      </Card>
+    </KeyboardAvoidingView>
   );
 }

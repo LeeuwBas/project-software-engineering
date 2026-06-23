@@ -12,6 +12,7 @@ import {
   requestPermission,
   SdkAvailabilityStatus,
 } from 'react-native-health-connect';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
@@ -62,8 +63,10 @@ export default function RootLayout() {
     <AuthProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
-          <Stack screenOptions={{ headerShown: false }} />
-          <Toaster />
+          <KeyboardProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+            <Toaster />
+          </KeyboardProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </AuthProvider>

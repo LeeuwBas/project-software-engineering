@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppText } from './AppText';
 
@@ -63,67 +64,70 @@ export function SignInForm() {
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <Card className="m-6 mt-24 shadow-none">
-          <CardHeader>
-            <CardTitle className="text-center text-xl">
-              <AppText className="font-bold">Sign in</AppText>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="gap-6">
-            <View className="gap-6">
-              {errors.detail && (
-                <AppText className="text-sm text-red-500 opacity-80">{errors.detail}</AppText>
-              )}
-              <View className="gap-1.5">
-                <AppText className="font-bold">Email</AppText>
-                <Input
-                  id="email"
-                  placeholder="john@doe.com"
-                  keyboardType="email-address"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  onSubmitEditing={onEmailSubmitEditing}
-                  returnKeyType="next"
-                  submitBehavior="submit"
-                  onChangeText={setEmail}
-                />
-                {errors.email && (
-                  <Text className="text-sm text-red-500 opacity-80">{errors.email[0]}</Text>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+          <View style={{ flex: 0.4 }} />
+          <Card className="mx-4 shadow-none">
+            <CardHeader>
+              <CardTitle className="text-center text-xl">
+                <AppText className="font-bold">Sign in</AppText>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="gap-6">
+              <View className="gap-6">
+                {errors.detail && (
+                  <AppText className="text-sm text-red-500 opacity-80">{errors.detail}</AppText>
                 )}
-              </View>
-              <View className="gap-1.5">
-                <AppText className="font-bold">Password</AppText>
-                <Input
-                  ref={passwordInputRef}
-                  id="password"
-                  placeholder="••••••••"
-                  secureTextEntry
-                  returnKeyType="send"
-                  autoCapitalize="none"
-                  onSubmitEditing={onSubmit}
-                  onChangeText={setPassword}
-                  autoComplete="current-password"
-                  textContentType="password"
-                />
-                {errors.password && (
-                  <Text className="text-sm text-red-500">{errors.password[0]}</Text>
+                <View className="gap-1.5">
+                  <AppText className="font-bold">Email</AppText>
+                  <Input
+                    id="email"
+                    placeholder="john@doe.com"
+                    keyboardType="email-address"
+                    autoComplete="email"
+                    autoCapitalize="none"
+                    onSubmitEditing={onEmailSubmitEditing}
+                    returnKeyType="next"
+                    submitBehavior="submit"
+                    onChangeText={setEmail}
+                  />
+                  {errors.email && (
+                    <Text className="text-sm text-red-500 opacity-80">{errors.email[0]}</Text>
+                  )}
+                </View>
+                <View className="gap-1.5">
+                  <AppText className="font-bold">Password</AppText>
+                  <Input
+                    ref={passwordInputRef}
+                    id="password"
+                    placeholder="••••••••"
+                    secureTextEntry
+                    returnKeyType="send"
+                    autoCapitalize="none"
+                    onSubmitEditing={onSubmit}
+                    onChangeText={setPassword}
+                    autoComplete="current-password"
+                    textContentType="password"
+                  />
+                  {errors.password && (
+                    <Text className="text-sm text-red-500">{errors.password[0]}</Text>
+                  )}
+                </View>
+                {loading ? (
+                  <Button className="w-full py-0" variant="outline" onPress={null}>
+                    <AppText className="font-bold">Loading...</AppText>
+                  </Button>
+                ) : (
+                  <Button className="w-full py-0" variant="default" onPress={onSubmit}>
+                    <AppText className="font-bold text-white">Continue</AppText>
+                  </Button>
                 )}
+                <Button className="w-full py-0" onPress={onCreateAccount}>
+                  <AppText className="font-bold text-white">Create Account</AppText>
+                </Button>
               </View>
-              {loading ? (
-                <Button className="w-full py-0" variant="outline" onPress={null}>
-                  <AppText className="font-bold">Loading...</AppText>
-                </Button>
-              ) : (
-                <Button className="w-full py-0" variant="default" onPress={onSubmit}>
-                  <AppText className="font-bold text-white">Continue</AppText>
-                </Button>
-              )}
-              <Button className="w-full py-0" onPress={onCreateAccount}>
-                <AppText className="font-bold text-white">Create Account</AppText>
-              </Button>
-            </View>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
   );
