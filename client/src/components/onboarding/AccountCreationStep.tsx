@@ -16,7 +16,14 @@ type Props = {
   onNext?: () => void;
 };
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Signup widget of the onboarding process.
+ * Serves as UI for a user to save their email and password for their account.
+ * 
+ * @param {Props} onNext - 
+ *  Function to handle in-page routing to the next step of onboarding
+ * @return {React.JSX.Element} Signup widget
+ */
 export function AccountCreationStep({ onNext }: Props) {
   const router = useRouter();
   const auth = useAuth();

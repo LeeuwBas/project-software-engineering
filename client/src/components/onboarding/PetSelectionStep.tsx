@@ -10,18 +10,23 @@ type Props = {
   onNext?: () => void;
 };
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Pet selection widget for the onboarding process.
+ * Serves as an interface for a user to save their desired pet.
+ * 
+ * @param {Props} onNext - 
+ *  Function to handle in-page routing to the next step of onboarding
+ * @return {React.JSX.Element} Pet selection widget
+ */
 export function PetSelectionStep({ onNext }: Props) {
   const router = useRouter();
   const pet = getPetID();
   const [draftPet, setDraftPet] = useState(pet);
 
-  // TODO (AlexAugustijn): explain
   function confirm() {
     setPetID(draftPet);
     onNext?.();
   }
-  // TODO (AlexAugustijn): explain general layout
   return (
     <View className="flex-col gap-12">
       <PetSelector currentPet={draftPet} onPetChange={setDraftPet} />

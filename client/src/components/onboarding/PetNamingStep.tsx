@@ -12,7 +12,16 @@ type Props = {
   onBack?: () => void;
 };
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Pet naming widget for the onboarding process.
+ * Serves as an interface for a user to save pet and username.
+ * 
+ * @param {Props} onNext - 
+ *  Function to handle in-page routing to the next step of onboarding
+ * @param {Props} onBack - 
+ *  Function to handle in-page routing to the prevous step of onboarding
+ * @return {React.JSX.Element} Pet naming widget
+ */
 export function PetNamingStep({ onNext, onBack }: Props) {
   const [petName, setPetName] = useState<string>('');
   const [userName, setUserName] = useState<string>('');

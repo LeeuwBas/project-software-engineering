@@ -9,10 +9,17 @@ const STEP_ORDER: OnboardingStep[] = [
     'module-config',
 ];
 
-/** TODO (AlexAugustijn): docstring */
+/** 
+ * Owner of helper functions to handle the inpage routing of the Onboarding
+ * 
+ * @return Helper functions
+ */
 export function useOnboarding() {
     const [step, setStep] = useState<OnboardingStep>('pet-selection');
 
+    /**
+     * Routes to the next step in the onboarding step list
+     */
     function nextStep() {
         const currentIndex = STEP_ORDER.indexOf(step);
 
@@ -21,6 +28,9 @@ export function useOnboarding() {
         }
     }
 
+    /**
+     * Routes to the previous step in the onboarding step list
+     */
     function previousStep() {
         const currentIndex = STEP_ORDER.indexOf(step);
 
@@ -29,6 +39,12 @@ export function useOnboarding() {
         }
     }
 
+    /**
+     * Routes to a specific step in the onboarding step list
+     * 
+     * @param {OnboardingStep} step - 
+     *  string from the OnboardingStep types to route to
+     */
     function goToStep(step: OnboardingStep) {
         setStep(step);
     }

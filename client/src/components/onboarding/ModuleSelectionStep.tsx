@@ -20,7 +20,14 @@ const DEFAULT_MODULES: EnabledModules = {
   food: true,
 };
 
-/** TODO (hfgieter): docstring */
+/**
+ * Module selection widget for the onboarding process.
+ * Serves as an interface for a user to save their enabled modules.
+ * 
+ * @param {Props} onNext - 
+ *  Function to handle in-page routing to the next step of onboarding
+ * @return {React.JSX.Element} Module selection widget
+ */
 export default function ModuleSelectionStep({ onNext }: Props) {
   const router = useRouter();
 
