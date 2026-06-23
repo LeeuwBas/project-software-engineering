@@ -1,10 +1,12 @@
-import { View } from 'react-native';
-import { cn } from '@/lib/utils';
 import { NotchedBorder } from '@/components/ui/notched-border';
+import { cn } from '@/lib/utils';
+import { View, ViewStyle } from 'react-native';
 
 type NotchedBoxProps = React.ComponentProps<typeof View> & {
   fillClassName?: string;
   borderClassName?: string;
+  fillStyle?: ViewStyle;
+  borderStyle?: ViewStyle;
 };
 
 /*
@@ -25,12 +27,19 @@ function NotchedBox({
   className,
   fillClassName = 'bg-card',
   borderClassName = 'bg-border',
+  fillStyle,
+  borderStyle,
   children,
   ...props
 }: NotchedBoxProps) {
   return (
     <View className={cn('relative', className)} {...props}>
-      <NotchedBorder fillClassName={fillClassName} borderClassName={borderClassName} />
+      <NotchedBorder
+        fillClassName={fillClassName}
+        borderClassName={borderClassName}
+        fillStyle={fillStyle}
+        borderStyle={borderStyle}
+      />
       {children}
     </View>
   );
