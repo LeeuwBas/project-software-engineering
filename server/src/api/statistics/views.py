@@ -236,7 +236,6 @@ class StatBulkView(APIView):
         summary="Sets a new stat",
         description="""Updates or inserts a new stat 
                     for a given date range""",
-        # TODO Params?
         request={
             "application/json": {
                 "type": "object",
@@ -311,7 +310,7 @@ class BarchartView(APIView):
                 description="Amount of bins to put the data in, defaults to the amount of days.",
                 type=OpenApiTypes.INT,
                 location=OpenApiParameter.QUERY,
-                required=True,  # TODO moet dit True of False zijn als het default heeft?
+                required=False,
             ),
         ],
         responses={
@@ -388,7 +387,6 @@ class SummaryView(APIView):
             200: {
                 "type": "object",
                 "properties": {
-                    # TODO Moet dit general worden, dus niet meer specifiek voor water?
                     "total_water": {"type": "integer"},
                     "average_water": {"type": "number"},
                     "minimum_water": {"type": "integer"},
@@ -478,14 +476,6 @@ class GoalManageView(APIView):
                 description="Date for which to set the goal.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                # TODO Check this
-                name="goals",
-                description="Goal values to update.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
                 required=True,
             ),
         ],
@@ -603,7 +593,6 @@ class GoalBulkView(APIView):
         summary="Sets a new goal",
         description="""Updates or inserts a new goal to be followed. for a given date range
                 """,
-        # TODO Moeten hier nog parameters?
         request={
             "application/json": {
                 "type": "object",
