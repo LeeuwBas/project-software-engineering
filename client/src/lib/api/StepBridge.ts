@@ -1,15 +1,14 @@
 import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
-import { createNewState, useValue } from '@/lib/api/ValueState';
 import {
     getGoals,
-    getStatistic,
     getStatisticChart,
     getStatisticSummary,
     loadGoalZustand,
     loadZustand,
     setGoalZustand,
-    setZustand,
+    setZustand
 } from '@/lib/api/GenericStorage';
+import { createNewState, useValue } from '@/lib/api/ValueState';
 
 /** Use the step bridge when the values need to be manipulated. */
 export interface StepBridge extends GoaledStatisticBridge {}

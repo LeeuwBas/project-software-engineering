@@ -19,9 +19,9 @@ export default function Settings() {
   const router = useRouter();
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
-  if (!settingsOpen) {
-    return;
-  }
+  // if (!settingsOpen) {
+  //   return;
+  // }
 
   type SettingItem = {
     label: string;
@@ -56,6 +56,7 @@ export default function Settings() {
 
   return (
     <View
+      pointerEvents={settingsOpen ? 'auto' : 'none'}
       className={`-top-6 transition-opacity duration-200 ${settingsOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full mb-2 w-full items-center">
         <Card>

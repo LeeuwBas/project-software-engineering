@@ -1,4 +1,5 @@
 import Pet from '@/components/widgets/Pet';
+import { NUM_PETS } from '@/lib/types';
 import ChevronLeft from '@assets/icons/toolbar_icons/chevron_left.svg';
 import ChevronRight from '@assets/icons/toolbar_icons/chevron_right.svg';
 import { useRef, useState } from 'react';
@@ -7,7 +8,6 @@ import { FlatList, Pressable, View } from 'react-native';
 type PetSelectorProps = {
   currentPet: number;
   onPetChange: (id: number) => void;
-  maxPets: number;
 };
 
 const VIRTUAL_LOOPS = 50;
@@ -15,17 +15,16 @@ const VIRTUAL_LOOPS = 50;
 /**
  * Widget of the menu for pet selection, with a swipable flatlist.
  * @param currentPet index of the pet currently selected by user
- * @param maxPets the total number of pets
  */
-export function PetSelector({ currentPet, onPetChange, maxPets }: PetSelectorProps) {
+export function PetSelector({ currentPet, onPetChange }: PetSelectorProps) {
   const listRef = useRef<FlatList>(null);
   const [width, setWidth] = useState(0);
 
-  const initialIndex = Math.floor(VIRTUAL_LOOPS / 2) * maxPets + currentPet;
+  const initialIndex = Math.floor(VIRTUAL_LOOPS / 2) * NUM_PETS + currentPet;
   const [localIndex, setLocalIndex] = useState(initialIndex);
 
-  const totalItems = maxPets * VIRTUAL_LOOPS;
-  const data = Array.from({ length: totalItems }, (_, index) => index % maxPets);
+  const totalItems = NUM_PETS * VIRTUAL_LOOPS;
+  const data = Array.from({ length: totalItems }, (_, index) => index % NUM_PETS);
 
   function updatePetSelection(newIndex: number) {
     setLocalIndex(newIndex);

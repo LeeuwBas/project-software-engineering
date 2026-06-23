@@ -1,15 +1,13 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { PetSelector } from '@/components/widgets/PetSelector';
 import { useAuth } from '@/lib/auth/AuthManager';
 import { getPetID, setPetID } from '@/lib/settings';
+import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { PetSelector } from '@/components/widgets/PetSelector';
-import { ImageBackground } from 'expo-image';
-
-const NUM_PETS = 3;
 
 /** TODO (ZJWeng): docstring, and add some comments explaining sections */
 export default function PetSelection() {
@@ -32,7 +30,7 @@ export default function PetSelection() {
       <SafeAreaProvider>
         <SafeAreaView className="size-full justify-center">
           <View className="flex-col gap-12">
-            <PetSelector currentPet={draftPet} onPetChange={setDraftPet} maxPets={NUM_PETS} />
+            <PetSelector currentPet={draftPet} onPetChange={setDraftPet} />
 
             <View className="items-center gap-2">
               <Button className="size-auto" onPress={confirm}>
