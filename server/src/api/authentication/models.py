@@ -4,7 +4,6 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
-from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -36,8 +35,8 @@ class UserManager(BaseUserManager):
     create_superuser.alters_data = True
     create_user.alters_data = True
 
-class User(AbstractUser):
 
+class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     username = models.CharField(

@@ -67,7 +67,10 @@ class SettingsView(APIView):
                 },
             }
         },
-        responses={200: "ok", 400: "Invalid input"},
+        responses={
+            200: OpenApiResponse(description="ok"),
+            400: OpenApiResponse(description="Invalid input"),
+        },
     )
     def post(self, request):
         settings = request.data.get("settings", None)
