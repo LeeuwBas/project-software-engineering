@@ -20,6 +20,9 @@ import { useStress } from './api/StressBridge';
 import { useWater } from './api/WaterBridge';
 import useStepValue from './GetSteps';
 
+// Number of available pets
+export const NUM_PETS = 4;
+
 // state of popups and functions to open/close them.
 export interface PopupConfigs {
     popupOpen: boolean;
