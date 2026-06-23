@@ -66,7 +66,7 @@ export default function Settings() {
       pointerEvents={settingsOpen ? 'auto' : 'none'}
       className={`-top-6 transition-opacity duration-200 ${settingsOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full mb-2 w-full items-center">
-        <Card className='w-3/4'>
+        <Card className="w-3/4">
           <CardContent>
             {ITEMS.map((item) => {
               const Icon = item.icon;
