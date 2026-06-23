@@ -60,7 +60,7 @@ export default function Toolbar({}: {}) {
       (await waterBridge.set(draftWater),
         await foodBridge.set(draftFood),
         await sleepBridge.set(draftSleep),
-        // await Promise.allSettled([
+        // await Promise.allSettled([ // TODO (Dorus-vda): is this needed?
 
         // await goaledModules.map(async (module) => {
         //     await module.bridge.setGoal(draftGoals[module.id]);

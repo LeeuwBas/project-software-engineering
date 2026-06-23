@@ -410,6 +410,7 @@ async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Da
     return +result[name];
 }
 
+/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
 async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
