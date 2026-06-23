@@ -114,47 +114,39 @@ export default function Toolbar({}: {}) {
 
       {/* The toolbar itself TODO: (ZJWeng): add more comments explaing the structure, above and below this plz */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
-        <AttachStep index={5}>
-          <AttachStep index={7}>
-            <Pressable
-              disabled={menuOpen || settingsOpen || stressMenuOpen}
-              className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
-              onPress={() => changeStats()}>
-              <StatsIcon width={28} height={28} color={iconColor} />
-            </Pressable>
-          </AttachStep>
+        <AttachStep index={2}>
+          <Pressable
+            disabled={menuOpen || settingsOpen || stressMenuOpen}
+            className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
+            onPress={() => changeStats()}>
+            <StatsIcon width={28} height={28} color={iconColor} />
+          </Pressable>
         </AttachStep>
 
         <AttachStep index={1} style={{ position: 'absolute', top: -25 }}>
-          <AttachStep index={4}>
-            <NotchedBox
-              className={`shadow-block transition-opacity duration-200 ${
-                statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
-              }`}
-              fillClassName="bg-primary"
-              borderClassName="bg-primary-dark">
-              <Pressable
-                disabled={statsOpen || settingsOpen}
-                className={`size-16 items-center justify-center`}
-                onPress={() => {
-                  if (stressMenuOpen) {
-                    sendStress();
-                  }
-                  closeMenu();
-                }}>
-                {(menuOpen || stressMenuOpen) && (
-                  <CheckIcon width={50} height={50} color={'white'} />
-                )}
+          <NotchedBox
+            className={`shadow-block transition-opacity duration-200 ${
+              statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
+            }`}
+            fillClassName="bg-primary"
+            borderClassName="bg-primary-dark">
+            <Pressable
+              disabled={statsOpen || settingsOpen}
+              className={`size-16 items-center justify-center`}
+              onPress={async () => {
+                if (stressMenuOpen) {
+                  await sendStress();
+                }
+                closeMenu();
+              }}>
+              {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
 
-                {!menuOpen && !stressMenuOpen && (
-                  <PlusIcon width={50} height={50} color={'white'} />
-                )}
-              </Pressable>
-            </NotchedBox>
-          </AttachStep>
+              {!menuOpen && !stressMenuOpen && <PlusIcon width={50} height={50} color={'white'} />}
+            </Pressable>
+          </NotchedBox>
         </AttachStep>
 
-        <AttachStep index={8}>
+        <AttachStep index={3}>
           <Pressable
             disabled={statsOpen || menuOpen || stressMenuOpen}
             className={`p-2 transition-opacity  duration-200 ${statsOpen || menuOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
