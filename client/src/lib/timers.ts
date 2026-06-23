@@ -1,5 +1,5 @@
-import { initializeApiManager } from "./api/APIBridge";
-import { syncServer } from "./StorageSync";
+import { initializeApiManager } from './api/APIBridge';
+import { syncServer } from './StorageSync';
 
 // Value to check if the day has rolled over
 export let nextTimer = new Date();
@@ -14,11 +14,11 @@ export function scheduleCacheFlush() {
 
     const flushTimer = nextTimer.getTime() - now.getTime();
 
-    console.log(`start cache refresh time out, ${flushTimer/1000} seconds until midnight`)
+    console.log(`start cache refresh time out, ${flushTimer / 1000} seconds until midnight`);
 
     setTimeout(() => {
         flushCache();
-    }, flushTimer)
+    }, flushTimer);
 }
 
 /**

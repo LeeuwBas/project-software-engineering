@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useColorScheme, View } from 'react-native';
-import Shoe from '@assets/icons/module_icons/shoe.svg'
+import Shoe from '@assets/icons/module_icons/shoe.svg';
 import {
-  getSdkStatus,
-  initialize,
-  requestPermission,
-  SdkAvailabilityStatus,
-  readRecords,
-  aggregateRecord,
+    getSdkStatus,
+    initialize,
+    requestPermission,
+    SdkAvailabilityStatus,
+    readRecords,
+    aggregateRecord,
 } from 'react-native-health-connect';
 import { useAppContext } from './AppContext';
 
@@ -18,7 +18,7 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 export default function useStepValue() {
     const [steps, setSteps] = useState(0);
     const permissionGranted = useHealthPermission();
-    const { menuOpen } = useAppContext()
+    const { menuOpen } = useAppContext();
 
     const isRunningInExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 

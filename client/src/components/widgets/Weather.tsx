@@ -21,13 +21,13 @@ export default function Weather() {
     if (weather.id <= 699) return <Snowy width={30} height={30} />;
     if (weather.id <= 799) return <Misty width={30} height={30} />;
     if (weather.id === 800) {
-      if (Date.now() > (weather.sunset * 1000) || Date.now() < (weather.sunrise * 1000))
+      if (Date.now() > weather.sunset * 1000 || Date.now() < weather.sunrise * 1000)
         return <Moony width={30} height={30} />;
       return <Sunny width={30} height={30} />;
     }
     if (weather.id <= 802) {
-      if (Date.now() > (weather.sunset * 1000) || Date.now() < (weather.sunrise * 1000)) 
-        return <MoonyCloud width={30}height={30} />;
+      if (Date.now() > weather.sunset * 1000 || Date.now() < weather.sunrise * 1000)
+        return <MoonyCloud width={30} height={30} />;
       return <SunnyCloud width={30} height={30} />;
     }
     return <Cloudy width={30} height={30} />;

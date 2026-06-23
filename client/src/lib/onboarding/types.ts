@@ -1,4 +1,3 @@
-
 export type OnboardingStep =
     | 'pet-selection'
     | 'pet-naming'

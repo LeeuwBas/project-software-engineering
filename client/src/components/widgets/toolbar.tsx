@@ -1,6 +1,12 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { foodBridge, sleepBridge, stepsBridge, stressBridge, waterBridge } from '@/lib/api/APIBridge';
+import {
+  foodBridge,
+  sleepBridge,
+  stepsBridge,
+  stressBridge,
+  waterBridge,
+} from '@/lib/api/APIBridge';
 import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
@@ -49,11 +55,9 @@ export default function Toolbar({}: {}) {
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
-
-      await waterBridge.set(draftWater),
-      await foodBridge.set(draftFood),
-      await sleepBridge.set(draftSleep)
-
+      (await waterBridge.set(draftWater),
+        await foodBridge.set(draftFood),
+        await sleepBridge.set(draftSleep));
 
       // await Promise.allSettled([
 
@@ -62,9 +66,9 @@ export default function Toolbar({}: {}) {
       //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
       // });
 
-      await foodBridge.setGoal(draftGoals['food'])
-      await stepsBridge.setGoal(draftGoals['steps'])
-      await waterBridge.setGoal(draftGoals['water'])
+      await foodBridge.setGoal(draftGoals['food']);
+      await stepsBridge.setGoal(draftGoals['steps']);
+      await waterBridge.setGoal(draftGoals['water']);
       // ]);
 
       if (menuOpen) changeMenu();

@@ -20,10 +20,10 @@ const VIRTUAL_LOOPS = 50;
 export function PetSelector({ currentPet, onPetChange, maxPets }: PetSelectorProps) {
   const listRef = useRef<FlatList>(null);
   const [width, setWidth] = useState(0);
-  
+
   const initialIndex = Math.floor(VIRTUAL_LOOPS / 2) * maxPets + currentPet;
   const [localIndex, setLocalIndex] = useState(initialIndex);
-  
+
   const totalItems = maxPets * VIRTUAL_LOOPS;
   const data = Array.from({ length: totalItems }, (_, index) => index % maxPets);
 
@@ -45,10 +45,7 @@ export function PetSelector({ currentPet, onPetChange, maxPets }: PetSelectorPro
   }
 
   return (
-    <View 
-      className="w-full justify-center"
-      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
-    >
+    <View className="w-full justify-center" onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       {width > 0 && (
         <FlatList
           ref={listRef}

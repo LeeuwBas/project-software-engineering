@@ -107,9 +107,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
         <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
             <AppText className="font-bold text-white">
-              {requiresGoalSetup
-                ? 'Continue to Goal Setup'
-                : 'Finish Setup & Go to Tutorial'}
+              {requiresGoalSetup ? 'Continue to Goal Setup' : 'Finish Setup & Go to Tutorial'}
             </AppText>
           </Button>
         </View>

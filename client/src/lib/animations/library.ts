@@ -164,7 +164,6 @@ export const ANIMATIONS = {
         fps: 8,
         source: require('@assets/pets/onigiri/onigiri_eating.png'),
     },
-
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;

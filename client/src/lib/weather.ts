@@ -34,7 +34,7 @@ export async function getWeatherStatus(): Promise<WeatherData | null> {
         id: data.weather[0].id,
         temp: data.main.temp,
         sunset: data.sys.sunset,
-        sunrise: data.sys.sunrise
+        sunrise: data.sys.sunrise,
     };
     return weather;
 }

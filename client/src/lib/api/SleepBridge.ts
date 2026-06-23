@@ -1,9 +1,5 @@
 import { LoadableBridge, StatisticBridge } from '@/lib/api/APIBridge';
-import {
-    loadGoalZustand,
-    loadZustand,
-    setZustand
-} from '@/lib/api/GenericStorage';
+import { loadGoalZustand, loadZustand, setZustand } from '@/lib/api/GenericStorage';
 import { createNewState, useValue } from '@/lib/api/ValueState';
 
 // Use the sleep bridge when the values need to be manipulated.

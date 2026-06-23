@@ -24,11 +24,7 @@ export function PetSelectionStep({ onNext }: Props) {
 
   return (
     <View className="flex-col gap-12">
-      <PetSelector 
-        currentPet={draftPet} 
-        onPetChange={setDraftPet} 
-        maxPets={NUM_PETS} 
-      />
+      <PetSelector currentPet={draftPet} onPetChange={setDraftPet} maxPets={NUM_PETS} />
 
       <View className="w-full gap-2 px-12">
         <Button onPress={confirm}>

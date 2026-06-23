@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 
-const COLORS = ["#22a022", "#7eaf1c", "#e1d60b", "#df9732", "#b41b21"];
-const FADED_COLORS = ["#81c381", "#b9d580", "#fff7a1", "#ffd69c", "#ff9699"];
+const COLORS = ['#22a022', '#7eaf1c', '#e1d60b', '#df9732', '#b41b21'];
+const FADED_COLORS = ['#81c381', '#b9d580', '#fff7a1', '#ffd69c', '#ff9699'];
 
 interface StressButtonsProps {
   value: number | null;
