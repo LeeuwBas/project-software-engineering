@@ -18,6 +18,7 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
+/** TODO (buenk): docstring, maybe a few more comments? */
 export function SignUpForm() {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
@@ -148,17 +149,6 @@ export function SignUpForm() {
               <Button className="w-full" onPress={onGuestSubmit}>
                 <Text>Continue as guest</Text>
               </Button>
-
-              {/* - Begin placeholder for testing - */}
-              {/* uncomment this to test the routing between pages */}
-              {/*<Button
-                className="mt-2 w-1/2 self-center py-1"
-                onPress={() => {
-                  router.replace('/login');
-                }}>
-                <Text className="text-sm">goto login</Text>
-              </Button>
-              {/* - End placeholder for testing - */}
             </View>
           </CardContent>
         </Card>

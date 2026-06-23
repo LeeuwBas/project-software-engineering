@@ -17,6 +17,7 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-native-spotlight-tour';
 
+// TODO (buenk, ZJWeng): docstring
 export default function App() {
   const water = useWater() ?? 0;
   const {
@@ -31,9 +32,13 @@ export default function App() {
     changeStressMenu,
   } = useAppContext();
 
+  // TODO (buenk): comment
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
+    // Adds event listeners for changing of app state.
+    // Back up all data when the app goes to the background.
+    // Check if caches need to be flushed when reopening the app.
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'background') triggerBackup();
       if (nextAppState === 'active') {
@@ -46,17 +51,20 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
+  // TODO (LeeuwBas): explain
   useEffect(() => {
     initializeApiManager().then();
     scheduleCacheFlush();
   }, []);
-
+  // TODO (ZJWeng): comment
   const triggerBackup = async () => {
     await syncServer(true);
   };
 
+  // TODO (buenk): comment
   const { done, setTutorialDone } = useTutorial();
 
+  // TODO (ZJWeng): comment
   function closePopup() {
     setTutorialDone();
     if (menuOpen) changeMenu();
@@ -65,12 +73,15 @@ export default function App() {
     if (stressMenuOpen) changeStressMenu();
   }
 
+  // Hook for dark mode boolean
   const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 
+  // Used with onFormat to detect where and how large the pet renders to determine the safe area to render quotes
   const [petHomeLayout, setPetHomeLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [topBarLayout, setTopBarLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
+  // TODO (buenk): comment
   const mySteps = useMemo(
     () =>
       createTutorialSteps({
@@ -82,7 +93,8 @@ export default function App() {
       }),
     [menuOpen, statsOpen, changeMenu, changeStats, water]
   );
-
+  /* TODO (buenk): summary of the structure, like what the SafeAreaView, SpotlightTourProvider, and LinearGradient 
+  are for/ what they contain.*/
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SpotlightTourProvider
@@ -98,6 +110,7 @@ export default function App() {
         shift
         shape="rectangle">
         <TutorialStarter />
+        {/** Homepage component container: {@link Topbar}, {@link PetHome}, {@link Quotes}, {@link Toolbar} */}
         <LinearGradient
           colors={
             dark
@@ -110,13 +123,21 @@ export default function App() {
           {popupOpen && <Pressable className="absolute inset-0 z-10" onPress={closePopup} />}
 
           <View className="flex-1 p-4">
-            <View onLayout={(e) => setTopBarLayout(e.nativeEvent.layout)}>
+            <View
+              onLayout={
+                /* Used to determine where the bottom of the Topbar is */
+                (e) => setTopBarLayout(e.nativeEvent.layout)
+              }>
               <Topbar />
             </View>
             <View className="flex-1 items-center justify-center">
               <View
                 className="flex-grow-0"
-                onLayout={(e) => setPetHomeLayout(e.nativeEvent.layout)}>
+                onLayout={
+                  /* Used to determine where the top of the PetHome is, since flex-grow-0 shrinks to fit */
+                  (e) => setPetHomeLayout(e.nativeEvent.layout)
+                }>
+                {/* TODO (buenk): what are these? */}
                 <AttachStep index={0} fill>
                   <AttachStep index={9} fill>
                     <PetHome />
@@ -127,7 +148,7 @@ export default function App() {
             <Quotes petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
           </View>
 
-          {done && (
+          {done && ( // Blur that appears when the popup appears.
             <BlurView
               pointerEvents="none"
               className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
@@ -144,6 +165,8 @@ export default function App() {
   );
 }
 
+// TODO (buenk): comment, but also this component really should be moved to a new component file alongside mySteps
+// and the SpotlightTourProvider
 function TutorialStarter() {
   const { start } = useSpotlightTour();
   const { menuOpen, statsOpen, settingsOpen } = useAppContext();

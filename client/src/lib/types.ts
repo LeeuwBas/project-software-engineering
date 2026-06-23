@@ -35,6 +35,7 @@ export interface PopupConfigs {
     setSendStress: Dispatch<SetStateAction<() => void>>;
 }
 
+/** TODO (ZJWeng): docstring */
 export interface PetType {
     pet: number;
     setPet: Function;

@@ -7,12 +7,15 @@ import { createWaterBridge } from '@/lib/api/WaterBridge';
 import { StatisticsSummary } from '@/lib/storage';
 import { createStressBridge } from './StressBridge';
 
+/** TODO (LeeuwBas): docstring */
 export type LoadableBridge<T> = T & Loadable;
 
+/** TODO (LeeuwBas): docstring */
 export interface Loadable {
     load: () => Promise<any>;
 }
 
+/** TODO (LeeuwBas): docstring */
 export interface StatisticBridge {
     useCurrent: () => number | null;
     set: (value: number, date?: Date) => Promise<any>;
@@ -20,6 +23,7 @@ export interface StatisticBridge {
     getSummary?: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
 }
 
+/** TODO (david kramer): docstring */
 export interface GoaledStatisticBridge extends StatisticBridge {
     getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
     getSummary: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
@@ -28,6 +32,7 @@ export interface GoaledStatisticBridge extends StatisticBridge {
     useGoal: () => number | null;
 }
 
+// TODO (LeeuwBas): explain
 const loaders: Loadable[] = [];
 let initPromise: Promise<void> | null = null;
 
@@ -71,6 +76,8 @@ export async function initializeApiManager() {
 export async function getGoalCalender(startDate: Date, endDate: Date) {
     return await loadCalender(startDate, endDate);
 }
+
+/* Api bridges all in one place, ensuring they are loaded and can easily be imported. */
 
 export const waterBridge = register(createWaterBridge());
 export const stressBridge = register(createStressBridge());

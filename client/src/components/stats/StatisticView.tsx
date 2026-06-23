@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { StatisticChart } from './StatisticChart';
 
+/** TODO (ZJWeng): docstring, and please add some comments throughout explaining what each section is for */
 export function StatisticView({ stat }: { stat: ModuleId }) {
   const [period, setPeriod] = useState<HistoryPeriod>('week');
   const [summary, setSummary] = useState<StatisticsSummary | null>(null);

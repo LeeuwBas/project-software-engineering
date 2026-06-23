@@ -28,4 +28,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return <AppContext.Provider value={popup}>{children}</AppContext.Provider>;
 }
 
+/** TODO (buenk, ZJWeng, hfgieter) docstring, also can we put this above the function since it's the default export?
+ * This one is pretty important, also {@link PopupConfigs} in it. Make sure both docstrings for this and PopupConfigs
+ * are well made, they're pretty important.
+ */
 export const useAppContext = () => useContext(AppContext);
