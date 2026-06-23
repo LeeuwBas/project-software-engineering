@@ -1,3 +1,5 @@
+// TODO (buenk): either delete this file or move it to a folder outside of client/, maybe called examples/ or something
+
 import { AppText } from '@/components/AppText';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,8 +16,8 @@ import { Label } from '@/components/ui/label';
 import { Text } from '@/components/ui/text';
 import PersonIcon from '@assets/icons/toolbar_icons/profile.svg';
 import ChartIcon from '@assets/icons/toolbar_icons/stats.svg';
-import { ScrollView, View } from 'react-native';
 import { useColorScheme } from 'nativewind';
+import { ScrollView, View } from 'react-native';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (

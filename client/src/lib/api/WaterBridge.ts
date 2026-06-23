@@ -1,8 +1,6 @@
 import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
-import { createNewState, useValue } from '@/lib/api/ValueState';
 import {
     getGoals,
-    getStatistic,
     getStatisticChart,
     getStatisticSummary,
     loadGoalZustand,
@@ -10,6 +8,7 @@ import {
     setGoalZustand,
     setZustand,
 } from '@/lib/api/GenericStorage';
+import { createNewState, useValue } from '@/lib/api/ValueState';
 
 // Use the water bridge when the values need to be manipulated.
 export interface WaterBridge extends GoaledStatisticBridge {}
@@ -32,6 +31,7 @@ export function useWater() {
     return useValue(waterState);
 }
 
+/** TODO (LeeuwBas): docstring */
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
         load: () =>

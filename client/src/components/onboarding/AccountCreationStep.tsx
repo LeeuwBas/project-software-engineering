@@ -13,11 +13,8 @@ import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-co
 import { toast } from 'sonner-native';
 import { Ionicons } from '@expo/vector-icons';
 
-type Props = {
-  onNext?: () => void;
-};
-
-export function AccountCreationStep({ onNext }: Props) {
+/** TODO (AlexAugustijn): docstring */
+export function AccountCreationStep() {
   const router = useRouter();
   const auth = useAuth();
 
@@ -27,6 +24,7 @@ export function AccountCreationStep({ onNext }: Props) {
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
   const [loading, setLoading] = React.useState<Boolean>(false);
+  const [loadingGuest, setLoadingGuest] = React.useState<Boolean>(false);
 
   const { resetTutorial } = useTutorial();
 
@@ -63,7 +61,7 @@ export function AccountCreationStep({ onNext }: Props) {
         router.replace('/login');
         throw Error('Sign in failed');
       }
-      onNext?.();
+      router.replace('/(protected)');
     } catch (err) {
       console.error('Sign up request failed:', err);
       setErrors({ general: ['Could not reach the server.'] });
@@ -73,9 +71,11 @@ export function AccountCreationStep({ onNext }: Props) {
   }
 
   async function onGuestSubmit() {
+    setLoadingGuest(true);
     await auth.setGuest();
     resetTutorial();
-    onNext?.();
+    setLoadingGuest(false);
+    router.replace('/(protected)');
   }
 
   return (
@@ -156,12 +156,18 @@ export function AccountCreationStep({ onNext }: Props) {
               </Button>
             ) : (
               <Button className="w-full" variant="default" onPress={onSubmit}>
-                <AppText className="font-bold text-white">Sign Up & Continue</AppText>
+                <AppText className="font-bold text-white">Sign Up & Go to Tutorial</AppText>
               </Button>
             )}
-            <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
-              <AppText className="font-bold">Continue as guest</AppText>
-            </Button>
+            {loadingGuest ? (
+              <Button className="w-full" variant="outline" onPress={null}>
+                <AppText className="font-bold">Loading...</AppText>
+              </Button>
+            ) : (
+              <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
+                <AppText className="font-bold">Continue as Guest</AppText>
+              </Button>
+            )}
           </CardContent>
         </Card>
       </KeyboardAvoidingView>

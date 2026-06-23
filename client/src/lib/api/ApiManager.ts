@@ -82,6 +82,7 @@ export async function queryApi(
     authenticate: boolean = true,
     recurse_unauthenticated: boolean = true
 ): Promise<Response | null> {
+    // TODO (LeeuwBas): maybe a few more comments in this function
     const auth = internalAuth;
     const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 

@@ -12,6 +12,7 @@ import { SvgProps } from 'react-native-svg';
 const MAX_WATER = 25;
 const MAX_FOOD = 12;
 
+/** TODO (ZJWeng): docstring */
 export default function Module({
   id,
   icon: Icon,
@@ -27,7 +28,7 @@ export default function Module({
   const { value, setValue, goal, onPress, buttonString } = props ?? {};
 
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
-
+  // TODO (ZJWeng, Dorus-vda): explain component structure
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center justify-between gap-2">
@@ -49,14 +50,12 @@ export default function Module({
               </AppText>
             </View>
 
-            <AttachStep index={3} style={{ alignSelf: 'center' }}>
-              <Button
-                variant="outline"
-                disabled={value >= MAX_WATER}
-                onPress={() => setValue(value + 1)}>
-                <Plus size={20} />
-              </Button>
-            </AttachStep>
+            <Button
+              variant="outline"
+              disabled={value >= MAX_WATER}
+              onPress={() => setValue(value + 1)}>
+              <Plus size={20} />
+            </Button>
           </View>
         )}
 

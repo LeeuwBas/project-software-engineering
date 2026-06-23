@@ -7,6 +7,8 @@ const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 const settingsKey = 'settings';
 
+// TODO (david kramer): some brief explanations for what each type is for?
+
 export interface Settings {
     chosenPet: number;
     hasDoneTutorial: boolean;
@@ -191,7 +193,7 @@ export async function setNewGoal<K extends keyof StatLine>(
         oldGoal = createStatLine();
     }
     oldGoal[statName] = goal;
-    AsyncStorage.setItem(today, JSON.stringify(oldGoal));
+    await AsyncStorage.setItem(today, JSON.stringify(oldGoal));
     await markSyncRequired(statName, true, date);
 }
 
@@ -370,7 +372,7 @@ export async function updateStat<K extends keyof StatLine>(
 
     line[statName] = oldVal + change;
 
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     await markSyncRequired(statName, false, day);
     return true;
 }
@@ -420,6 +422,9 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             if (key === 'stress') {
                 today[key] = achieved;
             } else {
+                if (key == 'water') {
+                    console.log(`achieved: ${achieved}, goal: ${goal}`);
+                }
                 const complete = nodata ? 0 : achieved >= goal;
                 today[key] = +complete;
             }
@@ -458,7 +463,7 @@ export async function setStat<K extends keyof StatLine>(
     }
 
     line[statName] = value;
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     await markSyncRequired(statName, false, day);
     return true;
 }
@@ -518,7 +523,7 @@ export async function insertStat<K extends keyof StatLine>(
         }
         line[statName] = value;
     }
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     await markSyncRequired(statName, false, day);
     return true;
 }
@@ -543,7 +548,10 @@ export async function markSyncRequired<K extends keyof StatLine>(
 
     if (currentSync === null) {
         // Insert if this is the first time
-        AsyncStorage.setItem(storageKey, JSON.stringify({ [dateString]: new Array(statName) }));
+        await AsyncStorage.setItem(
+            storageKey,
+            JSON.stringify({ [dateString]: new Array(statName) })
+        );
         return;
     }
 
@@ -561,7 +569,7 @@ export async function markSyncRequired<K extends keyof StatLine>(
         storage[dateString] = new Array(statName);
     }
 
-    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+    await AsyncStorage.setItem(storageKey, JSON.stringify(storage));
 }
 
 /**
@@ -616,7 +624,7 @@ export async function getSyncData(forGoals: boolean = false) {
         delete storage[key];
     }
 
-    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+    await AsyncStorage.setItem(storageKey, JSON.stringify(storage));
     return syncData;
 }
 

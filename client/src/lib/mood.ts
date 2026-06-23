@@ -1,3 +1,4 @@
+/** TODO (ZJWeng): delete this file i think? */
 export default function getMood(happiness: number) {
     if (happiness < 20) return 'Sad';
     if (happiness < 40) return 'Gloomy';

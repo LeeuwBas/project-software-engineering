@@ -2,6 +2,9 @@ import React, { ReactNode, useState } from 'react';
 import { LayoutChangeEvent, StyleProp, View, ViewStyle } from 'react-native';
 import Svg, { Polygon, Rect } from 'react-native-svg';
 
+/**
+ * An automatically resizing pixel speach bubble svg see {@link Quotes} for it's use.
+ */
 interface PixelBubbleProps {
   pixelSize?: number;
   fill?: string; // interior background

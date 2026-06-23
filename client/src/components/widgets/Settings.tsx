@@ -3,24 +3,26 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAppContext } from '@/lib/AppContext';
 import { useAuth } from '@/lib/auth/AuthManager';
+import { useTutorial } from '@/lib/settings';
 import Moon from '@assets/icons/weather_icons/moon.svg';
 import Sunny from '@assets/icons/weather_icons/sunny.svg';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import { useTutorial } from '@/lib/settings';
 
+/** TODO (buenk): docstring, and some comments throughout, explaining each section */
 export default function Settings() {
   const { resetTutorial } = useTutorial();
-  const { settingsOpen } = useAppContext();
+  const { settingsOpen, changeSettings } = useAppContext();
   const auth = useAuth();
   const router = useRouter();
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
-  if (!settingsOpen) {
-    return;
-  }
+  // if (!settingsOpen) {
+  //   return;
+  // }
 
   type SettingItem = {
     label: string;
@@ -30,16 +32,20 @@ export default function Settings() {
 
   const dark = colorScheme === 'dark';
 
-  const ITEMS: SettingItem[] = [
+  const [showMore, setShowMore] = useState(false);
+
+  const BASE_ITEMS: SettingItem[] = [
     { label: 'Change Pet', effect: () => router.push('/pet-select') },
-    { label: 'Change Username', effect: null },
-    { label: 'More', effect: null },
     {
       label: auth.isGuest ? 'Sign in' : 'Sign out',
       effect: () => {
         auth.signOut();
       },
     },
+  ];
+
+  const MORE_ITEMS: SettingItem[] = [
+    { label: 'Change Names', effect: () => router.push('/change-names') },
     {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,
@@ -48,16 +54,20 @@ export default function Settings() {
     {
       label: 'Restart tutorial',
       effect: () => {
+        changeSettings();
         resetTutorial();
       },
     },
   ];
 
+  const ITEMS = showMore ? [...BASE_ITEMS, ...MORE_ITEMS] : BASE_ITEMS;
+
   return (
     <View
+      pointerEvents={settingsOpen ? 'auto' : 'none'}
       className={`-top-6 transition-opacity duration-200 ${settingsOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full mb-2 w-full items-center">
-        <Card>
+        <Card className="w-3/4">
           <CardContent>
             {ITEMS.map((item) => {
               const Icon = item.icon;
@@ -74,6 +84,12 @@ export default function Settings() {
                 </Button>
               );
             })}
+            <Button
+              className="my-2 flex h-12"
+              variant="secondary"
+              onPress={() => setShowMore((prev) => !prev)}>
+              <AppText className="font-bold text-white">{showMore ? 'Less' : 'More'}</AppText>
+            </Button>
           </CardContent>
         </Card>
       </View>
