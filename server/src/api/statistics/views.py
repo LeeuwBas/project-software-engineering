@@ -33,6 +33,9 @@ from .helpers import (
 )
 
 """
+Cheatsheet of the endpoints defined in this file. For descriptions on functionality
+or extended descriptions on the parameters, check the documentation at the actual functions.
+
 /api/stats/<date>/
     get:
         query param: statName, if None, return all stats of date
