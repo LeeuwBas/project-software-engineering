@@ -1,6 +1,5 @@
 import {
     createEnabledModules,
-    createSettings,
     EnabledModules,
     getSettings,
     setSettings,
@@ -189,7 +188,7 @@ export function setPetID(petID: number) {
  * @returns The ID of the stored pet
  */
 export function getPetID() {
-    const ID = useSettingsStore.getState().settings?.chosenPet ?? null;
+    const ID = useSettingsStore((state) => state.settings)?.chosenPet ?? null;
     if (ID === undefined) {
         console.warn('Undefined pet ID loaded!');
     }
