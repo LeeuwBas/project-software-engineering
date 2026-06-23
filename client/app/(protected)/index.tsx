@@ -170,13 +170,11 @@ export default function App() {
 function TutorialStarter() {
   const { start } = useSpotlightTour();
   const { menuOpen, statsOpen, settingsOpen } = useAppContext();
-  const { done } = useTutorial();
-  const startedRef = useRef(false);
+  const { done, setTutorialDone } = useTutorial();
 
   useEffect(() => {
-    if (startedRef.current) return; // only ever start the tour once
     if (!done && !menuOpen && !statsOpen && !settingsOpen) {
-      startedRef.current = true;
+      setTutorialDone();
       start();
     }
   }, [menuOpen, statsOpen, settingsOpen, start, done]);
