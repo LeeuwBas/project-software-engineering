@@ -1,7 +1,6 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { PetSelector } from '@/components/widgets/PetSelector';
-import { useAuth } from '@/lib/auth/AuthManager';
 import { getPetID, setPetID } from '@/lib/settings';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -12,14 +11,12 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 /** TODO (ZJWeng): docstring, and add some comments explaining sections */
 export default function PetSelection() {
   const router = useRouter();
-  const auth = useAuth();
-  const isLoggedIn = auth.isAuthenticated || auth.isGuest;
   const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
   function confirm() {
     setPetID(draftPet);
-    isLoggedIn ? router.replace('/(protected)') : router.replace('/signup');
+    router.replace('/(protected)');
   }
 
   return (
@@ -36,14 +33,6 @@ export default function PetSelection() {
               <Button className="size-auto" onPress={confirm}>
                 <AppText className="font-bold text-white">Choose pet</AppText>
               </Button>
-              {!isLoggedIn && (
-                <Button
-                  variant="outline"
-                  className="size-auto"
-                  onPress={() => router.replace('/login')}>
-                  <AppText className="font-bold">I already have an account</AppText>
-                </Button>
-              )}
             </View>
           </View>
         </SafeAreaView>

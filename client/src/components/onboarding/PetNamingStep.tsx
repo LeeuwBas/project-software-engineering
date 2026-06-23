@@ -1,24 +1,20 @@
-import { View } from 'react-native';
-import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChangeName } from '@/components/widgets/ChangeName';
 import { useNameManagement } from '@/lib/useNameManagement';
+import { View } from 'react-native';
+import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 
-type Props = {
-  onNext?: () => void;
-  onBack?: () => void;
-};
-
-export function PetNamingStep({ onNext, onBack }: Props) {
+/** TODO (AlexAugustijn): docstring */
+export function PetNamingStep({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { petName, setPetName, userName, setUserName, errors, validateAndSave } =
     useNameManagement();
 
   function handleConfirm() {
     const isValid = validateAndSave();
     if (isValid) {
-      onNext?.();
+      onNext();
     }
   }
 
@@ -46,11 +42,11 @@ export function PetNamingStep({ onNext, onBack }: Props) {
             <Button
               disabled={petName.length === 0 || userName.length === 0}
               onPress={handleConfirm}>
-              <AppText className="font-bold text-white">Continue to Signup</AppText>
+              <AppText className="font-bold text-white">Save Names</AppText>
             </Button>
 
             <Button variant="outline" onPress={onBack}>
-              <AppText className="font-bold">Choose another companion</AppText>
+              <AppText className="font-bold">Choose Another Companion</AppText>
             </Button>
           </View>
         </Card>
