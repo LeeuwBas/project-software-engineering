@@ -40,89 +40,20 @@ export function createTutorialSteps({
       placement: 'top',
       render: ({ stop }) => (
         <StepCard stop={stop} stop_position="top">
-          <AppText>This is where you log all your habits. Give it a try!</AppText>
+          <AppText>This is where you log all your habits.</AppText>
         </StepCard>
       ),
     },
-    // 2. Opened menu card.
-    {
-      placement: 'top',
-      before: () =>
-        new Promise<void>((resolve) => {
-          if (!menuOpen) changeMenu();
-          setTimeout(resolve, 80);
-        }),
-      render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
-          <AppText>Here you see all the habits you can log.</AppText>
-        </StepCard>
-      ),
-    },
-    // 3. Log water button.
-    {
-      placement: 'top',
-      onBackdropPress: ({ next }) => {
-        waterBridge.set(water + 1);
-        next();
-      },
-      render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
-          <AppText>Click here to log a glass of water.</AppText>
-        </StepCard>
-      ),
-    },
-    // 4. Tap center button again to close.
-    {
-      placement: 'top',
-      onBackdropPress: ({ next }) => {
-        if (menuOpen) changeMenu();
-        next();
-      },
-      render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
-          <AppText>Nice! Now tap here again to close the menu.</AppText>
-        </StepCard>
-      ),
-    },
-    // 5. Stats button
+    // 2. Stats button
     {
       placement: 'top',
       render: ({ stop }) => (
         <StepCard stop={stop} stop_position="top">
-          <AppText>This is where you can see your stats. Go and try it!</AppText>
+          <AppText>This is where you can see your stats.</AppText>
         </StepCard>
       ),
     },
-    // 6. Calendar view
-    {
-      placement: 'top',
-      before: () =>
-        new Promise<void>((resolve) => {
-          if (!statsOpen) changeStats();
-          setTimeout(resolve, 120);
-        }),
-      render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
-          <AppText>
-            This is the calendar view, each block shows the goals you reached that day.
-          </AppText>
-        </StepCard>
-      ),
-    },
-    // 7. Tap stats button again to close it
-    {
-      placement: 'top',
-      onBackdropPress: ({ next }) => {
-        if (statsOpen) changeStats();
-        next();
-      },
-      render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
-          <AppText>Tap here again to close your stats.</AppText>
-        </StepCard>
-      ),
-    },
-    // 8. Profile settings
+    // 3. Profile settings
     {
       placement: 'top',
       render: ({ stop }) => (
@@ -131,7 +62,7 @@ export function createTutorialSteps({
         </StepCard>
       ),
     },
-    // 9. Final message.
+    // 4. Final message.
     {
       onBackdropPress: ({ stop }) => stop(),
       render: ({ stop }) => (

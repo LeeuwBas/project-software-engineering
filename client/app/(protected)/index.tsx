@@ -47,7 +47,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    initializeApiManager().then();
+    initializeApiManager().then(() => console.log("loaded apis"));
     scheduleCacheFlush();
   }, []);
 
@@ -118,7 +118,7 @@ export default function App() {
                 className="flex-grow-0"
                 onLayout={(e) => setPetHomeLayout(e.nativeEvent.layout)}>
                 <AttachStep index={0} fill>
-                  <AttachStep index={9} fill>
+                  <AttachStep index={4} fill>
                     <PetHome />
                   </AttachStep>
                 </AttachStep>
