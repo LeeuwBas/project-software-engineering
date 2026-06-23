@@ -58,8 +58,8 @@ class StatManageView(APIView):
 
     @extend_schema(
         summary="Retrieves the statistics data of a given date.",
-        description="""Retrieves the statistics of a given date. 
-            If no name for the statistic was provided, 
+        description="""Retrieves the statistics of a given date.
+            If no name for the statistic was provided,
             the API will return all known stats.
             """,
         parameters=[
