@@ -67,9 +67,8 @@ export default function ModuleConfigStep({ onBack }: Props) {
 
         bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
       }
-
     });
-    router.replace('/(protected)')
+    router.replace('/(protected)');
   }
 
   return (
