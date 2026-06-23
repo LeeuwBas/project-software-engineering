@@ -1,6 +1,7 @@
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 
+/** TODO (Dorus-vda, ZJWeng): docstring */
 export interface WeatherData {
     status: string;
     id: number;
@@ -9,7 +10,8 @@ export interface WeatherData {
     sunrise: number;
 }
 
-// Request location perms and return weather data
+/** Request location perms and return weather data.
+ */
 export async function getWeatherStatus(): Promise<WeatherData | null> {
     const api_key = process.env.EXPO_PUBLIC_WEATHER_API_KEY;
 
@@ -34,12 +36,13 @@ export async function getWeatherStatus(): Promise<WeatherData | null> {
         id: data.weather[0].id,
         temp: data.main.temp,
         sunset: data.sys.sunset,
-        sunrise: data.sys.sunrise
+        sunrise: data.sys.sunrise,
     };
     return weather;
 }
 
-// Return weather data (to be used in a component)
+/** Non -async return weather data (to be used in a component).
+ */
 export function getWeather(): WeatherData | null {
     const [weather, setWeather] = useState<WeatherData | null>(null);
 

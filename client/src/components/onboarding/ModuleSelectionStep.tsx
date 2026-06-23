@@ -20,6 +20,7 @@ const DEFAULT_MODULES: EnabledModules = {
   food: true,
 };
 
+/** TODO (hfgieter): docstring */
 export default function ModuleSelectionStep({ onNext }: Props) {
   const router = useRouter();
 
