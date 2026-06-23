@@ -42,4 +42,4 @@ jobs:
         run: pnpm prettier -v
 
       - name: Run Prettier check
-        run: pnpm prettier -c "**/*.{ts,tsx}" --config prettier.config.js --log-level debug
+        run: pnpm prettier -c "**/*.{ts,tsx}" --log-level debug
