@@ -256,7 +256,8 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
  * Gets the stat summary for the past 'days' time.
  *
  * @param statName - Name of the statistic to summarize.
- * @param days - Amount of days to summarize.
+ * @param start - Date object of the first day considered.
+ * @param end - Date object of the last day considered.
  *
  * @returns StatisticsSummary object containing all data
  */
@@ -275,7 +276,7 @@ export async function getStatSummary<K extends keyof StatLine>(
 
     returnValue.total = values.reduce((Acc, [d, x], _) => Acc + +x, 0);
     returnValue.count = values.length;
-    returnValue.average = returnValue.total / returnValue.count;
+    returnValue.average = returnValue.total / dateDifference(start, end);
     returnValue.maximum = values.reduce((Acc, [d, x], _) => (Acc > +x ? Acc : +x), 0);
     returnValue.minimum = values.reduce((Acc, [d, x], _) => (Acc < +x ? Acc : +x), 0);
 
@@ -478,7 +479,6 @@ export async function setStatBulk(bulk: any, goals: boolean = false) {
     await Promise.allSettled(
         Object.keys(bulk).map((value) => {
             const line = makeStatline(bulk[value]);
-            console.log(`Line: ${line}`);
             if (line === undefined) {
                 console.log(`Could not bulk insert ${value}!`);
                 return Promise.reject('Incomplete stat line');
