@@ -15,8 +15,10 @@ import {
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
+
 import '../global.css';
 
+/**TODO (buenk): docstring, this file is already pretty well comented so explain the main purpose */
 export default function RootLayout() {
   const [loaded] = useFonts({
     IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),
@@ -25,10 +27,6 @@ export default function RootLayout() {
   // const system = useColorScheme(); // This is the REACT NATIVE hook, but there's also a nativewind hook. nice :(
   useEffect(() => {
     colorScheme.set('light'); // Temporarily forcing light mode
-  }, []);
-
-  useEffect(() => {
-    loadSettings();
   }, []);
 
   useEffect(() => {

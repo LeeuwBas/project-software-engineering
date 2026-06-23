@@ -1,15 +1,13 @@
+import CheckIcon from '@/assets/icons/toolbar_icons/check.svg';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { OnboardingStep } from '@/lib/onboarding/types';
 import { getActiveModules, setActiveModules } from '@/lib/settings';
 import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-
-type Props = {
-  onNext?: () => void;
-};
 
 const DEFAULT_MODULES: EnabledModules = {
   water: true,
@@ -19,7 +17,14 @@ const DEFAULT_MODULES: EnabledModules = {
   food: true,
 };
 
-export default function ModuleSelectionStep({ onNext }: Props) {
+/** TODO (hfgieter): docstring */
+export default function ModuleSelectionStep({
+  onNext,
+  goToStep,
+}: {
+  onNext: () => void;
+  goToStep: (step: OnboardingStep) => void;
+}) {
   const router = useRouter();
 
   const [activeModules, setModuleState] = useState<EnabledModules>(DEFAULT_MODULES);
@@ -47,9 +52,9 @@ export default function ModuleSelectionStep({ onNext }: Props) {
     setActiveModules(activeModules);
 
     if (requiresGoalSetup) {
-      onNext?.();
+      onNext();
     } else {
-      router.replace('/(protected)');
+      goToStep('account');
     }
   }
 
@@ -69,14 +74,28 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           {stressModule && (
             <Pressable
               onPress={() => toggleModule(stressModule.id)}
-              className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
+              className="flex-row items-center justify-between rounded-xl border-4 p-4"
               style={{
                 backgroundColor: stressModule.color,
                 borderColor: stressModule.borderColor,
                 opacity: isSelected(stressModule.id) ? 1 : 0.4,
               }}>
-              <stressModule.icon width={32} height={32} />
-              <AppText className="text-xl font-bold">{stressModule.name}</AppText>
+              <View className="w-8" />
+
+              <View className="flex-1 flex-row items-center justify-center gap-3">
+                <stressModule.icon width={32} height={32} />
+                <AppText className="text-xl font-bold">{stressModule.name}</AppText>
+              </View>
+
+              <View className="w-8 items-center justify-center">
+                {isSelected(stressModule.id) ? (
+                  <CheckIcon
+                    width={32}
+                    height={32}
+                    color={stressModule.selectColor ?? stressModule.borderColor}
+                  />
+                ) : null}
+              </View>
             </Pressable>
           )}
         </View>
@@ -91,14 +110,28 @@ export default function ModuleSelectionStep({ onNext }: Props) {
               <Pressable
                 key={module.id}
                 onPress={() => toggleModule(module.id)}
-                className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
+                className="flex-row items-center justify-between gap-3 rounded-xl border-4 p-4"
                 style={{
                   backgroundColor: module.color,
                   borderColor: module.borderColor,
                   opacity: isSelected(module.id) ? 1 : 0.4,
                 }}>
-                <module.icon width={32} height={32} />
-                <AppText className="text-xl font-bold">{module.name}</AppText>
+                <View className="w-8" />
+
+                <View className="flex-1 flex-row items-center justify-center gap-3">
+                  <module.icon width={32} height={32} />
+                  <AppText className="text-xl font-bold">{module.name}</AppText>
+                </View>
+
+                <View className="w-8 items-center justify-center">
+                  {isSelected(module.id) ? (
+                    <CheckIcon
+                      width={32}
+                      height={32}
+                      color={module.selectColor ?? module.borderColor}
+                    />
+                  ) : null}
+                </View>
               </Pressable>
             ))}
           </View>
@@ -106,11 +139,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
         <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
-            <AppText className="font-bold text-white">
-              {requiresGoalSetup
-                ? 'Continue to Goal Setup'
-                : 'Finish Setup & Go to Tutorial'}
-            </AppText>
+            <AppText className="font-bold text-white">Choose Habit Modules</AppText>
           </Button>
         </View>
       </View>

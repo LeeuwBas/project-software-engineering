@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 
+/** TODO (ZJWeng): docstring */
 export default function Menu({
   water,
   setWater,
@@ -88,44 +89,42 @@ export default function Menu({
   // if (!menuOpen) {
   //   return null;
   // }
-
+  // TODO (ZJWeng): explain the general structure of the component
   return (
     <View
       pointerEvents={menuOpen ? 'auto' : 'none'}
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
-        <AttachStep index={2} style={{ alignSelf: 'center' }}>
-          <Card className="mb-6 h-auto w-3/4 justify-center shadow-block">
-            <CardHeader className="w-full flex-row items-center justify-between">
-              <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
-              {goalsViewActive ? (
-                <Button onPress={submitGoals} className="py-0" variant="secondary">
-                  <AppText className="font-bold text-white">Back</AppText>
-                </Button>
-              ) : (
-                <Button onPress={() => setGoalsViewActive(!goalsViewActive)} className="py-0">
-                  <AppText className="font-bold text-white">Change goals</AppText>
-                </Button>
-              )}
-            </CardHeader>
-            <CardContent className="w-full">
-              {goalsViewActive ? (
-                <GoalsView goals={goals} setGoals={setGoals} />
-              ) : (
-                <View className="flex-col gap-5">
-                  {activeModules.map((module) => (
-                    <Module
-                      key={module.id}
-                      id={module.id}
-                      icon={module.icon}
-                      props={menuConfig[module.id]}
-                    />
-                  ))}
-                </View>
-              )}
-            </CardContent>
-          </Card>
-        </AttachStep>
+        <Card className="mb-6 h-auto w-3/4 justify-center shadow-block">
+          <CardHeader className="w-full flex-row items-center justify-between">
+            <CardTitle className="mx-2 my-4 text-2xl font-bold">{name}</CardTitle>
+            {goalsViewActive ? (
+              <Button onPress={submitGoals} className="py-0" variant="secondary">
+                <AppText className="font-bold text-white">Back</AppText>
+              </Button>
+            ) : (
+              <Button onPress={() => setGoalsViewActive(!goalsViewActive)} className="py-0">
+                <AppText className="font-bold text-white">Change goals</AppText>
+              </Button>
+            )}
+          </CardHeader>
+          <CardContent className="w-full">
+            {goalsViewActive ? (
+              <GoalsView goals={goals} setGoals={setGoals} />
+            ) : (
+              <View className="flex-col gap-5">
+                {activeModules.map((module) => (
+                  <Module
+                    key={module.id}
+                    id={module.id}
+                    icon={module.icon}
+                    props={menuConfig[module.id]}
+                  />
+                ))}
+              </View>
+            )}
+          </CardContent>
+        </Card>
       </View>
     </View>
   );

@@ -1,6 +1,7 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { foodBridge, sleepBridge, stepsBridge, stressBridge, waterBridge } from '@/lib/api/APIBridge';
+import { foodBridge, sleepBridge, stepsBridge, waterBridge } from '@/lib/api/APIBridge';
+import { cancelWaterNotification, setWaterNotifaction } from '@/lib/notificationSetter';
 import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
@@ -10,12 +11,12 @@ import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { NotchedBox } from '../ui/notched-box';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
-import { NotchedBorder } from '../ui/notched-border';
-import { NotchedBox } from '../ui/notched-box';
 
+/** TODO (ZJWeng, Dorus-vda, buenk): docstring */
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
@@ -51,22 +52,26 @@ export default function Toolbar({}: {}) {
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
+      (await waterBridge.set(draftWater),
+        await foodBridge.set(draftFood),
+        await sleepBridge.set(draftSleep),
+        // await Promise.allSettled([ // TODO (Dorus-vda): is this needed?
 
-      await waterBridge.set(draftWater),
-      await foodBridge.set(draftFood),
-      await sleepBridge.set(draftSleep)
+        // await goaledModules.map(async (module) => {
+        //     await module.bridge.setGoal(draftGoals[module.id]);
+        //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
+        // });
 
+        await foodBridge.setGoal(draftGoals['food']));
+      await stepsBridge.setGoal(draftGoals['steps']);
+      await waterBridge.setGoal(draftGoals['water']);
 
-      // await Promise.allSettled([
+      if (draftWater >= draftGoals['water']) {
+        cancelWaterNotification();
+      } else {
+        setWaterNotifaction();
+      }
 
-      // await goaledModules.map(async (module) => {
-      //     await module.bridge.setGoal(draftGoals[module.id]);
-      //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
-      // });
-
-      await foodBridge.setGoal(draftGoals['food'])
-      await stepsBridge.setGoal(draftGoals['steps'])
-      await waterBridge.setGoal(draftGoals['water'])
       // ]);
 
       if (menuOpen) changeMenu();
@@ -107,49 +112,41 @@ export default function Toolbar({}: {}) {
       />
       <Settings />
 
-      {/* The toolbar itself */}
+      {/* The toolbar itself TODO: (ZJWeng): add more comments explaing the structure, above and below this plz */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
-        <AttachStep index={5}>
-          <AttachStep index={7}>
-            <Pressable
-              disabled={menuOpen || settingsOpen || stressMenuOpen}
-              className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
-              onPress={() => changeStats()}>
-              <StatsIcon width={28} height={28} color={iconColor} />
-            </Pressable>
-          </AttachStep>
+        <AttachStep index={2}>
+          <Pressable
+            disabled={menuOpen || settingsOpen || stressMenuOpen}
+            className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
+            onPress={() => changeStats()}>
+            <StatsIcon width={28} height={28} color={iconColor} />
+          </Pressable>
         </AttachStep>
 
         <AttachStep index={1} style={{ position: 'absolute', top: -25 }}>
-          <AttachStep index={4}>
-            <NotchedBox
-              className={`shadow-block transition-opacity duration-200 ${
-                statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
-              }`}
-              fillClassName="bg-primary"
-              borderClassName="bg-primary-dark">
-              <Pressable
-                disabled={statsOpen || settingsOpen}
-                className={`size-16 items-center justify-center`}
-                onPress={() => {
-                  if (stressMenuOpen) {
-                    sendStress();
-                  }
-                  closeMenu();
-                }}>
-                {(menuOpen || stressMenuOpen) && (
-                  <CheckIcon width={50} height={50} color={'white'} />
-                )}
+          <NotchedBox
+            className={`shadow-block transition-opacity duration-200 ${
+              statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
+            }`}
+            fillClassName="bg-primary"
+            borderClassName="bg-primary-dark">
+            <Pressable
+              disabled={statsOpen || settingsOpen}
+              className={`size-16 items-center justify-center`}
+              onPress={async () => {
+                if (stressMenuOpen) {
+                  await sendStress();
+                }
+                closeMenu();
+              }}>
+              {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
 
-                {!menuOpen && !stressMenuOpen && (
-                  <PlusIcon width={50} height={50} color={'white'} />
-                )}
-              </Pressable>
-            </NotchedBox>
-          </AttachStep>
+              {!menuOpen && !stressMenuOpen && <PlusIcon width={50} height={50} color={'white'} />}
+            </Pressable>
+          </NotchedBox>
         </AttachStep>
 
-        <AttachStep index={8}>
+        <AttachStep index={3}>
           <Pressable
             disabled={statsOpen || menuOpen || stressMenuOpen}
             className={`p-2 transition-opacity  duration-200 ${statsOpen || menuOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}

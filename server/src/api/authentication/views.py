@@ -26,6 +26,7 @@ class UserViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
+    """TODO (LeeuwBas): docstring (see statistics/views.py for example)"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -43,6 +44,7 @@ class UserViewSet(
 
 
 class SettingsView(APIView):
+    """TODO (david kramer): docstring (see statistics/views.py for example)"""
     permission_classes = [IsAuthenticated, IsSelf]
 
     @extend_schema(
