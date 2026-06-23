@@ -134,15 +134,14 @@ export function AccountCreationStep({ onNext }: Props) {
                 />
                 <Pressable
                   onPress={() => setPasswordVisible(!isPasswordVisible)}
-                  className ="absolute right-3 top-0 bottom-0 justify-center"
+                  className="absolute bottom-0 right-3 top-0 justify-center"
                   hitSlop={10}
-                  accessibilityLabel={isPasswordVisible ? "Hide password" : "Show password"}
-                >
-                <Ionicons
-                  name={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
-                  size={20}
-                  className="text-muted-foreground"
-                />
+                  accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}>
+                  <Ionicons
+                    name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    className="text-muted-foreground"
+                  />
                 </Pressable>
               </View>
 
