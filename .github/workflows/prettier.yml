@@ -35,14 +35,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Debug working directory
-        run: ls -la
-
-      - name: Debug prettier version
-        run: pnpm prettier -v
-
       - name: Run Prettier check
         run: pnpm prettier -c "**/*.{ts,tsx}" --end-of-line lf
-
-      - name: Show diff
-        run: git diff
