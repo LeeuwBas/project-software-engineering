@@ -422,6 +422,9 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             if (key === 'stress') {
                 today[key] = achieved;
             } else {
+                if (key == 'water') {
+                    console.log(`achieved: ${achieved}, goal: ${goal}`);
+                }
                 const complete = nodata ? 0 : achieved >= goal;
                 today[key] = +complete;
             }

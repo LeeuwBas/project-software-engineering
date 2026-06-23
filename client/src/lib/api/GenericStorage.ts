@@ -325,6 +325,7 @@ export async function setGoalZustand<K extends keyof StatLine>(
     name: K,
     value: number
 ) {
+    console.log(`setting ${name} goal to ${value}`);
     if (state.getState().value === null) {
         throw Error(`Stat ${name} not loaded yet`);
     }

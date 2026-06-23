@@ -50,14 +50,12 @@ export default function Module({
               </AppText>
             </View>
 
-            <AttachStep index={3} style={{ alignSelf: 'center' }}>
-              <Button
-                variant="outline"
-                disabled={value >= MAX_WATER}
-                onPress={() => setValue(value + 1)}>
-                <Plus size={20} />
-              </Button>
-            </AttachStep>
+            <Button
+              variant="outline"
+              disabled={value >= MAX_WATER}
+              onPress={() => setValue(value + 1)}>
+              <Plus size={20} />
+            </Button>
           </View>
         )}
 
