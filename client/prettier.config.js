@@ -11,7 +11,7 @@ module.exports = {
       files: '*.ts',
       options: {
         tabWidth: 4,
-        endOfLine: 'crlf',
+        endOfLine: 'auto',
       },
     },
     {
@@ -21,7 +21,7 @@ module.exports = {
     {
       files: '*.tsx',
       options: {
-        endOfLine: 'crlf',
+        endOfLine: 'auto',
       },
     },
   ],
