@@ -171,7 +171,7 @@ export const ANIMATIONS = {
         height: 64,
         frameCount: 4,
         fps: 8,
-        source: require('@assets/pets/bober/BOBER_blink.png')
+        source: require('@assets/pets/bober/BOBER_blink.png'),
     },
 
     bober_breath_happy: {
@@ -179,7 +179,7 @@ export const ANIMATIONS = {
         height: 64,
         frameCount: 40,
         fps: 8,
-        source: require('@assets/pets/bober/BOBER_breath_happy.png')
+        source: require('@assets/pets/bober/BOBER_breath_happy.png'),
     },
 
     bober_breath_neutral: {
@@ -187,7 +187,7 @@ export const ANIMATIONS = {
         height: 64,
         frameCount: 40,
         fps: 8,
-        source: require('@assets/pets/bober/BOBER_breath_neutral.png')
+        source: require('@assets/pets/bober/BOBER_breath_neutral.png'),
     },
 
     bober_sleeping: {
@@ -195,7 +195,7 @@ export const ANIMATIONS = {
         height: 64,
         frameCount: 40,
         fps: 8,
-        source: require('@assets/pets/bober/BOBER_sleeping.png')
+        source: require('@assets/pets/bober/BOBER_sleeping.png'),
     },
 
     bober_drinking: {
@@ -203,10 +203,16 @@ export const ANIMATIONS = {
         height: 64,
         frameCount: 61,
         fps: 8,
-        source: require('@assets/pets/bober/BOBER_drinking.png')
+        source: require('@assets/pets/bober/BOBER_drinking.png'),
     },
 
-
+    bober_eating: {
+        width: 64,
+        height: 64,
+        frameCount: 54,
+        fps: 8,
+        source: require('@assets/pets/bober/BOBER_eating.png'),
+    },
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;
