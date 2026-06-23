@@ -68,7 +68,7 @@ export interface NonGoaledModule {
     unit: string;
     color: string;
     borderColor: string;
-    selectColor: string;
+    selectColor?: string;
     bridge: StatisticBridge;
     menuConfig?: MenuConfig;
 }
@@ -81,7 +81,7 @@ export interface GoaledModule {
     unit: string;
     color: string;
     borderColor: string;
-    selectColor: string;
+    selectColor?: string;
     bridge: GoaledStatisticBridge;
     goalConfig: GoalConfig;
     menuConfig?: MenuConfig;
@@ -98,7 +98,6 @@ export const MODULES: ModuleDefinition[] = [
         unit: 'glasses',
         color: '#aed8eb',
         borderColor: '#5abce8',
-        selectColor: '#5abce8',
         bridge: waterBridge,
         goalConfig: {
             defaultGoal: 8,
@@ -132,7 +131,6 @@ export const MODULES: ModuleDefinition[] = [
         unit: 'cortisol',
         color: '#fcada3',
         borderColor: '#f67788',
-        selectColor: '#f67788',
         bridge: stressBridge,
     },
     {
@@ -143,7 +141,6 @@ export const MODULES: ModuleDefinition[] = [
         unit: 'hours',
         color: '#bb9cd6',
         borderColor: '#a772d6',
-        selectColor: '#a772d6',
         bridge: sleepBridge,
     },
     {

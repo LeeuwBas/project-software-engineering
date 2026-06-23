@@ -85,7 +85,11 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
               <View className="w-8 items-center justify-center">
                 {isSelected(stressModule.id) ? (
-                  <CheckIcon width={32} height={32} color={stressModule.selectColor} />
+                  <CheckIcon
+                    width={32}
+                    height={32}
+                    color={stressModule.selectColor ?? stressModule.borderColor}
+                  />
                 ) : null}
               </View>
             </Pressable>
@@ -117,7 +121,11 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
                 <View className="w-8 items-center justify-center">
                   {isSelected(module.id) ? (
-                    <CheckIcon width={32} height={32} color={module.selectColor} />
+                    <CheckIcon
+                      width={32}
+                      height={32}
+                      color={module.selectColor ?? module.borderColor}
+                    />
                   ) : null}
                 </View>
               </Pressable>
