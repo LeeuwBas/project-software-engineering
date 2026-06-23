@@ -14,6 +14,7 @@ type Props = {
   onBack?: () => void;
 };
 
+/** TODO (AlexAugustijn): docstring */
 export default function ModuleConfigStep({ onBack }: Props) {
   const router = useRouter();
 

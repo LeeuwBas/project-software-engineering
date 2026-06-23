@@ -1,6 +1,7 @@
 import { GlassWater } from 'lucide-react-native';
 import { View } from 'react-native';
 
+/** TODO (buenk, ZJWeng): docstring */
 export default function Statbar({ stat, value }: { stat: string; value: number }) {
   let bgColor: string | null = null;
   switch (stat) {

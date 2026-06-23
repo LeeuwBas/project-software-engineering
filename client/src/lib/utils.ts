@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { StatLine } from '@/lib/storage';
 
+/** TODO (ZJWeng): docstring */
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }

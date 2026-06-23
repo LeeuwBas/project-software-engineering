@@ -3,13 +3,14 @@ import random
 
 
 def load_quotes():
+    """Load quotes from server/resources/quotes.json"""
     with open("resources/quotes.json", "r") as f:
         return json.load(f)
 
 
 def get_json_quote(action, level, context="Standard"):
+    """Parse request and return an applicable quote"""
     quotes = load_quotes()
-    #return random.choice(quotes["Neutral"]["WaterLow"]) # temp for testing
 
     if action not in quotes or level not in quotes[action]:
         return "What do you want from me?"

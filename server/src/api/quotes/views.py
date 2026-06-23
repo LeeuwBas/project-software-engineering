@@ -9,13 +9,22 @@ from ..statistics.serializers import (QuoteRequestSerializer,
                                       QuoteResponseSerializer)
 from .helpers import get_json_quote
 
+"""
+/api/get-quote/
+    get:
+        query param: 
+            action: string - Category of quote.
+            level: string - 'strength' of requested quote.
+            context: string - Extra contextual perameter for relevant context like if it's good weather or if the user
+                exercised a lot today.
+"""
 
 class RequestQuote(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
         summary="Get a random quote.",
-        description="Returns a random quote supported by a specific mood or action.",
+        description="Returns a random quote for a action, level, and context.",
         request=QuoteRequestSerializer,
         responses={
             200: OpenApiResponse(

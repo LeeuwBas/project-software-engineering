@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
 
+/** TODO (ZJWeng): docstring */
 export default function Menu({
   water,
   setWater,
@@ -88,7 +89,7 @@ export default function Menu({
   // if (!menuOpen) {
   //   return null;
   // }
-
+  // TODO (ZJWeng): explain the general structure of the component
   return (
     <View
       pointerEvents={menuOpen ? 'auto' : 'none'}

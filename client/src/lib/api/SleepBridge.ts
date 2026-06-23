@@ -1,12 +1,8 @@
 import { LoadableBridge, StatisticBridge } from '@/lib/api/APIBridge';
-import {
-    loadGoalZustand,
-    loadZustand,
-    setZustand
-} from '@/lib/api/GenericStorage';
+import { loadGoalZustand, loadZustand, setZustand } from '@/lib/api/GenericStorage';
 import { createNewState, useValue } from '@/lib/api/ValueState';
 
-// Use the sleep bridge when the values need to be manipulated.
+/** Use the sleep bridge when the values need to be manipulated. */
 export interface SleepBridge extends StatisticBridge {}
 
 const sleepState = createNewState();
@@ -27,11 +23,12 @@ export function useSleep() {
     return useValue(sleepState);
 }
 
+/** TODO (WilliamBower): docstring */
 export function createSleepBridge(): LoadableBridge<SleepBridge> {
     return {
         load: () =>
             Promise.all([
-                loadZustand(sleepState, 'sleep'),
+                loadZustand(sleepState, 'sleep', -1),
                 loadGoalZustand(sleepGoalState, 'sleep'),
             ]),
         useCurrent: () => useSleep(),

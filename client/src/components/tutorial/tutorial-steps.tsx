@@ -19,6 +19,7 @@ type TutorialStepParams = {
   water: number;
 };
 
+/** TODO (buenk): docstring */
 export function createTutorialSteps({
   menuOpen,
   statsOpen,
@@ -74,6 +75,7 @@ export function createTutorialSteps({
   ];
 }
 
+/** TODO (buenk): docstring */
 function StepCard({
   children,
   stop,
