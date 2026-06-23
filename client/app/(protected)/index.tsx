@@ -53,7 +53,7 @@ export default function App() {
 
   // TODO (LeeuwBas): explain
   useEffect(() => {
-    initializeApiManager().then(() => console.log("loaded apis"));
+    initializeApiManager().then();
     scheduleCacheFlush();
   }, []);
   // TODO (ZJWeng): comment
