@@ -7,9 +7,11 @@ import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Keyboard, TextInput, View } from 'react-native';
+import { Pressable, Keyboard, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppText } from './AppText';
+import { Ionicons } from '@expo/vector-icons';
+
 
 export function SignInForm() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export function SignInForm() {
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
   const [loading, setLoading] = React.useState<Boolean>(false);
+  const [isPasswordVisible, setPasswordVisible] = React.useState(false);
 
   const passwordInputRef = React.useRef<TextInput>(null);
 
@@ -92,18 +95,32 @@ export function SignInForm() {
               </View>
               <View className="gap-1.5">
                 <AppText className="font-bold">Password</AppText>
-                <Input
-                  ref={passwordInputRef}
-                  id="password"
-                  placeholder="••••••••"
-                  secureTextEntry
-                  returnKeyType="send"
-                  autoCapitalize="none"
-                  onSubmitEditing={onSubmit}
-                  onChangeText={setPassword}
-                  autoComplete="current-password"
-                  textContentType="password"
-                />
+                <View>
+                  <Input
+                    ref={passwordInputRef}
+                    id="password"
+                    placeholder="••••••••"
+                    secureTextEntry={!isPasswordVisible}
+                    returnKeyType="send"
+                    autoCapitalize="none"
+                    onSubmitEditing={onSubmit}
+                    onChangeText={setPassword}
+                    autoComplete="current-password"
+                    textContentType="password"
+                  />
+                  <Pressable
+                    onPress={() => setPasswordVisible(!isPasswordVisible)}
+                    className ="absolute right-3 top-0 bottom-0 justify-center"
+                    hitSlop={10}
+                    accessibilityLabel={isPasswordVisible ? "Hide password" : "Show password"}
+                  >
+                  <Ionicons
+                    name={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
+                    size={20}
+                    className="text-muted-foreground"
+                  />
+                  </Pressable>
+                </View>
                 {errors.password && (
                   <Text className="text-sm text-red-500">{errors.password[0]}</Text>
                 )}
