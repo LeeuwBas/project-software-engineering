@@ -16,12 +16,12 @@ export function useNameManagement(initialPetName = '', initialUserName = '') {
     const newErrors: Record<string, string[] | null> = { pet: null, user: null };
 
     if (!validateName(petName)) {
-      newErrors.pet = ['Only include (capitalized) letters.'];
+      newErrors.pet = ['Only include letters.'];
       isValid = false;
     }
 
     if (!validateName(userName)) {
-      newErrors.user = ['Only include (capitalized) letters.'];
+      newErrors.user = ['Only include letters.'];
       isValid = false;
     }
 

@@ -11,9 +11,16 @@ type ChangeNameProps = {
   errors?: Record<string, string[] | null>;
 };
 
-export function ChangeName({ petName, setPetName, userName, setUserName, errors = {} }: ChangeNameProps) {
+export function ChangeName({
+  petName,
+  setPetName,
+  userName,
+  setUserName,
+  errors = {},
+}: ChangeNameProps) {
   const maxPetNameLength = 12;
   const maxUserNameLength = 16;
+
 
   return (
     <CardContent className="gap-5">
