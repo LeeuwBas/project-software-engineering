@@ -63,7 +63,7 @@ export function SignInForm() {
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <Card className="m-6 mt-24 border-4 border-border shadow-none">
+        <Card className="m-6 mt-24 shadow-none">
           <CardHeader>
             <CardTitle className="text-center text-xl">
               <AppText className="font-bold">Sign in</AppText>
@@ -115,11 +115,11 @@ export function SignInForm() {
                 </Button>
               ) : (
                 <Button className="w-full py-0" variant="default" onPress={onSubmit}>
-                  <AppText className="font-bold">Continue</AppText>
+                  <AppText className="font-bold text-white">Continue</AppText>
                 </Button>
               )}
               <Button className="w-full py-0" onPress={onCreateAccount}>
-                <AppText className="font-bold">Create Account</AppText>
+                <AppText className="font-bold text-white">Create Account</AppText>
               </Button>
             </View>
           </CardContent>
