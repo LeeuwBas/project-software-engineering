@@ -131,7 +131,7 @@ export default function CalendarOverview() {
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
-  // console.log('calendar:' + calendarData[today.getDate() - 1]); // Today
+  console.log(calendarData[today.getDate() - 1]); // Today
 
   return (
     <View>
