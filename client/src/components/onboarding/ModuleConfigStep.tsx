@@ -10,12 +10,14 @@ import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-type Props = {
-  onBack?: () => void;
-};
-
 /** TODO (AlexAugustijn): docstring */
-export default function ModuleConfigStep({ onBack }: Props) {
+export default function ModuleConfigStep({
+  onNext,
+  onBack,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+}) {
   const router = useRouter();
 
   const { colorScheme } = useColorScheme();
@@ -68,7 +70,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
       }
     });
 
-    router.replace('/(protected)');
+    onNext();
   }
 
   return (
@@ -119,13 +121,13 @@ export default function ModuleConfigStep({ onBack }: Props) {
 
           <View className="gap-2">
             <Button onPress={saveGoals}>
-              <AppText className="font-bold text-white">Finish setup & Go to tutorial</AppText>
+              <AppText className="font-bold text-white">Set Goals</AppText>
             </Button>
 
             <Button
               variant="outline"
               onPress={() => {
-                onBack?.();
+                onBack();
               }}>
               <AppText className="font-bold">Reselect modules</AppText>
             </Button>

@@ -7,13 +7,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-controller';
 
-type Props = {
-  onNext?: () => void;
-  onBack?: () => void;
-};
-
 /** TODO (AlexAugustijn): docstring */
-export function PetNamingStep({ onNext, onBack }: Props) {
+export function PetNamingStep({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const [petName, setPetName] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [errors, setErrors] = useState<Record<string, string[] | null>>({});
@@ -28,7 +23,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
       savePetName(petName);
       saveUserName(userName);
 
-      onNext?.();
+      onNext();
     } else {
       return;
     }
@@ -142,15 +137,15 @@ export function PetNamingStep({ onNext, onBack }: Props) {
             </View>
             <View className="gap-2">
               <Button disabled={petName.length === 0 || userName.length === 0} onPress={confirm}>
-                <AppText className="font-bold text-white">Continue to Signup</AppText>
+                <AppText className="font-bold text-white">Save Names</AppText>
               </Button>
 
               <Button
                 variant="outline"
                 onPress={() => {
-                  onBack?.();
+                  onBack();
                 }}>
-                <AppText className="font-bold">Choose another companion</AppText>
+                <AppText className="font-bold">Choose Another Companion</AppText>
               </Button>
             </View>
           </CardContent>
