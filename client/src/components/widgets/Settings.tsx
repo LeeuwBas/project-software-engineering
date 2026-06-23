@@ -45,7 +45,7 @@ export default function Settings() {
   ];
 
   const MORE_ITEMS: SettingItem[] = [
-    { label: 'Change Names', effect: null },
+    { label: 'Change Names', effect: () => router.push('/change-names') },
     {
       label: dark ? 'Light' : 'Dark',
       effect: toggleColorScheme,
