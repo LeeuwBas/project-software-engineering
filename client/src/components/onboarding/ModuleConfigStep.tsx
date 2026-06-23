@@ -61,13 +61,13 @@ export default function ModuleConfigStep({ onBack }: Props) {
 
   function saveGoals() {
     initializeApiManager().then(() => {
+      const promises: Promise<any>[] = [];
       for (const module of activeGoaledModules) {
         const bridge = module.bridge;
 
         bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
       }
     });
-
     router.replace('/(protected)');
   }
 
