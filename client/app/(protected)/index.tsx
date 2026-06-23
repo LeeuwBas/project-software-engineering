@@ -174,7 +174,8 @@ function TutorialStarter() {
   const { done, setTutorialDone } = useTutorial();
 
   useEffect(() => {
-    if (!done && !menuOpen && !statsOpen && !settingsOpen) {
+    if (startedRef.current) return; // only ever start the tour once
+    if (done === false && !menuOpen && !statsOpen && !settingsOpen) {
       setTutorialDone();
       start();
     }

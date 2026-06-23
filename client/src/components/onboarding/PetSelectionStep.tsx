@@ -13,7 +13,7 @@ type Props = {
 /** TODO (AlexAugustijn): docstring */
 export function PetSelectionStep({ onNext }: Props) {
   const router = useRouter();
-  const pet = getPetID();
+  const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
   // TODO (AlexAugustijn): explain
