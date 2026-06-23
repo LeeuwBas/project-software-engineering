@@ -38,10 +38,20 @@ or extended descriptions on the parameters, check the documentation at the actua
 
 /api/stats/<date>/
     get:
-        query param: statName, if None, return all stats of date
+        query param: statName, if None, returns all stats of date
 
     post:
-        data: statName and value dict. can have multiple in one go
+        data: statName and value dict. Can have multiple in single request
+
+/api/stats/bulk/
+    get:
+        query params:
+            stat_name, if None, returns all stats of date range
+            start_date, required
+            end_date, required
+
+    post:
+        data: dict with dates as keys and statName and value dicts as keys
 
 
 /api/barchart/<statname>/<startDate>/<endDate>/
@@ -49,6 +59,27 @@ or extended descriptions on the parameters, check the documentation at the actua
         query param: bins, if not provided, default to 1 day per bin
 
 /api/summary/<statName>/<startDate>/<endDate>/
+    get:
+        no params
+
+/api/goals/<goal_date>/
+    get:
+        query param: goal_name, if None, returns all goals of date
+
+    post:
+        data: statName and goal dict. Can have multiple in single request
+
+/api/goals/bulk/
+    get:
+        query_params:
+            goal_name, if None, returns all goals of date range
+            start_date, required
+            end_date, required
+
+    post:
+        data: dict with dates as keys and goalName and value dicts as keys
+
+/api/calendar/<start_date>/<end_date>/
     get:
         no params
 
