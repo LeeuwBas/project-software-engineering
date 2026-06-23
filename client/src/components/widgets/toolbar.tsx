@@ -1,6 +1,12 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { foodBridge, sleepBridge, stepsBridge, stressBridge, waterBridge } from '@/lib/api/APIBridge';
+import {
+  foodBridge,
+  sleepBridge,
+  stepsBridge,
+  waterBridge
+} from '@/lib/api/APIBridge';
+import { cancelWaterNotification, setWaterNotifaction } from '@/lib/notificationSetter';
 import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
@@ -10,11 +16,10 @@ import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { NotchedBox } from '../ui/notched-box';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
-import { NotchedBorder } from '../ui/notched-border';
-import { NotchedBox } from '../ui/notched-box';
 
 /** TODO (ZJWeng, Dorus-vda, buenk): docstring */
 export default function Toolbar({}: {}) {
@@ -52,22 +57,26 @@ export default function Toolbar({}: {}) {
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
+      (await waterBridge.set(draftWater),
+        await foodBridge.set(draftFood),
+        await sleepBridge.set(draftSleep),
+        // await Promise.allSettled([
 
-      await waterBridge.set(draftWater),
-      await foodBridge.set(draftFood),
-      await sleepBridge.set(draftSleep)
+        // await goaledModules.map(async (module) => {
+        //     await module.bridge.setGoal(draftGoals[module.id]);
+        //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
+        // });
 
+        await foodBridge.setGoal(draftGoals['food']));
+      await stepsBridge.setGoal(draftGoals['steps']);
+      await waterBridge.setGoal(draftGoals['water']);
 
-      // await Promise.allSettled([
+      if (draftWater >= draftGoals['water']) {
+        cancelWaterNotification();
+      } else {
+        setWaterNotifaction();
+      }
 
-      // await goaledModules.map(async (module) => {
-      //     await module.bridge.setGoal(draftGoals[module.id]);
-      //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
-      // });
-
-      await foodBridge.setGoal(draftGoals['food'])
-      await stepsBridge.setGoal(draftGoals['steps'])
-      await waterBridge.setGoal(draftGoals['water'])
       // ]);
 
       if (menuOpen) changeMenu();
