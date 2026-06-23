@@ -68,7 +68,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
         promises.push(bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal));
       }
 
-      Promise.all(promises).then(() => {console.log("finished the goals setting"); router.replace('/(protected)')});
+      Promise.all(promises).then(() => {router.replace('/(protected)')});
     })
 
   }
