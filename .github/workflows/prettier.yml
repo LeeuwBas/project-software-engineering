@@ -38,5 +38,8 @@ jobs:
       - name: Debug working directory
         run: ls -la
 
+      - name: Debug prettier version
+        run: pnpm prettier -v
+
       - name: Run Prettier check
         run: pnpm prettier -c "**/*.{ts,tsx}" --config prettier.config.js --log-level debug

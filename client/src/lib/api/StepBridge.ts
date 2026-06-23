@@ -11,7 +11,7 @@ import {
     setZustand,
 } from '@/lib/api/GenericStorage';
 
-/** Use the step bridge when the values need to be manipulated. *//
+/** Use the step bridge when the values need to be manipulated. */
 export interface StepBridge extends GoaledStatisticBridge {}
 
 const stepState = createNewState();
