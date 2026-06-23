@@ -5,6 +5,7 @@ import { MODULES } from '@/lib/types';
 import { View } from 'react-native';
 import { ModuleSelection } from '@/components/widgets/ModuleSelection';
 import { useModuleManagement } from '@/lib/useModuleManagement';
+import { Card } from '../ui/card';
 export default function ModuleSelectionStep({
   onNext,
   goToStep,
@@ -31,18 +32,16 @@ export default function ModuleSelectionStep({
   }
 
   return (
-    <View className="flex-1 justify-center px-4">
+    <Card className="mx-4 gap-2 rounded-2xl border border-border/40 bg-card/80 p-5">
       <ModuleSelection
         activeModules={activeModules}
         toggleModule={toggleModule}
         isSelected={isSelected}
       />
 
-      <View className="pt-8">
-        <Button className="w-full" disabled={selectedCount === 0} onPress={handleSave}>
-          <AppText className="font-bold text-white">Choose Tracked Habits</AppText>
-        </Button>
-      </View>
-    </View>
+      <Button className="mt-8 w-full" disabled={selectedCount === 0} onPress={handleSave}>
+        <AppText className="font-bold text-white">Choose Tracked Habits</AppText>
+      </Button>
+    </Card>
   );
 }

@@ -4,7 +4,7 @@ import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { Pressable, View } from 'react-native';
 import { Button } from '../ui/button';
-import { Card } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 
 type ModuleSelectionProps = {
   activeModules: EnabledModules;
@@ -17,16 +17,16 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
   const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
-    <Card className="gap-2 border border-border/40 bg-card/80 p-5">
+    <CardContent className='p-0'>
       <View className="gap-2">
-        <AppText className="text-center text-xl font-bold">
+        <AppText className="text-center text-xl font-bold mb-2">
           Would you like to keep track of stress?
         </AppText>
 
         {stressModule && (
           <Pressable
             onPress={() => toggleModule(stressModule.id)}
-            className="flex-row items-center justify-between rounded-xl border-4 p-4"
+            className="flex-row items-center justify-between border-4 p-4"
             style={{
               backgroundColor: stressModule.color,
               borderColor: stressModule.borderColor,
@@ -53,7 +53,7 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
       </View>
 
       <View className="gap-2">
-        <AppText className="text-center text-xl font-bold">
+        <AppText className="text-center text-xl font-bold my-2">
           Which habits would you like to track?
         </AppText>
 
@@ -62,7 +62,7 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
             <Pressable
               key={module.id}
               onPress={() => toggleModule(module.id)}
-              className="flex-row items-center justify-between gap-3 rounded-xl border-4 p-4"
+              className="flex-row items-center justify-between gap-3 border-4 p-4"
               style={{
                 backgroundColor: module.color,
                 borderColor: module.borderColor,
@@ -88,6 +88,6 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
           ))}
         </View>
       </View>
-    </Card>
+    </CardContent>
   );
 }
