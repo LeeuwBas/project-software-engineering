@@ -22,6 +22,7 @@ export function AccountCreationStep() {
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
   const [loading, setLoading] = React.useState<Boolean>(false);
+  const [loadingGuest, setLoadingGuest] = React.useState<Boolean>(false);
 
   const { resetTutorial } = useTutorial();
 
@@ -68,8 +69,10 @@ export function AccountCreationStep() {
   }
 
   async function onGuestSubmit() {
+    setLoadingGuest(true);
     await auth.setGuest();
     resetTutorial();
+    setLoadingGuest(false);
     router.replace('/(protected)');
   }
 
@@ -139,9 +142,15 @@ export function AccountCreationStep() {
                 <AppText className="font-bold text-white">Sign Up & Go to Tutorial</AppText>
               </Button>
             )}
-            <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
-              <AppText className="font-bold">Continue as Guest</AppText>
-            </Button>
+            {loadingGuest ? (
+              <Button className="w-full" variant="outline" onPress={null}>
+                <AppText className="font-bold">Loading...</AppText>
+              </Button>
+            ) : (
+              <Button className="w-full" variant="outline" onPress={onGuestSubmit}>
+                <AppText className="font-bold">Continue as Guest</AppText>
+              </Button>
+            )}
           </CardContent>
         </Card>
       </KeyboardAvoidingView>
