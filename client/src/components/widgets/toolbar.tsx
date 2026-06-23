@@ -1,11 +1,6 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import {
-  foodBridge,
-  sleepBridge,
-  stepsBridge,
-  waterBridge
-} from '@/lib/api/APIBridge';
+import { foodBridge, sleepBridge, stepsBridge, waterBridge } from '@/lib/api/APIBridge';
 import { cancelWaterNotification, setWaterNotifaction } from '@/lib/notificationSetter';
 import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';

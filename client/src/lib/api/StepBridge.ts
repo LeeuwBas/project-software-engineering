@@ -6,7 +6,7 @@ import {
     loadGoalZustand,
     loadZustand,
     setGoalZustand,
-    setZustand
+    setZustand,
 } from '@/lib/api/GenericStorage';
 import { createNewState, useValue } from '@/lib/api/ValueState';
 

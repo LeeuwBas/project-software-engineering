@@ -27,12 +27,12 @@ interface AnimationProps {
  * @param {number} scale scales the animation by this amount, defaults to 1
  * @returns A TSX element that renders the specified animation at the specified scale
  */
-export function Animation({ animation, scale = 1, iteration_count=0 }: AnimationProps) {
+export function Animation({ animation, scale = 1, iteration_count = 0 }: AnimationProps) {
   const config = ANIMATIONS[animation] ? ANIMATIONS[animation] : ANIMATIONS['placeholder'];
   const image = useImage(config.source);
   const frame = useSharedValue(0);
   const startTime = useSharedValue(0);
-  const iteration = useSharedValue(0)
+  const iteration = useSharedValue(0);
 
   useEffect(() => {
     startTime.value = performance.now();

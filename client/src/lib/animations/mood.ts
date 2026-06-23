@@ -1,5 +1,4 @@
-import { getCurrentGoal, getStat, StatLine } from '@/lib/storage'
-
+import { getCurrentGoal, getStat, StatLine } from '@/lib/storage';
 
 /**
  * Checks the supplied achieved stats against the supplied goals at the given hour of the day.
@@ -15,36 +14,34 @@ function checkStats(achieved: StatLine, goals: StatLine, hour: number) {
     // Waking day is defined as being from 10 to 22, so 12 hours.
     const fraction = (hour - 10) / 12;
 
-    (Object.entries(achieved) as [keyof StatLine, number][]).forEach(
-        ([key, value]) => {
-            switch (key) {
-                case "stress":
-                    if (value !== 0) {
+    (Object.entries(achieved) as [keyof StatLine, number][]).forEach(([key, value]) => {
+        switch (key) {
+            case 'stress':
+                if (value !== 0) {
+                    return false;
+                }
+                break;
+            case 'food':
+                if (hour < 14) {
+                    if (value < 1) {
                         return false;
                     }
-                    break;
-                case "food":
-                    if (hour < 14) {
-                        if (value < 1) {
-                            return false;
-                        }
-                    } else if (hour < 20) {
-                        if (value < 2) {
-                            return false;
-                        }
-                    } else {
-                        if (value < 3) {
-                            return false;
-                        }
-                    }
-                    break;
-                default:
-                    if (value < ((goals[key] ?? 0) * fraction)) {
+                } else if (hour < 20) {
+                    if (value < 2) {
                         return false;
                     }
-            }
+                } else {
+                    if (value < 3) {
+                        return false;
+                    }
+                }
+                break;
+            default:
+                if (value < (goals[key] ?? 0) * fraction) {
+                    return false;
+                }
         }
-    );
+    });
 }
 
 /**
@@ -63,7 +60,7 @@ export async function getMood(): Promise<number> {
         return 1;
     }
 
-    if (typeof goals == "number") {
+    if (typeof goals == 'number') {
         return 1;
     }
 
