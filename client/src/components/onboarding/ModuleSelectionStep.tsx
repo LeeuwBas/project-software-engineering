@@ -84,9 +84,9 @@ export default function ModuleSelectionStep({ onNext }: Props) {
               </View>
 
               <View className="w-8 items-center justify-center">
-                {isSelected(stressModule.id)
-                  ? <CheckIcon width={32} height={32} color={stressModule.selectColor} />
-                  : null}
+                {isSelected(stressModule.id) ? (
+                  <CheckIcon width={32} height={32} color={stressModule.selectColor} />
+                ) : null}
               </View>
             </Pressable>
           )}
@@ -116,9 +116,9 @@ export default function ModuleSelectionStep({ onNext }: Props) {
                 </View>
 
                 <View className="w-8 items-center justify-center">
-                  {isSelected(module.id)
-                    ? <CheckIcon width={32} height={32} color={module.selectColor} />
-                    : null}
+                  {isSelected(module.id) ? (
+                    <CheckIcon width={32} height={32} color={module.selectColor} />
+                  ) : null}
                 </View>
               </Pressable>
             ))}
@@ -128,9 +128,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
         <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
             <AppText className="font-bold text-white">
-              {requiresGoalSetup
-                ? 'Continue to Goal Setup'
-                : 'Finish Setup & Go to Tutorial'}
+              {requiresGoalSetup ? 'Continue to Goal Setup' : 'Finish Setup & Go to Tutorial'}
             </AppText>
           </Button>
         </View>
