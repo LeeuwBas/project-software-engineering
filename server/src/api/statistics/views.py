@@ -106,16 +106,16 @@ class StatManageView(APIView):
 
         return Response(returnVal, HTTP_200_OK)
 
-    # TODO: Make POST request documentation (now GET)
     @extend_schema(
-        summary="Retrieves the statistics data of a given date.",
-        description="""Retrieves the statistics of a given date, if no name
-            for the statistic was provided, the API will return all known stats.
+        summary="Updates the given statistics on the given day",
+        description="""Sets or updates the statistics for a day set in the path.
+        Request body must be a dictionary, any key not in the dictionary will not be
+        changed or set to the default value in case there is no data of the day.
             """,
         parameters=[
             OpenApiParameter(
                 name="date",
-                description="date for which the requested goal was active",
+                description="Date to insert the data for.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.PATH,
                 required=True,
