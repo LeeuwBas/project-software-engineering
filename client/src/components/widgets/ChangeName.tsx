@@ -21,7 +21,6 @@ export function ChangeName({
   const maxPetNameLength = 12;
   const maxUserNameLength = 16;
 
-
   return (
     <CardContent className="gap-5">
       <View className="gap-1.5">

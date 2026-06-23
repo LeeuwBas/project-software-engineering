@@ -12,11 +12,8 @@ type Props = {
 };
 
 export function PetNamingStep({ onNext, onBack }: Props) {
-  const { 
-    petName, setPetName, 
-    userName, setUserName, 
-    errors, validateAndSave 
-  } = useNameManagement();
+  const { petName, setPetName, userName, setUserName, errors, validateAndSave } =
+    useNameManagement();
 
   function handleConfirm() {
     const isValid = validateAndSave();
@@ -45,8 +42,10 @@ export function PetNamingStep({ onNext, onBack }: Props) {
             errors={errors}
           />
 
-          <View className="px-6 pb-6 gap-2">
-            <Button disabled={petName.length === 0 || userName.length === 0} onPress={handleConfirm}>
+          <View className="gap-2 px-6 pb-6">
+            <Button
+              disabled={petName.length === 0 || userName.length === 0}
+              onPress={handleConfirm}>
               <AppText className="font-bold text-white">Continue to Signup</AppText>
             </Button>
 
