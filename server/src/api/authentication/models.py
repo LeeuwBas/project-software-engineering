@@ -8,6 +8,7 @@ from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
+    """TODO (LeeuwBas): docstring"""
     use_in_migrations = True
 
     def create_user(self, email, password, **extra_fields):
@@ -37,6 +38,7 @@ class UserManager(BaseUserManager):
     create_user.alters_data = True
 
 class User(AbstractUser):
+    """TODO (LeeuwBas): docstring"""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 

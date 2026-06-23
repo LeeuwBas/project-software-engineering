@@ -13,6 +13,7 @@ import { AppText } from './AppText';
 import { Ionicons } from '@expo/vector-icons';
 
 
+/** TODO (buenk): docstring, maybe a few more comments? */
 export function SignInForm() {
   const router = useRouter();
   const auth = useAuth();
@@ -139,17 +140,6 @@ export function SignInForm() {
               <Button className="w-full py-0" onPress={onCreateAccount}>
                 <AppText className="font-bold">Create Account</AppText>
               </Button>
-
-              {/* - Begin placeholder for testing - */}
-              {/* uncomment this to test the routing between pages */}
-              {/*<Button
-                className="mt-2 w-1/2 self-center py-1"
-                onPress={() => {
-                  router.replace('/signup');
-                }}>
-                <Text className="text-sm">goto signup</Text>
-              </Button>
-              {/* - End placeholder for testing - */}
             </View>
           </CardContent>
         </Card>
