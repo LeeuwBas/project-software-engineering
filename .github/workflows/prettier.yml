@@ -42,4 +42,7 @@ jobs:
         run: pnpm prettier -v
 
       - name: Run Prettier check
-        run: pnpm prettier -c "**/*.{ts,tsx}" --log-level debug
+        run: pnpm prettier -c "**/*.{ts,tsx}" --write
+
+      - name: Show diff
+        run: git diff
