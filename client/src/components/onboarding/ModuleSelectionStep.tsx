@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { getActiveModules, setActiveModules } from '@/lib/settings';
 import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -10,7 +11,7 @@ type Props = {
   onNext?: () => void;
 };
 
-const DEFAULT_MODULES = {
+const DEFAULT_MODULES: EnabledModules = {
   water: true,
   sleep: true,
   steps: true,
@@ -19,6 +20,8 @@ const DEFAULT_MODULES = {
 };
 
 export default function ModuleSelectionStep({ onNext }: Props) {
+  const router = useRouter();
+
   const [activeModules, setModuleState] = useState<EnabledModules>(DEFAULT_MODULES);
 
   useEffect(() => {
@@ -36,9 +39,18 @@ export default function ModuleSelectionStep({ onNext }: Props) {
     return activeModules[moduleId] ?? false;
   }
 
+  const requiresGoalSetup = MODULES.some(
+    (module) => activeModules[module.id] && 'goalConfig' in module
+  );
+
   function saveModules() {
     setActiveModules(activeModules);
-    onNext?.();
+
+    if (requiresGoalSetup) {
+      onNext?.();
+    } else {
+      router.replace('/(protected)');
+    }
   }
 
   const selectedCount = Object.values(activeModules).filter(Boolean).length;
@@ -94,7 +106,11 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
         <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
-            <AppText className="font-bold text-white">Continue</AppText>
+            <AppText className="font-bold text-white">
+              {requiresGoalSetup
+                ? 'Continue to Goal Setup'
+                : 'Finish Setup & Go to Tutorial'}
+            </AppText>
           </Button>
         </View>
       </View>
