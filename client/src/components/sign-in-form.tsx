@@ -100,6 +100,8 @@ export function SignInForm() {
                     ref={passwordInputRef}
                     id="password"
                     placeholder="••••••••"
+                    inputMode="text"
+                    keyboardType="default"
                     secureTextEntry={!isPasswordVisible}
                     returnKeyType="send"
                     autoCapitalize="none"
