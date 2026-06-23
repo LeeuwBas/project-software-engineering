@@ -3,6 +3,8 @@ import { AppText } from '@/components/AppText';
 import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { Pressable, View } from 'react-native';
+import { Button } from '../ui/button';
+import { Card } from '../ui/card';
 
 type ModuleSelectionProps = {
   activeModules: EnabledModules;
@@ -15,7 +17,7 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
   const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
-    <View className="gap-2 rounded-2xl border border-border/40 bg-card/80 p-5">
+    <Card className="gap-2 border border-border/40 bg-card/80 p-5">
       <View className="gap-2">
         <AppText className="text-center text-xl font-bold">
           Would you like to keep track of stress?
@@ -86,6 +88,6 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
           ))}
         </View>
       </View>
-    </View>
+    </Card>
   );
 }
