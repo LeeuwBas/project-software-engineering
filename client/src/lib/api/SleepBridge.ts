@@ -27,7 +27,7 @@ export function createSleepBridge(): LoadableBridge<SleepBridge> {
     return {
         load: () =>
             Promise.all([
-                loadZustand(sleepState, 'sleep'),
+                loadZustand(sleepState, 'sleep', -1),
                 loadGoalZustand(sleepGoalState, 'sleep'),
             ]),
         useCurrent: () => useSleep(),

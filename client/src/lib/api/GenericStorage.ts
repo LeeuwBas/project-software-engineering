@@ -26,9 +26,13 @@ import { formatDate } from '@/lib/utils';
  * @returns The loaded value
  * @throws Error when the value is already loaded
  */
-export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
+export async function loadZustand<K extends keyof StatLine>(
+    state: ValueZustand,
+    name: K,
+    defaultValue: number = 0
+) {
     // For the current day we can default to 0. For other days we cannot.
-    const loadedValue = (await getStatistic(name)) ?? 0;
+    let loadedValue = (await getStatistic(name)) ?? defaultValue;
 
     state.getState().setValue(loadedValue);
     return loadedValue;
