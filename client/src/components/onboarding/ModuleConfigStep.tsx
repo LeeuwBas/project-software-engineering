@@ -65,11 +65,11 @@ export default function ModuleConfigStep({ onBack }: Props) {
       for (const module of activeGoaledModules) {
         const bridge = module.bridge;
 
-        promises.push(bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal));
+        bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
       }
 
-      Promise.all(promises).then(() => router.replace('/(protected)'));
     });
+    router.replace('/(protected)')
   }
 
   return (
