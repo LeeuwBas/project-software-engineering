@@ -92,7 +92,7 @@ function StepCard({
       {stop_position === 'top' && (
         <View className="flex w-full items-center justify-center">
           <Button variant="secondary" onPress={stop} className="my-2 w-32 p-0">
-            <AppText className="text-xs">{!final ? "Skip Tutorial" : "Finish Tutorial"}</AppText>
+            <AppText className="text-xs">{!final ? 'Skip Tutorial' : 'Finish Tutorial'}</AppText>
           </Button>
         </View>
       )}
@@ -100,7 +100,7 @@ function StepCard({
       {stop_position === 'bottom' && (
         <View className="flex w-full items-center justify-center">
           <Button variant="secondary" onPress={stop} className="my-2 w-32 p-0">
-            <AppText className="text-xs">{!final ? "Skip Tutorial" : "Finish Tutorial"}</AppText>
+            <AppText className="text-xs">{!final ? 'Skip Tutorial' : 'Finish Tutorial'}</AppText>
           </Button>
         </View>
       )}

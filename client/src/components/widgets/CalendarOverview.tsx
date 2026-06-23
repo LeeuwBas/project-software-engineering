@@ -177,9 +177,7 @@ export default function CalendarOverview() {
                   ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
                   ${item.currentDay && 'border-primary-foreground'}
                   ${calendarData[index]?.stress === 2 ? 'bg-[#b41b21]/30' : calendarData[index]?.stress === 1 ? 'bg-[#FFFF00]/30' : calendarData[index]?.stress === 0 ? 'bg-[#22a022]/30' : ''} `}>
-            <AppText className="self-end text-sm font-bold">
-              {item.value || 'Placeholder'}
-            </AppText>
+            <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
             {!item.hidden && (
               <View className="flex-row flex-wrap gap-1 self-start p-0.5">
                 {activeCalendarModules.map(
