@@ -1,15 +1,21 @@
-import { createSettings, EnabledModules, getSettings, setSettings, Settings } from '@/lib/storage';
+import {
+    createEnabledModules,
+    EnabledModules,
+    getSettings,
+    setSettings,
+    Settings,
+} from '@/lib/storage';
 import { create } from 'zustand';
 import { getAPI, postAPI } from './api/ApiManager';
 import { internalAuth } from '@/lib/auth/AuthService';
 
 type SettingsStore = {
-    settings: Settings;
+    settings: Settings | null;
     setStore: (settings: Settings) => void;
 };
 
 const useSettingsStore = create<SettingsStore>((set) => ({
-    settings: createSettings(),
+    settings: null,
     setStore: (settings) => set({ settings }),
 }));
 
@@ -27,7 +33,7 @@ export async function loadSettingsServer() {
     const b64Settings = res['settings'];
     const settings: Settings = JSON.parse(atob(b64Settings));
 
-    setSettings(settings);
+    await setSettings(settings);
     return true;
 }
 
@@ -87,6 +93,12 @@ export async function loadSettings() {
 async function updateSettings<K extends keyof Settings>(key: K, value: Settings[K]) {
     console.log(`saving new value for setting ${key}: ${value}`);
     const current = useSettingsStore.getState().settings;
+
+    if (current === null) {
+        console.log('Attempted settings save before they were loaded!');
+        return;
+    }
+
     current[key] = value;
     useSettingsStore.getState().setStore(current);
     await setAndSyncSettings(current);
@@ -101,7 +113,7 @@ async function resetTutorial() {
 }
 
 export function useTutorial() {
-    const done = useSettingsStore((s) => s.settings.hasDoneTutorial);
+    const done = useSettingsStore((s) => s.settings?.hasDoneTutorial ?? null);
     return { done, setTutorialDone, resetTutorial };
 }
 
@@ -118,7 +130,7 @@ export function savePetName(petName: string) {
  * @returns the saved pet name
  */
 export function getPetName() {
-    return useSettingsStore.getState().settings.petName;
+    return useSettingsStore.getState().settings?.petName ?? '';
 }
 
 /**
@@ -134,7 +146,7 @@ export function saveUserName(userName: string) {
  * @returns The saved username
  */
 export function getUserName() {
-    return useSettingsStore.getState().settings.userName;
+    return useSettingsStore.getState().settings?.userName ?? '';
 }
 
 /**
@@ -150,7 +162,7 @@ export function setActiveModules(modules: EnabledModules) {
  * @returns Object containing the information about the modules.
  */
 export function getActiveModules(): EnabledModules {
-    return useSettingsStore.getState().settings.enabledModules;
+    return useSettingsStore.getState().settings?.enabledModules ?? createEnabledModules();
 }
 
 /**
@@ -176,6 +188,9 @@ export function setPetID(petID: number) {
  * @returns The ID of the stored pet
  */
 export function getPetID() {
-    const ID = useSettingsStore.getState().settings.chosenPet;
-    return typeof ID === 'number' ? ID : 0;
+    const ID = useSettingsStore((state) => state.settings)?.chosenPet ?? null;
+    if (ID === undefined) {
+        console.warn('Undefined pet ID loaded!');
+    }
+    return ID;
 }

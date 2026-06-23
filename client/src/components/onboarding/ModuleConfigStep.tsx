@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { getActiveModules } from '@/lib/settings';
 import { GoaledModule, MODULES } from '@/lib/types';
-import { useRouter } from 'expo-router';
 import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
@@ -18,8 +17,6 @@ export default function ModuleConfigStep({
   onNext: () => void;
   onBack: () => void;
 }) {
-  const router = useRouter();
-
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
@@ -63,6 +60,7 @@ export default function ModuleConfigStep({
 
   function saveGoals() {
     initializeApiManager().then(() => {
+      const promises: Promise<any>[] = [];
       for (const module of activeGoaledModules) {
         const bridge = module.bridge;
 

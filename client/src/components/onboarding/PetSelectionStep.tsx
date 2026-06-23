@@ -9,7 +9,7 @@ import { View } from 'react-native';
 /** TODO (AlexAugustijn): docstring */
 export function PetSelectionStep({ onNext }: { onNext: () => void }) {
   const router = useRouter();
-  const pet = getPetID();
+  const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
   // TODO (AlexAugustijn): explain

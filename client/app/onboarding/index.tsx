@@ -33,7 +33,7 @@ export default function Onboarding() {
       break;
 
     case 'account':
-      currentStep = <AccountCreationStep onNext={nextStep} />;
+      currentStep = <AccountCreationStep />;
       break;
     default:
       currentStep = null;

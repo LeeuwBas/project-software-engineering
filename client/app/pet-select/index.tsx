@@ -11,7 +11,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 /** TODO (ZJWeng): docstring, and add some comments explaining sections */
 export default function PetSelection() {
   const router = useRouter();
-  const pet = getPetID();
+  const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
   function confirm() {
