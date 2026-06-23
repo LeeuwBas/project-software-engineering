@@ -31,7 +31,7 @@ export function createTutorialSteps({
     // 0. The pet
     {
       render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="bottom">
+        <StepCard stop={stop} stop_position="bottom" final={false}>
           <AppText>Welcome to VirtuoPet! This is your new virtual pet!</AppText>
         </StepCard>
       ),
@@ -40,7 +40,7 @@ export function createTutorialSteps({
     {
       placement: 'top',
       render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
+        <StepCard stop={stop} stop_position="top" final={false}>
           <AppText>This is where you log all your habits.</AppText>
         </StepCard>
       ),
@@ -49,7 +49,7 @@ export function createTutorialSteps({
     {
       placement: 'top',
       render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
+        <StepCard stop={stop} stop_position="top" final={false}>
           <AppText>This is where you can see your stats.</AppText>
         </StepCard>
       ),
@@ -58,7 +58,7 @@ export function createTutorialSteps({
     {
       placement: 'top',
       render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="top">
+        <StepCard stop={stop} stop_position="top" final={false}>
           <AppText>And here you'll find all of your settings.</AppText>
         </StepCard>
       ),
@@ -67,7 +67,7 @@ export function createTutorialSteps({
     {
       onBackdropPress: ({ stop }) => stop(),
       render: ({ stop }) => (
-        <StepCard stop={stop} stop_position="bottom">
+        <StepCard stop={stop} stop_position="bottom" final={true}>
           <AppText>Thank you for following the tutorial!</AppText>
         </StepCard>
       ),
@@ -80,17 +80,19 @@ function StepCard({
   children,
   stop,
   stop_position,
+  final,
 }: {
   children: ReactNode;
   stop: () => void;
   stop_position?: 'top' | 'bottom';
+  final: boolean;
 }) {
   return (
     <>
       {stop_position === 'top' && (
         <View className="flex w-full items-center justify-center">
           <Button variant="secondary" onPress={stop} className="my-2 w-32 p-0">
-            <AppText className="text-xs">Skip Tutorial</AppText>
+            <AppText className="text-xs">{!final ? "Skip Tutorial" : "Finish Tutorial"}</AppText>
           </Button>
         </View>
       )}
@@ -98,7 +100,7 @@ function StepCard({
       {stop_position === 'bottom' && (
         <View className="flex w-full items-center justify-center">
           <Button variant="secondary" onPress={stop} className="my-2 w-32 p-0">
-            <AppText className="text-xs">Skip Tutorial</AppText>
+            <AppText className="text-xs">{!final ? "Skip Tutorial" : "Finish Tutorial"}</AppText>
           </Button>
         </View>
       )}
