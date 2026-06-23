@@ -17,9 +17,9 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
   const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
-    <CardContent className='p-0'>
+    <CardContent className="p-0">
       <View className="gap-2">
-        <AppText className="text-center text-xl font-bold mb-2">
+        <AppText className="mb-2 text-center text-xl font-bold">
           Would you like to keep track of stress?
         </AppText>
 
@@ -53,7 +53,7 @@ export function ModuleSelection({ activeModules, toggleModule, isSelected }: Mod
       </View>
 
       <View className="gap-2">
-        <AppText className="text-center text-xl font-bold my-2">
+        <AppText className="my-2 text-center text-xl font-bold">
           Which habits would you like to track?
         </AppText>
 
