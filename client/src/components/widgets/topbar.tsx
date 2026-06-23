@@ -17,16 +17,6 @@ export default function Topbar() {
     (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
-  // // Parameters for each module bar
-  // const bars: BarType[] = activeGoaledModules.map((module) => ({
-  //   id: module.id,
-  //   icon: module.icon,
-  //   value: module.useValue() ?? 0,
-  //   goal: module.bridge.useGoal() ?? 0,
-  //   color: module.color,
-  //   borderColor: module.borderColor,
-  // }));
-
   return (
     <View className="flex-row content-start">
       <View className="w-1/2 flex-row gap-2">

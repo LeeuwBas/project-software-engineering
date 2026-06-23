@@ -4,11 +4,7 @@ import { NotchedBox } from '../ui/notched-box';
 
 /**
  * Horizontal progress bar for a goaled statistic
- * @param icon Icon next to the bar
- * @param value The value of the statistic
- * @param goal The goal of the statistic
- * @param color The fill color of the bar
- * @param borderColor The border color of the bar
+ * @param module Goaled module of which the progress bar is shown.
  *
  * @returns The progress bar
  */
