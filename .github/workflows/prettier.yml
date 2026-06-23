@@ -17,7 +17,7 @@ jobs:
       - name: Prettify code
         uses: creyD/prettier_action@v4.6
         with:
-          prettier_options: "-c **/*.{ts,tsx}"
+          prettier_options: '-c "**/*.{ts,tsx}"'
           working_directory: 'client'
           dry: True
 
