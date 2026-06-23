@@ -1,21 +1,32 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { ModuleProps } from '@/lib/types';
+import { MenuConfig, ModuleId } from '@/lib/types';
 import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
 import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
+import { SvgProps } from 'react-native-svg';
+
+const MAX_WATER = 25;
+const MAX_FOOD = 12;
 
 /** TODO (ZJWeng): docstring */
 export default function Module({
-  props: { id, icon: Icon, value, setValue, goal, onPress, buttonString },
+  id,
+  icon: Icon,
+  props,
 }: {
-  props: ModuleProps;
+  id: ModuleId;
+  icon: React.FC<SvgProps>;
+  props?: MenuConfig;
 }) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
+  const { value, setValue, goal, onPress, buttonString } = props ?? {};
+
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
   // TODO (ZJWeng, Dorus-vda): explain component structure
   return (
@@ -25,7 +36,7 @@ export default function Module({
         {/* Water module */}
         {id === 'water' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-            <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
+            <Button variant={'outline'} disabled={value <= 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
@@ -42,7 +53,7 @@ export default function Module({
             <AttachStep index={3} style={{ alignSelf: 'center' }}>
               <Button
                 variant="outline"
-                disabled={value === goal}
+                disabled={value >= MAX_WATER}
                 onPress={() => setValue(value + 1)}>
                 <Plus size={20} />
               </Button>
@@ -52,9 +63,13 @@ export default function Module({
 
         {id === 'steps' && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-            <AppText className="text-right text-base font-bold">{value}</AppText>
+            <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
+              {value}
+            </AppText>
             <AppText className="w-4 text-center text-base font-bold"> / </AppText>
-            <AppText className="text-left text-base font-bold">{goal}</AppText>
+            <AppText style={{ width: valueWidth * 4 }} className="text-left text-base font-bold">
+              {goal}
+            </AppText>
           </View>
         )}
 
@@ -68,7 +83,7 @@ export default function Module({
 
         {id === 'food' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
-            <Button variant={'outline'} disabled={value === 0} onPress={() => setValue(value - 1)}>
+            <Button variant={'outline'} disabled={value <= 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
@@ -82,20 +97,18 @@ export default function Module({
               </AppText>
             </View>
 
-            <AttachStep index={3} style={{ alignSelf: 'center' }}>
-              <Button
-                variant="outline"
-                disabled={value === goal}
-                onPress={() => setValue(value + 1)}>
-                <Plus size={20} />
-              </Button>
-            </AttachStep>
+            <Button
+              variant="outline"
+              disabled={value >= MAX_FOOD}
+              onPress={() => setValue(value + 1)}>
+              <Plus size={20} />
+            </Button>
           </View>
         )}
 
         {id === 'sleep' && setValue !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
-            <Pressable onPress={() => setValue(-1)} className={`${value !== -1 && 'opacity-30'}`}>
+            <Pressable onPress={() => setValue(0)} className={`${value !== 0 && 'opacity-30'}`}>
               <ThumbsDown width={30} height={30} color={'#b41b21'} />
             </Pressable>
 

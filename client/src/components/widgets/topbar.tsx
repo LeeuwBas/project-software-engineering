@@ -1,36 +1,31 @@
 import { AppText } from '@/components/AppText';
 import Bar from '@/components/widgets/Bar';
 import Weather from '@/components/widgets/Weather';
-import { stepsBridge, waterBridge } from '@/lib/api/APIBridge';
-import { useSteps } from '@/lib/api/StepBridge';
-import { useWater } from '@/lib/api/WaterBridge';
-import Glass from '@assets/icons/module_icons/glass.svg';
-import Shoe from '@assets/icons/module_icons/shoe.svg';
+import { getActiveModules } from '@/lib/settings';
+import { BarType, GoaledModule, MODULES } from '@/lib/types';
 import { View } from 'react-native';
 
-/** TODO (ZJWeng): docstring, and maybe one or two other comments */
+/**
+ * The view on top of the homepage. Contains the weather, day of the week, and bars for active goaled modules.
+ * @returns the top view
+ */
 export default function Topbar() {
   const date = new Date();
   const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-  const water = useWater() ?? 0;
-  const waterGoal = waterBridge.useGoal() ?? 0;
-  const steps = useSteps() ?? 0;
-  const stepsGoal = stepsBridge.useGoal() ?? 0;
 
-  const bars = [
-    {
-      id: 'water',
-      icon: Glass,
-      value: water,
-      goal: waterGoal,
-    },
-    {
-      id: 'steps',
-      icon: Shoe,
-      value: steps,
-      goal: stepsGoal,
-    },
-  ];
+  const activeGoaledModules = MODULES.filter(
+    (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
+  );
+
+  // Parameters for each module bar
+  const bars: BarType[] = activeGoaledModules.map((module) => ({
+    id: module.id,
+    icon: module.icon,
+    value: module.useValue() ?? 0,
+    goal: module.bridge.useGoal() ?? 0,
+    color: module.color,
+    borderColor: module.borderColor,
+  }));
 
   return (
     <View className="flex-row content-start">
@@ -41,7 +36,7 @@ export default function Topbar() {
 
       <View className="w-full flex-col gap-2">
         {bars.map((bar) => (
-          <Bar icon={bar.icon} value={bar.value} goal={bar.goal} key={bar.id} />
+          <Bar {...bar} key={bar.id} />
         ))}
       </View>
     </View>

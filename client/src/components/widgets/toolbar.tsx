@@ -1,10 +1,7 @@
 import Menu from '@/components/widgets/Menu';
 import { useAppContext } from '@/lib/AppContext';
-import { foodBridge, sleepBridge, stepsBridge, waterBridge } from '@/lib/api/APIBridge';
-import { useFood } from '@/lib/api/FoodBridge';
-import { useSleep } from '@/lib/api/SleepBridge';
-import { useWater } from '@/lib/api/WaterBridge';
-import { GoalModules } from '@/lib/types';
+import { foodBridge, sleepBridge, stepsBridge, stressBridge, waterBridge } from '@/lib/api/APIBridge';
+import { GoaledModule, MODULES } from '@/lib/types';
 import CheckIcon from '@assets/icons/toolbar_icons/check.svg';
 import PlusIcon from '@assets/icons/toolbar_icons/plus.svg';
 import ProfileIcon from '@assets/icons/toolbar_icons/profile.svg';
@@ -16,23 +13,25 @@ import { AttachStep } from 'react-native-spotlight-tour';
 import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
+import { NotchedBorder } from '../ui/notched-border';
+import { NotchedBox } from '../ui/notched-box';
 
 /** TODO (ZJWeng, Dorus-vda, buenk): docstring */
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
-  const water = useWater() ?? 0;
-  const food = useFood() ?? 0;
-  // const steps = useSteps() ?? 0; TODO (Dorus-vda): please add more comments to explain sections, also remove this if it's unused
-  const steps = 6000;
-  const sleep = useSleep() ?? 0;
+  const moduleValues: Record<string, number> = Object.fromEntries(
+    MODULES.map((module) => [module.id, module.useValue() ?? 0])
+  );
 
-  const goals: GoalModules = {
-    water: waterBridge.useGoal() ?? 0,
-    steps: stepsBridge.useGoal() ?? 0,
-    food: foodBridge.useGoal() ?? 0,
-  };
+  const goaledModules: GoaledModule[] = MODULES.filter(
+    (module): module is GoaledModule => 'goalConfig' in module
+  );
+
+  const goals: Record<string, number> = Object.fromEntries(
+    goaledModules.map((module) => [module.id, module.bridge.useGoal() ?? 0])
+  );
 
   const {
     statsOpen,
@@ -46,22 +45,30 @@ export default function Toolbar({}: {}) {
     sendStress,
   } = useAppContext();
 
-  const [draftWater, setDraftWater] = useState(water);
-  const [draftFood, setDraftFood] = useState(food);
-  const [draftSleep, setDraftSleep] = useState(sleep);
-  const [draftGoals, setDraftGoals] = useState<GoalModules>(goals);
+  const [draftWater, setDraftWater] = useState(moduleValues.water);
+  const [draftFood, setDraftFood] = useState(moduleValues.food);
+  const [draftSleep, setDraftSleep] = useState(moduleValues.sleep);
+  const [draftGoals, setDraftGoals] = useState<Record<string, number>>(goals);
 
   async function closeMenu() {
     if (menuOpen || stressMenuOpen) {
-      await waterBridge.set(draftWater);
-      await foodBridge.set(draftFood);
-      await sleepBridge.set(draftSleep);
 
-      await waterBridge.setGoal(draftGoals.water).then(() => stepsBridge.setGoal(draftGoals.steps));
-      await foodBridge.setGoal(draftGoals.food);
-      console.log('Save water goal: ' + draftGoals.water);
-      console.log('Save steps goal: ' + draftGoals.steps);
-      console.log('Save food goal: ' + draftGoals.food);
+      await waterBridge.set(draftWater),
+      await foodBridge.set(draftFood),
+      await sleepBridge.set(draftSleep)
+
+
+      // await Promise.allSettled([
+
+      // await goaledModules.map(async (module) => {
+      //     await module.bridge.setGoal(draftGoals[module.id]);
+      //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
+      // });
+
+      await foodBridge.setGoal(draftGoals['food'])
+      await stepsBridge.setGoal(draftGoals['steps'])
+      await waterBridge.setGoal(draftGoals['water'])
+      // ]);
 
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
@@ -73,12 +80,12 @@ export default function Toolbar({}: {}) {
   // Refresh value in popup when retrieved from storage
   useEffect(() => {
     if (menuOpen) {
-      setDraftWater(water);
-      setDraftFood(food);
-      setDraftSleep(sleep);
+      setDraftWater(moduleValues.water);
+      setDraftFood(moduleValues.food);
+      setDraftSleep(moduleValues.sleep);
       setDraftGoals(goals);
     }
-  }, [menuOpen, water]);
+  }, [menuOpen]);
 
   return (
     <View className="relative left-0 right-0 z-20 mt-auto w-full items-center">
@@ -87,7 +94,7 @@ export default function Toolbar({}: {}) {
       <Menu
         water={draftWater}
         setWater={setDraftWater}
-        steps={steps}
+        steps={moduleValues.steps} // Steps doesn't need a draft because it is not changed in the menu.
         onStressPress={() => {
           changeStressMenu();
           changeMenu();
@@ -116,19 +123,30 @@ export default function Toolbar({}: {}) {
 
         <AttachStep index={1} style={{ position: 'absolute', top: -25 }}>
           <AttachStep index={4}>
-            <Pressable
-              disabled={statsOpen || settingsOpen}
-              className={`size-16 items-center justify-center border-4 border-primary-dark bg-primary shadow-block transition-opacity duration-200 ${statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'}`}
-              onPress={() => {
-                if (stressMenuOpen) {
-                  sendStress();
-                }
-                closeMenu();
-              }}>
-              {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
+            <NotchedBox
+              className={`shadow-block transition-opacity duration-200 ${
+                statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
+              }`}
+              fillClassName="bg-primary"
+              borderClassName="bg-primary-dark">
+              <Pressable
+                disabled={statsOpen || settingsOpen}
+                className={`size-16 items-center justify-center`}
+                onPress={() => {
+                  if (stressMenuOpen) {
+                    sendStress();
+                  }
+                  closeMenu();
+                }}>
+                {(menuOpen || stressMenuOpen) && (
+                  <CheckIcon width={50} height={50} color={'white'} />
+                )}
 
-              {!menuOpen && !stressMenuOpen && <PlusIcon width={50} height={50} color={'white'} />}
-            </Pressable>
+                {!menuOpen && !stressMenuOpen && (
+                  <PlusIcon width={50} height={50} color={'white'} />
+                )}
+              </Pressable>
+            </NotchedBox>
           </AttachStep>
         </AttachStep>
 

@@ -4,12 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GoalsView from '@/components/widgets/GoalsView';
 import Module from '@/components/widgets/Module';
 import { useAppContext } from '@/lib/AppContext';
-import { GoalModules, ModuleProps } from '@/lib/types';
-import Food from '@assets/icons/module_icons/food.svg';
-import Glass from '@assets/icons/module_icons/glass.svg';
-import Shoe from '@assets/icons/module_icons/shoe.svg';
-import Sleep from '@assets/icons/module_icons/sleep_bed.svg';
-import Stress from '@assets/icons/module_icons/stress.svg';
+import { getActiveModules, getPetName } from '@/lib/settings';
+import { MenuConfig, ModuleId, MODULES } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
@@ -35,48 +31,40 @@ export default function Menu({
   setFood: (food: number) => void;
   sleep: number;
   setSleep: (sleep: number) => void;
-  goals: GoalModules;
-  setGoals: (goals: GoalModules) => void;
+  goals: Record<string, number>;
+  setGoals: React.Dispatch<React.SetStateAction<Record<string, number>>>;
 }) {
   const [goalsViewActive, setGoalsViewActive] = useState(false);
-  // TODO (buenk, ZJWeng): Add backend for retrieving name
-  const name = 'Alex';
+
+  const name = getPetName();
   const { menuOpen } = useAppContext();
 
-  const modules: ModuleProps[] = [
-    {
-      id: 'water',
-      icon: Glass,
+  const menuConfig: Record<ModuleId, MenuConfig> = {
+    water: {
       value: water,
       setValue: setWater,
       goal: goals.water,
     },
-    {
-      id: 'steps',
-      icon: Shoe,
+    steps: {
       value: steps,
       goal: goals.steps,
     },
-    {
-      id: 'stress',
-      icon: Stress,
+    stress: {
       onPress: onStressPress,
       buttonString: 'Log Stress',
     },
-    {
-      id: 'food',
-      icon: Food,
+    food: {
       value: food,
       setValue: setFood,
       goal: goals.food,
     },
-    {
-      id: 'sleep',
-      icon: Sleep,
+    sleep: {
       value: sleep,
       setValue: setSleep,
     },
-  ];
+  };
+
+  const activeModules = MODULES.filter((module) => getActiveModules()[module.id]);
 
   useEffect(() => {
     if (!menuOpen) {
@@ -87,25 +75,24 @@ export default function Menu({
   // Save input goals to goals view
   // Doesn't send to storage
   function submitGoals() {
-    const final_goals = {
-      water: Math.ceil(goals.water),
-      steps: Math.ceil(goals.steps),
-      food: Math.ceil(goals.food),
-      sleep: false,
-    };
-    setGoals(final_goals);
-    if (water > goals.water) {
-      setWater(goals.water);
-    }
+    // Applies Math.ceil to all goals to prevent decimal numbers
+    const finalGoals: Record<string, number> = Object.fromEntries(
+      Object.entries(goals).map(([id, goal]) => [id, Math.ceil(goal)])
+    );
+
+    setGoals(finalGoals);
     setGoalsViewActive(false);
   }
 
-  if (!menuOpen) {
-    return null;
-  }
+  // Makes performance worse
+
+  // if (!menuOpen) {
+  //   return null;
+  // }
   // TODO (ZJWeng): explain the general structure of the component
   return (
     <View
+      pointerEvents={menuOpen ? 'auto' : 'none'}
       className={`absolute -top-6 w-full transition-opacity duration-200 ${menuOpen ? 'opacity-100' : 'opacity-0'} items-center`}>
       <View className="absolute bottom-full w-full items-center">
         <AttachStep index={2} style={{ alignSelf: 'center' }}>
@@ -127,8 +114,13 @@ export default function Menu({
                 <GoalsView goals={goals} setGoals={setGoals} />
               ) : (
                 <View className="flex-col gap-5">
-                  {modules.map((module) => (
-                    <Module key={module.id} props={module} />
+                  {activeModules.map((module) => (
+                    <Module
+                      key={module.id}
+                      id={module.id}
+                      icon={module.icon}
+                      props={menuConfig[module.id]}
+                    />
                   ))}
                 </View>
               )}

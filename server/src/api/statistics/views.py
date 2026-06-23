@@ -1,7 +1,14 @@
+from django.forms.models import FieldError
+from django.utils import timezone
+from django.db.models import F
+from django.core.exceptions import FieldError
 
-from datetime import datetime, timedelta
+from rest_framework import status, serializers
+from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiResponse,
@@ -15,19 +22,19 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from ..authentication.permissions import IsSelf
+from .models import Stats, Goals
+
 from .helpers import (
     getBarChart,
-    getCalender,
+    getSummary,
     getDay,
     getGoal,
-    getStatDict,
-    getSummary,
-    setDay,
     setGoal,
+    getCalender,
+    setDay,
+    getStatDict,
     toISOFormat,
 )
-from .models import Goals, Stats
-from .serializers import StatsSerializer
 
 """
 /api/stats/<date>/
@@ -168,7 +175,7 @@ class StatBulkView(APIView):
             OpenApiParameter(
                 name="stat_name",
                 description="Internal name of the stat. If not supplied, "
-                            "the api will return all stats at the given date.",
+                "the api will return all stats at the given date.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.QUERY,
                 required=False,
@@ -227,7 +234,7 @@ class StatBulkView(APIView):
                     "date": {
                         "type": "object",
                         "description": "Goals that need to be updated. "
-                                       "<internal_name>:<val>",
+                        "<internal_name>:<val>",
                         "additionalProperties": {"type": "number"},
                     }
                 },
@@ -420,14 +427,14 @@ class GoalManageView(APIView):
     )
     def get(self, request, goal_date):
         goal_name = request.query_params.get("goal_name", None)
+        if goal_name is None:
+            return Response("Invalid input", 400)
         day = datetime.fromisoformat(goal_date)
 
         goals = getGoal(request.user, goal_name, day)
 
         if goals is None:
-            return Response(
-                getStatDict(Goals()), status=status.HTTP_200_OK
-            )
+            return Response(getStatDict(Goals()), 200)
 
         if type(goals) is dict:
             return Response(goals, 200)
@@ -466,11 +473,17 @@ class GoalManageView(APIView):
         goal_data = request.data.get("goals")
         day = datetime.fromisoformat(goal_date)
 
+        if goal_data is None:
+            return Response("Invalid input", 400)
         if len(goal_data) == 0:
             return Response("Invalid input", 400)
 
-        setGoal(request.user, goal_data, day)
-        return Response("ok", 200)
+        try:
+            setGoal(request.user, goal_data, day)
+            return Response("ok", 200)
+        except FieldError:
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
+
 
 class GoalBulkView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
@@ -499,7 +512,7 @@ class GoalBulkView(APIView):
             OpenApiParameter(
                 name="goal_name",
                 description="Internal name of the goal. If not supplied, "
-                            "the api will return all goals at the given date.",
+                "the api will return all goals at the given date.",
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.QUERY,
                 required=False,
@@ -518,7 +531,10 @@ class GoalBulkView(APIView):
             },
         },
     )
-    def get(self, request,):
+    def get(
+        self,
+        request,
+    ):
         goal_name = request.query_params.get("goal_name", None)
         start_date = request.query_params.get("start_date", None)
         end_date = request.query_params.get("end_date", None)
@@ -558,7 +574,7 @@ class GoalBulkView(APIView):
                     "date": {
                         "type": "object",
                         "description": "Goals that need to be updated. "
-                                       "<internal_name>:<val>",
+                        "<internal_name>:<val>",
                         "additionalProperties": {"type": "number"},
                     }
                 },
@@ -576,7 +592,10 @@ class GoalBulkView(APIView):
                 day = datetime.fromisoformat(date)
             except ValueError:
                 return Response(status=HTTP_400_BAD_REQUEST)
-            setGoal(request.user, request.data[date], day)
+            try:
+                setGoal(request.user, request.data[date], day)
+            except FieldError:
+                return Response("Invalid input", 400)
 
         return Response("ok", status=200)
 

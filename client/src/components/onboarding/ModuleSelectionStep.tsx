@@ -1,95 +1,117 @@
-import { useEffect, useState } from 'react';
-import { Pressable, View } from 'react-native';
-
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { MODULES } from '@/lib/onboarding/types';
 import { getActiveModules, setActiveModules } from '@/lib/settings';
+import { EnabledModules } from '@/lib/storage';
+import { MODULES } from '@/lib/types';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 type Props = {
   onNext?: () => void;
 };
 
-type ActiveModules = Record<string, boolean>;
+const DEFAULT_MODULES: EnabledModules = {
+  water: true,
+  sleep: true,
+  steps: true,
+  stress: true,
+  food: true,
+};
 
 /** TODO (hfgieter): docstring */
 export default function ModuleSelectionStep({ onNext }: Props) {
-  const [activeModules, setModuleState] = useState<ActiveModules>({});
+  const router = useRouter();
+
+  const [activeModules, setModuleState] = useState<EnabledModules>(DEFAULT_MODULES);
 
   useEffect(() => {
     setModuleState(getActiveModules());
   }, []);
 
-  function toggleModule(moduleKey: string) {
+  function toggleModule(moduleId: keyof EnabledModules) {
     setModuleState((current) => ({
       ...current,
-      [moduleKey]: !current[moduleKey],
+      [moduleId]: !current[moduleId],
     }));
   }
 
-  function isSelected(moduleKey: string) {
-    return activeModules[moduleKey] ?? false;
+  function isSelected(moduleId: keyof EnabledModules) {
+    return activeModules[moduleId] ?? false;
   }
+
+  const requiresGoalSetup = MODULES.some(
+    (module) => activeModules[module.id] && 'goalConfig' in module
+  );
 
   function saveModules() {
     setActiveModules(activeModules);
-    onNext?.();
+
+    if (requiresGoalSetup) {
+      onNext?.();
+    } else {
+      router.replace('/(protected)');
+    }
   }
 
   const selectedCount = Object.values(activeModules).filter(Boolean).length;
 
-  const stressModule = MODULES.find((module) => module.key === 'stress');
-  const habitModules = MODULES.filter((module) => module.key !== 'stress');
+  const stressModule = MODULES.find((module) => module.id === 'stress');
+  const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
     <View className="flex-1 justify-center px-4">
-      <View className="gap-6 rounded-2xl border border-border/40 bg-card/80 p-5">
-        <View className="gap-3">
+      <View className="gap-2 rounded-2xl border border-border/40 bg-card/80 p-5">
+        <View className="gap-2">
           <AppText className="text-center text-xl font-bold">
             Would you like to keep track of stress?
           </AppText>
 
           {stressModule && (
             <Pressable
-              onPress={() => toggleModule(stressModule.key)}
-              className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
+              onPress={() => toggleModule(stressModule.id)}
+              className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
               style={{
                 backgroundColor: stressModule.color,
                 borderColor: stressModule.borderColor,
-                opacity: isSelected(stressModule.key) ? 1 : 0.4,
+                opacity: isSelected(stressModule.id) ? 1 : 0.4,
               }}>
               <stressModule.icon width={32} height={32} />
-              <AppText className="text-xl font-bold">{stressModule.id}</AppText>
+              <AppText className="text-xl font-bold">{stressModule.name}</AppText>
             </Pressable>
           )}
         </View>
 
-        <View className="gap-3">
+        <View className="gap-2">
           <AppText className="text-center text-xl font-bold">
             Which habits would you like to track?
           </AppText>
 
-          <View className="gap-4">
+          <View className="gap-2">
             {habitModules.map((module) => (
               <Pressable
-                key={module.key}
-                onPress={() => toggleModule(module.key)}
-                className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-6"
+                key={module.id}
+                onPress={() => toggleModule(module.id)}
+                className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
                 style={{
                   backgroundColor: module.color,
                   borderColor: module.borderColor,
-                  opacity: isSelected(module.key) ? 1 : 0.4,
+                  opacity: isSelected(module.id) ? 1 : 0.4,
                 }}>
                 <module.icon width={32} height={32} />
-                <AppText className="text-xl font-bold">{module.id}</AppText>
+                <AppText className="text-xl font-bold">{module.name}</AppText>
               </Pressable>
             ))}
           </View>
         </View>
 
-        <View className="gap-2 pt-2">
+        <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
-            <AppText className="font-bold text-white">Continue</AppText>
+            <AppText className="font-bold text-white">
+              {requiresGoalSetup
+                ? 'Continue to Goal Setup'
+                : 'Finish Setup & Go to Tutorial'}
+            </AppText>
           </Button>
         </View>
       </View>

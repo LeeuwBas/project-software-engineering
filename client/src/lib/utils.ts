@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { StatLine } from '@/lib/storage';
 
 /** TODO (ZJWeng): docstring */
 export function cn(...inputs: ClassValue[]) {
@@ -13,4 +14,13 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function dateDifference(a: Date, b: Date) {
     return Math.ceil(Math.abs(a.getTime() - b.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Formats a date to ISO date format (YYYY-MM-DD)
+ *
+ * @param date the date to format
+ */
+export function formatDate(date: Date): string {
+    return date.toISOString().substring(0, 10);
 }

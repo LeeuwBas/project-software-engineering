@@ -15,6 +15,8 @@ import {
     updateStat,
 } from '@/lib/storage';
 import { syncServer } from '@/lib/StorageSync';
+import { internalAuth } from '@/lib/auth/AuthService';
+import { formatDate } from '@/lib/utils';
 
 /**
  * Loads a given statistic into the given zustand.
@@ -25,9 +27,13 @@ import { syncServer } from '@/lib/StorageSync';
  * @returns The loaded value
  * @throws Error when the value is already loaded
  */
-export async function loadZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
+export async function loadZustand<K extends keyof StatLine>(
+    state: ValueZustand,
+    name: K,
+    defaultValue: number = 0
+) {
     // For the current day we can default to 0. For other days we cannot.
-    const loadedValue = (await getStatistic(name)) ?? 0;
+    let loadedValue = (await getStatistic(name)) ?? defaultValue;
 
     state.getState().setValue(loadedValue);
     return loadedValue;
@@ -404,11 +410,6 @@ async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Da
     return +result[name];
 }
 
-function formatDate(date: Date): string {
-    return date.toISOString().substring(0, 10);
-}
-
-/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
 async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
@@ -426,5 +427,5 @@ async function loadGoalServer<K extends keyof StatLine>(
         return null;
     }
 
-    return +result.goals;
+    return +result[name];
 }

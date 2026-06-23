@@ -18,7 +18,8 @@ export function PetNamingStep({ onNext, onBack }: Props) {
   const [userName, setUserName] = useState<string>('');
   const [errors, setErrors] = useState<Record<string, string[] | null>>({});
 
-  const maxNameLength = 16;
+  const maxPetNameLength = 12;
+  const maxUserNameLength = 16;
 
   function confirm() {
     const petNameCorrect = validatePetName();
@@ -95,7 +96,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
                 returnKeyType="next"
                 value={petName}
                 onChangeText={setPetName}
-                maxLength={maxNameLength}
+                maxLength={maxPetNameLength}
               />
 
               <View className="flex-row items-center justify-between">
@@ -108,7 +109,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
                 </View>
 
                 <AppText className="text-right">
-                  {petName.length}/{maxNameLength}
+                  {petName.length}/{maxPetNameLength}
                 </AppText>
               </View>
             </View>
@@ -122,7 +123,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
                 returnKeyType="done"
                 value={userName}
                 onChangeText={setUserName}
-                maxLength={maxNameLength}
+                maxLength={maxUserNameLength}
               />
 
               <View className="flex-row items-center justify-between">
@@ -135,7 +136,7 @@ export function PetNamingStep({ onNext, onBack }: Props) {
                 </View>
 
                 <AppText className="text-right">
-                  {userName.length}/{maxNameLength}
+                  {userName.length}/{maxUserNameLength}
                 </AppText>
               </View>
             </View>

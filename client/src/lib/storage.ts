@@ -5,6 +5,7 @@ import { dateDifference } from './utils';
 const statPrefix = 'Stats-';
 const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
+const settingsKey = 'settings';
 
 // TODO (david kramer): some brief explanations for what each type is for?
 
@@ -82,6 +83,24 @@ export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
     } as EnabledModules;
 }
 
+/**
+ * Removes all saved data from the storage.
+ */
+export async function clearStorage() {
+    console.log('Clearing storage...');
+    const keys = (await AsyncStorage.getAllKeys()).filter((value) => {
+        return (
+            value.startsWith(statPrefix) ||
+            value.startsWith(goalPrefix) ||
+            value.startsWith(syncDataKey) ||
+            value.startsWith(settingsKey)
+        );
+    });
+
+    await AsyncStorage.multiRemove(keys);
+    console.log('Cleared storage');
+}
+
 // ---------------------------------- Statistics Functions ----------------------------------
 
 /**
@@ -95,6 +114,13 @@ function calculateDate(date: Date, stat: string = statPrefix) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${stat}${year}-${month}-${day}`;
+}
+
+function makeStatline(statLine: any): StatLine {
+    for (const key of Object.keys(statLine)) {
+        statLine[key] = +statLine[key];
+    }
+    return statLine as StatLine;
 }
 
 /**
@@ -232,7 +258,8 @@ export async function getNamedStatRange(statName: string, lowerDay: Date, upperD
  * Gets the stat summary for the past 'days' time.
  *
  * @param statName - Name of the statistic to summarize.
- * @param days - Amount of days to summarize.
+ * @param start - Date object of the first day considered.
+ * @param end - Date object of the last day considered.
  *
  * @returns StatisticsSummary object containing all data
  */
@@ -251,7 +278,7 @@ export async function getStatSummary<K extends keyof StatLine>(
 
     returnValue.total = values.reduce((Acc, [d, x], _) => Acc + +x, 0);
     returnValue.count = values.length;
-    returnValue.average = returnValue.total / returnValue.count;
+    returnValue.average = returnValue.total / dateDifference(start, end);
     returnValue.maximum = values.reduce((Acc, [d, x], _) => (Acc > +x ? Acc : +x), 0);
     returnValue.minimum = values.reduce((Acc, [d, x], _) => (Acc < +x ? Acc : +x), 0);
 
@@ -439,6 +466,37 @@ export async function setStat<K extends keyof StatLine>(
 }
 
 /**
+ * Sets a bulk statistic/goal, without it being marked for synchronization.
+ * This can be used to load values from external sources
+ *
+ * @param bulk The bulk data object. By Date (key) and then a statLine (value).
+ * @param goals Weather this is a goal (true) or a statistic (false).
+ */
+export async function setStatBulk(bulk: any, goals: boolean = false) {
+    if (!bulk) {
+        console.log('no bulk');
+        return false;
+    }
+
+    await Promise.allSettled(
+        Object.keys(bulk).map((value) => {
+            const line = makeStatline(bulk[value]);
+            if (line === undefined) {
+                console.log(`Could not bulk insert ${value}!`);
+                return Promise.reject('Incomplete stat line');
+            }
+
+            return AsyncStorage.setItem(
+                (goals ? goalPrefix : statPrefix) + value,
+                JSON.stringify(line)
+            );
+        })
+    );
+
+    return true;
+}
+
+/**
  * Inserts a statistic into the storage. When there are no statistics saved, a new entry is made,
  * else it is inserted into the already existing statline.
  *
@@ -568,7 +626,7 @@ export async function getSyncData(forGoals: boolean = false) {
 
 export async function getSettings(): Promise<Settings> {
     try {
-        const raw = await AsyncStorage.getItem('settings');
+        const raw = await AsyncStorage.getItem(settingsKey);
 
         const val = raw ? createSettings(JSON.parse(raw)) : createSettings();
         return val;
@@ -580,56 +638,10 @@ export async function getSettings(): Promise<Settings> {
 
 export async function setSettings(settings: Settings) {
     try {
-        await AsyncStorage.setItem('settings', JSON.stringify(settings));
+        await AsyncStorage.setItem(settingsKey, JSON.stringify(settings));
     } catch (error) {
         console.error(error);
     }
-}
-
-// ------------------------------- Deprecated Water Funtions ------------------------------
-
-// Handles water in storage. May be used as template for future objects.
-export function useWater(menuOpen: boolean) {
-    const [water, setWater] = useState(0);
-
-    // Sends water value to storage.
-    async function setWaterData(water: number) {
-        try {
-            await AsyncStorage.setItem('water', JSON.stringify(water));
-        } catch (error) {
-            console.error('Setting water went wrong.', error);
-        }
-    }
-
-    // Gets water value from storage.
-    async function getWaterData(): Promise<number> {
-        try {
-            const water = await AsyncStorage.getItem('water');
-            return water !== null ? parseInt(water) : 0;
-        } catch (error) {
-            console.error('Getting water went wrong.', error);
-            return 0;
-        }
-    }
-
-    function saveWater(value: number) {
-        setWaterData(value);
-        setWater(value);
-        console.log('saved water ' + value);
-    }
-
-    // Gets water data from storage on render.
-    useEffect(() => {
-        async function getWater() {
-            const saved_water = await getWaterData();
-            setWater(saved_water);
-            console.log('retrieved water ' + saved_water);
-        }
-
-        getWater();
-    }, []);
-
-    return { water, saveWater };
 }
 
 export function petContextInit() {
