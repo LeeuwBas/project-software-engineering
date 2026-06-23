@@ -15,8 +15,8 @@ import {
 import { configureReanimatedLogger } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Toaster } from 'sonner-native';
+
 import '../global.css';
-import { scheduleAt } from '@/lib/notificationScheduler';
 
 export default function RootLayout() {
   const [loaded] = useFonts({
