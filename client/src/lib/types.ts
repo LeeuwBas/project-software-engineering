@@ -72,6 +72,7 @@ export interface NonGoaledModule {
     unit: string;
     color: string;
     borderColor: string;
+    selectColor?: string;
     bridge: StatisticBridge;
     menuConfig?: MenuConfig;
 }
@@ -84,6 +85,7 @@ export interface GoaledModule {
     unit: string;
     color: string;
     borderColor: string;
+    selectColor?: string;
     bridge: GoaledStatisticBridge;
     goalConfig: GoalConfig;
     menuConfig?: MenuConfig;
@@ -116,6 +118,7 @@ export const MODULES: ModuleDefinition[] = [
         unit: 'steps',
         color: '#a5d9a5',
         borderColor: '#69d669',
+        selectColor: '#36d636',
         bridge: stepsBridge,
         goalConfig: {
             defaultGoal: 5000,
@@ -152,6 +155,7 @@ export const MODULES: ModuleDefinition[] = [
         unit: 'meals',
         color: '#fcdf8d',
         borderColor: '#f7cc52',
+        selectColor: '#f9c025',
         bridge: foodBridge,
         goalConfig: {
             defaultGoal: 3,
