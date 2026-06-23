@@ -34,9 +34,5 @@ jobs:
       - name: Debug working directory
         run: ls -la
 
-      - name: Debug Prettier config resolution
-        run: pnpm prettier --find-config-path .
-        working-directory: client
-
       - name: Run Prettier check
-        run: pnpm prettier -c "**/*.{ts,tsx}"
+        run: pnpm prettier -c "**/*.{ts,tsx} --config prettier.config.js"
