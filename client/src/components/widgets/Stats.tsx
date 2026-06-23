@@ -17,6 +17,7 @@ interface TabLabel {
   icon: React.FC<SvgProps>;
 }
 
+/** TODO (ZJWeng): docstring and comments throughout */
 export default function Stats({}: {}) {
   const { statsOpen } = useAppContext();
   const [activeTab, setActiveTab] = useState<TabId>('calendar');

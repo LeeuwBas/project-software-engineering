@@ -8,6 +8,7 @@ interface StressButtonsProps {
   onChange: (value: number) => void;
 }
 
+/** TODO (hfgieter): docstring */
 export default function StressButtons({ value, onChange }: StressButtonsProps) {
   const selectedIndex = value ? value - 1 : null;
 

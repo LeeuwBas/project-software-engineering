@@ -18,6 +18,7 @@ import { Toaster } from 'sonner-native';
 
 import '../global.css';
 
+/**TODO (buenk): docstring, this file is already pretty well comented so explain the main purpose */
 export default function RootLayout() {
   const [loaded] = useFonts({
     IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),

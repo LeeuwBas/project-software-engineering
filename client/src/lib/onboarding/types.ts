@@ -1,3 +1,4 @@
+/** TODO (AlexAugustijn): docstring */
 export type OnboardingStep =
     | 'pet-selection'
     | 'pet-naming'

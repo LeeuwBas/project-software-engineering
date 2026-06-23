@@ -11,6 +11,7 @@ import { ImageBackground } from 'expo-image';
 
 const NUM_PETS = 3;
 
+/** TODO (ZJWeng): docstring, and add some comments explaining sections */
 export default function PetSelection() {
   const router = useRouter();
   const auth = useAuth();

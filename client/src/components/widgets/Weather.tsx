@@ -2,15 +2,16 @@ import { AppText } from '@/components/AppText';
 import { getWeather, WeatherData } from '@/lib/weather';
 import Cloudy from '@assets/icons/weather_icons/cloudy.svg';
 import Misty from '@assets/icons/weather_icons/misty.svg';
+import Moony from '@assets/icons/weather_icons/moon.svg';
+import MoonyCloud from '@assets/icons/weather_icons/moon_cloudy.svg';
 import Rainy from '@assets/icons/weather_icons/rainy.svg';
 import Snowy from '@assets/icons/weather_icons/snowy.svg';
 import Sunny from '@assets/icons/weather_icons/sunny.svg';
 import SunnyCloud from '@assets/icons/weather_icons/sunny_cloudy.svg';
-import MoonyCloud from '@assets/icons/weather_icons/moon_cloudy.svg';
-import Moony from '@assets/icons/weather_icons/moon.svg';
 import Thunder from '@assets/icons/weather_icons/thunder.svg';
 import { View } from 'react-native';
 
+/** TODO (ZJWeng, Dorus-vda, buenk): docstring, and a few comments please */
 export default function Weather() {
   const weather = getWeather();
   if (!weather) return;

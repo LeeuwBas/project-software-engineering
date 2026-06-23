@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { OnboardingStep } from '@/lib/onboarding/types';
+import { useState } from 'react';
 
 const STEP_ORDER: OnboardingStep[] = [
     'pet-selection',
@@ -9,6 +9,7 @@ const STEP_ORDER: OnboardingStep[] = [
     'module-config',
 ];
 
+/** TODO (AlexAugustijn): docstring */
 export function useOnboarding() {
     const [step, setStep] = useState<OnboardingStep>('pet-selection');
 

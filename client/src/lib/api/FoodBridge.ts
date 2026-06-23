@@ -1,16 +1,16 @@
 import { GoaledStatisticBridge, LoadableBridge } from '@/lib/api/APIBridge';
-import { createNewState, useValue } from '@/lib/api/ValueState';
 import {
     getGoals,
-    getStatisticSummary,
     getStatisticChart,
+    getStatisticSummary,
     loadGoalZustand,
     loadZustand,
     setGoalZustand,
     setZustand,
 } from '@/lib/api/GenericStorage';
+import { createNewState, useValue } from '@/lib/api/ValueState';
 
-// Use the food bridge when the values need to be manipulated.
+/** Use the food bridge when the values need to be manipulated. */
 export interface foodBridge extends GoaledStatisticBridge {}
 
 const foodState = createNewState();
@@ -31,6 +31,7 @@ export function useFood() {
     return useValue(foodState);
 }
 
+/** TODO (Dorus-vda, WilliamBower): docstring, and some comments pleases */
 export function createFoodBridge(): LoadableBridge<foodBridge> {
     return {
         load: () =>

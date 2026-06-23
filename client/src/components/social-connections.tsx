@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useColorScheme } from 'nativewind';
 import { Image, Platform, View } from 'react-native';
 
@@ -21,6 +21,7 @@ const SOCIAL_CONNECTION_STRATEGIES = [
   },
 ];
 
+/** TODO (buenk): docstring or delete */
 export function SocialConnections() {
   const { colorScheme } = useColorScheme();
 

@@ -41,6 +41,8 @@ export default async function generateQuoteRequest() {
         stress: { med: 0.33, high: 0.66, invert: true }, // high stays good
         food: { med: 0.45, high: 0.99 },
     };
+
+    // calculate if the progress toward the goal is low, med, or high, or null if there is no goal
     const getLevel = (
         current: number | null,
         goal: number | null,
@@ -62,10 +64,12 @@ export default async function generateQuoteRequest() {
         { action: 'Stress', level: getLevel(stressNow, stressGoal, floors.stress) },
     ];
 
+    // filter out stats with no goal
     const nonNullStats = stats.filter(
         (stat): stat is { action: string; level: string } => stat.level !== null
     );
 
+    // figure out what the lowest progress is and filter out any goals with more progress than that
     const priority = ['Low', 'Medium', 'High'];
     const worstLevel = priority.find((level) => nonNullStats.some((stat) => stat.level === level));
     const validStats =
@@ -75,8 +79,10 @@ export default async function generateQuoteRequest() {
         return null;
     }
 
+    // pick a random goal among the ones with the least progress.
     const worst = validStats[Math.floor(Math.random() * validStats.length)];
 
+    // figure out if the weather is good in case we still need steps, or if we exercised in case we need more water.
     let context = 'Standard';
     if (worst.action === 'Water' && worstLevel === 'Low') {
         if (

@@ -5,12 +5,13 @@ import { useSyncExternalStore } from 'react';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
 
-// useState/useRef were executing outside a component and scrambling the hook order.
+// Subsciber/publisher model to store what quote is displayed currently
 let currentQuote: string | null = null;
 let timer: ReturnType<typeof setTimeout> | null = null;
 const subscribers = new Set<() => void>();
 const emit = () => subscribers.forEach((cb) => cb());
 
+// use anywhere to subscribe to the quotes module
 export function useQuote(): string | null {
     return useSyncExternalStore(
         (cb) => {

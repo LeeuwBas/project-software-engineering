@@ -1,3 +1,4 @@
+/** TODO (ZJWeng): delete this file i think? */
 import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native';
 
 export const THEME = {
