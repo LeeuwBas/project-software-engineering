@@ -18,6 +18,6 @@ jobs:
         uses: creyD/prettier_action@v4.6
         with:
           prettier_options: "-c **/*.{ts,tsx}"
-          working_directory: '${{ github.action_path }}/client'
+          working_directory: 'client'
           dry: True
 
