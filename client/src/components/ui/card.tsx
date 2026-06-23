@@ -1,20 +1,22 @@
 import { Text, TextClassContext } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import { View } from 'react-native';
+import { NotchedBox } from '@/components/ui/notched-box';
 
 function Card({
   className,
+  children,
   ...props
 }: React.ComponentProps<typeof View> & React.RefAttributes<View>) {
   return (
     <TextClassContext.Provider value="text-card-foreground">
-      <View
-        className={cn(
-          'flex flex-col gap-6 rounded-lg border-4 border-border bg-card py-6 shadow-sm shadow-black/5',
-          className
-        )}
-        {...props}
-      />
+      <NotchedBox
+        fillClassName="bg-card"
+        borderClassName="bg-border"
+        className={cn('flex flex-col gap-6 py-6', className)}
+        {...props}>
+        {children}
+      </NotchedBox>
     </TextClassContext.Provider>
   );
 }
