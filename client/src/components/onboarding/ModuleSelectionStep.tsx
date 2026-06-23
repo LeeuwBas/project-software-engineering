@@ -6,6 +6,7 @@ import { MODULES } from '@/lib/types';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import CheckIcon from '@/assets/icons/toolbar_icons/check.svg';
 
 type Props = {
   onNext?: () => void;
@@ -69,14 +70,24 @@ export default function ModuleSelectionStep({ onNext }: Props) {
           {stressModule && (
             <Pressable
               onPress={() => toggleModule(stressModule.id)}
-              className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
+              className="flex-row items-center justify-between rounded-xl border-4 p-4"
               style={{
                 backgroundColor: stressModule.color,
                 borderColor: stressModule.borderColor,
                 opacity: isSelected(stressModule.id) ? 1 : 0.4,
               }}>
-              <stressModule.icon width={32} height={32} />
-              <AppText className="text-xl font-bold">{stressModule.name}</AppText>
+              <View className="w-8" />
+
+              <View className="flex-1 flex-row items-center justify-center gap-3">
+                <stressModule.icon width={32} height={32} />
+                <AppText className="text-xl font-bold">{stressModule.name}</AppText>
+              </View>
+
+              <View className="w-8 items-center justify-center">
+                {isSelected(stressModule.id)
+                  ? <CheckIcon width={32} height={32} color={stressModule.selectColor} />
+                  : null}
+              </View>
             </Pressable>
           )}
         </View>
@@ -91,14 +102,24 @@ export default function ModuleSelectionStep({ onNext }: Props) {
               <Pressable
                 key={module.id}
                 onPress={() => toggleModule(module.id)}
-                className="flex-row items-center justify-center gap-3 rounded-xl border-4 p-4"
+                className="flex-row items-center justify-between gap-3 rounded-xl border-4 p-4"
                 style={{
                   backgroundColor: module.color,
                   borderColor: module.borderColor,
                   opacity: isSelected(module.id) ? 1 : 0.4,
                 }}>
-                <module.icon width={32} height={32} />
-                <AppText className="text-xl font-bold">{module.name}</AppText>
+                <View className="w-8" />
+
+                <View className="flex-1 flex-row items-center justify-center gap-3">
+                  <module.icon width={32} height={32} />
+                  <AppText className="text-xl font-bold">{module.name}</AppText>
+                </View>
+
+                <View className="w-8 items-center justify-center">
+                  {isSelected(module.id)
+                    ? <CheckIcon width={32} height={32} color={module.selectColor} />
+                    : null}
+                </View>
               </Pressable>
             ))}
           </View>
