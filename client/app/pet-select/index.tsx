@@ -14,7 +14,7 @@ export default function PetSelection() {
   const router = useRouter();
   const auth = useAuth();
   const isLoggedIn = auth.isAuthenticated || auth.isGuest;
-  const pet = getPetID();
+  const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
   function confirm() {

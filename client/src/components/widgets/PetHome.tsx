@@ -37,7 +37,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   const pet = getPetID();
   const quote = useQuote();
 
-  const source = selection(pet); // derived, never stale
+  const source = pet ? selection(pet) : null; // derived, never stale
   const idleAnim = `${source}_breath_happy` as AnimationName;
   const blinkAnim = `${source}_blink` as AnimationName;
   const waterAnim = `${source}_drinking` as AnimationName;

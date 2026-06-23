@@ -176,7 +176,7 @@ function TutorialStarter() {
 
   useEffect(() => {
     if (startedRef.current) return; // only ever start the tour once
-    if (!done && !menuOpen && !statsOpen && !settingsOpen) {
+    if (done === false && !menuOpen && !statsOpen && !settingsOpen) {
       startedRef.current = true;
       start();
     }
