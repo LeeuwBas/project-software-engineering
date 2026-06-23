@@ -14,7 +14,7 @@ import { SvgProps } from 'react-native-svg';
 /** TODO (buenk): docstring, and some comments throughout, explaining each section */
 export default function Settings() {
   const { resetTutorial } = useTutorial();
-  const { settingsOpen } = useAppContext();
+  const { settingsOpen, changeSettings } = useAppContext();
   const auth = useAuth();
   const router = useRouter();
   const { colorScheme, toggleColorScheme } = useColorScheme();
@@ -49,6 +49,7 @@ export default function Settings() {
     {
       label: 'Restart tutorial',
       effect: () => {
+        changeSettings();
         resetTutorial();
       },
     },
