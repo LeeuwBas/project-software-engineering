@@ -31,5 +31,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Debug Prettier config resolution
+        run: pnpm prettier --find-config-path .
+
+      - name: Debug working directory
+        run: pwd
+
       - name: Run Prettier check
         run: pnpm prettier -c "**/*.{ts,tsx}"
