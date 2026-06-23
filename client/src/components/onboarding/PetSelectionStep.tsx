@@ -10,16 +10,18 @@ type Props = {
   onNext?: () => void;
 };
 
+/** TODO (AlexAugustijn): docstring */
 export function PetSelectionStep({ onNext }: Props) {
   const router = useRouter();
   const pet = getPetID();
   const [draftPet, setDraftPet] = useState(pet);
 
+  // TODO (AlexAugustijn): explain
   function confirm() {
     setPetID(draftPet);
     onNext?.();
   }
-
+  // TODO (AlexAugustijn): explain general layout
   return (
     <View className="flex-col gap-12">
       <PetSelector currentPet={draftPet} onPetChange={setDraftPet} />

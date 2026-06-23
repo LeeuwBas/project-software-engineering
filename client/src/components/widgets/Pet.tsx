@@ -4,6 +4,7 @@ import Onigiri from '@assets/pets/onigiri/onigiri.svg';
 import Bober from '@assets/pets/bober/BOBER.svg'
 import { View } from 'react-native';
 
+/** TODO (ZJWeng): docstring */
 export default function Pet({ className = '', id, ...props }: { className?: string; id: number }) {
   function selection(id: number) {
     switch (id) {
@@ -20,7 +21,7 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
     }
   }
 
-  const source = selection(id);
+  const source = selection(id); // TODO (ZJWeng): this is unused
 
   return (
     <View className={className} {...props}>

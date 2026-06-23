@@ -7,6 +7,8 @@ const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 const settingsKey = 'settings';
 
+// TODO (david kramer): some brief explanations for what each type is for?
+
 export interface Settings {
     chosenPet: number;
     hasDoneTutorial: boolean;

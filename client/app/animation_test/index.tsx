@@ -1,9 +1,10 @@
 import { Animation } from '@/components/animations/renderer';
+import { AnimationName } from '@/lib/animations/library';
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
-import { AnimationName } from '@/lib/animations/library';
 
+// TODO (AlexAugustijn): AnimationView is used nowhere, delete this file and the animation_test directory
 export default function AnimationView() {
   const [currentAnim, setCurrentAnim] = useState<AnimationName>('onigiri_breath_happy');
 

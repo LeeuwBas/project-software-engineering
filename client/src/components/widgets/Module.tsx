@@ -12,6 +12,7 @@ import { SvgProps } from 'react-native-svg';
 const MAX_WATER = 25;
 const MAX_FOOD = 12;
 
+/** TODO (ZJWeng): docstring */
 export default function Module({
   id,
   icon: Icon,
@@ -27,7 +28,7 @@ export default function Module({
   const { value, setValue, goal, onPress, buttonString } = props ?? {};
 
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
-
+  // TODO (ZJWeng, Dorus-vda): explain component structure
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center justify-between gap-2">
@@ -107,7 +108,7 @@ export default function Module({
 
         {id === 'sleep' && setValue !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
-            <Pressable onPress={() => setValue(-1)} className={`${value !== -1 && 'opacity-30'}`}>
+            <Pressable onPress={() => setValue(0)} className={`${value !== 0 && 'opacity-30'}`}>
               <ThumbsDown width={30} height={30} color={'#b41b21'} />
             </Pressable>
 

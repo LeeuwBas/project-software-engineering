@@ -3,14 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAppContext } from '@/lib/AppContext';
 import { useAuth } from '@/lib/auth/AuthManager';
+import { useTutorial } from '@/lib/settings';
 import Moon from '@assets/icons/weather_icons/moon.svg';
 import Sunny from '@assets/icons/weather_icons/sunny.svg';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import { useTutorial } from '@/lib/settings';
 
+/** TODO (buenk): docstring, and some comments throughout, explaining each section */
 export default function Settings() {
   const { resetTutorial } = useTutorial();
   const { settingsOpen } = useAppContext();

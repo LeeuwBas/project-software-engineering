@@ -2,6 +2,7 @@ import { AppText } from '@/components/AppText';
 import getMood from '@/lib/mood';
 import { View } from 'react-native';
 
+/** TODO (ZJWeng): delete this file i think? */
 export default function Happiness() {
   // TODO: calculate happiness based on number of tasks completed.
   const happiness = 100;
