@@ -21,6 +21,7 @@ import Settings from './Settings';
 import Stats from './Stats';
 import StressMenu from './StressMenu';
 
+/** TODO (ZJWeng, Dorus-vda, buenk): docstring */
 export default function Toolbar({}: {}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
@@ -59,7 +60,7 @@ export default function Toolbar({}: {}) {
       (await waterBridge.set(draftWater),
         await foodBridge.set(draftFood),
         await sleepBridge.set(draftSleep),
-        // await Promise.allSettled([
+        // await Promise.allSettled([ // TODO (Dorus-vda): is this needed?
 
         // await goaledModules.map(async (module) => {
         //     await module.bridge.setGoal(draftGoals[module.id]);
@@ -116,7 +117,7 @@ export default function Toolbar({}: {}) {
       />
       <Settings />
 
-      {/* The toolbar itself */}
+      {/* The toolbar itself TODO: (ZJWeng): add more comments explaing the structure, above and below this plz */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
         <AttachStep index={5}>
           <AttachStep index={7}>

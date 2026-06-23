@@ -19,6 +19,7 @@ export interface calendarCell {
 
 const weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
+/** TODO (Dorus-vda): docstring, make sure to explain the @returns */
 export default function CalendarOverview() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();

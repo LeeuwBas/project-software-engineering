@@ -3,12 +3,13 @@ import { useOnboarding } from '@/lib/onboarding/useOnboarding';
 import { AccountCreationStep } from '@/components/onboarding/AccountCreationStep';
 import ModuleConfigStep from '@/components/onboarding/ModuleConfigStep';
 import ModuleSelectionStep from '@/components/onboarding/ModuleSelectionStep';
-import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 import { PetNamingStep } from '@/components/onboarding/PetNamingStep';
+import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 
 import { ImageBackground } from 'expo-image';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+/** TODO (AlexAugustijn): docstring */
 export default function Onboarding() {
   const { step, nextStep, previousStep } = useOnboarding();
 

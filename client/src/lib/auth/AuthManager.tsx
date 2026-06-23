@@ -1,4 +1,6 @@
+import { syncServer } from '@/lib/StorageSync';
 import { API_ENDPOINT } from '@/lib/api/ApiEndpoint';
+import { internalAuth } from '@/lib/auth/AuthService';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
@@ -9,17 +11,46 @@ import { clearStorage } from '@/lib/storage';
 const GUEST_MODE = 'guest';
 
 type Auth = {
+  /**
+   * Weather the current user is authenticated
+   */
   isAuthenticated: boolean;
+  /**
+   * Weather the authentication is still loading.
+   */
   isLoading: boolean;
+  /**
+   * If the current user is in offline/guest mode
+   */
   isGuest: boolean;
 
+  /**
+   * Enables guest mode.
+   * Resolves once it has been enabled and all related storage is updated.
+   */
   setGuest: () => Promise<void>;
+  /**
+   * Logs in to the given account using the provided credentials.
+   *
+   * @param email the email to log in to
+   * @param password the password to use
+   * @return true if successful, false otherwise.
+   */
   signIn: (email: string, password: string) => Promise<boolean>;
+  /**
+   * Signs the current user out. This also works for guest mode.
+   */
   signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<Auth | null>(null);
 
+/**
+ * An Auth context provider component
+ *
+ * @param children the children of the component
+ * @constructor
+ */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
@@ -30,6 +61,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const refreshPromiseRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
+    /**
+     * Load authentication status from local storage.
+     */
     async function init() {
       const storedAccessToken = await tokenStorage.getAccessToken();
       const storedRefreshToken = await tokenStorage.getRefreshToken();
@@ -75,18 +109,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const receivedAccessToken = data.access;
     const receivedRefreshToken = data.refresh;
 
+    // Update internal auth variables
     await tokenStorage.setTokens(receivedAccessToken, receivedRefreshToken);
     setAccessToken(receivedAccessToken);
     setRefreshToken(receivedRefreshToken);
     internalAuth.accessToken = receivedAccessToken;
     internalAuth.refreshToken = receivedRefreshToken;
     setAuthenticated(true);
+
     console.log('Token renewed successfully');
   }
 
   async function signIn(email: string, password: string) {
-    let res;
-    res = await fetch(`${API_ENDPOINT}/auth/token/`, {
+    const res = await fetch(`${API_ENDPOINT}/auth/token/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),

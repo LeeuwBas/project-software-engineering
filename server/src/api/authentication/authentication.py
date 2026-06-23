@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class IDMarkedRefreshToken(RefreshToken):
+    """TODO (LeeuwBas): docstring"""
     @classmethod
     def for_user(cls, user):
         token = super().for_user(user)
@@ -12,6 +13,7 @@ class IDMarkedRefreshToken(RefreshToken):
 
 
 class MarkedJWTAuthentication(JWTAuthentication):
+    """TODO (LeeuwBas): docstring"""
     def get_user(self, validated_token):
         user = super().get_user(validated_token)
 

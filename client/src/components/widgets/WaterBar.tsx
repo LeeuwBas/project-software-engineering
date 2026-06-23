@@ -2,6 +2,7 @@ import { useWater } from '@/lib/api/WaterBridge';
 import Glass from '@assets/icons/module_icons/glass.svg';
 import { View } from 'react-native';
 
+/** TODO (hfgieter): docstring */
 export default function WaterBar() {
   const water = useWater() ?? 0;
   return (
