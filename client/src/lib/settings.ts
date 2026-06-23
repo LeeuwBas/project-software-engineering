@@ -68,6 +68,8 @@ async function setAndSyncSettings(settings: Settings) {
 export async function loadSettings() {
     const settings = await getSettings();
     useSettingsStore.getState().setStore(settings);
+
+    if (internalAuth.isGuest) return;
     // Does not await a response from the server, because there will be no error handling if the server fails anyways.
     loadSettingsServer().then((success) =>
         console.log(

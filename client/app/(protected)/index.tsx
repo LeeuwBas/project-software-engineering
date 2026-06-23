@@ -6,7 +6,7 @@ import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
-import { useTutorial } from '@/lib/settings';
+import { loadSettings, useTutorial } from '@/lib/settings';
 import { syncServer } from '@/lib/StorageSync';
 import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
@@ -54,6 +54,7 @@ export default function App() {
   // TODO (LeeuwBas): explain
   useEffect(() => {
     initializeApiManager().then();
+    loadSettings().then();
     scheduleCacheFlush();
   }, []);
   // TODO (ZJWeng): comment
