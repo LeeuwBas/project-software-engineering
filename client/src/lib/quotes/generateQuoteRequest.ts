@@ -2,7 +2,13 @@ import { getCurrentGoal, getStat } from '@/lib/storage';
 import { getWeatherStatus, WeatherData } from '@/lib/weather';
 
 // 15 minute cache so repeated quote requests dont hammer the weather api
-let _weatherCache: { data: WeatherData | null; timestamp: number } | null = null;
+let _weatherCache: {
+    data: WeatherData | null;
+    promise: Promise<WeatherData | null> | null;
+    timestamp: number;
+    resolved: boolean;
+} | null = null;
+
 const WEATHER_POLLING = 15 * 60 * 1000;
 
 /**
@@ -101,18 +107,16 @@ export default async function generateQuoteRequest() {
 
     const action = worst.action;
     const level = worst.level;
+
     return { action, level, context };
 }
 
 // grab todays stats and goals from storage
 // returns null if either is unavailable or in an unexpected shape
 async function getTodaysSnapshot() {
-    console.log('getting snapshot');
     try {
         const currentStats = await getStat(); // StatLine | null
-        console.log('got stat');
         const currentGoals = await getCurrentGoal(null); // StatLine | number | null
-        console.log('got goals');
 
         if (currentStats === null || typeof currentGoals === 'number' || currentGoals === null)
             throw Error(`stats: ${currentStats}\ngoals: ${currentGoals}`);
@@ -126,11 +130,34 @@ async function getTodaysSnapshot() {
 
 // true if weather is clear or lightly cloudy
 // caches the result for 15 minutes before re-fetching
-async function isGoodWeather(): Promise<boolean> {
-    const now = Date.now();
-    if (_weatherCache === null || now - _weatherCache.timestamp >= WEATHER_POLLING) {
-        _weatherCache = { data: await getWeatherStatus(), timestamp: now };
+function _fetchWeather() {
+    const cache = {
+        data: _weatherCache?.data ?? null,
+        promise: null as Promise<WeatherData | null> | null,
+        timestamp: Date.now(),
+        resolved: false,
+    };
+    cache.promise = getWeatherStatus();
+    cache.promise.then((data) => {
+        cache.data = data;
+        cache.resolved = true;
+    });
+    _weatherCache = cache;
+}
+
+function isGoodWeather(): boolean {
+    if (_weatherCache === null || _weatherCache.promise === null) {
+        _fetchWeather();
+        return false;
     }
-    if (!_weatherCache.data) return false;
-    return _weatherCache.data.id >= 800 && _weatherCache.data.id <= 802;
+
+    const elapsed = Date.now() - _weatherCache.timestamp;
+    const stale = _weatherCache.resolved
+        ? elapsed >= WEATHER_POLLING // 15 min, only once we have data
+        : elapsed >= 30_000; // 30s, only while still waiting
+
+    if (stale) _fetchWeather();
+
+    const data = _weatherCache.data;
+    return !!data && data.id >= 800 && data.id <= 802;
 }
