@@ -14,10 +14,11 @@ import {
     stressBridge,
     waterBridge,
 } from './api/APIBridge';
-import { useFood } from './api/FoodBridge';
+import { foodDefault, useFood } from './api/FoodBridge';
 import { useSleep } from './api/SleepBridge';
+import { stepsDefault } from './api/StepBridge';
 import { useStress } from './api/StressBridge';
-import { useWater } from './api/WaterBridge';
+import { useWater, waterDefault } from './api/WaterBridge';
 import useStepValue from './GetSteps';
 
 // Number of available pets
@@ -93,78 +94,86 @@ export interface GoaledModule {
 
 export type ModuleDefinition = GoaledModule | NonGoaledModule;
 
-export const MODULES: ModuleDefinition[] = [
-    {
-        id: 'water',
-        name: 'Water',
-        icon: Glass,
-        useValue: useWater,
-        unit: 'glasses',
-        color: '#aed8eb',
-        borderColor: '#5abce8',
-        bridge: waterBridge,
-        goalConfig: {
-            defaultGoal: 8,
-            minGoal: 1,
-            stepSize: 1,
-            maxGoal: 20,
-        },
+export const WaterModule: GoaledModule = {
+    id: 'water',
+    name: 'Water',
+    icon: Glass,
+    useValue: useWater,
+    unit: 'glasses',
+    color: '#aed8eb',
+    borderColor: '#5abce8',
+    bridge: waterBridge,
+    goalConfig: {
+        defaultGoal: waterDefault,
+        minGoal: 1,
+        stepSize: 1,
+        maxGoal: 20,
     },
+};
 
-    {
-        id: 'food',
-        name: 'Meals',
-        icon: Food,
-        useValue: useFood,
-        unit: 'meals',
-        color: '#fcdf8d',
-        borderColor: '#f7cc52',
-        selectColor: '#f9c025',
-        bridge: foodBridge,
-        goalConfig: {
-            defaultGoal: 3,
-            minGoal: 2,
-            stepSize: 1,
-            maxGoal: 7,
-        },
+export const StepModule: GoaledModule = {
+    id: 'steps',
+    name: 'Walking',
+    icon: Shoe,
+    useValue: useStepValue,
+    unit: 'steps',
+    color: '#a5d9a5',
+    borderColor: '#69d669',
+    selectColor: '#36d636',
+    bridge: stepsBridge,
+    goalConfig: {
+        defaultGoal: stepsDefault,
+        minGoal: 1000,
+        maxGoal: 25000,
+        stepSize: 1000,
     },
-    {
-        id: 'sleep',
-        name: 'Sleep',
-        icon: Sleep,
-        useValue: useSleep,
-        unit: 'hours',
-        color: '#bb9cd6',
-        borderColor: '#a772d6',
-        bridge: sleepBridge,
+};
+
+export const StressModule: ModuleDefinition = {
+    id: 'stress',
+    name: 'Stress',
+    icon: Stress,
+    useValue: useStress,
+    unit: 'cortisol',
+    color: '#fcada3',
+    borderColor: '#f67788',
+    bridge: stressBridge,
+};
+export const SleepModule: ModuleDefinition = {
+    id: 'sleep',
+    name: 'Sleep',
+    icon: Sleep,
+    useValue: useSleep,
+    unit: 'hours',
+    color: '#bb9cd6',
+    borderColor: '#a772d6',
+    bridge: sleepBridge,
+};
+
+export const FoodModule: GoaledModule = {
+    id: 'food',
+    name: 'Meals',
+    icon: Food,
+    useValue: useFood,
+    unit: 'meals',
+    color: '#fcdf8d',
+    borderColor: '#f7cc52',
+    selectColor: '#f9c025',
+    bridge: foodBridge,
+    goalConfig: {
+        defaultGoal: foodDefault,
+        minGoal: 2,
+        stepSize: 1,
+        maxGoal: 7,
     },
-    {
-        id: 'steps',
-        name: 'Walking',
-        icon: Shoe,
-        useValue: useStepValue,
-        unit: 'steps',
-        color: '#a5d9a5',
-        borderColor: '#69d669',
-        selectColor: '#36d636',
-        bridge: stepsBridge,
-        goalConfig: {
-            defaultGoal: 5000,
-            minGoal: 1000,
-            maxGoal: 25000,
-            stepSize: 1000,
-        },
-    },
-    {
-        id: 'stress',
-        name: 'Stress',
-        icon: Stress,
-        useValue: useStress,
-        unit: 'cortisol',
-        color: '#fcada3',
-        borderColor: '#f67788',
-        bridge: stressBridge,
-    },
+};
+
+export const MODULES: ModuleDefinition[] = [
+    WaterModule,
+    FoodModule,
+    SleepModule,
+    StepModule,
+    StressModule,
 ];
 
 export interface BarType {

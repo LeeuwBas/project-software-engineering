@@ -1,5 +1,6 @@
 import {
     createEnabledModules,
+    createSettings,
     EnabledModules,
     getSettings,
     setSettings,
@@ -66,6 +67,14 @@ async function setAndSyncSettings(settings: Settings) {
         console.log(`saving settings to server failed, reason: ${error}`)
     );
     await setSettings(settings);
+}
+
+/**
+ * Initialize the settings for the onboarding. Initializes with an empty settings interface.
+ * Should not be used to initialize settings otherwise as it will overwrite all settings.
+ */
+export function initSettings() {
+    useSettingsStore.getState().setStore(createSettings());
 }
 
 /**
