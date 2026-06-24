@@ -31,6 +31,8 @@ export function useFood() {
     return useValue(foodState);
 }
 
+export const foodDefault: number = 3;
+
 /** TODO (Dorus-vda, WilliamBower): docstring, and some comments pleases */
 export function createFoodBridge(): LoadableBridge<foodBridge> {
     return {
@@ -45,7 +47,7 @@ export function createFoodBridge(): LoadableBridge<foodBridge> {
             );
         },
         getSummary: async (start, end) => await getStatisticSummary('food', start, end),
-        getGoal: async (date) => (await getGoals('food', date)) ?? 0,
+        getGoal: async (date) => (await getGoals('food', date)) ?? foodDefault,
         setGoal: (value) => setGoalZustand(foodGoalState, 'food', value),
         useGoal: () => useValue(foodGoalState),
     };

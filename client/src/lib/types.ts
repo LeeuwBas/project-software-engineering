@@ -15,11 +15,12 @@ import {
     waterBridge,
 } from './api/APIBridge';
 import { waterDefault } from './api/WaterBridge';
-import { useFood } from './api/FoodBridge';
+import { foodDefault, useFood } from './api/FoodBridge';
 import { useSleep } from './api/SleepBridge';
 import { useStress } from './api/StressBridge';
 import { useWater } from './api/WaterBridge';
 import useStepValue from './GetSteps';
+import { stepsDefault } from './api/StepBridge';
 
 // Number of available pets
 export const NUM_PETS = 4;
@@ -123,7 +124,7 @@ export const StepModule: GoaledModule = {
     selectColor: '#36d636',
     bridge: stepsBridge,
     goalConfig: {
-        defaultGoal: 5000,
+        defaultGoal: stepsDefault,
         minGoal: 1000,
         maxGoal: 25000,
         stepSize: 1000,
@@ -162,7 +163,7 @@ export const FoodModule: GoaledModule = {
     selectColor: '#f9c025',
     bridge: foodBridge,
     goalConfig: {
-        defaultGoal: 3,
+        defaultGoal: foodDefault,
         minGoal: 2,
         stepSize: 1,
         maxGoal: 7,

@@ -51,7 +51,7 @@ export function createWaterBridge(): LoadableBridge<WaterBridge> {
             );
         },
         getSummary: async (start, end) => await getStatisticSummary('water', start, end),
-        getGoal: async (date) => (await getGoals('water', date)) ?? 0,
+        getGoal: async (date) => (await getGoals('water', date)) ?? waterDefault,
         setGoal: (value) => setGoalZustand(waterGoalState, 'water', value),
         useGoal: () => useValue(waterGoalState),
     };

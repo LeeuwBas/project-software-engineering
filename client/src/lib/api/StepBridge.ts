@@ -21,6 +21,8 @@ export function useSteps() {
     return useValue(stepState);
 }
 
+export const stepsDefault: number = 5000;
+
 /** TODO (LeeuwBas): docstring */
 export function createStepBridge(): LoadableBridge<StepBridge> {
     return {
@@ -35,7 +37,7 @@ export function createStepBridge(): LoadableBridge<StepBridge> {
             );
         },
         getSummary: async (start, end) => await getStatisticSummary('steps', start, end),
-        getGoal: async (date) => (await getGoals('steps', date)) ?? 0,
+        getGoal: async (date) => (await getGoals('steps', date)) ?? stepsDefault,
         setGoal: (value) => setGoalZustand(stepGoalState, 'steps', value),
         useGoal: () => useValue(stepGoalState),
     };
