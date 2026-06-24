@@ -39,16 +39,16 @@ export default function Module({
         </View>
         {/* Water module */}
         {id === 'water' && setValue !== undefined && value !== undefined && goal !== undefined && (
-          <View className="flex-1 flex-row items-center justify-center gap-3">
+          <View className="w-full flex-1 flex-row items-center justify-center gap-3">
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 flex-grow"
               disabled={value <= 0}
               onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
-            <View className="flex w-16 flex-row items-center justify-between gap-0 rounded-md border border-border px-2 py-3">
+            <View className="flex min-w-16 flex-grow flex-row items-center justify-between gap-0 rounded-md border border-border px-2 py-3">
               <AppText className="text-base font-bold">{value}</AppText>
               <AppText className="text-xs font-bold"> / </AppText>
               <AppText className="text-left text-base font-bold">{goal}</AppText>
@@ -56,7 +56,7 @@ export default function Module({
 
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 flex-grow"
               disabled={value >= MAX_WATER}
               onPress={() => setValue(value + 1)}>
               <Plus size={20} />
@@ -81,16 +81,16 @@ export default function Module({
         )}
 
         {id === 'food' && setValue !== undefined && value !== undefined && goal !== undefined && (
-          <View className="flex-1 flex-row items-center justify-center gap-3">
+          <View className="w-full flex-1 flex-row items-center justify-center gap-3">
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 flex-grow"
               disabled={value <= 0}
               onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
-            <View className="flex w-16 flex-row items-center justify-between gap-0 rounded-md border border-border px-2 py-3">
+            <View className="flex min-w-16 flex-grow flex-row items-center justify-between gap-0 rounded-md border border-border px-2 py-3">
               <AppText className="text-base font-bold">{value}</AppText>
               <AppText className="text-xs font-bold"> / </AppText>
               <AppText className="text-left text-base font-bold">{goal}</AppText>
@@ -98,7 +98,7 @@ export default function Module({
 
             <Button
               variant="outline"
-              className="h-12"
+              className="h-12 flex-grow"
               disabled={value >= MAX_FOOD}
               onPress={() => setValue(value + 1)}>
               <Plus size={20} />
