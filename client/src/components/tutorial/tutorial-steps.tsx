@@ -3,9 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { type ReactNode } from 'react';
 import { View } from 'react-native';
-import {
-  TourStep
-} from 'react-native-spotlight-tour';
+import { TourStep } from 'react-native-spotlight-tour';
 
 /** TODO (buenk): docstring */
 export function createTutorialSteps(): TourStep[] {
