@@ -11,7 +11,7 @@ interface StatisticChartProps {
   labels: string[];
 }
 
-/** TODO (AlexAugustijn): docstring, and some comments explaining each section */
+/** TODO (ZJWeng): docstring, and some comments explaining each section */
 export function StatisticChart({ module, values, labels }: StatisticChartProps) {
   const { colorScheme } = useColorScheme();
   const labelColor = colorScheme === 'dark' ? 'white' : '#555555';
