@@ -12,7 +12,12 @@ import * as React from 'react';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { toast } from 'sonner-native';
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Signup widget of the onboarding process.
+ * Serves as UI for a user to save their email and password for their account.
+ *
+ * @return {React.JSX.Element} Signup widget
+ */
 export function AccountCreationStep() {
   const router = useRouter();
   const auth = useAuth();

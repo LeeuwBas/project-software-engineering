@@ -1,4 +1,6 @@
-/** TODO (AlexAugustijn): docstring */
+/**
+ * A type that dictates the states that the onboarding steps can assume
+ */
 export type OnboardingStep =
     | 'pet-selection'
     | 'pet-naming'
