@@ -89,6 +89,7 @@ export function createQuoteBridge(): QuoteBridge {
         let data = { quote: getJsonQuote(req) };
 
         if (!data?.quote) {
+            console.log('Requesting quote from the server! This should never happen!');
             data = await getAPI(
                 `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
                     `&level=${encodeURIComponent(req.level)}` +
