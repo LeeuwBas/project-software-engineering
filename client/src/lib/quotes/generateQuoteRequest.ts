@@ -1,6 +1,5 @@
-import { getCurrentGoal, getStat } from '@/lib/storage';
+import { EnabledModules, getCurrentGoal, getStat } from '@/lib/storage';
 import { getWeatherStatus, WeatherData } from '@/lib/weather';
-
 // 15 minute cache so repeated quote requests dont hammer the weather api
 let _weatherCache: {
     data: WeatherData | null;
@@ -18,7 +17,7 @@ const DEFAULT_QUOTE = { action: 'Standard', level: 'Standard', context: 'Standar
  * @returns `{ action, level, context }` to pass to the quote API, or `null` if a
  * request cannot be made (missing data, no valid stats).
  */
-export default async function generateQuoteRequest() {
+export default async function generateQuoteRequest(activeModules: EnabledModules) {
     const snap = await getTodaysSnapshot();
     if (snap === null) return DEFAULT_QUOTE;
     const { currentStats, currentGoals } = snap;
@@ -39,37 +38,43 @@ export default async function generateQuoteRequest() {
         food: foodGoal,
     } = currentGoals;
 
+    console.log(JSON.stringify(currentStats));
+    console.log(JSON.stringify(currentGoals));
+
     const goodWeather: boolean = await isGoodWeather();
 
-    // Low, Medium, High boundaries
+    // Low, Medium, High boundaries. make sure the names match module ids
     const floors = {
         water: { med: 0.45, high: 0.99 },
         sleep: { med: 0.33, high: 0.66 },
         steps: { med: 0.33, high: 0.99 },
-        stress: { med: 0.33, high: 0.66, invert: true }, // high stays good
+        stress: { med: 1, high: 2 },
         food: { med: 0.45, high: 0.99 },
     };
 
     // calculate if the progress toward the goal is low, med, or high, or null if there is no goal
-    const getLevel = (
-        current: number | null,
-        goal: number | null,
-        floors: { med: number; high: number; invert?: boolean }
-    ): string | null => {
+    const getLevel = (current: number | null, goal: number | null, id: string): string | null => {
+        const { med, high } = floors[id as keyof typeof floors];
+
+        if (!activeModules[id as keyof EnabledModules]) return null;
         if (current === null || goal === 0 || goal === null) return null;
+        if (id == 'stress') {
+            if (current < med) return 'Low';
+            if (current < high) return 'Medium';
+            return 'High';
+        }
         let ratio = current / goal;
-        if (floors.invert ?? false) ratio = 1 - ratio;
-        if (ratio < floors.med) return 'Low';
-        if (ratio < floors.high) return 'Medium';
+        if (ratio < med) return 'Low';
+        if (ratio < high) return 'Medium';
         return 'High';
     };
 
     const stats = [
-        { action: 'Water', level: getLevel(waterNow, waterGoal, floors.water) },
-        { action: 'Walk', level: getLevel(stepsNow, stepsGoal, floors.steps) },
-        { action: 'Sleep', level: getLevel(sleepNow, sleepGoal, floors.sleep) },
-        { action: 'Eat', level: getLevel(foodNow, foodGoal, floors.food) },
-        { action: 'Stress', level: getLevel(stressNow, stressGoal, floors.stress) },
+        { action: 'Water', level: getLevel(waterNow, waterGoal, 'water') },
+        { action: 'Walk', level: getLevel(stepsNow, stepsGoal, 'steps') },
+        { action: 'Sleep', level: getLevel(sleepNow, sleepGoal, 'sleep') },
+        { action: 'Eat', level: getLevel(foodNow, foodGoal, 'food') },
+        { action: 'Stress', level: getLevel(stressNow, stressGoal, 'stress') },
     ];
 
     // filter out stats with no goal

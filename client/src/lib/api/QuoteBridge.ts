@@ -1,6 +1,7 @@
 import { getAPI } from '@/lib/api/ApiManager';
 import generateQuoteRequest from '@/lib/quotes/generateQuoteRequest';
 import getJsonQuote from '@/lib/quotes/getJsonQuote';
+import { EnabledModules } from '@/lib/storage';
 import { useSyncExternalStore } from 'react';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
@@ -43,7 +44,7 @@ export interface QuoteBridge {
      * @param durationMs duration that the quote should display if not dismissed, defaults to
      * DEFAULT_QUOTE_DURATION_MS.
      */
-    requestQuote: () => void;
+    requestQuote: (activeModules: EnabledModules) => void;
     /**
      * Manually set the quote.
      * @param quote string to set {@link quote} to.
@@ -82,8 +83,8 @@ export function createQuoteBridge(): QuoteBridge {
         }
     };
 
-    const requestQuote = async () => {
-        const req = await generateQuoteRequest();
+    const requestQuote = async (activeModules: EnabledModules) => {
+        const req = await generateQuoteRequest(activeModules);
         if (req === null) return;
         let data = { quote: getJsonQuote(req) };
 
