@@ -3,14 +3,15 @@ import { useOnboarding } from '@/lib/onboarding/useOnboarding';
 import { AccountCreationStep } from '@/components/onboarding/AccountCreationStep';
 import ModuleConfigStep from '@/components/onboarding/ModuleConfigStep';
 import ModuleSelectionStep from '@/components/onboarding/ModuleSelectionStep';
-import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 import { PetNamingStep } from '@/components/onboarding/PetNamingStep';
+import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 
 import { ImageBackground } from 'expo-image';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+/** TODO (AlexAugustijn): docstring */
 export default function Onboarding() {
-  const { step, nextStep, previousStep } = useOnboarding();
+  const { step, nextStep, previousStep, goToStep } = useOnboarding();
 
   let currentStep;
 
@@ -23,18 +24,17 @@ export default function Onboarding() {
       currentStep = <PetNamingStep onNext={nextStep} onBack={previousStep} />;
       break;
 
-    case 'account':
-      currentStep = <AccountCreationStep onNext={nextStep} />;
-      break;
-
     case 'module-selection':
-      currentStep = <ModuleSelectionStep onNext={nextStep} />;
+      currentStep = <ModuleSelectionStep onNext={nextStep} goToStep={goToStep} />;
       break;
 
     case 'module-config':
-      currentStep = <ModuleConfigStep onBack={previousStep} />;
+      currentStep = <ModuleConfigStep onNext={nextStep} onBack={previousStep} />;
       break;
 
+    case 'account':
+      currentStep = <AccountCreationStep />;
+      break;
     default:
       currentStep = null;
   }

@@ -5,11 +5,12 @@ import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 
+/** TODO (ZJWeng, Dorus-vda, buenk): docstring */
 export default function WaterWidget({ water, setWater }: { water: number; setWater: Function }) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
-  // TODO: get goal from API
+  // TODO: get goal from API (ZJWeng) hows this going?
   const goal = 10;
 
   function alterWaterValue(value: number) {

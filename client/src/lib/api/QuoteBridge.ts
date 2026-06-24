@@ -1,15 +1,17 @@
 import { getAPI } from '@/lib/api/ApiManager';
-import { calculateQuoteRequest } from '@/lib/quotes/calculateQuoteRequest';
+import generateQuoteRequest from '@/lib/quotes/generateQuoteRequest';
+import getJsonQuote from '@/lib/quotes/getJsonQuote';
 import { useSyncExternalStore } from 'react';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
 
-// useState/useRef were executing outside a component and scrambling the hook order.
+// Subsciber/publisher model to store what quote is displayed currently
 let currentQuote: string | null = null;
 let timer: ReturnType<typeof setTimeout> | null = null;
 const subscribers = new Set<() => void>();
 const emit = () => subscribers.forEach((cb) => cb());
 
+// use anywhere to subscribe to the quotes module
 export function useQuote(): string | null {
     return useSyncExternalStore(
         (cb) => {
@@ -81,14 +83,19 @@ export function createQuoteBridge(): QuoteBridge {
     };
 
     const requestQuote = async () => {
-        const req = await calculateQuoteRequest();
+        const req = await generateQuoteRequest();
         if (req === null) return;
-        const data = await getAPI(
-            `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
-                `&level=${encodeURIComponent(req.level)}` +
-                `&context=${encodeURIComponent(req.context)}`
-        );
-        setQuote(data?.quote ?? null);
+        let data = { quote: getJsonQuote(req) };
+
+        if (!data?.quote) {
+            data = await getAPI(
+                `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
+                    `&level=${encodeURIComponent(req.level)}` +
+                    `&context=${encodeURIComponent(req.context)}`
+            );
+        }
+        if (!data?.quote) return;
+        setQuote(data?.quote);
     };
 
     const removeQuote = () => {

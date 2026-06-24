@@ -7,6 +7,8 @@ const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 const settingsKey = 'settings';
 
+// TODO (david kramer): some brief explanations for what each type is for?
+
 export interface Settings {
     chosenPet: number;
     hasDoneTutorial: boolean;
@@ -191,7 +193,7 @@ export async function setNewGoal<K extends keyof StatLine>(
         oldGoal = createStatLine();
     }
     oldGoal[statName] = goal;
-    AsyncStorage.setItem(today, JSON.stringify(oldGoal));
+    await AsyncStorage.setItem(today, JSON.stringify(oldGoal));
     await markSyncRequired(statName, true, date);
 }
 
@@ -370,7 +372,7 @@ export async function updateStat<K extends keyof StatLine>(
 
     line[statName] = oldVal + change;
 
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     await markSyncRequired(statName, false, day);
     return true;
 }
@@ -387,6 +389,7 @@ export async function updateStat<K extends keyof StatLine>(
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
+    const todayDate = new Date();
     let returnValue: StatLine[] = [];
     let isFull = true;
 
@@ -409,8 +412,13 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
 
         if (dayStat === null) {
             nodata = true;
-            isFull = false;
             dayStat = createStatLine();
+
+            // If there is no data for the future, we can safely default to 0
+            // as there should not be any data. This greatly reduces server requests.
+            if (currentDay <= todayDate) {
+                isFull = false;
+            }
         }
 
         for (let key of Object.keys(dayStat) as (keyof StatLine)[]) {
@@ -420,7 +428,9 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             if (key === 'stress') {
                 today[key] = achieved;
             } else {
-                const complete = nodata ? 0 : achieved >= goal;
+                // If we do not have date, we did not meet achieve the goal
+                // If the goal is 0, it shouldn't be met either
+                const complete = nodata ? 0 : achieved >= goal && goal > 0;
                 today[key] = +complete;
             }
         }
@@ -458,7 +468,7 @@ export async function setStat<K extends keyof StatLine>(
     }
 
     line[statName] = value;
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     await markSyncRequired(statName, false, day);
     return true;
 }
@@ -518,7 +528,7 @@ export async function insertStat<K extends keyof StatLine>(
         }
         line[statName] = value;
     }
-    AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
+    await AsyncStorage.setItem(calculateDate(day), JSON.stringify(line));
     await markSyncRequired(statName, false, day);
     return true;
 }
@@ -543,7 +553,10 @@ export async function markSyncRequired<K extends keyof StatLine>(
 
     if (currentSync === null) {
         // Insert if this is the first time
-        AsyncStorage.setItem(storageKey, JSON.stringify({ [dateString]: new Array(statName) }));
+        await AsyncStorage.setItem(
+            storageKey,
+            JSON.stringify({ [dateString]: new Array(statName) })
+        );
         return;
     }
 
@@ -561,7 +574,7 @@ export async function markSyncRequired<K extends keyof StatLine>(
         storage[dateString] = new Array(statName);
     }
 
-    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+    await AsyncStorage.setItem(storageKey, JSON.stringify(storage));
 }
 
 /**
@@ -616,7 +629,7 @@ export async function getSyncData(forGoals: boolean = false) {
         delete storage[key];
     }
 
-    AsyncStorage.setItem(storageKey, JSON.stringify(storage));
+    await AsyncStorage.setItem(storageKey, JSON.stringify(storage));
     return syncData;
 }
 

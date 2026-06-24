@@ -1,3 +1,4 @@
+/** TODO (LeeuwBas): docstring */
 type AuthService = {
     accessToken: string | null;
     refreshToken: string | null;
@@ -7,6 +8,7 @@ type AuthService = {
     signOut: () => Promise<void>;
 };
 
+/** TODO (LeeuwBas): docstring */
 export const internalAuth: AuthService = {
     accessToken: null,
     refreshToken: null,

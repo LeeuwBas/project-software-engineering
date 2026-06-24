@@ -8,6 +8,7 @@ import { useWater } from '@/lib/api/WaterBridge';
 import { getPetID } from '@/lib/settings';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { scheduleNotification } from '@/lib/notificationScheduler';
 
 /**
  * This component represents the pet with its associated animations for the homescreen.
@@ -26,6 +27,8 @@ export default function PetHome({ className = '', ...props }: { className?: stri
         return 'onigiri';
       case 2:
         return 'blob';
+      case 3:
+        return 'bober';
       default:
         console.error('Unknown pet id');
     }
@@ -34,7 +37,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
   const pet = getPetID();
   const quote = useQuote();
 
-  const source = selection(pet); // derived, never stale
+  const source = pet !== null ? selection(pet) : null; // derived, never stale
   const idleAnim = `${source}_breath_happy` as AnimationName;
   const blinkAnim = `${source}_blink` as AnimationName;
   const waterAnim = `${source}_drinking` as AnimationName;
