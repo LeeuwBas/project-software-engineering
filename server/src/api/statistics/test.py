@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 
 from datetime import date
 
-from .models import Stats, Goals
+from .models import Stats
 
 
 class StatisticsTests(TestCase):
