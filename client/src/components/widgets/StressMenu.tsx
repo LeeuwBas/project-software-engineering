@@ -22,9 +22,9 @@ async function saveStress(score1: number, score2: number, score3: number) {
 }
 
 /** Content for the stress input questionnaire.
- * 
+ *
  * @returns JSX element
-*/
+ */
 export default function StressMenu() {
   const { stressMenuOpen, setSendStress } = useAppContext();
 
