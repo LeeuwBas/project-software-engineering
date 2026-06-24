@@ -6,23 +6,10 @@ import { useAppContext } from '@/lib/AppContext';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-async function saveStress(score1: number, score2: number, score3: number) {
-  const score = score1 + score2 + score3;
-  let level = 0;
-
-  if (score < 8) {
-    level = 0;
-  } else if (score < 12) {
-    level = 1;
-  } else {
-    level = 2;
-  }
-
-  await stressBridge.set(level);
-}
-
-/** TODO (hfgieter, david kramer, ZJWeng): docstring, also this should be above the helper function since it's
- * the default export*/
+/** Content for the stress input questionnaire.
+ *
+ * @returns JSX element
+ */
 export default function StressMenu() {
   const { stressMenuOpen, setSendStress } = useAppContext();
 
@@ -44,7 +31,7 @@ export default function StressMenu() {
     return null;
   }
 
-  // TODO (hfgieter): explain component layout
+  // Every cardcontent is for every question with matching AppText and buttons.
   return (
     <View className="absolute -top-6 w-full items-center">
       <View className="absolute bottom-full w-full items-center">
@@ -72,4 +59,27 @@ export default function StressMenu() {
       </View>
     </View>
   );
+}
+
+/**
+ * Saves a calculated total score to the storage.
+ * The 3 different scores are the values of the questionaire.
+ *
+ * @param score1
+ * @param score2
+ * @param score3
+ */
+async function saveStress(score1: number, score2: number, score3: number) {
+  const score = score1 + score2 + score3;
+  let level = 0;
+
+  if (score < 8) {
+    level = 0;
+  } else if (score < 12) {
+    level = 1;
+  } else {
+    level = 2;
+  }
+
+  await stressBridge.set(level);
 }

@@ -4,21 +4,30 @@ import { getChartLabels } from '@/lib/stats/chart-labels';
 import { HistoryPeriod, PERIOD_CONFIG } from '@/lib/stats/statistics-types';
 import { StatisticsSummary } from '@/lib/storage';
 import { GoaledModule, ModuleId, MODULES } from '@/lib/types';
-import { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { StatisticChart } from './StatisticChart';
+import { THEME } from '@/lib/theme';
 
 /** TODO (ZJWeng): docstring, and please add some comments throughout explaining what each section is for */
 export function StatisticView({ stat }: { stat: ModuleId }) {
-  const [period, setPeriod] = useState<HistoryPeriod>('week');
+  const [period, _setPeriod] = useState<HistoryPeriod>('week');
   const [summary, setSummary] = useState<StatisticsSummary | null>(null);
   const [bars, setBars] = useState<number[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const module: GoaledModule = MODULES.find(
     (module): module is GoaledModule => module.id === stat
   )!;
+
+  function setPeriod(period: HistoryPeriod) {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    _setPeriod(period);
+  }
 
   useEffect(() => {
     async function loadData() {
@@ -66,26 +75,31 @@ export function StatisticView({ stat }: { stat: ModuleId }) {
         <Button
           variant={period === 'week' ? 'default' : 'outline'}
           className="py-0"
-          onPress={() => setPeriod('week')}>
+          onPress={() => setPeriod('week')}
+          disabled={loading}>
           <AppText>Week</AppText>
         </Button>
 
         <Button
           variant={period === 'month' ? 'default' : 'outline'}
           className="py-0"
-          onPress={() => setPeriod('month')}>
+          onPress={() => setPeriod('month')}
+          disabled={loading}>
           <AppText>Month</AppText>
         </Button>
 
         <Button
           variant={period === 'year' ? 'default' : 'outline'}
           className="py-0"
-          onPress={() => setPeriod('year')}>
+          onPress={() => setPeriod('year')}
+          disabled={loading}>
           <AppText>Year</AppText>
         </Button>
       </View>
 
-      {!loading && <StatisticChart module={module} values={values} labels={labels} />}
+      {(!loading && <StatisticChart module={module} values={values} labels={labels} />) || (
+        <ActivityIndicator size="large" color="#c7d0bd" />
+      )}
 
       <View className="mt-4 gap-2">
         <AppText>
