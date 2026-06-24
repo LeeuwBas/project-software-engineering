@@ -15,7 +15,9 @@ export interface Loadable {
     load: () => Promise<any>;
 }
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * Interface to define all functions needed to use the statistics.
+ */
 export interface StatisticBridge {
     useCurrent: () => number | null;
     set: (value: number, date?: Date) => Promise<any>;
@@ -23,7 +25,9 @@ export interface StatisticBridge {
     getSummary?: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
 }
 
-/** TODO (david kramer): docstring */
+/**
+ * Interface extension to add support for goal bridges.
+ */
 export interface GoaledStatisticBridge extends StatisticBridge {
     getBarChart: (bins: number, daysPerBin: number, endDate?: Date) => Promise<number[]>;
     getSummary: (startDate: Date, endDate: Date) => Promise<StatisticsSummary | null>;
