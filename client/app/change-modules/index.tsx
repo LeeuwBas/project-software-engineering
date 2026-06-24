@@ -7,6 +7,12 @@ import { ImageBackground } from 'expo-image';
 import { router } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+/**
+ * Module changing widget for the onboarding process.
+ * Serves as an interface for a user to save their active modules.
+ *
+ * @return {React.JSX.Element} Module changing widget
+ */
 export default function ChangeModules() {
   const { activeModules, toggleModule, isSelected, saveModules } = useModuleManagement();
 
@@ -26,7 +32,6 @@ export default function ChangeModules() {
         <SafeAreaView className="size-full justify-center">
           <Card className="mx-4 gap-2 p-5">
             <ModuleSelection
-              activeModules={activeModules}
               toggleModule={toggleModule}
               isSelected={isSelected}
             />

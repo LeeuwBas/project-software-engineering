@@ -44,7 +44,6 @@ export default function ModuleSelectionStep({
   return (
     <Card className="mx-4 gap-2 p-5 shadow-none">
       <ModuleSelection
-        activeModules={activeModules}
         toggleModule={toggleModule}
         isSelected={isSelected}
       />
