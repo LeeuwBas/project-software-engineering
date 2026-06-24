@@ -37,7 +37,10 @@ export const foodDefault: number = 3;
 export function createFoodBridge(): LoadableBridge<foodBridge> {
     return {
         load: () =>
-            Promise.all([loadZustand(foodState, 'food'), loadGoalZustand(foodGoalState, 'food')]),
+            Promise.all([
+                loadZustand(foodState, 'food'),
+                loadGoalZustand(foodGoalState, 'food', foodDefault),
+            ]),
         useCurrent: () => useFood(),
         set: (value) => setZustand(foodState, 'food', Math.max(Math.min(value, 100), 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
