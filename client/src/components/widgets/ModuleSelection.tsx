@@ -6,17 +6,23 @@ import { MODULES } from '@/lib/types';
 import { Pressable, View } from 'react-native';
 
 type ModuleSelectionProps = {
-  activeModules: EnabledModules;
   toggleModule: (moduleId: keyof EnabledModules) => void;
   isSelected: (moduleId: keyof EnabledModules) => boolean;
 };
 
-export function ModuleSelection({ activeModules, toggleModule, isSelected }: ModuleSelectionProps) {
+/** UI element for selecting which habits (modules) to track.
+ * @param toggleModule callback function that toggles module on or off
+ * @param isSelected callback function that lets know if module is selected
+ *
+ * @returns JSX element
+ */
+export function ModuleSelection({ toggleModule, isSelected }: ModuleSelectionProps) {
   const stressModule = MODULES.find((module) => module.id === 'stress');
   const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
-    <CardContent className="p-0">
+    <
+    className="p-0">
       <View className="gap-2">
         <AppText className="mb-2 text-center text-xl font-bold">
           Would you like to keep track of stress?

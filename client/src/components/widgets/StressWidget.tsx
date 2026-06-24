@@ -4,7 +4,11 @@ import { View } from 'react-native';
 import { AppText } from '../AppText';
 import { Button } from '../ui/button';
 
-/** TODO (hfgieter, buenk): docstring */
+/** Widget for in the quick habit menu to get to stress logging menu
+ * @param onPress callback function to know if button is pressed.
+ *
+ * @returns JSX element
+ */
 export default function StressWidget({ onPress }: { onPress: () => void }) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
