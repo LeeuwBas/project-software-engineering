@@ -6,10 +6,6 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-type Props = {
-  onNext?: () => void;
-};
-
 /**
  * Pet selection widget for the onboarding process.
  * Serves as an interface for a user to save their desired pet.
@@ -18,14 +14,14 @@ type Props = {
  *  Function to handle in-page routing to the next step of onboarding
  * @return {React.JSX.Element} Pet selection widget
  */
-export function PetSelectionStep({ onNext }: Props) {
+export function PetSelectionStep({ onNext }: { onNext: () => void }) {
   const router = useRouter();
-  const pet = getPetID();
+  const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
   function confirm() {
     setPetID(draftPet);
-    onNext?.();
+    onNext();
   }
   return (
     <View className="flex-col gap-12">
@@ -33,7 +29,7 @@ export function PetSelectionStep({ onNext }: Props) {
 
       <View className="w-full gap-2 px-12">
         <Button onPress={confirm}>
-          <AppText className="font-bold text-white">Choose companion</AppText>
+          <AppText className="font-bold text-white">Choose Companion</AppText>
         </Button>
 
         <Button variant="outline" onPress={() => router.push('/login')}>

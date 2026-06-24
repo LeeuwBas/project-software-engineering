@@ -4,9 +4,9 @@ import { useState } from 'react';
 const STEP_ORDER: OnboardingStep[] = [
     'pet-selection',
     'pet-naming',
-    'account',
     'module-selection',
     'module-config',
+    'account',
 ];
 
 /** 
