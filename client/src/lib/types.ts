@@ -14,6 +14,7 @@ import {
     stressBridge,
     waterBridge,
 } from './api/APIBridge';
+import { waterDefault } from './api/WaterBridge';
 import { useFood } from './api/FoodBridge';
 import { useSleep } from './api/SleepBridge';
 import { useStress } from './api/StressBridge';
@@ -94,7 +95,7 @@ export interface GoaledModule {
 export type ModuleDefinition = GoaledModule | NonGoaledModule;
 
 
-export const WaterModule: ModuleDefinition = {
+export const WaterModule: GoaledModule = {
     id: 'water',
     name: 'Water',
     icon: Glass,
@@ -104,14 +105,14 @@ export const WaterModule: ModuleDefinition = {
     borderColor: '#5abce8',
     bridge: waterBridge,
     goalConfig: {
-        defaultGoal: 8,
+        defaultGoal: waterDefault,
         minGoal: 1,
         stepSize: 1,
         maxGoal: 20,
     },
 }
 
-export const StepModule: ModuleDefinition = {
+export const StepModule: GoaledModule = {
     id: 'steps',
     name: 'Walking',
     icon: Shoe,
@@ -150,7 +151,7 @@ export const SleepModule: ModuleDefinition = {
     bridge: sleepBridge,
 };
 
-export const FoodModule: ModuleDefinition = {
+export const FoodModule: GoaledModule = {
     id: 'food',
     name: 'Meals',
     icon: Food,

@@ -9,6 +9,7 @@ import {
     setZustand,
 } from '@/lib/api/GenericStorage';
 import { createNewState, useValue } from '@/lib/api/ValueState';
+import { WaterModule } from '../types';
 
 // Use the water bridge when the values need to be manipulated.
 export interface WaterBridge extends GoaledStatisticBridge {}
@@ -31,13 +32,15 @@ export function useWater() {
     return useValue(waterState);
 }
 
+export const waterDefault: number = 8;
+
 /** TODO (LeeuwBas): docstring */
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
         load: () =>
             Promise.all([
                 loadZustand(waterState, 'water'),
-                loadGoalZustand(waterGoalState, 'water'),
+                loadGoalZustand(waterGoalState, 'water', waterDefault),
             ]),
         useCurrent: () => useWater(),
         set: (value) => setZustand(waterState, 'water', Math.max(Math.min(value, 100), 0)),
