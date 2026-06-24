@@ -151,6 +151,106 @@ STAT_BULK_POST_SCHEMA = extend_schema(
     },
 )
 
+BARCHART_GET_SCHEMA = extend_schema(
+    summary="Retrieves data for a bar chart between given dates.",
+    description="""Retrieves the bin data to create a bar chart for a
+            given statistic at a given date range. If bins is supplied, it must
+            be divider of the amount of days. Date is exclusive on the lower
+            bound and inclusive on the upper bound.
+            """,
+    parameters=[
+        OpenApiParameter(
+            name="statName",
+            description="Name of the statistic to get the bar chart.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            required=True,
+        ),
+        OpenApiParameter(
+            name="startDate",
+            description="Start date of the bar chart. (exclusive)",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            required=True,
+        ),
+        OpenApiParameter(
+            name="endDate",
+            description="End date of the bar chart. (inclusive)",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            required=True,
+        ),
+        OpenApiParameter(
+            name="bins",
+            description="Amount of bins to put the data in, defaults to the amount of days.",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            required=False,
+        ),
+    ],
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "days_per_bin": {
+                    "type": "integer",
+                    "example": 5,
+                },
+                "bins": {
+                    "type": "object",
+                    "additionalProperties": {"type": "integer"},
+                    "example": {"0": 5, "1": 8, "2": 3},
+                },
+            },
+        },
+        400: OpenApiResponse(description="Invalid input."),
+        401: OpenApiResponse(description="Unauthorised request."),
+    },
+)
+
+SUMMARY_GET_SCHEMA = extend_schema(
+    summary="Retrieves the summary view of a given date range.",
+    description="""Retrieves the total, average, minimum on a 
+            date and maximum on a date in the range.
+            """,
+    parameters=[
+        OpenApiParameter(
+            name="statName",
+            description="Name of the stat to summarize.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            required=True,
+        ),
+        OpenApiParameter(
+            name="startDate",
+            description="Start date of the summary view.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            required=True,
+        ),
+        OpenApiParameter(
+            name="endDate",
+            description="End date of the summary view.",
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.PATH,
+            required=True,
+        ),
+    ],
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "total_water": {"type": "integer"},
+                "average_water": {"type": "number"},
+                "minimum_water": {"type": "integer"},
+                "maximum_water": {"type": "integer"},
+            },
+        },
+        400: OpenApiResponse(description="Invalid input."),
+        401: OpenApiResponse(description="Unauthorised request."),
+    },
+)
+
 GOAL_GET_SCHEMA = extend_schema(
     summary="Retrieves the set goal at a given date.",
     description="""Retrieves the goals of a given dat for a given
