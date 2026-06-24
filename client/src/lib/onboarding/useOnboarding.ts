@@ -9,9 +9,9 @@ const STEP_ORDER: OnboardingStep[] = [
     'account',
 ];
 
-/** 
+/**
  * Owner of helper functions to handle the inpage routing of the Onboarding
- * 
+ *
  * @return Helper functions
  */
 export function useOnboarding() {
@@ -41,8 +41,8 @@ export function useOnboarding() {
 
     /**
      * Routes to a specific step in the onboarding step list
-     * 
-     * @param {OnboardingStep} step - 
+     *
+     * @param {OnboardingStep} step -
      *  string from the OnboardingStep types to route to
      */
     function goToStep(step: OnboardingStep) {

@@ -9,10 +9,10 @@ import { KeyboardAvoidingView, KeyboardProvider } from 'react-native-keyboard-co
 /**
  * Pet naming widget for the onboarding process.
  * Serves as an interface for a user to save pet and username.
- * 
- * @param {Props} onNext - 
+ *
+ * @param {Props} onNext -
  *  Function to handle in-page routing to the next step of onboarding
- * @param {Props} onBack - 
+ * @param {Props} onBack -
  *  Function to handle in-page routing to the prevous step of onboarding
  * @return {React.JSX.Element} Pet naming widget
  */

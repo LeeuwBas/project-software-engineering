@@ -9,8 +9,8 @@ import { View } from 'react-native';
 /**
  * Pet selection widget for the onboarding process.
  * Serves as an interface for a user to save their desired pet.
- * 
- * @param {Props} onNext - 
+ *
+ * @param {Props} onNext -
  *  Function to handle in-page routing to the next step of onboarding
  * @return {React.JSX.Element} Pet selection widget
  */

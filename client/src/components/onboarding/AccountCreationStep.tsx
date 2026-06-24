@@ -15,7 +15,7 @@ import { toast } from 'sonner-native';
 /**
  * Signup widget of the onboarding process.
  * Serves as UI for a user to save their email and password for their account.
- * 
+ *
  * @return {React.JSX.Element} Signup widget
  */
 export function AccountCreationStep() {
