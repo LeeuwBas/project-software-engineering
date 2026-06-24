@@ -11,6 +11,8 @@ let _weatherCache: {
 
 const WEATHER_POLLING = 15 * 60 * 1000;
 
+const DEFAULT_QUOTE = { action: 'Standard', level: 'Standard', context: 'Standard' };
+
 /**
  * Determines which quote to request based on today's stats, goals, and weather.
  * @returns `{ action, level, context }` to pass to the quote API, or `null` if a
@@ -18,7 +20,7 @@ const WEATHER_POLLING = 15 * 60 * 1000;
  */
 export default async function generateQuoteRequest() {
     const snap = await getTodaysSnapshot();
-    if (snap === null) return null;
+    if (snap === null) return DEFAULT_QUOTE;
     const { currentStats, currentGoals } = snap;
 
     const {
@@ -82,7 +84,7 @@ export default async function generateQuoteRequest() {
         worstLevel === undefined ? [] : nonNullStats.filter((stat) => stat.level === worstLevel);
     if (validStats.length === 0) {
         console.log('no valid stats found');
-        return null;
+        return DEFAULT_QUOTE;
     }
 
     // pick a random goal among the ones with the least progress.
