@@ -36,6 +36,7 @@ export default function Settings() {
 
   const BASE_ITEMS: SettingItem[] = [
     { label: 'Change Pet', effect: () => router.push('/pet-select') },
+    { label: 'Change Habits', effect: () => router.push('/change-modules') },
     {
       label: auth.isGuest ? 'Sign in' : 'Sign out',
       effect: () => {

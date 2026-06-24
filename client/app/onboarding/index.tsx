@@ -9,7 +9,12 @@ import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 import { ImageBackground } from 'expo-image';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Owns the onboarding page,
+ * loads in widgets based on what step of the onboarding process the user is on.
+ * Background of the onboarding page is owned by this function too.
+ * @return {React.JSX.Element} Onboarding widget
+ */
 export default function Onboarding() {
   const { step, nextStep, previousStep, goToStep } = useOnboarding();
 

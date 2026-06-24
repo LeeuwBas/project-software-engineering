@@ -52,6 +52,9 @@ export async function setZustand<K extends keyof StatLine>(
     name: K,
     value: number
 ) {
+    if (name === 'water') {
+        console.log(`saving water to ${value}`);
+    }
     if (state.getState().value === null) {
         throw Error(`Stat ${name} not loaded yet`);
     }
@@ -249,13 +252,19 @@ export async function loadCalender(startDate: Date, endDate: Date) {
  *
  * @param state The state to load into
  * @param name The name of the statistic to load
+ * @param defaultValue Default value to load as goal if no goal is found.
  *
  * @returns The loaded value
  * @throws Error when the value is already loaded
  */
-export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
+export async function loadGoalZustand<K extends keyof StatLine>(
+    state: ValueZustand,
+    name: K,
+    defaultValue: number = 0
+) {
     // For the current day we can default to 0. For other days we cannot.
-    const loadedValue = (await getGoals(name)) ?? 0;
+    const loadedValue = (await getGoals(name)) ?? defaultValue;
+    console.log(`loading ${name} goal, now: ${loadedValue}`);
 
     state.getState().setValue(loadedValue);
     return loadedValue;
@@ -284,7 +293,7 @@ export async function getGoals<K extends keyof StatLine>(
     const server = await loadGoalServer(name, date);
 
     if (server === null) {
-        return 0;
+        return null;
     }
 
     if (date == new Date()) {
