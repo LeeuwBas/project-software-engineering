@@ -1,7 +1,7 @@
 import { scheduleNotification } from './notificationScheduler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
-import { getUserName } from './settings';
+import { getUserName } from '@/lib/settings';
 
 const userName = getUserName();
 
