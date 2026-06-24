@@ -5,7 +5,6 @@ import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
-import { AttachStep } from 'react-native-spotlight-tour';
 import { AppText } from '../AppText';
 
 export interface calendarCell {
@@ -27,6 +26,7 @@ export default function CalendarOverview() {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const today = useMemo(() => new Date(), []);
+  const [loading, setLoading] = useState(false);
 
   const [calendarData, updateCalendarData] = useState<any[]>([]);
 
@@ -120,15 +120,18 @@ export default function CalendarOverview() {
         console.error('Failed to fetch calendar:', error);
       }
     };
-
-    fetchCalendarData();
+    fetchCalendarData().finally(() => setLoading(false));
   }, [rangeStart, rangeEnd]);
 
   const toPrevMonth = () => {
+    if (loading) return;
+    setLoading(true);
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
 
   const toNextMonth = () => {
+    if (loading) return;
+    setLoading(true);
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
@@ -138,7 +141,7 @@ export default function CalendarOverview() {
     <View>
       {/* Month/year displaty with arrow buttons */}
       <View className="mb-6 flex-row items-center gap-x-4 self-center">
-        <Pressable onPress={toPrevMonth} hitSlop={12}>
+        <Pressable onPress={toPrevMonth} hitSlop={12} disabled={loading}>
           <ArrowBigLeft size={24} color={iconColor} />
         </Pressable>
 
@@ -148,7 +151,7 @@ export default function CalendarOverview() {
 
         <View style={{ width: 24 }}>
           {!(month === today.getMonth() && year === today.getFullYear()) && (
-            <Pressable onPress={toNextMonth} hitSlop={12}>
+            <Pressable onPress={toNextMonth} hitSlop={12} disabled={loading}>
               <ArrowBigRight size={24} color={iconColor} />
             </Pressable>
           )}
