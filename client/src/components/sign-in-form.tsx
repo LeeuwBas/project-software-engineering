@@ -7,10 +7,12 @@ import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import * as React from 'react';
-import { Keyboard, TextInput, View } from 'react-native';
+import { Keyboard, TextInput, View, Pressable } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppText } from './AppText';
+import ClosedEye from '@assets/icons/eye-icon/closed-eye.svg';
+import OpenEye from '@assets/icons/eye-icon/open-eye.svg';
 
 /** TODO (buenk): docstring, maybe a few more comments? */
 export function SignInForm() {
@@ -22,6 +24,7 @@ export function SignInForm() {
   const [password, setPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
   const [loading, setLoading] = React.useState<Boolean>(false);
+  const [isPasswordVisible, setPasswordVisible] = React.useState(false);
 
   const passwordInputRef = React.useRef<TextInput>(null);
 
@@ -96,20 +99,35 @@ export function SignInForm() {
                 </View>
                 <View className="gap-1.5">
                   <AppText className="font-bold">Password</AppText>
-                  <Input
-                    ref={passwordInputRef}
-                    id="password"
-                    placeholder="••••••••"
-                    secureTextEntry
-                    returnKeyType="send"
-                    autoCapitalize="none"
-                    onSubmitEditing={onSubmit}
-                    onChangeText={setPassword}
-                    autoComplete="current-password"
-                    textContentType="password"
-                  />
+                  <View>
+                    <Input
+                      ref={passwordInputRef}
+                      id="password"
+                      placeholder="••••••••"
+                      inputMode="text"
+                      keyboardType="default"
+                      secureTextEntry={!isPasswordVisible}
+                      returnKeyType="send"
+                      autoCapitalize="none"
+                      onSubmitEditing={onSubmit}
+                      onChangeText={setPassword}
+                      autoComplete="current-password"
+                      textContentType="password"
+                    />
+                    <Pressable
+                      onPress={() => setPasswordVisible(!isPasswordVisible)}
+                      className="absolute bottom-0 right-3 top-0 justify-center"
+                      hitSlop={10}
+                      accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}>
+                      {isPasswordVisible ? (
+                        <OpenEye width={20} height={20} />
+                      ) : (
+                        <ClosedEye width={20} height={20} />
+                      )}
+                    </Pressable>
+                  </View>
                   {errors.password && (
-                    <Text className="text-sm text-red-500">{errors.password[0]}</Text>
+                    <AppText className="text-sm text-red-500">{errors.password[0]}</AppText>
                   )}
                 </View>
                 {loading ? (

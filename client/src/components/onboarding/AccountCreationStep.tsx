@@ -1,6 +1,6 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { TextInput, View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,8 @@ import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { toast } from 'sonner-native';
+import ClosedEye from '@assets/icons/eye-icon/closed-eye.svg';
+import OpenEye from '@assets/icons/eye-icon/open-eye.svg';
 
 /**
  * Signup widget of the onboarding process.
@@ -24,6 +26,7 @@ export function AccountCreationStep() {
 
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [isPasswordVisible, setPasswordVisible] = React.useState(false);
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});
 
   const [loading, setLoading] = React.useState<Boolean>(false);
@@ -119,19 +122,33 @@ export function AccountCreationStep() {
 
           <View className="gap-1.5">
             <AppText className="font-bold">Password</AppText>
-            <Input
-              ref={passwordInputRef}
-              id="password"
-              placeholder="••••••••"
-              secureTextEntry
-              returnKeyType="send"
-              autoCapitalize="none"
-              onSubmitEditing={onSubmit}
-              onChangeText={setPassword}
-              autoComplete="new-password"
-              textContentType="newPassword"
-            />
-
+            <View>
+              <Input
+                ref={passwordInputRef}
+                id="password"
+                placeholder="••••••••"
+                inputMode="text"
+                keyboardType="default"
+                secureTextEntry={!isPasswordVisible}
+                returnKeyType="send"
+                autoCapitalize="none"
+                onSubmitEditing={onSubmit}
+                onChangeText={setPassword}
+                autoComplete="new-password"
+                textContentType="newPassword"
+              />
+              <Pressable
+                onPress={() => setPasswordVisible(!isPasswordVisible)}
+                className="absolute bottom-0 right-3 top-0 justify-center"
+                hitSlop={10}
+                accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}>
+                {isPasswordVisible ? (
+                  <OpenEye width={20} height={20} />
+                ) : (
+                  <ClosedEye width={20} height={20} />
+                )}
+              </Pressable>
+            </View>
             {errors.password && (
               <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
             )}
