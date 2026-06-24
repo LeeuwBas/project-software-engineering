@@ -11,7 +11,8 @@ import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { toast } from 'sonner-native';
-import { Ionicons } from '@expo/vector-icons';
+import ClosedEye from '@assets/icons/eye-icon/closed-eye.svg';
+import OpenEye from '@assets/icons/eye-icon/open-eye.svg';
 
 /** TODO (AlexAugustijn): docstring */
 export function AccountCreationStep() {
@@ -116,62 +117,35 @@ export function AccountCreationStep() {
 
           <View className="gap-1.5">
             <AppText className="font-bold">Password</AppText>
-            <Input
-              ref={passwordInputRef}
-              id="password"
-              placeholder="••••••••"
-              secureTextEntry
-              returnKeyType="send"
-              autoCapitalize="none"
-              onSubmitEditing={onSubmit}
-              onChangeText={setPassword}
-              autoComplete="new-password"
-              textContentType="newPassword"
-            />
-
-            <View className="gap-1.5">
-              <AppText className="font-bold">Password</AppText>
-              <View>
-                <Input
-                  ref={passwordInputRef}
-                  id="password"
-                  placeholder="••••••••"
-                  inputMode="text"
-                  keyboardType="default"
-                  secureTextEntry={!isPasswordVisible}
-                  returnKeyType="send"
-                  autoCapitalize="none"
-                  onSubmitEditing={onSubmit}
-                  onChangeText={setPassword}
-                  autoComplete="new-password"
-                  textContentType="newPassword"
-                />
-                <Pressable
-                  onPress={() => setPasswordVisible(!isPasswordVisible)}
-                  className="absolute bottom-0 right-3 top-0 justify-center"
-                  hitSlop={10}
-                  accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}>
-                  <Ionicons
-                    name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
-                    size={20}
-                    className="text-muted-foreground"
-                  />
-                </Pressable>
-              </View>
-
-              {errors.password && (
-                <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
-              )}
+            <View>
+              <Input
+                ref={passwordInputRef}
+                id="password"
+                placeholder="••••••••"
+                inputMode="text"
+                keyboardType="default"
+                secureTextEntry={!isPasswordVisible}
+                returnKeyType="send"
+                autoCapitalize="none"
+                onSubmitEditing={onSubmit}
+                onChangeText={setPassword}
+                autoComplete="new-password"
+                textContentType="newPassword"
+              />
+              <Pressable
+                onPress={() => setPasswordVisible(!isPasswordVisible)}
+                className="absolute bottom-0 right-3 top-0 justify-center"
+                hitSlop={10}
+                accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}>
+                {isPasswordVisible ? (
+                  <OpenEye width={20} height={20} />
+                ) : (
+                  <ClosedEye width={20} height={20} />
+                )}
+              </Pressable>
             </View>
-
-            {loading ? (
-              <Button className="w-full" variant="outline" onPress={null}>
-                <AppText className="font-bold">Loading...</AppText>
-              </Button>
-            ) : (
-              <Button className="w-full" variant="default" onPress={onSubmit}>
-                <AppText className="font-bold text-white">Sign Up & Go to Tutorial</AppText>
-              </Button>
+            {errors.password && (
+              <AppText className="text-sm text-red-500 opacity-80">{errors.password[0]}</AppText>
             )}
           </View>
 
