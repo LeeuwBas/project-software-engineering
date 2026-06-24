@@ -14,7 +14,7 @@ type Props = {
   onBack?: () => void;
 };
 
-export default function PetNamingStep({ onNext, onBack }: Props) {
+export default function ChangeNames({ onNext, onBack }: Props) {
   const currentUserName = getUserName();
   const currentPetName = getPetName();
 
