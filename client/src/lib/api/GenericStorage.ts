@@ -249,13 +249,18 @@ export async function loadCalender(startDate: Date, endDate: Date) {
  *
  * @param state The state to load into
  * @param name The name of the statistic to load
+ * @param defaultValue Default value to load as goal if no goal is found.
  *
  * @returns The loaded value
  * @throws Error when the value is already loaded
  */
-export async function loadGoalZustand<K extends keyof StatLine>(state: ValueZustand, name: K) {
+export async function loadGoalZustand<K extends keyof StatLine>(
+    state: ValueZustand,
+    name: K,
+    defaultValue: number = 0
+) {
     // For the current day we can default to 0. For other days we cannot.
-    const loadedValue = (await getGoals(name)) ?? 0;
+    const loadedValue = (await getGoals(name)) ?? defaultValue;
 
     state.getState().setValue(loadedValue);
     return loadedValue;
