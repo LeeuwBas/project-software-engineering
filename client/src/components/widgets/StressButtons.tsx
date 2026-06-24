@@ -14,8 +14,8 @@ export default function StressButtons({ value, onChange }: StressButtonsProps) {
   const selectedIndex = value ? value - 1 : null;
 
   return (
-    <View className='m-0'>
-      <View className="mt-4 mx-4 mb-1 flex-row self-center">
+    <View className="m-0">
+      <View className="mx-4 mb-1 mt-4 flex-row self-center">
         {COLORS.map((color, i) => (
           <Pressable
             key={i}
@@ -35,9 +35,9 @@ export default function StressButtons({ value, onChange }: StressButtonsProps) {
           />
         ))}
       </View>
-      <View className='flex-row justify-between'>
-        <AppText className='font-bold'>Disagree</AppText>
-        <AppText className='font-bold'>Agree</AppText>
+      <View className="flex-row justify-between">
+        <AppText className="font-bold">Disagree</AppText>
+        <AppText className="font-bold">Agree</AppText>
       </View>
     </View>
   );
