@@ -3,8 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { getUserName } from './settings';
 
-
-const userName = getUserName()
+const userName = getUserName();
 
 const waterLastStorageKey = 'water_last_schedule_date';
 const waterIdStorageKey = 'water_last_notification_id';
@@ -32,7 +31,11 @@ export async function setWaterNotifaction() {
         const scheduleDate = new Date();
         scheduleDate.setHours(18, 0, 0, 0);
 
-        const id = await scheduleNotification(scheduleDate, 'Water time!', `Hey ${userName}! Time for a glass of water!`);
+        const id = await scheduleNotification(
+            scheduleDate,
+            'Water time!',
+            `Hey ${userName}! Time for a glass of water!`
+        );
         await AsyncStorage.setItem(waterLastStorageKey, scheduleDate.toISOString());
         await AsyncStorage.setItem(waterIdStorageKey, id);
     } catch (error) {
