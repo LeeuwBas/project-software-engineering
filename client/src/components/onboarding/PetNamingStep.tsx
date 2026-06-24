@@ -6,7 +6,16 @@ import { useNameManagement } from '@/lib/useNameManagement';
 import { View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Pet naming widget for the onboarding process.
+ * Serves as an interface for a user to save pet and username.
+ *
+ * @param {Props} onNext -
+ *  Function to handle in-page routing to the next step of onboarding
+ * @param {Props} onBack -
+ *  Function to handle in-page routing to the prevous step of onboarding
+ * @return {React.JSX.Element} Pet naming widget
+ */
 export function PetNamingStep({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { petName, setPetName, userName, setUserName, errors, validateAndSave } =
     useNameManagement();
