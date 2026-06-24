@@ -20,10 +20,6 @@ export default function Settings() {
   const router = useRouter();
   const { colorScheme, toggleColorScheme } = useColorScheme();
 
-  // if (!settingsOpen) {
-  //   return;
-  // }
-
   type SettingItem = {
     label: string;
     effect: Function | null;

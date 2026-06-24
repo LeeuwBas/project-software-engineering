@@ -18,7 +18,10 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
-/** TODO (buenk): docstring, maybe a few more comments? */
+/**
+ * Component that renders full sign up form with email and password
+ * input. Calls to the auth bridge to sign up the user.
+ */
 export function SignUpForm() {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
