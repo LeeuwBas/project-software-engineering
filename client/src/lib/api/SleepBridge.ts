@@ -23,7 +23,9 @@ export function useSleep() {
     return useValue(sleepState);
 }
 
-/** TODO (WilliamBower): docstring */
+/**
+ * @returns return a newly set up sleep bridge.
+ */
 export function createSleepBridge(): LoadableBridge<SleepBridge> {
     return {
         load: () =>

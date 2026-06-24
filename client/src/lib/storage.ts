@@ -7,8 +7,9 @@ const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 const settingsKey = 'settings';
 
-// TODO (david kramer): some brief explanations for what each type is for?
-
+/**
+ * Contains to store all settings in an organized manner.
+ */
 export interface Settings {
     chosenPet: number;
     hasDoneTutorial: boolean;
@@ -17,6 +18,9 @@ export interface Settings {
     enabledModules: EnabledModules;
 }
 
+/**
+ * Interface to contain booleans for which modules are enabled.
+ */
 export interface EnabledModules {
     water: boolean;
     sleep: boolean;
@@ -25,6 +29,9 @@ export interface EnabledModules {
     food: boolean;
 }
 
+/**
+ * Interface to neatly contain all statistics of a day.
+ */
 export interface StatLine {
     water: number | null;
     sleep: number | null;
@@ -33,6 +40,9 @@ export interface StatLine {
     food: number | null;
 }
 
+/**
+ * Interface to store summaries of statistics.
+ */
 export interface StatisticsSummary {
     statisticName: keyof StatLine;
     isFull: boolean;
@@ -43,6 +53,9 @@ export interface StatisticsSummary {
     maximum: number;
 }
 
+/**
+ * Interface to contain all information related to the bar chart.
+ */
 export interface StatisticsBarChart {
     statisticName: string;
     isFull: boolean;
@@ -50,6 +63,12 @@ export interface StatisticsBarChart {
     bins: number[];
 }
 
+/**
+ * Create an empty StatLine object.
+ *
+ * @param overrides non default values to replace the defaults.
+ * @returns A new StatLine object, filled with default values
+ */
 export function createStatLine(overrides: Partial<StatLine> = {}) {
     return {
         water: null,
@@ -61,6 +80,12 @@ export function createStatLine(overrides: Partial<StatLine> = {}) {
     } as StatLine;
 }
 
+/**
+ * Create an empty Settings object.
+ *
+ * @param overrides non default values to replace the defaults.
+ * @returns A new Settings object, filled with default values.
+ */
 export function createSettings(overrides: Partial<Settings> = {}) {
     return {
         chosenPet: 0,
@@ -72,6 +97,12 @@ export function createSettings(overrides: Partial<Settings> = {}) {
     } as Settings;
 }
 
+/**
+ * Create an empty EnabledModules object.
+ *
+ * @param overrides non default values to replace the defaults.
+ * @returns A new EnabledModules object, filled with default values.
+ */
 export function createEnabledModules(overrides: Partial<EnabledModules> = {}) {
     return {
         water: true,
@@ -116,6 +147,13 @@ function calculateDate(date: Date, stat: string = statPrefix) {
     return `${stat}${year}-${month}-${day}`;
 }
 
+/**
+ * Creates a new StatLine object with the values as overrides. Differs from {@link createStatLine} because this function
+ * casts all values to numbers.
+ *
+ * @param statLine dictionary object containing the overrides for a StatLine
+ * @returns
+ */
 function makeStatline(statLine: any): StatLine {
     for (const key of Object.keys(statLine)) {
         statLine[key] = +statLine[key];
@@ -635,6 +673,11 @@ export async function getSyncData(forGoals: boolean = false) {
 
 // ---------------------------------- Settings Functions ----------------------------------
 
+/**
+ * Retrieves all settings from the local async storage.
+ *
+ * @returns A Promis for a Settings object.
+ */
 export async function getSettings(): Promise<Settings> {
     try {
         const raw = await AsyncStorage.getItem(settingsKey);
@@ -647,45 +690,15 @@ export async function getSettings(): Promise<Settings> {
     }
 }
 
+/**
+ * Store new settings in the local async storage.
+ *
+ * @param settings Settings interface to save.
+ */
 export async function setSettings(settings: Settings) {
     try {
         await AsyncStorage.setItem(settingsKey, JSON.stringify(settings));
     } catch (error) {
         console.error(error);
     }
-}
-
-export function petContextInit() {
-    const [pet, setPet] = useState(0);
-
-    async function getPetData(): Promise<number> {
-        try {
-            const id = await AsyncStorage.getItem('pet_id');
-            return id !== null ? parseInt(id) : 0;
-        } catch (error) {
-            console.error('Getting pet id went wrong', error);
-            return 0;
-        }
-    }
-
-    async function savePet(id: number) {
-        try {
-            await AsyncStorage.setItem('pet_id', JSON.stringify(id));
-        } catch (error) {
-            console.error('Setting pet id went wrong.', error);
-        }
-        console.log('saved pet id ' + id);
-    }
-
-    useEffect(() => {
-        async function getPet() {
-            const saved_id = await getPetData();
-            setPet(saved_id);
-            console.log('retrieved pet id ' + saved_id);
-        }
-
-        getPet();
-    }, []);
-
-    return { pet, setPet, savePet };
 }

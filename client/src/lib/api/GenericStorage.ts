@@ -343,7 +343,13 @@ export async function setGoalZustand<K extends keyof StatLine>(
     await setGoal(name, value);
 }
 
-/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
+/**
+ * Request the calender data from the server.
+ *
+ * @param startDate First date in the calender view.
+ * @param endDate Last date in the calender view.
+ * @returns Promise of the calender bins or null.
+ */
 async function loadServerCalendar(startDate: Date, endDate: Date) {
     if (internalAuth.isGuest) {
         return null;
@@ -365,7 +371,15 @@ async function loadServerCalendar(startDate: Date, endDate: Date) {
     return result;
 }
 
-/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
+/**
+ * Load a barchart from the server.
+ *
+ * @param name statistic to load the barchart for
+ * @param startDate first day in the barchart
+ * @param endDate last day in the barchart
+ * @param bins amount of bins to put the data in
+ * @returns array containing all bins
+ */
 async function loadServerChart<K extends keyof StatLine>(
     name: K,
     startDate: Date,
@@ -388,7 +402,14 @@ async function loadServerChart<K extends keyof StatLine>(
     return loaded;
 }
 
-/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
+/**
+ * Load the statistic summary for a statistic between two dates.
+ *
+ * @param name name of the statistic
+ * @param startDate First date to include in the summary. Exclusive
+ * @param endDate Last date to include in the summary. Inclusive
+ * @returns a StatisticsSummary interface.
+ */
 async function loadServerSummary<K extends keyof StatLine>(
     name: K,
     startDate: Date,
@@ -403,7 +424,13 @@ async function loadServerSummary<K extends keyof StatLine>(
     return result as StatisticsSummary | null;
 }
 
-/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
+/**
+ * Load a statistic from the server
+ *
+ * @param name Name of the statistic to load
+ * @param date Date to load, defaults to today
+ * @returns a number of the stat
+ */
 async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Date()) {
     if (internalAuth.isGuest) {
         return null;
@@ -418,7 +445,13 @@ async function loadServer<K extends keyof StatLine>(name: K, date: Date = new Da
     return +result[name];
 }
 
-/** TODO (LeeuwBas, david kramer): docstring (i know this isnt imported but we are graded on maintainability) */
+/**
+ * Load a specific goal from the server.
+ *
+ * @param name the goal to load
+ * @param date date to load, defaults to today.
+ * @returns the goal amount
+ */
 async function loadGoalServer<K extends keyof StatLine>(
     name: K | null,
     date: Date = new Date()
