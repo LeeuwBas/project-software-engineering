@@ -23,7 +23,7 @@ export function PetNamingStep({ onNext, onBack }: { onNext: () => void; onBack: 
       <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={100} style={{ flex: 1 }}>
         <View style={{ flex: 0.3 }} />
 
-        <Card className="mx-4 border-border bg-background/80 shadow-none">
+        <Card className="mx-4 shadow-none">
           <CardHeader>
             <CardTitle className="text-center text-xl sm:text-left">
               <AppText className="font-bold">Making Acquaintance</AppText>
