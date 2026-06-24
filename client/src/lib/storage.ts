@@ -389,6 +389,7 @@ export async function updateStat<K extends keyof StatLine>(
  * @returns dictionary containing a boolean if all data is present, and the data
  */
 export async function getCalender(lowerDate: Date, upperDate: Date) {
+    const todayDate = new Date();
     let returnValue: StatLine[] = [];
     let isFull = true;
 
@@ -411,8 +412,13 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
 
         if (dayStat === null) {
             nodata = true;
-            isFull = false;
             dayStat = createStatLine();
+
+            // If there is no data for the future, we can safely default to 0
+            // as there should not be any data. This greatly reduces server requests.
+            if (currentDay <= todayDate) {
+                isFull = false;
+            }
         }
 
         for (let key of Object.keys(dayStat) as (keyof StatLine)[]) {
@@ -422,10 +428,9 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
             if (key === 'stress') {
                 today[key] = achieved;
             } else {
-                if (key == 'water') {
-                    console.log(`achieved: ${achieved}, goal: ${goal}`);
-                }
-                const complete = nodata ? 0 : achieved >= goal;
+                // If we do not have date, we did not meet achieve the goal
+                // If the goal is 0, it shouldn't be met either
+                const complete = nodata ? 0 : achieved >= goal && goal > 0;
                 today[key] = +complete;
             }
         }
