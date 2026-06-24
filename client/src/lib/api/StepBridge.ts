@@ -23,7 +23,9 @@ export function useSteps() {
 
 export const stepsDefault: number = 5000;
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * @returns return a newly set up steps bridge.
+ */
 export function createStepBridge(): LoadableBridge<StepBridge> {
     return {
         load: () =>
