@@ -6,7 +6,7 @@ import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
-import { useTutorial } from '@/lib/settings';
+import { loadSettings, useTutorial } from '@/lib/settings';
 import { syncServer } from '@/lib/StorageSync';
 import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
@@ -54,6 +54,7 @@ export default function App() {
   // TODO (LeeuwBas): explain
   useEffect(() => {
     initializeApiManager().then();
+    loadSettings().then();
     scheduleCacheFlush();
   }, []);
   // TODO (ZJWeng): comment
@@ -139,7 +140,7 @@ export default function App() {
                 }>
                 {/* TODO (buenk): what are these? */}
                 <AttachStep index={0} fill>
-                  <AttachStep index={9} fill>
+                  <AttachStep index={4} fill>
                     <PetHome />
                   </AttachStep>
                 </AttachStep>
@@ -170,13 +171,11 @@ export default function App() {
 function TutorialStarter() {
   const { start } = useSpotlightTour();
   const { menuOpen, statsOpen, settingsOpen } = useAppContext();
-  const { done } = useTutorial();
-  const startedRef = useRef(false);
+  const { done, setTutorialDone } = useTutorial();
 
   useEffect(() => {
-    if (startedRef.current) return; // only ever start the tour once
-    if (!done && !menuOpen && !statsOpen && !settingsOpen) {
-      startedRef.current = true;
+    if (done === false && !menuOpen && !statsOpen && !settingsOpen) {
+      setTutorialDone();
       start();
     }
   }, [menuOpen, statsOpen, settingsOpen, start, done]);

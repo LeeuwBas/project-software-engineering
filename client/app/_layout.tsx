@@ -31,10 +31,6 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    loadSettings();
-  }, []);
-
-  useEffect(() => {
     const healthConnectAvailable = Constants.executionEnvironment !== 'storeClient';
     if (!healthConnectAvailable) return;
 

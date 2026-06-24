@@ -4,20 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { getActiveModules } from '@/lib/settings';
 import { GoaledModule, MODULES } from '@/lib/types';
-import { useRouter } from 'expo-router';
 import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-type Props = {
-  onBack?: () => void;
-};
-
 /** TODO (AlexAugustijn): docstring */
-export default function ModuleConfigStep({ onBack }: Props) {
-  const router = useRouter();
-
+export default function ModuleConfigStep({
+  onNext,
+  onBack,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+}) {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
@@ -61,6 +60,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
 
   function saveGoals() {
     initializeApiManager().then(() => {
+      const promises: Promise<any>[] = [];
       for (const module of activeGoaledModules) {
         const bridge = module.bridge;
 
@@ -68,7 +68,7 @@ export default function ModuleConfigStep({ onBack }: Props) {
       }
     });
 
-    router.replace('/(protected)');
+    onNext();
   }
 
   return (
@@ -119,13 +119,13 @@ export default function ModuleConfigStep({ onBack }: Props) {
 
           <View className="gap-2">
             <Button onPress={saveGoals}>
-              <AppText className="font-bold text-white">Finish setup & Go to tutorial</AppText>
+              <AppText className="font-bold text-white">Set Goals</AppText>
             </Button>
 
             <Button
               variant="outline"
               onPress={() => {
-                onBack?.();
+                onBack();
               }}>
               <AppText className="font-bold">Reselect modules</AppText>
             </Button>

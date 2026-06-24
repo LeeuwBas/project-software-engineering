@@ -1,16 +1,13 @@
+import CheckIcon from '@/assets/icons/toolbar_icons/check.svg';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { OnboardingStep } from '@/lib/onboarding/types';
 import { getActiveModules, setActiveModules } from '@/lib/settings';
 import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import CheckIcon from '@/assets/icons/toolbar_icons/check.svg';
-
-type Props = {
-  onNext?: () => void;
-};
 
 const DEFAULT_MODULES: EnabledModules = {
   water: true,
@@ -21,7 +18,13 @@ const DEFAULT_MODULES: EnabledModules = {
 };
 
 /** TODO (hfgieter): docstring */
-export default function ModuleSelectionStep({ onNext }: Props) {
+export default function ModuleSelectionStep({
+  onNext,
+  goToStep,
+}: {
+  onNext: () => void;
+  goToStep: (step: OnboardingStep) => void;
+}) {
   const router = useRouter();
 
   const [activeModules, setModuleState] = useState<EnabledModules>(DEFAULT_MODULES);
@@ -49,9 +52,9 @@ export default function ModuleSelectionStep({ onNext }: Props) {
     setActiveModules(activeModules);
 
     if (requiresGoalSetup) {
-      onNext?.();
+      onNext();
     } else {
-      router.replace('/(protected)');
+      goToStep('account');
     }
   }
 
@@ -136,9 +139,7 @@ export default function ModuleSelectionStep({ onNext }: Props) {
 
         <View className="pt-8">
           <Button className="w-full" disabled={selectedCount === 0} onPress={saveModules}>
-            <AppText className="font-bold text-white">
-              {requiresGoalSetup ? 'Continue to Goal Setup' : 'Finish Setup & Go to Tutorial'}
-            </AppText>
+            <AppText className="font-bold text-white">Choose Habit Modules</AppText>
           </Button>
         </View>
       </View>

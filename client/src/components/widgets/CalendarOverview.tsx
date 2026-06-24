@@ -165,42 +165,38 @@ export default function CalendarOverview() {
       </View>
 
       {/* Calendar grid */}
-      <AttachStep index={6} fill>
-        <FlatList
-          data={dayGrid}
-          numColumns={7}
-          scrollEnabled={false}
-          keyExtractor={(item) => item.id}
-          style={{ maxHeight: (dayGrid.length / 7) * 72 }} // Necesarry for the spotlight tutorial
-          renderItem={({ item, index }) => (
-            <View
-              className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
-                    ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
-                    ${item.currentDay && 'border-primary-foreground'}
-                    ${calendarData[index]?.stress === 2 ? 'bg-[#b41b21]/30' : calendarData[index]?.stress === 1 ? 'bg-[#FFFF00]/30' : calendarData[index]?.stress === 0 ? 'bg-[#22a022]/30' : ''} `}>
-              <AppText className="self-end text-sm font-bold">
-                {item.value || 'Placeholder'}
-              </AppText>
-              {!item.hidden && (
-                <View className="flex-row flex-wrap gap-1 self-start p-0.5">
-                  {activeCalendarModules.map(
-                    (module) =>
-                      calendarData[index]?.[module.id] === 1 && (
-                        <View
-                          key={module.id}
-                          className={`aspect-square h-[7px] border-[1px]`}
-                          style={{
-                            backgroundColor: module.borderColor,
-                          }}
-                        />
-                      )
-                  )}
-                </View>
-              )}
-            </View>
-          )}
-        />
-      </AttachStep>
+      <FlatList
+        data={dayGrid}
+        numColumns={7}
+        scrollEnabled={false}
+        keyExtractor={(item) => item.id}
+        style={{ maxHeight: (dayGrid.length / 7) * 72 }} // Necesarry for the spotlight tutorial
+        renderItem={({ item, index }) => (
+          <View
+            className={`m-1 h-16 flex-1 items-center justify-between gap-y-1 border-2
+                  ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
+                  ${item.currentDay && 'border-primary-foreground'}
+                  ${calendarData[index]?.stress === 2 ? 'bg-[#b41b21]/30' : calendarData[index]?.stress === 1 ? 'bg-[#FFFF00]/30' : calendarData[index]?.stress === 0 ? 'bg-[#22a022]/30' : ''} `}>
+            <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
+            {!item.hidden && (
+              <View className="flex-row flex-wrap gap-1 self-start p-0.5">
+                {activeCalendarModules.map(
+                  (module) =>
+                    calendarData[index]?.[module.id] === 1 && (
+                      <View
+                        key={module.id}
+                        className={`aspect-square h-[7px] border-[1px]`}
+                        style={{
+                          backgroundColor: module.borderColor,
+                        }}
+                      />
+                    )
+                )}
+              </View>
+            )}
+          </View>
+        )}
+      />
     </View>
   );
 }

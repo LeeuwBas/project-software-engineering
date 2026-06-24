@@ -325,6 +325,7 @@ export async function setGoalZustand<K extends keyof StatLine>(
     name: K,
     value: number
 ) {
+    console.log(`setting ${name} goal to ${value}`);
     if (state.getState().value === null) {
         throw Error(`Stat ${name} not loaded yet`);
     }
@@ -341,7 +342,6 @@ async function loadServerCalendar(startDate: Date, endDate: Date) {
     const endpoint = `/api/calendar/${formatDate(startDate)}/${formatDate(endDate)}`;
 
     const result: any[] = await getAPI(endpoint);
-
     if (result === null) {
         return null;
     }
