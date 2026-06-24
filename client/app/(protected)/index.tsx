@@ -16,7 +16,6 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-native-spotlight-tour';
 
-// TODO (buenk, ZJWeng): docstring
 export default function App() {
   const {
     statsOpen,
@@ -55,12 +54,12 @@ export default function App() {
     loadSettings().then();
     scheduleCacheFlush();
   }, []);
-  // TODO (ZJWeng): comment
+
   const triggerBackup = async () => {
     await syncServer(true);
   };
 
-  // TODO (ZJWeng): comment
+  // Close any open popups
   function closePopup() {
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();

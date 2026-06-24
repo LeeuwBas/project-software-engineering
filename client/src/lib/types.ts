@@ -24,7 +24,7 @@ import useStepValue from './GetSteps';
 // Number of available pets
 export const NUM_PETS = 4;
 
-// state of popups and functions to open/close them.
+// States of popups and functions to open/close them.
 export interface PopupConfigs {
     popupOpen: boolean;
     menuOpen: boolean;
@@ -37,13 +37,6 @@ export interface PopupConfigs {
     changeStressMenu: () => void;
     sendStress: () => void;
     setSendStress: Dispatch<SetStateAction<() => void>>;
-}
-
-/** TODO (ZJWeng): docstring */
-export interface PetType {
-    pet: number;
-    setPet: Function;
-    savePet: Function;
 }
 
 // Uses draft values instead of actual stored values.
@@ -129,7 +122,7 @@ export const StepModule: GoaledModule = {
     },
 };
 
-export const StressModule: ModuleDefinition = {
+export const StressModule: NonGoaledModule = {
     id: 'stress',
     name: 'Stress',
     icon: Stress,
@@ -139,7 +132,7 @@ export const StressModule: ModuleDefinition = {
     borderColor: '#f67788',
     bridge: stressBridge,
 };
-export const SleepModule: ModuleDefinition = {
+export const SleepModule: NonGoaledModule = {
     id: 'sleep',
     name: 'Sleep',
     icon: Sleep,

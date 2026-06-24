@@ -5,16 +5,19 @@ import ThumbsDown from '@assets/icons/module_icons/thumbs_down.svg';
 import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
 import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
-import { Pressable, View } from 'react-native';
-import { AttachStep } from 'react-native-spotlight-tour';
+import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import Bar from './Bar';
-import { Separator } from '../ui/separator';
 
 const MAX_WATER = 25;
 const MAX_FOOD = 12;
 
-/** TODO (ZJWeng): docstring */
+/**
+ * Module component to be shown in menu popup. Each module has different components due to the nature of each stat.
+ *
+ * @param id id of the module
+ * @param icon icon of the module
+ * @param props props used in the module. See MenuConfig type
+ */
 export default function Module({
   id,
   icon: Icon,
@@ -29,8 +32,6 @@ export default function Module({
 
   const { value, setValue, goal, onPress, buttonString } = props ?? {};
 
-  const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
-  // TODO (ZJWeng, Dorus-vda): explain component structure
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex max-w-full flex-row items-center justify-between gap-3">
@@ -40,6 +41,7 @@ export default function Module({
         {/* Water module */}
         {id === 'water' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="w-full flex-1 flex-row items-center justify-center gap-3">
+            {/* Minus button */}
             <Button
               variant="outline"
               className="h-12 flex-grow"
@@ -48,12 +50,14 @@ export default function Module({
               <Minus size={20} />
             </Button>
 
+            {/* Values & goal */}
             <View className="flex min-w-16 flex-grow flex-row items-center justify-between gap-0 rounded-md border border-border px-2 py-3">
               <AppText className="text-base font-bold">{value}</AppText>
               <AppText className="text-xs font-bold"> / </AppText>
               <AppText className="text-left text-base font-bold">{goal}</AppText>
             </View>
 
+            {/* Plus button */}
             <Button
               variant="outline"
               className="h-12 flex-grow"
@@ -64,6 +68,7 @@ export default function Module({
           </View>
         )}
 
+        {/* Steps module */}
         {id === 'steps' && (
           <View className="px-auto flex flex-1 flex-row items-center justify-center gap-0 rounded-md border border-border py-3">
             <AppText className="text-base font-bold">{value}</AppText>
@@ -72,6 +77,7 @@ export default function Module({
           </View>
         )}
 
+        {/* Stress module */}
         {id === 'stress' && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
             <Button variant="outline" className="h-12 flex-1 py-0" onPress={onPress}>
@@ -80,8 +86,10 @@ export default function Module({
           </View>
         )}
 
+        {/* Food module */}
         {id === 'food' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="w-full flex-1 flex-row items-center justify-center gap-3">
+            {/* Minus button */}
             <Button
               variant="outline"
               className="h-12 flex-grow"
@@ -96,6 +104,7 @@ export default function Module({
               <AppText className="text-left text-base font-bold">{goal}</AppText>
             </View>
 
+            {/* Plus button */}
             <Button
               variant="outline"
               className="h-12 flex-grow"
@@ -106,21 +115,22 @@ export default function Module({
           </View>
         )}
 
+        {/* Sleep module */}
         {id === 'sleep' && setValue !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
+            {/* Bad sleep */}
             <Button
-              variant={value === -1 ? 'secondary' : 'outline'}
+              variant={value === 0 ? 'secondary' : 'outline'}
               className={'h-12 flex-1'}
-              onPress={() => setValue(-1)}>
-              {/*<Button onPress={() => setValue(1)} className={`${value !== 1 && 'opacity-30'}`}>*/}
-              <ThumbsDown width={30} height={30} color={value === -1 ? '#ffffff' : '#aaaaaa'} />
+              onPress={() => setValue(0)}>
+              <ThumbsDown width={30} height={30} color={value === 0 ? '#ffffff' : '#aaaaaa'} />
             </Button>
 
+            {/* Good sleep */}
             <Button
               variant={value === 1 ? 'secondary' : 'outline'}
               className={'h-12 flex-1'}
               onPress={() => setValue(1)}>
-              {/*<Button onPress={() => setValue(1)} className={`${value !== 1 && 'opacity-30'}`}>*/}
               <ThumbsUp width={30} height={30} color={value === 1 ? '#ffffff' : '#aaaaaa'} />
             </Button>
           </View>

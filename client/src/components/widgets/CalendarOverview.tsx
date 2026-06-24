@@ -1,12 +1,12 @@
+import { AppText } from '@/components/AppText';
 import { getGoalCalender } from '@/lib/api/APIBridge';
 import { getActiveModules } from '@/lib/settings';
 import { ModuleDefinition, MODULES } from '@/lib/types';
+import ChevronLeft from '@assets/icons/toolbar_icons/chevron_left.svg';
+import ChevronRight from '@assets/icons/toolbar_icons/chevron_right.svg';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
-import { AppText } from '../AppText';
-import ChevronLeft from '@assets/icons/toolbar_icons/chevron_left.svg';
-import ChevronRight from '@assets/icons/toolbar_icons/chevron_right.svg';
 
 export interface calendarCell {
   id: string;
