@@ -35,7 +35,7 @@ export default function StressMenu() {
   return (
     <View className="absolute -top-6 w-full items-center">
       <View className="absolute bottom-full w-full items-center">
-        <Card className="mb-6 h-auto w-3/4 items-center justify-center shadow-block">
+        <Card className="mb-6 h-auto w-[80%] items-center justify-center shadow-block">
           <CardHeader className="items-center">
             <AppText className="mx-6 mt-4 text-2xl font-bold">Today I felt...</AppText>
           </CardHeader>
