@@ -7,7 +7,6 @@ import { View } from 'react-native';
 
 /**
  * The view on top of the homepage. Contains the weather, day of the week, and bars for active goaled modules.
- * @returns the top view
  */
 export default function Topbar() {
   const date = new Date();

@@ -1,7 +1,7 @@
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 
-/** TODO (Dorus-vda, ZJWeng): docstring */
+/** Weather data used in weather component */
 export interface WeatherData {
     status: string;
     id: number;
