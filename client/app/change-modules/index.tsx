@@ -1,10 +1,10 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { ModuleSelection } from '@/components/widgets/ModuleSelection';
 import { useModuleManagement } from '@/lib/useModuleManagement';
-import { Card } from '@/components/ui/card';
-import { router } from 'expo-router';
 import { ImageBackground } from 'expo-image';
+import { router } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ChangeModules() {
@@ -24,7 +24,7 @@ export default function ChangeModules() {
       style={{ flex: 1 }}>
       <SafeAreaProvider>
         <SafeAreaView className="size-full justify-center">
-          <Card className="mx-4 gap-2 rounded-2xl border border-border/40 bg-card/80 p-5">
+          <Card className="mx-4 gap-2 p-5">
             <ModuleSelection
               activeModules={activeModules}
               toggleModule={toggleModule}
