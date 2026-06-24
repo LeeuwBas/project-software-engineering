@@ -411,7 +411,12 @@ class CalendarView(APIView):
         endDay = datetime.fromisoformat(end_date)
 
         if startDay >= endDay:
-            return Response("Invalid input", HTTP_400_BAD_REQUEST)
+            return Response("Invalid Input", HTTP_400_BAD_REQUEST)
+
+        if startDay + timedelta(days=45) < endDay:
+            return Response(
+                {"reason": "Too long of a period requested"}, HTTP_400_BAD_REQUEST
+            )
 
         returnList = getCalender(request.user, startDay, endDay)
 

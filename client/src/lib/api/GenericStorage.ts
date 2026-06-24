@@ -342,7 +342,6 @@ async function loadServerCalendar(startDate: Date, endDate: Date) {
     const endpoint = `/api/calendar/${formatDate(startDate)}/${formatDate(endDate)}`;
 
     const result: any[] = await getAPI(endpoint);
-
     if (result === null) {
         return null;
     }

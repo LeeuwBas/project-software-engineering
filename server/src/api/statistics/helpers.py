@@ -174,22 +174,22 @@ def getCalender(user: str, startDay: datetime, endDay: datetime):
 
     currentDay = startDay
     while currentDay <= endDay:
-        nodata = False
+        has_data = True
 
         stats = getDay(user, None, currentDay)
         if stats is None:
             stats = getStatDict(Stats())
-            nodata = True
+            has_data = False
 
         goals = getGoal(user, None, currentDay)
         if goals is None:
             goals = getStatDict(Goals())
-            nodata = True
+            has_data = False
 
         for key in stats.keys():
             if key == "stress":
                 continue
-            stats[key] = stats[key] >= goals[key] if nodata else False
+            stats[key] = stats[key] >= goals[key] if has_data else False
 
         returnList.append(stats)
 
