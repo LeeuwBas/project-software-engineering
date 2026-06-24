@@ -4,7 +4,6 @@ import Quotes from '@/components/widgets/Quotes';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
-import { useWater } from '@/lib/api/WaterBridge';
 import { useAppContext } from '@/lib/AppContext';
 import { loadSettings, useTutorial } from '@/lib/settings';
 import { syncServer } from '@/lib/StorageSync';
@@ -19,7 +18,6 @@ import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-nativ
 
 // TODO (buenk, ZJWeng): docstring
 export default function App() {
-  const water = useWater() ?? 0;
   const {
     statsOpen,
     menuOpen,
@@ -62,12 +60,8 @@ export default function App() {
     await syncServer(true);
   };
 
-  // TODO (buenk): comment
-  const { done, setTutorialDone } = useTutorial();
-
   // TODO (ZJWeng): comment
   function closePopup() {
-    setTutorialDone();
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();
     if (statsOpen) changeStats();
@@ -83,17 +77,7 @@ export default function App() {
   const [topBarLayout, setTopBarLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
   // TODO (buenk): comment
-  const mySteps = useMemo(
-    () =>
-      createTutorialSteps({
-        menuOpen,
-        statsOpen,
-        changeMenu,
-        changeStats,
-        water,
-      }),
-    [menuOpen, statsOpen, changeMenu, changeStats, water]
-  );
+  const mySteps = useMemo(() => createTutorialSteps(), []);
   /* TODO (buenk): summary of the structure, like what the SafeAreaView, SpotlightTourProvider, and LinearGradient 
   are for/ what they contain.*/
   return (
@@ -149,16 +133,15 @@ export default function App() {
             <Quotes petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
           </View>
 
-          {done && ( // Blur that appears when the popup appears.
-            <BlurView
-              pointerEvents="none"
-              className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
-              style={{ zIndex: 9 }}
-              intensity={20}
-              tint="regular"
-              experimentalBlurMethod="dimezisBlurView"
-            />
-          )}
+          <BlurView
+            pointerEvents="none"
+            className={`absolute h-full w-full transition-opacity duration-300 ${popupOpen ? 'opacity-100' : 'opacity-0'}`}
+            style={{ zIndex: 9 }}
+            intensity={20}
+            tint="regular"
+            experimentalBlurMethod="dimezisBlurView"
+          />
+
           <Toolbar />
         </LinearGradient>
       </SpotlightTourProvider>
