@@ -21,8 +21,7 @@ export function ModuleSelection({ toggleModule, isSelected }: ModuleSelectionPro
   const habitModules = MODULES.filter((module) => module.id !== 'stress');
 
   return (
-    <
-    className="p-0">
+    <CardContent className="p-0">
       <View className="gap-2">
         <AppText className="mb-2 text-center text-xl font-bold">
           Would you like to keep track of stress?
