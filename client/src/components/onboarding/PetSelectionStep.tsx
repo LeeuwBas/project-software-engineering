@@ -1,9 +1,9 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { PetSelector } from '@/components/widgets/PetSelector';
-import { getPetID, setPetID } from '@/lib/settings';
+import { getPetID, initSettings, setPetID } from '@/lib/settings';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 /**
@@ -18,6 +18,8 @@ export function PetSelectionStep({ onNext }: { onNext: () => void }) {
   const router = useRouter();
   const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
+
+  useEffect(() => initSettings(), []);
 
   function confirm() {
     setPetID(draftPet);
