@@ -17,8 +17,10 @@ interface TabLabel {
   icon: React.FC<SvgProps>;
 }
 
-/** TODO (ZJWeng): docstring and comments throughout */
-export default function Stats({}: {}) {
+/**
+ * Stats popup containing the calendar overview and bar charts for each goaled module
+ */
+export default function Stats() {
   const { statsOpen } = useAppContext();
   const [activeTab, setActiveTab] = useState<TabId>('calendar');
   const { colorScheme } = useColorScheme();
@@ -28,16 +30,14 @@ export default function Stats({}: {}) {
     (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
+  // Default to calendar
   useEffect(() => {
     if (!statsOpen) {
       setActiveTab('calendar');
     }
   }, [statsOpen]);
 
-  // if (!statsOpen) {
-  //   return null;
-  // }
-
+  // Labels for each tab
   const labels: TabLabel[] = [
     {
       id: 'calendar',
@@ -54,6 +54,7 @@ export default function Stats({}: {}) {
       pointerEvents={statsOpen ? 'auto' : 'none'}
       className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
       <View className="bottom-full w-[90%] items-center">
+        {/* Labels */}
         <View className="absolute -top-12 w-full flex-row gap-1">
           {labels.map(({ id, icon: Icon }) => (
             <Button
@@ -65,6 +66,8 @@ export default function Stats({}: {}) {
             </Button>
           ))}
         </View>
+
+        {/* Calendar overview & bar chart */}
         <Card className="w-full items-center justify-center py-3 shadow-block">
           <CardContent className="w-full items-center px-2">
             {activeTab === 'calendar' ? (

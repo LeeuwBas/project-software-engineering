@@ -3,6 +3,15 @@ import { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext<PopupConfigs>(null!);
 
+/**
+ * Function for using the app context, which contain popup state functions
+ * for opening and closing popups {@link PopupConfigs}
+ * Also contains state of sendStress function that is called when stress is submitted.
+ *
+ * @returns popup and sendStress state functions
+ */
+export const useAppContext = () => useContext(AppContext);
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -27,9 +36,3 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return <AppContext.Provider value={popup}>{children}</AppContext.Provider>;
 }
-
-/** TODO (buenk, ZJWeng, hfgieter) docstring, also can we put this above the function since it's the default export?
- * This one is pretty important, also {@link PopupConfigs} in it. Make sure both docstrings for this and PopupConfigs
- * are well made, they're pretty important.
- */
-export const useAppContext = () => useContext(AppContext);

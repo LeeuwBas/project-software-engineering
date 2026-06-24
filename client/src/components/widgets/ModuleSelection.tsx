@@ -1,18 +1,22 @@
 import CheckIcon from '@/assets/icons/toolbar_icons/check.svg';
 import { AppText } from '@/components/AppText';
+import { CardContent } from '@/components/ui/card';
 import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { Pressable, View } from 'react-native';
-import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
 
 type ModuleSelectionProps = {
-  activeModules: EnabledModules;
   toggleModule: (moduleId: keyof EnabledModules) => void;
   isSelected: (moduleId: keyof EnabledModules) => boolean;
 };
 
-export function ModuleSelection({ activeModules, toggleModule, isSelected }: ModuleSelectionProps) {
+/** UI element for selecting which habits (modules) to track.
+ * @param toggleModule callback function that toggles module on or off
+ * @param isSelected callback function that lets know if module is selected
+ *
+ * @returns JSX element
+ */
+export function ModuleSelection({ toggleModule, isSelected }: ModuleSelectionProps) {
   const stressModule = MODULES.find((module) => module.id === 'stress');
   const habitModules = MODULES.filter((module) => module.id !== 'stress');
 

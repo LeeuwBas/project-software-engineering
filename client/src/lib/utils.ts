@@ -1,8 +1,9 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { StatLine } from '@/lib/storage';
 
-/** TODO (ZJWeng): docstring */
+/**
+ * Resolves combines Tailwind/Nativewind and CSS and removes conflicts
+ */
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
