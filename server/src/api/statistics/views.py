@@ -1,21 +1,23 @@
 from django.forms.models import FieldError
-from django.utils import timezone
-from django.db.models import F
-from django.core.exceptions import FieldError
 
-from rest_framework import status, serializers
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter,
-    OpenApiResponse,
-    inline_serializer,
+from .schemas import (
+    STAT_GET_SCHEMA,
+    STAT_POST_SCHEMA,
+    STAT_BULK_GET_SCHEMA,
+    STAT_BULK_POST_SCHEMA,
+    BARCHART_GET_SCHEMA,
+    SUMMARY_GET_SCHEMA,
+    GOAL_GET_SCHEMA,
+    GOAL_POST_SCHEMA,
+    GOAL_BULK_GET_SCHEMA,
+    GOAL_BULK_POST_SCHEMA,
+    CALENDAR_GET_SCHEMA,
 )
-from drf_spectacular.types import OpenApiTypes
 
 from datetime import datetime, timedelta
 
@@ -36,12 +38,25 @@ from .helpers import (
 )
 
 """
+Cheatsheet of the endpoints defined in this file. For descriptions on functionality
+or extended descriptions on the parameters, check the documentation at the actual functions.
+
 /api/stats/<date>/
     get:
-        query param: statName, if None, return all stats of date
+        query param: statName, if None, returns all stats of date
 
     post:
-        data: statName and value dict. can have multiple in one go
+        data: statName and value dict. Can have multiple in single request
+
+/api/stats/bulk/
+    get:
+        query params:
+            stat_name, if None, returns all stats of date range
+            start_date, required
+            end_date, required
+
+    post:
+        data: dict with dates as keys and statName and value dicts as keys
 
 
 /api/barchart/<statname>/<startDate>/<endDate>/
@@ -52,6 +67,27 @@ from .helpers import (
     get:
         no params
 
+/api/goals/<goal_date>/
+    get:
+        query param: goal_name, if None, returns all goals of date
+
+    post:
+        data: statName and goal dict. Can have multiple in single request
+
+/api/goals/bulk/
+    get:
+        query_params:
+            goal_name, if None, returns all goals of date range
+            start_date, required
+            end_date, required
+
+    post:
+        data: dict with dates as keys and goalName and value dicts as keys
+
+/api/calendar/<start_date>/<end_date>/
+    get:
+        no params
+
 """
 
 
@@ -59,42 +95,7 @@ class StatManageView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves the statistics data of a given date.",
-        description="""Retrieves the statistics of a given date, if no name
-            for the statistic was provided, the API will return all known stats.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="date",
-                description="date for which the requested goal was active",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="statName",
-                description="Internal name of the goal. If not supplied, "
-                "the api will return all goals at the given date.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=False,
-            ),
-        ],
-        responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "goals": {
-                        "type": "object",
-                        "additionalProperties": {"type": "integer"},
-                        "example": {"water": 5},
-                    }
-                },
-            },
-            400: OpenApiResponse(description="Invalid input."),
-        },
-    )
+    @STAT_GET_SCHEMA
     def get(self, request, date):
         statName = request.query_params.get("statName", None)
         day = datetime.fromisoformat(date)
@@ -107,93 +108,23 @@ class StatManageView(APIView):
         if type(returnVal) is not dict:
             returnVal = {statName: returnVal}
 
-        return Response(returnVal, 200)
+        return Response(returnVal, HTTP_200_OK)
 
-    # TODO: Make POST request documentation (now GET)
-    @extend_schema(
-        summary="Retrieves the statistics data of a given date.",
-        description="""Retrieves the statistics of a given date, if no name
-            for the statistic was provided, the API will return all known stats.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="date",
-                description="date for which the requested goal was active",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            )
-        ],
-        request={
-            "application/json": {
-                "type": "object",
-                "properties": {
-                    "stats": {
-                        "type": "object",
-                        "description": "Statistics to be inserted. "
-                        "<internal_name>:<val>",
-                        "additionalProperties": {"type": "number"},
-                    }
-                },
-            }
-        },
-        responses={200: "ok", 400: OpenApiResponse(description="Invalid input.")},
-    )
+    @STAT_POST_SCHEMA
     def post(self, request, date):
         stat_data = request.data.get("stats")
         day = datetime.fromisoformat(date)
 
         setDay(request.user, stat_data, day)
 
-        return Response("ok", 200)
+        return Response("ok", HTTP_200_OK)
 
 
 class StatBulkView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves the set stat at a given date range",
-        description="""Retrieves the stats of a given date range for a given
-                module. If the module is not supplied it will return all stats.
-                """,
-        parameters=[
-            OpenApiParameter(
-                name="start_date",
-                description="start date for the stats",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="end_date",
-                description="End date of the stats",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="stat_name",
-                description="Internal name of the stat. If not supplied, "
-                "the api will return all stats at the given date.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=False,
-            ),
-        ],
-        responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "object",
-                        "additionalProperties": {"type": "integer"},
-                        "example": {"water": 5},
-                    }
-                },
-            },
-        },
-    )
+    @STAT_BULK_GET_SCHEMA
     def get(self, request):
         stat_name = request.query_params.get("stat_name", None)
         start_date = request.query_params.get("start_date", None)
@@ -202,10 +133,10 @@ class StatBulkView(APIView):
             day = datetime.fromisoformat(start_date)
             end_day = datetime.fromisoformat(end_date)
         except ValueError:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         if day + timedelta(days=90) < end_day:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         return_dict = {}
 
@@ -221,101 +152,29 @@ class StatBulkView(APIView):
 
             day = day + timedelta(days=1)
 
-        return Response(return_dict, 200)
+        return Response(return_dict, HTTP_200_OK)
 
-    @extend_schema(
-        summary="Sets a new stat",
-        description="""Updates or inserts a new stat for a given date range
-                """,
-        request={
-            "application/json": {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "object",
-                        "description": "Goals that need to be updated. "
-                        "<internal_name>:<val>",
-                        "additionalProperties": {"type": "number"},
-                    }
-                },
-            }
-        },
-        responses={200: "ok", 400: "Invalid Input."},
-    )
+    @STAT_BULK_POST_SCHEMA
     def post(self, request):
         for date in request.data:
             data = request.data[date]
             if len(data) == 0:
-                return Response("Invalid input", 400)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
             try:
                 day = datetime.fromisoformat(date)
             except ValueError:
-                return Response(status=HTTP_400_BAD_REQUEST)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
             setDay(request.user, request.data[date], day)
 
-        return Response("ok", status=200)
+        return Response("ok", HTTP_200_OK)
 
 
 class BarchartView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves data for a bar chart between given dates.",
-        description="""Retrieves the bin data to create a bar chart for a
-            given statistic at a given date range. If bins is supplied, it must
-            be divider of the amount of days. Date is exclusive on the lower
-            bound and inclusive on the upper bound.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="statName",
-                description="name of the statistic to get the bar chart.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="startDate",
-                description="Start date of the bar chart. exclusive",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="endDate",
-                description="End date of the bar chart. inclusive",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="bins",
-                description="Amount of bins to put the data in, defaults to the amount of days",
-                type=OpenApiTypes.INT,
-                location=OpenApiParameter.QUERY,
-                required=True,
-            ),
-        ],
-        responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "days_per_bin": {
-                        "type": "integer",
-                        "example": 5,
-                    },
-                    "bins": {
-                        "type": "object",
-                        "additionalProperties": {"type": "integer"},
-                        "example": {"0": 5, "1": 8, "2": 3},
-                    },
-                },
-            },
-            400: OpenApiResponse(description="Invalid input."),
-        },
-    )
+    @BARCHART_GET_SCHEMA
     def get(self, request, statName, startDate, endDate):
         startDate = datetime.fromisoformat(startDate)
         endDate = datetime.fromisoformat(endDate)
@@ -324,168 +183,63 @@ class BarchartView(APIView):
         bins = int(request.query_params.get("bins", days))
 
         if days % bins != 0:
-            return Response(f"Invalid input days%bins = {days % bins}", 400)
+            return Response(
+                f"Invalid input days%bins = {days % bins}", HTTP_400_BAD_REQUEST
+            )
 
         returnData = getBarChart(startDate, endDate, bins, request.user, statName)
-        return Response(returnData, 200)
+        return Response(returnData, HTTP_200_OK)
 
 
 class SummaryView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves the calendar view of a given date range.",
-        description="""Retrieves boolean data if all goals are completed
-            for a given date range. Inclusive on both sides of the date range
-            (a <= b <= c).
-
-            Element 0 of the return array is the oldest date.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="statName",
-                description="name of the stat to summarize.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="startDate",
-                description="start date of the calendar view",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="endDate",
-                description="end date of the calender view",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-        ],
-        responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "total_water": {"type": "integer"},
-                    "average_water": {"type": "number"},
-                    "minimum_water": {"type": "integer"},
-                    "maximum_water": {"type": "integer"},
-                },
-            },
-            400: OpenApiResponse(description="Invalid input."),
-        },
-    )
+    @SUMMARY_GET_SCHEMA
     def get(self, request, statName, startDate, endDate):
         if endDate < startDate:
-            Response("Invalid input", 400)
+            Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         startDate = datetime.fromisoformat(startDate)
         endDate = datetime.fromisoformat(endDate)
 
         returnDict = getSummary(request.user, statName, startDate, endDate)
 
-        return Response(returnDict, 200)
+        return Response(returnDict, HTTP_200_OK)
 
 
 class GoalManageView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves the set goal at a given date.",
-        description="""Retrieves the goals of a given dat for a given
-            module. If the module is not supplied it will return all set goals.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="goal_date",
-                description="date for which the requested goal was active",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="goal_name",
-                description="Internal name of the goal. If not supplied, "
-                "the api will return all goals at the given date.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=False,
-            ),
-        ],
-        responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "goals": {
-                        "type": "object",
-                        "additionalProperties": {"type": "integer"},
-                        "example": {"water": 5},
-                    }
-                },
-            },
-            400: OpenApiResponse(description="Invalid input."),
-        },
-    )
+    @GOAL_GET_SCHEMA
     def get(self, request, goal_date):
         goal_name = request.query_params.get("goal_name", None)
         if goal_name is None:
-            return Response("Invalid input", 400)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
         day = datetime.fromisoformat(goal_date)
 
         goals = getGoal(request.user, goal_name, day)
 
         if goals is None:
-            return Response(getStatDict(Goals()), 200)
+            return Response(getStatDict(Goals()), HTTP_200_OK)
 
         if type(goals) is dict:
-            return Response(goals, 200)
+            return Response(goals, HTTP_200_OK)
         else:
-            return Response({goal_name: goals}, 200)
+            return Response({goal_name: goals}, HTTP_200_OK)
 
-    @extend_schema(
-        summary="Sets a new goal",
-        description="""Updates or inserts a new goal to be followed.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="goal_date",
-                description="date for which to set the goal",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            )
-        ],
-        request={
-            "application/json": {
-                "type": "object",
-                "properties": {
-                    "goals": {
-                        "type": "object",
-                        "description": "Goals that need to be updated. "
-                        "<internal_name>:<val>",
-                        "additionalProperties": {"type": "number"},
-                    }
-                },
-            }
-        },
-        responses={200: "ok", 400: "Invalid Input."},
-    )
+    @GOAL_POST_SCHEMA
     def post(self, request, goal_date):
         goal_data = request.data.get("goals")
         day = datetime.fromisoformat(goal_date)
 
-        if goal_data is None:
-            return Response("Invalid input", 400)
-        if len(goal_data) == 0:
-            return Response("Invalid input", 400)
+        if goal_data is None or len(goal_data) == 0:
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         try:
             setGoal(request.user, goal_data, day)
-            return Response("ok", 200)
+            return Response("ok", HTTP_200_OK)
         except FieldError:
             return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
@@ -494,52 +248,8 @@ class GoalBulkView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves the set goal at a given date range",
-        description="""Retrieves the goals of a given date range for a given
-                module. If the module is not supplied it will return all set goals.
-                """,
-        parameters=[
-            OpenApiParameter(
-                name="start_date",
-                description="start date for the goals",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="end_date",
-                description="End date of the goal",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="goal_name",
-                description="Internal name of the goal. If not supplied, "
-                "the api will return all goals at the given date.",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.QUERY,
-                required=False,
-            ),
-        ],
-        responses={
-            200: {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "object",
-                        "additionalProperties": {"type": "integer"},
-                        "example": {"water": 5},
-                    }
-                },
-            },
-        },
-    )
-    def get(
-        self,
-        request,
-    ):
+    @GOAL_BULK_GET_SCHEMA
+    def get(self, request):
         goal_name = request.query_params.get("goal_name", None)
         start_date = request.query_params.get("start_date", None)
         end_date = request.query_params.get("end_date", None)
@@ -547,10 +257,10 @@ class GoalBulkView(APIView):
             day = datetime.fromisoformat(start_date)
             end_day = datetime.fromisoformat(end_date)
         except ValueError:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         if day + timedelta(days=90) < end_day:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         return_dict = {}
 
@@ -566,85 +276,32 @@ class GoalBulkView(APIView):
 
             day = day + timedelta(days=1)
 
-        return Response(return_dict, 200)
+        return Response(return_dict, HTTP_200_OK)
 
-    @extend_schema(
-        summary="Sets a new goal",
-        description="""Updates or inserts a new goal to be followed. for a given date range
-                """,
-        request={
-            "application/json": {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "object",
-                        "description": "Goals that need to be updated. "
-                        "<internal_name>:<val>",
-                        "additionalProperties": {"type": "number"},
-                    }
-                },
-            }
-        },
-        responses={200: "ok", 400: "Invalid Input."},
-    )
+    @GOAL_BULK_POST_SCHEMA
     def post(self, request):
         for date in request.data:
             data = request.data[date]
             if len(data) == 0:
-                return Response("Invalid input", 400)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
             try:
                 day = datetime.fromisoformat(date)
             except ValueError:
-                return Response(status=HTTP_400_BAD_REQUEST)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
             try:
                 setGoal(request.user, request.data[date], day)
             except FieldError:
-                return Response("Invalid input", 400)
+                return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
-        return Response("ok", status=200)
+        return Response("ok", HTTP_200_OK)
 
 
 class CalendarView(APIView):
     permission_classes = [IsAuthenticated, IsSelf]
     serializer_class = StatsSerializer
 
-    @extend_schema(
-        summary="Retrieves the calendar view of a given date range.",
-        description="""Retrieves boolean data if all goals are completed
-            for a given date range. Inclusive on both sides of the date range
-            (a <= b <= c).
-
-            Element 0 of the return array is the oldest date.
-            """,
-        parameters=[
-            OpenApiParameter(
-                name="start_date",
-                description="start date of the calendar view",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-            OpenApiParameter(
-                name="end_date",
-                description="end date of the calender view",
-                type=OpenApiTypes.STR,
-                location=OpenApiParameter.PATH,
-                required=True,
-            ),
-        ],
-        responses={
-            200: inline_serializer(
-                name="MyResponse",
-                fields={
-                    "key": serializers.CharField(),
-                    "val": serializers.FloatField(),
-                },
-                many=True,
-            ),
-            400: OpenApiResponse(description="Invalid input."),
-        },
-    )
+    @CALENDAR_GET_SCHEMA
     def get(self, request, start_date, end_date):
         startDay = datetime.fromisoformat(start_date)
         endDay = datetime.fromisoformat(end_date)
@@ -653,7 +310,9 @@ class CalendarView(APIView):
             return Response("Invalid Input", HTTP_400_BAD_REQUEST)
 
         if startDay + timedelta(days=45) < endDay:
-            return Response({"reason":"Too long of a period requested"}, HTTP_400_BAD_REQUEST)
+            return Response(
+                {"reason": "Too long of a period requested"}, HTTP_400_BAD_REQUEST
+            )
 
         returnList = getCalender(request.user, startDay, endDay)
 
