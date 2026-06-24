@@ -75,7 +75,7 @@ export default function ModuleConfigStep({
     <View className="flex-1">
       <View style={{ flex: 0.3 }} />
 
-      <Card className="mx-4 border-border bg-background/80 shadow-none">
+      <Card className="mx-4 shadow-none">
         <CardHeader>
           <CardTitle className="text-center text-xl">
             <AppText className="font-bold">Set Your Daily Goals</AppText>
