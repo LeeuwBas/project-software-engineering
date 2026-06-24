@@ -5,6 +5,7 @@ const REFRESH_TOKEN = 'refresh_token';
 const LOGIN_ID = 'login_id';
 const LOGIN_EMAIL = 'login_email';
 
+/** TODO (LeeuwBas): docstring */
 export const tokenStorage = {
     getAccessToken: () => SecureStore.getItemAsync(ACCESS_TOKEN),
     getRefreshToken: () => SecureStore.getItemAsync(REFRESH_TOKEN),

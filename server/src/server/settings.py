@@ -140,6 +140,7 @@ WSGI_APPLICATION = "server.wsgi.application"
 
 USE_SQLITE = config("USE_SQLITE", default=True, cast=bool)
 
+# Uses django on UvA server, but allows for .env variable to change to sqlite locally
 if USE_SQLITE:
     DATABASES = {
         "default": {

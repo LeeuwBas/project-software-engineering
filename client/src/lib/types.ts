@@ -20,6 +20,9 @@ import { useStress } from './api/StressBridge';
 import { useWater } from './api/WaterBridge';
 import useStepValue from './GetSteps';
 
+// Number of available pets
+export const NUM_PETS = 4;
+
 // state of popups and functions to open/close them.
 export interface PopupConfigs {
     popupOpen: boolean;
@@ -35,6 +38,7 @@ export interface PopupConfigs {
     setSendStress: Dispatch<SetStateAction<() => void>>;
 }
 
+/** TODO (ZJWeng): docstring */
 export interface PetType {
     pet: number;
     setPet: Function;
@@ -68,6 +72,7 @@ export interface NonGoaledModule {
     unit: string;
     color: string;
     borderColor: string;
+    selectColor?: string;
     bridge: StatisticBridge;
     menuConfig?: MenuConfig;
 }
@@ -80,6 +85,7 @@ export interface GoaledModule {
     unit: string;
     color: string;
     borderColor: string;
+    selectColor?: string;
     bridge: GoaledStatisticBridge;
     goalConfig: GoalConfig;
     menuConfig?: MenuConfig;
@@ -104,14 +110,16 @@ export const MODULES: ModuleDefinition[] = [
             maxGoal: 20,
         },
     },
+
     {
         id: 'food',
         name: 'Meals',
         icon: Food,
         useValue: useFood,
         unit: 'meals',
-        color: '#ffe396',
-        borderColor: '#b47e1b',
+        color: '#fcdf8d',
+        borderColor: '#f7cc52',
+        selectColor: '#f9c025',
         bridge: foodBridge,
         goalConfig: {
             defaultGoal: 3,
@@ -126,8 +134,8 @@ export const MODULES: ModuleDefinition[] = [
         icon: Sleep,
         useValue: useSleep,
         unit: 'hours',
-        color: '#ff96f6',
-        borderColor: '#a21bb4',
+        color: '#bb9cd6',
+        borderColor: '#a772d6',
         bridge: sleepBridge,
     },
     {
@@ -138,6 +146,7 @@ export const MODULES: ModuleDefinition[] = [
         unit: 'steps',
         color: '#a5d9a5',
         borderColor: '#69d669',
+        selectColor: '#36d636',
         bridge: stepsBridge,
         goalConfig: {
             defaultGoal: 5000,
@@ -157,3 +166,12 @@ export const MODULES: ModuleDefinition[] = [
         bridge: stressBridge,
     },
 ];
+
+export interface BarType {
+    id: ModuleId;
+    icon: React.FC<SvgProps>;
+    value: number;
+    goal: number;
+    color: string;
+    borderColor: string;
+}

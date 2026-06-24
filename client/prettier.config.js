@@ -9,11 +9,20 @@ module.exports = {
   overrides: [
     {
       files: '*.ts',
-      options: { tabWidth: 4 },
+      options: {
+        tabWidth: 4,
+        endOfLine: 'auto',
+      },
     },
     {
       files: '*.d.ts',
       options: { tabWidth: 2 },
+    },
+    {
+      files: '*.tsx',
+      options: {
+        endOfLine: 'auto',
+      },
     },
   ],
 };
