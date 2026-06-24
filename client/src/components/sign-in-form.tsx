@@ -11,6 +11,8 @@ import { Pressable, Keyboard, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AppText } from './AppText';
 import { Ionicons } from '@expo/vector-icons';
+import ClosedEye from '@assets/icons/eye-icon/closed-eye.svg';
+import OpenEye from '@assets/icons/eye-icon/open-eye.svg';
 
 /** TODO (buenk): docstring, maybe a few more comments? */
 export function SignInForm() {
@@ -115,11 +117,16 @@ export function SignInForm() {
                     className="absolute bottom-0 right-3 top-0 justify-center"
                     hitSlop={10}
                     accessibilityLabel={isPasswordVisible ? 'Hide password' : 'Show password'}>
-                    <Ionicons
+                    {/* <Ionicons
                       name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
                       size={20}
                       className="text-muted-foreground"
-                    />
+                    /> */}
+                    {isPasswordVisible ? (
+                      <ClosedEye width={36} height={36} />
+                    ) : (
+                      <OpenEye width={36} height={36} />
+                    )}
                   </Pressable>
                 </View>
                 {errors.password && (
