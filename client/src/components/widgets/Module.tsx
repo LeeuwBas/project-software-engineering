@@ -33,7 +33,7 @@ export default function Module({
   // TODO (ZJWeng, Dorus-vda): explain component structure
   return (
     <View className="flex w-full flex-row items-center justify-between">
-      <View className="flex max-w-full flex-row items-center justify-between gap-4">
+      <View className="flex max-w-full flex-row items-center justify-between gap-3">
         <View className="flex flex-row items-center gap-2">
           <Icon height={30} width={30} color={iconColor} />
         </View>
