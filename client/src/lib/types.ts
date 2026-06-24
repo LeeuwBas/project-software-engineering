@@ -14,13 +14,12 @@ import {
     stressBridge,
     waterBridge,
 } from './api/APIBridge';
-import { waterDefault } from './api/WaterBridge';
 import { foodDefault, useFood } from './api/FoodBridge';
 import { useSleep } from './api/SleepBridge';
-import { useStress } from './api/StressBridge';
-import { useWater } from './api/WaterBridge';
-import useStepValue from './GetSteps';
 import { stepsDefault } from './api/StepBridge';
+import { useStress } from './api/StressBridge';
+import { useWater, waterDefault } from './api/WaterBridge';
+import useStepValue from './GetSteps';
 
 // Number of available pets
 export const NUM_PETS = 4;
@@ -95,7 +94,6 @@ export interface GoaledModule {
 
 export type ModuleDefinition = GoaledModule | NonGoaledModule;
 
-
 export const WaterModule: GoaledModule = {
     id: 'water',
     name: 'Water',
@@ -111,7 +109,7 @@ export const WaterModule: GoaledModule = {
         stepSize: 1,
         maxGoal: 20,
     },
-}
+};
 
 export const StepModule: GoaledModule = {
     id: 'steps',
