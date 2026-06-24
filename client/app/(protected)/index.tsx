@@ -59,7 +59,7 @@ export default function App() {
     await syncServer(true);
   };
 
-  // TODO (ZJWeng): comment
+  // Close any open popups
   function closePopup() {
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();

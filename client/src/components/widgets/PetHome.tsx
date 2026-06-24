@@ -8,7 +8,6 @@ import { useWater } from '@/lib/api/WaterBridge';
 import { getPetID } from '@/lib/settings';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { scheduleNotification } from '@/lib/notificationScheduler';
 
 /**
  * This component represents the pet with its associated animations for the homescreen.

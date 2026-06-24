@@ -11,11 +11,14 @@ import SunnyCloud from '@assets/icons/weather_icons/sunny_cloudy.svg';
 import Thunder from '@assets/icons/weather_icons/thunder.svg';
 import { View } from 'react-native';
 
-/** TODO (ZJWeng, Dorus-vda, buenk): docstring, and a few comments please */
+/**
+ * Component containing weather icon and temperature
+ */
 export default function Weather() {
   const weather = getWeather();
   if (!weather) return;
 
+  // Which icon to display based on weather api id and time
   function weatherIcon(weather: WeatherData) {
     if (weather.id <= 299) return <Thunder width={30} height={30} />;
     if (weather.id <= 599) return <Rainy width={30} height={30} />;

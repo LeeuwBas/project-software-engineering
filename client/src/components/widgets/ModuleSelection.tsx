@@ -1,10 +1,9 @@
 import CheckIcon from '@/assets/icons/toolbar_icons/check.svg';
 import { AppText } from '@/components/AppText';
+import { CardContent } from '@/components/ui/card';
 import { EnabledModules } from '@/lib/storage';
 import { MODULES } from '@/lib/types';
 import { Pressable, View } from 'react-native';
-import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
 
 type ModuleSelectionProps = {
   activeModules: EnabledModules;

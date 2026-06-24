@@ -1,7 +1,7 @@
-import { View } from 'react-native';
 import { AppText } from '@/components/AppText';
-import { Input } from '@/components/ui/input';
 import { CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { View } from 'react-native';
 
 type ChangeNameProps = {
   petName: string;

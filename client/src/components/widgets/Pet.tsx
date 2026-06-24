@@ -1,10 +1,16 @@
 import Blob from '@assets/pets/blob/blob.svg';
+import Bober from '@assets/pets/bober/BOBER.svg';
 import Frog from '@assets/pets/frog/frog.svg';
 import Onigiri from '@assets/pets/onigiri/onigiri.svg';
-import Bober from '@assets/pets/bober/BOBER.svg';
 import { View } from 'react-native';
 
-/** TODO (ZJWeng): docstring */
+/**
+ * View containing the pet sprite
+ *
+ * @param className className in pet view
+ * @param id id of the pet
+ * @param props props in pet view
+ */
 export default function Pet({ className = '', id, ...props }: { className?: string; id: number }) {
   function selection(id: number) {
     switch (id) {
@@ -20,8 +26,6 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
         console.error('Unknown pet id: ' + id);
     }
   }
-
-  const source = selection(id); // TODO (ZJWeng): this is unused
 
   return (
     <View className={className} {...props}>
