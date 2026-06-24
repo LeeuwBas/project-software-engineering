@@ -4,7 +4,7 @@ from django.db.models import F
 from django.core.exceptions import FieldError
 
 from rest_framework import status, serializers
-from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -650,8 +650,11 @@ class CalendarView(APIView):
         endDay = datetime.fromisoformat(end_date)
 
         if startDay >= endDay:
-            return Response("Invalid Input", 400)
+            return Response("Invalid Input", HTTP_400_BAD_REQUEST)
+
+        if startDay + timedelta(days=45) < endDay:
+            return Response({"reason":"Too long of a period requested"}, HTTP_400_BAD_REQUEST)
 
         returnList = getCalender(request.user, startDay, endDay)
 
-        return Response(returnList, 200)
+        return Response(returnList, HTTP_200_OK)
