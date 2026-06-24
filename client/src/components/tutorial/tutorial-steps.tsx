@@ -1,32 +1,14 @@
-import {
-  AttachStep,
-  SpotlightTourProvider,
-  TourStep,
-  useSpotlightTour,
-} from 'react-native-spotlight-tour';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
-import { AppState, Pressable, View } from 'react-native';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { type ReactNode } from 'react';
-import { initializeApiManager, waterBridge } from '@/lib/api/APIBridge';
-
-type TutorialStepParams = {
-  menuOpen: boolean;
-  statsOpen: boolean;
-  changeMenu: () => void;
-  changeStats: () => void;
-  water: number;
-};
+import { View } from 'react-native';
+import {
+  TourStep
+} from 'react-native-spotlight-tour';
 
 /** TODO (buenk): docstring */
-export function createTutorialSteps({
-  menuOpen,
-  statsOpen,
-  changeMenu,
-  changeStats,
-  water,
-}: TutorialStepParams): TourStep[] {
+export function createTutorialSteps(): TourStep[] {
   return [
     // 0. The pet
     {
