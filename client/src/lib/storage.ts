@@ -7,7 +7,6 @@ const goalPrefix = 'Goals-';
 const syncDataKey = 'sync';
 const settingsKey = 'settings';
 
-
 /**
  * Contains to store all settings in an organized manner.
  */
@@ -153,7 +152,7 @@ function calculateDate(date: Date, stat: string = statPrefix) {
  * casts all values to numbers.
  *
  * @param statLine dictionary object containing the overrides for a StatLine
- * @returns 
+ * @returns
  */
 function makeStatline(statLine: any): StatLine {
     for (const key of Object.keys(statLine)) {
