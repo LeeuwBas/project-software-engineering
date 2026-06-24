@@ -53,12 +53,6 @@ export default function StressMenu() {
             </AppText>
             <StressButtons value={score3} onChange={setScore3} />
           </CardContent>
-          <CardContent className="flex-row items-center gap-2">
-            <View className="size-4 border-2 border-[#22a022] bg-[#81c381]"></View>
-            <AppText>Disagree</AppText>
-            <View className="size-4 border-2 border-[#b41b21] bg-[#ff9699]"></View>
-            <AppText>Agree</AppText>
-          </CardContent>
         </Card>
       </View>
     </View>
