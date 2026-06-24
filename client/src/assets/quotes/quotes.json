@@ -1,4 +1,9 @@
 {
+  "Standard": {
+    "Standard": {
+      "Standard": []
+    }
+  },
   "Water": {
     "Low": {
       "Standard": [
@@ -6,7 +11,7 @@
         "Have you had any water today?",
         "Would you like a glass of water?",
         "How about a drink of water?",
-        "It's a good time for some water.",
+        "Maybe a good time for some water!",
         "A glass of water looks tasty.",
         "I'm a bit dehydrated, I can use a glass of water.",
         "I can use a glass of water.",

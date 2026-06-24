@@ -107,9 +107,12 @@ export default async function generateQuoteRequest() {
 // grab todays stats and goals from storage
 // returns null if either is unavailable or in an unexpected shape
 async function getTodaysSnapshot() {
+    console.log('getting snapshot');
     try {
         const currentStats = await getStat(); // StatLine | null
+        console.log('got stat');
         const currentGoals = await getCurrentGoal(null); // StatLine | number | null
+        console.log('got goals');
 
         if (currentStats === null || typeof currentGoals === 'number' || currentGoals === null)
             throw Error(`stats: ${currentStats}\ngoals: ${currentGoals}`);
