@@ -31,10 +31,7 @@ export default function ChangeModules() {
       <SafeAreaProvider>
         <SafeAreaView className="size-full justify-center">
           <Card className="mx-4 gap-2 p-5">
-            <ModuleSelection
-              toggleModule={toggleModule}
-              isSelected={isSelected}
-            />
+            <ModuleSelection toggleModule={toggleModule} isSelected={isSelected} />
 
             <Button className="mt-8 w-full" disabled={selectedCount === 0} onPress={handleSave}>
               <AppText className="font-bold text-white">Change Tracked Habits</AppText>

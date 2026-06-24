@@ -17,9 +17,9 @@ type ChangeNameProps = {
  * @param userName Current string value of username.
  * @param setUserName Callback function to update username.
  * @param errors Optional object containing error arrays for the fields for pet and username.
- * 
+ *
  * @returns JSX element
-*/
+ */
 export function ChangeName({
   petName,
   setPetName,

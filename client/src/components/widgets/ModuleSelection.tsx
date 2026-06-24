@@ -13,7 +13,7 @@ type ModuleSelectionProps = {
 /** UI element for selecting which habits (modules) to track.
  * @param toggleModule callback function that toggles module on or off
  * @param isSelected callback function that lets know if module is selected
- * 
+ *
  * @returns JSX element
  */
 export function ModuleSelection({ toggleModule, isSelected }: ModuleSelectionProps) {

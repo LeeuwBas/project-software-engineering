@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 
 /** Widget for in the quick habit menu to get to stress logging menu
  * @param onPress callback function to know if button is pressed.
- * 
+ *
  * @returns JSX element
  */
 export default function StressWidget({ onPress }: { onPress: () => void }) {

@@ -43,10 +43,7 @@ export default function ModuleSelectionStep({
 
   return (
     <Card className="mx-4 gap-2 p-5 shadow-none">
-      <ModuleSelection
-        toggleModule={toggleModule}
-        isSelected={isSelected}
-      />
+      <ModuleSelection toggleModule={toggleModule} isSelected={isSelected} />
 
       <Button className="mt-8 w-full" disabled={selectedCount === 0} onPress={handleSave}>
         <AppText className="font-bold text-white">Choose Tracked Habits</AppText>
