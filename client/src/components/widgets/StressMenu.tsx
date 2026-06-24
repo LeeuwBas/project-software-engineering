@@ -6,8 +6,10 @@ import { useAppContext } from '@/lib/AppContext';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-/** TODO (hfgieter, ZJWeng): docstring, also this should be above the helper function since it's
- * the default export*/
+/** Content for the stress input questionnaire.
+ *
+ * @returns JSX element
+ */
 export default function StressMenu() {
   const { stressMenuOpen, setSendStress } = useAppContext();
 
@@ -29,7 +31,7 @@ export default function StressMenu() {
     return null;
   }
 
-  // TODO (hfgieter): explain component layout
+  // Every cardcontent is for every question with matching AppText and buttons.
   return (
     <View className="absolute -top-6 w-full items-center">
       <View className="absolute bottom-full w-full items-center">
