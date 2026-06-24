@@ -8,7 +8,9 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-/** TODO (ZJWeng): docstring, and add some comments explaining sections */
+/**
+ * Page for changing the chosen pet after onboarding.
+ */
 export default function PetSelection() {
   const router = useRouter();
   const pet = getPetID() ?? 0;

@@ -6,13 +6,18 @@ import ThumbsUp from '@assets/icons/module_icons/thumbs_up.svg';
 import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { Pressable, View } from 'react-native';
-import { AttachStep } from 'react-native-spotlight-tour';
 import { SvgProps } from 'react-native-svg';
 
 const MAX_WATER = 25;
 const MAX_FOOD = 12;
 
-/** TODO (ZJWeng): docstring */
+/**
+ * Module component to be shown in menu popup. Each module has different components due to the nature of each stat.
+ *
+ * @param id id of the module
+ * @param icon icon of the module
+ * @param props props used in the module. See MenuConfig type
+ */
 export default function Module({
   id,
   icon: Icon,
@@ -27,8 +32,9 @@ export default function Module({
 
   const { value, setValue, goal, onPress, buttonString } = props ?? {};
 
+  // Width of the box containing the value and goal
   const valueWidth = Math.max(String(goal ?? '').length, String(value ?? '').length) * 3;
-  // TODO (ZJWeng, Dorus-vda): explain component structure
+
   return (
     <View className="flex w-full flex-row items-center justify-between">
       <View className="flex flex-row items-center justify-between gap-2">
@@ -36,10 +42,12 @@ export default function Module({
         {/* Water module */}
         {id === 'water' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
+            {/* Minus button */}
             <Button variant={'outline'} disabled={value <= 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
+            {/* Value & goals */}
             <View className="flex-row items-center">
               <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
                 {value}
@@ -50,6 +58,7 @@ export default function Module({
               </AppText>
             </View>
 
+            {/* Plus button */}
             <Button
               variant="outline"
               disabled={value >= MAX_WATER}
@@ -59,6 +68,7 @@ export default function Module({
           </View>
         )}
 
+        {/* Steps module */}
         {id === 'steps' && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
             <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
@@ -71,6 +81,7 @@ export default function Module({
           </View>
         )}
 
+        {/* Stress module */}
         {id === 'stress' && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
             <Button variant="outline" className="py-0" onPress={onPress}>
@@ -79,12 +90,15 @@ export default function Module({
           </View>
         )}
 
+        {/* Food module */}
         {id === 'food' && setValue !== undefined && value !== undefined && goal !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center">
+            {/* Minus button */}
             <Button variant={'outline'} disabled={value <= 0} onPress={() => setValue(value - 1)}>
               <Minus size={20} />
             </Button>
 
+            {/* Value & goal */}
             <View className="flex-row items-center">
               <AppText style={{ width: valueWidth * 4 }} className="text-right text-base font-bold">
                 {value}
@@ -95,6 +109,7 @@ export default function Module({
               </AppText>
             </View>
 
+            {/* Plus button */}
             <Button
               variant="outline"
               disabled={value >= MAX_FOOD}
@@ -104,12 +119,15 @@ export default function Module({
           </View>
         )}
 
+        {/* Sleep module */}
         {id === 'sleep' && setValue !== undefined && (
           <View className="mx-auto flex-1 flex-row items-center justify-center gap-5">
+            {/* Bad sleep */}
             <Pressable onPress={() => setValue(0)} className={`${value !== 0 && 'opacity-30'}`}>
               <ThumbsDown width={30} height={30} color={'#b41b21'} />
             </Pressable>
 
+            {/* Good sleep */}
             <Pressable onPress={() => setValue(1)} className={`${value !== 1 && 'opacity-30'}`}>
               <ThumbsUp width={30} height={30} color={'#22a022'} />
             </Pressable>

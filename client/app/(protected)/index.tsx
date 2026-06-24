@@ -17,7 +17,6 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-native-spotlight-tour';
 
-// TODO (buenk, ZJWeng): docstring
 export default function App() {
   const water = useWater() ?? 0;
   const {
@@ -57,7 +56,7 @@ export default function App() {
     loadSettings().then();
     scheduleCacheFlush();
   }, []);
-  // TODO (ZJWeng): comment
+
   const triggerBackup = async () => {
     await syncServer(true);
   };
@@ -65,7 +64,7 @@ export default function App() {
   // TODO (buenk): comment
   const { done, setTutorialDone } = useTutorial();
 
-  // TODO (ZJWeng): comment
+  // Closes any open popup
   function closePopup() {
     setTutorialDone();
     if (menuOpen) changeMenu();
