@@ -22,7 +22,9 @@ export function useStress() {
     return useValue(StressState);
 }
 
-/** TODO (david kramer): docstring */
+/**
+ * @returns return a newly set up stress bridge.
+ */
 export function createStressBridge(): LoadableBridge<StressBridge> {
     return {
         load: () => loadZustand(StressState, 'stress'),

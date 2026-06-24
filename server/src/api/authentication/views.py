@@ -15,6 +15,17 @@ from .permissions import IsSelf
 
 User = get_user_model()
 
+"""
+Cheatsheet of the endpoints defined in this file. For descriptions on functionality
+or extended descriptions on the parameters, check the documentation at the actual functions.
+
+/users/settings
+    get:
+        returns the b64 string containing all settings.
+
+    post:
+        data: b64 encoded string of all settings.
+"""
 
 class UserViewSet(
     mixins.CreateModelMixin,
@@ -41,7 +52,6 @@ class UserViewSet(
 
 
 class SettingsView(APIView):
-    """TODO (david kramer): docstring (see statistics/views.py for example)"""
     permission_classes = [IsAuthenticated, IsSelf]
 
     @SETTINGS_GET_SCHEMA

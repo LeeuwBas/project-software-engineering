@@ -170,10 +170,10 @@ export const FoodModule: GoaledModule = {
 
 export const MODULES: ModuleDefinition[] = [
     WaterModule,
+    FoodModule,
+    SleepModule,
     StepModule,
     StressModule,
-    SleepModule,
-    FoodModule,
 ];
 
 export interface BarType {

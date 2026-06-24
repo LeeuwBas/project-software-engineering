@@ -9,7 +9,13 @@ interface StressButtonsProps {
   onChange: (value: number) => void;
 }
 
-/** TODO (hfgieter): docstring */
+/** UI element for stress input, green to red spectrum in 5 blocks.
+ *
+ * @param value number inbetween 1 and 5 which indicates agreement with statements.
+ * @param onChange callback function triggered when a button is selected, passing the newly selected value (1-5).
+ *
+ * @returns JSX element
+ */
 export default function StressButtons({ value, onChange }: StressButtonsProps) {
   const selectedIndex = value ? value - 1 : null;
 

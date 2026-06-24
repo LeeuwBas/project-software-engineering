@@ -1,8 +1,8 @@
 {
   "expo": {
     "scheme": "myapp",
-    "name": "my-expo-app",
-    "slug": "my-expo-app",
+    "name": "VirtuoPet",
+    "slug": "VirtuoPet",
     "version": "1.0.0",
     "web": {
       "bundler": "metro",
@@ -34,10 +34,10 @@
       ]
     ],
     "orientation": "portrait",
-    "icon": "src/assets/icon.png",
+    "icon": "src/assets/appicon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "src/assets/splash.png",
+      "image": "src/assets/appicon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -46,11 +46,11 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.myexpoapp"
+      "bundleIdentifier": "com.pse.virtuopet"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "src/assets/adaptive-icon.png",
+        "foregroundImage": "src/assets/appicon.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [

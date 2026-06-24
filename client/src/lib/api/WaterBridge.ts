@@ -34,7 +34,9 @@ export function useWater() {
 
 export const waterDefault: number = 8;
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * @returns return a newly set up water bridge.
+ */
 export function createWaterBridge(): LoadableBridge<WaterBridge> {
     return {
         load: () =>

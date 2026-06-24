@@ -57,27 +57,28 @@ export default function GoalsView({
       <AppText className="text-lg font-bold">Goals:</AppText>
       {/* List of goal modules */}
       {activeGoaledModules.map((module) => (
-        <View className="flex-row items-center gap-2" key={module.id}>
+        <View className="max-w-full flex-row items-center justify-between gap-3" key={module.id}>
           <module.icon height={30} width={30} />
-          <View className="w-[85%] flex-row items-center justify-between gap-4">
-            {/* Minus button */}
-            <Button
-              variant={'outline'}
-              disabled={goals[module.id] === module.goalConfig.minGoal}
-              onPress={() => decrementGoal(module)}>
-              <Minus size={20} />
-            </Button>
+          {/* Minus button */}
+          <Button
+            variant="outline"
+            className="h-12 flex-grow"
+            disabled={goals[module.id] === module.goalConfig.minGoal}
+            onPress={() => decrementGoal(module)}>
+            <Minus size={20} />
+          </Button>
 
-            <AppText className="text-right text-base font-bold">{goals[module.id]}</AppText>
-
-            {/* Plus button */}
-            <Button
-              variant="outline"
-              disabled={goals[module.id] === module.goalConfig.maxGoal}
-              onPress={() => incrementGoal(module)}>
-              <Plus size={20} />
-            </Button>
+          <View className="flex min-w-16 flex-grow flex-row items-center justify-center gap-0 rounded-md border border-border px-2 py-3">
+            <AppText className="text-base font-bold">{goals[module.id]}</AppText>
           </View>
+
+          {/* Plus button */}
+          <Button
+            variant="outline"
+            className="h-12 flex-grow"
+            onPress={() => incrementGoal(module)}>
+            <Plus size={20} />
+          </Button>
         </View>
       ))}
     </View>
