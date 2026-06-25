@@ -33,7 +33,7 @@ export function useFood() {
 
 export const foodDefault: number = 3;
 
-/** TODO (Dorus-vda, WilliamBower): docstring, and some comments pleases */
+/** TODO (!Dorus-vda, WilliamBower): docstring, and some comments pleases */
 export function createFoodBridge(): LoadableBridge<foodBridge> {
     return {
         load: () =>

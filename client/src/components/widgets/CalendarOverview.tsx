@@ -19,7 +19,6 @@ export interface calendarCell {
 
 const weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
-
 /**
  * Calendar widget for usage in the stats popup.
  * Displays reached goals using colored boxes.
