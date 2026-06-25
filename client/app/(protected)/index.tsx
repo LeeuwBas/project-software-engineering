@@ -5,7 +5,7 @@ import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useAppContext } from '@/lib/AppContext';
-import { loadSettings, useTutorial } from '@/lib/settings';
+import { loadSettings } from '@/lib/settings';
 import { syncServer } from '@/lib/StorageSync';
 import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
@@ -16,6 +16,11 @@ import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TourProvider, TourZone, useTour } from 'react-native-lumen';
 
+/**
+ * Home screen of the app. This component combines the main layout components
+ * It manages two distinct functionalities: Initializing business logic and
+ * the initial spotlight tutorial.
+ */
 export default function App() {
   const {
     statsOpen,
@@ -29,7 +34,6 @@ export default function App() {
     changeStressMenu,
   } = useAppContext();
 
-  // TODO (buenk): comment
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -85,6 +89,9 @@ export default function App() {
         config={{ preventInteraction: true, tooltipStyles: { backgroundColor: 'transparent' } }}>
         <TutorialStarter />
         {/** Homepage component container: {@link Topbar}, {@link PetHome}, {@link Quotes}, {@link Toolbar} */}
+
+        {/* This linear gradient is a hacky-way to cover the background with
+            a split-color fill. */}
         <LinearGradient
           colors={
             dark
@@ -111,7 +118,8 @@ export default function App() {
                   /* Used to determine where the top of the PetHome is, since flex-grow-0 shrinks to fit */
                   (e) => setPetHomeLayout(e.nativeEvent.layout)
                 }>
-                {/* TODO (buenk): what are these? */}
+                {/* These <TourZone> components represent steps within the
+                    spotlight tutorial. */}
                 <TourZone stepKey="pet" description="Welcome to VirtuoPet! This is your new virtual pet!" renderCustomCard={renderPetStep}>
                   <TourZone stepKey="final" description="Thank you for following the tutorial!" renderCustomCard={renderFinalStep}>
                     <PetHome />
@@ -136,32 +144,4 @@ export default function App() {
       </TourProvider>
     </SafeAreaView>
   );
-}
-
-// TODO (buenk): comment, but also this component really should be moved to a new component file alongside mySteps
-// and the SpotlightTourProvider
-function TutorialStarter() {
-  const { start, currentStep } = useTour();
-  const { menuOpen, statsOpen, settingsOpen, changeMenu, changeSettings, changeStats, stressMenuOpen, changeStressMenu } = useAppContext();
-  const { done, setTutorialDone } = useTutorial();
-  const prevStep = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (prevStep.current !== null && currentStep === null) {
-      if (menuOpen) changeMenu();
-      if (settingsOpen) changeSettings();
-      if (statsOpen) changeStats();
-      if (stressMenuOpen) changeStressMenu();
-    }
-    prevStep.current = currentStep;
-  }, [currentStep]);
-
-  useEffect(() => {
-    if (done === false && !menuOpen && !statsOpen && !settingsOpen) {
-      setTutorialDone();
-      start();
-    }
-  }, [menuOpen, statsOpen, settingsOpen, start, done]);
-
-  return null; // Nothing to be rendered, just starts the tour because the start function needs to be called in a child component.
 }

@@ -147,7 +147,7 @@ export default function CalendarOverview() {
   return (
     <View>
       {/* Month/year displaty with arrow buttons */}
-      <View className="mb-6 flex-row items-center gap-x-4 self-center">
+      <View className="flex-row items-center gap-x-4 self-center">
         <Pressable onPress={toPrevMonth} hitSlop={12} disabled={loading}>
           <ChevronLeft width={24} height={24} color={iconColor} />
         </Pressable>
@@ -165,8 +165,20 @@ export default function CalendarOverview() {
         </View>
       </View>
 
+      {/* Goals legend */}
+      <View className="my-2 h-6 flex-row justify-center gap-4">
+        {activeCalendarModules.map((module) => (
+          <View className="flex-row items-center gap-1">
+            <View
+              className="aspect-square h-3 border-[1px]"
+              style={{ backgroundColor: module.borderColor }}></View>
+            <AppText>{module.name}</AppText>
+          </View>
+        ))}
+      </View>
+
       {/* Row of weekdays */}
-      <View className="mb-2 flex-row">
+      <View className="flex-row">
         {weekdays.map((d) => (
           <View key={d} className="w-[14.2857%] items-center">
             <AppText className="font-bold">{d}</AppText>

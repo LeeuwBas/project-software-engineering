@@ -19,7 +19,10 @@ import { Toaster } from 'sonner-native';
 
 import '../global.css';
 
-/**TODO (buenk): docstring, this file is already pretty well comented so explain the main purpose */
+/**
+ * Main wrapper component for the app, providing the root layout and managing
+ * global state such as fonts and color scheme and initializing logic.
+ */
 export default function RootLayout() {
   const [loaded] = useFonts({
     IosevkaCharon: require('@assets/fonts/IosevkaCharon-Regular.ttf'),

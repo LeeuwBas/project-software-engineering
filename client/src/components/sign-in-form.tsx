@@ -14,7 +14,10 @@ import { AppText } from './AppText';
 import ClosedEye from '@assets/icons/eye-icon/closed-eye.svg';
 import OpenEye from '@assets/icons/eye-icon/open-eye.svg';
 
-/** TODO (buenk): docstring, maybe a few more comments? */
+/**
+ * Component that renders full sign in form with email and password
+ * input. Calls to the auth bridge to sign in the user.
+ */
 export function SignInForm() {
   const router = useRouter();
   const auth = useAuth();

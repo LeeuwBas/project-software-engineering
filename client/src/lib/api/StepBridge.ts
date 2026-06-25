@@ -23,7 +23,7 @@ export function useSteps() {
     return useValue(stepState);
 }
 
-export const stepsDefault: number = 5000;
+export const stepsDefault: number = 7000;
 
 /**
  * @returns return a newly set up steps bridge.

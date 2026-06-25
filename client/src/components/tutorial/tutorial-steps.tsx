@@ -45,7 +45,15 @@ export function renderFinalStep(props: CardProps) {
   );
 }
 
-/** TODO (buenk): docstring */
+/**
+ * Component that renders a card with a button to stop the tutorial.
+ *
+ * @param children - React content to render inside the card.
+ * @param stop - Stop tutorial callback function.
+ * @param stop_position - Variable to render the stop tutorial button on the
+ *                        top or bottom for layout purposes.
+ * @return The step JSX component.
+ */
 function StepCard({
   children,
   stop,

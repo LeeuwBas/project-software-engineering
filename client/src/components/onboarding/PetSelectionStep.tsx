@@ -2,9 +2,12 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { PetSelector } from '@/components/widgets/PetSelector';
 import { getPetID, initSettings, setPetID } from '@/lib/settings';
+import { clearStorage } from '@/lib/storage';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { tokenStorage } from '@/lib/auth/TokenStorage';
+import { GUEST_MODE } from '@/lib/auth/AuthManager';
 
 /**
  * Pet selection widget for the onboarding process.
@@ -22,7 +25,15 @@ export function PetSelectionStep({ onNext }: { onNext: () => void }) {
   useEffect(() => initSettings(), []);
 
   function confirm() {
-    setPetID(draftPet);
+    tokenStorage
+      .isCachedLogin('0', GUEST_MODE)
+      .then((result) => {
+        if (result) return;
+        tokenStorage.removeLoginId().then(() => clearStorage());
+      })
+      .finally(() => {
+        setPetID(draftPet);
+      });
     onNext();
   }
   return (
