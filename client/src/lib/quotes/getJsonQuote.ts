@@ -1,5 +1,5 @@
 import quotes from '@/assets/quotes/quotes.json';
-import { getUserName } from '../settings';
+import { getUserName } from '@/lib/settings';
 
 /** Local quote fetching while not logged in or while there is no internet. */
 export default function getJsonQuote(req: {
