@@ -5,7 +5,11 @@ import { type ReactNode } from 'react';
 import { View } from 'react-native';
 import { TourStep } from 'react-native-spotlight-tour';
 
-/** TODO (buenk): docstring */
+/**
+ * Factory that creates the step React components for the spotlight tutorial.
+ *
+ * @returns An array of TourStep objects representing the tutorial steps.
+ */
 export function createTutorialSteps(): TourStep[] {
   return [
     // 0. The pet
@@ -55,7 +59,15 @@ export function createTutorialSteps(): TourStep[] {
   ];
 }
 
-/** TODO (buenk): docstring */
+/**
+ * Component that renders a card with a button to stop the tutorial.
+ *
+ * @param children - React content to render inside the card.
+ * @param stop - Stop tutorial callback function.
+ * @param stop_position - Variable to render the stop tutorial button on the
+ *                        top or bottom for layout purposes.
+ * @return The step JSX component.
+ */
 function StepCard({
   children,
   stop,
