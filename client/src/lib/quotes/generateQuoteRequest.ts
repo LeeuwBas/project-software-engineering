@@ -38,9 +38,6 @@ export default async function generateQuoteRequest(activeModules: EnabledModules
         food: foodGoal,
     } = currentGoals;
 
-    console.log(JSON.stringify(currentStats));
-    console.log(JSON.stringify(currentGoals));
-
     const goodWeather: boolean = await isGoodWeather();
 
     // Low, Medium, High boundaries. make sure the names match module ids
