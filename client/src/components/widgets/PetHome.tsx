@@ -1,10 +1,9 @@
 import { Animation } from '@/components/animations/renderer';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
-import { quoteBridge } from '@/lib/api/APIBridge';
 import { useFood } from '@/lib/api/FoodBridge';
-import { useQuote } from '@/lib/api/QuoteBridge';
 import { useSleep } from '@/lib/api/SleepBridge';
 import { useWater } from '@/lib/api/WaterBridge';
+import { quoteBridge, useQuote } from '@/lib/quotes/QuoteBridge';
 import { getActiveModules, getPetID } from '@/lib/settings';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';

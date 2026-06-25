@@ -1,6 +1,6 @@
 import { AppText } from '@/components/AppText';
 import PixelBubble from '@/components/quotes/PixelBubble';
-import { useQuote } from '@/lib/api/QuoteBridge';
+import { QuoteBridge, useQuote } from '@/lib/quotes/QuoteBridge';
 import { useColorScheme } from 'nativewind';
 import { ReactNode } from 'react';
 import { LayoutRectangle, View } from 'react-native';
@@ -22,7 +22,9 @@ export default function Quotes({
   petHomeLayout: LayoutRectangle;
   topBarLayout: LayoutRectangle;
 }) {
+  /**{@link QuoteBridge}*/
   const quote = useQuote();
+
   const { colorScheme } = useColorScheme();
   const dark = colorScheme === 'dark';
 

@@ -1,5 +1,6 @@
 import { EnabledModules, getCurrentGoal, getStat } from '@/lib/storage';
 import { getWeatherStatus, WeatherData } from '@/lib/weather';
+
 // 15 minute cache so repeated quote requests dont hammer the weather api
 let _weatherCache: {
     data: WeatherData | null;
