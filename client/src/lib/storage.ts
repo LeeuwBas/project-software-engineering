@@ -461,7 +461,7 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
 
         for (let key of Object.keys(dayStat) as (keyof StatLine)[]) {
             const achieved = dayStat[key] ?? -1;
-            const goal = dayGoals[key] ?? 0;
+            const goal = dayGoals[key] ?? 1;
 
             if (key === 'stress') {
                 today[key] = achieved;

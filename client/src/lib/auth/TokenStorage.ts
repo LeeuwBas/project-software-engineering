@@ -46,7 +46,7 @@ export const tokenStorage = {
         const local_email = await SecureStore.getItemAsync(LOGIN_EMAIL);
 
         if (!local_id || !local_email) {
-            return false;
+            return true;
         }
 
         return +loginId <= +local_id + 1 && local_email === email;

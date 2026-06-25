@@ -52,9 +52,6 @@ export async function setZustand<K extends keyof StatLine>(
     name: K,
     value: number
 ) {
-    if (name === 'water') {
-        console.log(`saving water to ${value}`);
-    }
     if (state.getState().value === null) {
         throw Error(`Stat ${name} not loaded yet`);
     }
