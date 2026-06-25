@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
 import { dateDifference } from './utils';
 
 const statPrefix = 'Stats-';
@@ -461,7 +460,7 @@ export async function getCalender(lowerDate: Date, upperDate: Date) {
 
         for (let key of Object.keys(dayStat) as (keyof StatLine)[]) {
             const achieved = dayStat[key] ?? -1;
-            const goal = dayGoals[key] ?? 0;
+            const goal = dayGoals[key] ?? 1;
 
             if (key === 'stress') {
                 today[key] = achieved;
