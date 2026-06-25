@@ -74,6 +74,8 @@ export default function Menu({
 
   const activeModules = MODULES.filter((module) => getActiveModules()[module.id]);
 
+  const ifGoaledModules: boolean = activeModules.some((module) => 'goalConfig' in module);
+
   useEffect(() => {
     if (!menuOpen) {
       setGoalsViewActive(false);
@@ -91,21 +93,22 @@ export default function Menu({
             <CardTitle className="my-4 flex-1 text-2xl font-bold">{name}</CardTitle>
 
             {/* Goal button */}
-            {goalsViewActive ? (
-              <Button
-                onPress={() => setGoalsViewActive(false)}
-                className="py-0"
-                variant="secondary">
-                <AppText className="font-bold text-white">Back</AppText>
-              </Button>
-            ) : (
-              <Button
-                onPress={() => setGoalsViewActive(!goalsViewActive)}
-                className="py-0"
-                variant={'default'}>
-                <AppText className="font-bold text-white">Change goals</AppText>
-              </Button>
-            )}
+            {ifGoaledModules &&
+              (goalsViewActive ? (
+                <Button
+                  onPress={() => setGoalsViewActive(false)}
+                  className="py-0"
+                  variant="secondary">
+                  <AppText className="font-bold text-white">Back</AppText>
+                </Button>
+              ) : (
+                <Button
+                  onPress={() => setGoalsViewActive(!goalsViewActive)}
+                  className="py-0"
+                  variant={'default'}>
+                  <AppText className="font-bold text-white">Change goals</AppText>
+                </Button>
+              ))}
           </CardHeader>
 
           {/* Goals or modules */}
