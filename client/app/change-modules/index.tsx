@@ -5,6 +5,7 @@ import { ModuleSelection } from '@/components/widgets/ModuleSelection';
 import { useModuleManagement } from '@/lib/useModuleManagement';
 import { ImageBackground } from 'expo-image';
 import { router } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 /**
@@ -15,6 +16,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
  */
 export default function ChangeModules() {
   const { activeModules, toggleModule, isSelected, saveModules } = useModuleManagement();
+  const { colorScheme } = useColorScheme();
 
   const selectedCount = Object.values(activeModules).filter(Boolean).length;
 
@@ -25,7 +27,11 @@ export default function ChangeModules() {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaProvider>

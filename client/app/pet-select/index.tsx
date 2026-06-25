@@ -4,6 +4,7 @@ import { PetSelector } from '@/components/widgets/PetSelector';
 import { getPetID, setPetID } from '@/lib/settings';
 import { ImageBackground } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +16,7 @@ export default function PetSelection() {
   const router = useRouter();
   const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
+  const { colorScheme } = useColorScheme();
 
   function confirm() {
     setPetID(draftPet);
@@ -23,7 +25,11 @@ export default function PetSelection() {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaProvider>
