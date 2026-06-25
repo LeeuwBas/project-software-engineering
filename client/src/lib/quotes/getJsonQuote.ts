@@ -1,4 +1,5 @@
 import quotes from '@/assets/quotes/quotes.json';
+import { getUserName } from '@/lib/settings';
 
 /** Local quote fetching while not logged in or while there is no internet. */
 export default function getJsonQuote(req: {
@@ -15,5 +16,8 @@ export default function getJsonQuote(req: {
     const tier = (quotes as any)[req.action][req.level];
     const possibleQuotes: string[] = tier[req.context] ?? [];
 
-    return possibleQuotes[Math.floor(Math.random() * possibleQuotes.length)];
+    const selectedQuote = possibleQuotes[Math.floor(Math.random() * possibleQuotes.length)];
+    const userName = getUserName();
+
+    return selectedQuote.replaceAll('<USERNAME>', userName);
 }
