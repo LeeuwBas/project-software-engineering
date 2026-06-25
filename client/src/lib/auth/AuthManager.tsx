@@ -6,7 +6,7 @@ import { clearStorage } from '@/lib/storage';
 import { useRouter } from 'expo-router';
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 
-const GUEST_MODE = 'guest';
+export const GUEST_MODE = 'guest';
 
 type Auth = {
   /**
@@ -136,7 +136,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const receivedRefreshToken = data.refresh;
     const receivedLoginId = data.login_id;
 
-    const cachedLogin = await tokenStorage.isCachedLogin(receivedLoginId, email);
+    const cachedLogin =
+      (await tokenStorage.isCachedLogin(receivedLoginId, email)) ||
+      ((await tokenStorage.isCachedLogin('0', GUEST_MODE)) && +receivedLoginId === 0);
     if (!cachedLogin) {
       await clearStorage();
     } else {
@@ -185,10 +187,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await Promise.allSettled([
       // Concurrency!
       tokenStorage.setTokens(GUEST_MODE, GUEST_MODE),
-      tokenStorage
-        .removeLoginId()
-        .then(() => clearStorage())
-        .catch(() => {}),
+
+      tokenStorage.isCachedLogin('0', GUEST_MODE).then((result) => {
+        if (result) return;
+        tokenStorage
+          .setLoginID('0', GUEST_MODE)
+          .then(() => clearStorage())
+          .catch(() => {});
+      }),
     ]);
 
     setAccessToken(GUEST_MODE);

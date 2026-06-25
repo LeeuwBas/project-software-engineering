@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { tokenStorage } from '@/lib/auth/TokenStorage';
+import { GUEST_MODE } from '@/lib/auth/AuthManager';
 
 /**
  * Pet selection widget for the onboarding process.
@@ -24,10 +25,15 @@ export function PetSelectionStep({ onNext }: { onNext: () => void }) {
   useEffect(() => initSettings(), []);
 
   function confirm() {
-    // TODO: Setup check if there exists guest mode data
-    tokenStorage.removeLoginId();
-    clearStorage();
-    setPetID(draftPet);
+    tokenStorage
+      .isCachedLogin('0', GUEST_MODE)
+      .then((result) => {
+        if (result) return;
+        tokenStorage.removeLoginId().then(() => clearStorage());
+      })
+      .finally(() => {
+        setPetID(draftPet);
+      });
     onNext();
   }
   return (
