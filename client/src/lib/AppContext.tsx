@@ -4,11 +4,16 @@ import { createContext, useContext, useState } from 'react';
 const AppContext = createContext<PopupConfigs>(null!);
 
 /**
- * Function for using the app context, which contain popup state functions
- * for opening and closing popups {@link PopupConfigs}
- * Also contains state of sendStress function that is called when stress is submitted.
+ * Hook for accessing the global popup state provided by {@link AppProvider}.
  *
- * @returns popup and sendStress state functions
+ * Returns a {@link PopupConfigs} object with open/close state and toggle
+ * callback funcs for every overlay in the app.
+ * Must be called as a child of {@link AppProvider}.
+ *
+ * @returns The current {@link PopupConfigs} context value.
+ *
+ * @example
+ * const { settingsOpen, changeSettings } = useAppContext();
  */
 export const useAppContext = () => useContext(AppContext);
 
@@ -36,17 +41,3 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return <AppContext.Provider value={popup}>{children}</AppContext.Provider>;
 }
-
-/**
- * Hook for accessing the global popup state provided by {@link AppProvider}.
- *
- * Returns a {@link PopupConfigs} object with open/close state and toggle
- * callback funcs for every overlay in the app.
- * Must be called as a child of {@link AppProvider}.
- *
- * @returns The current {@link PopupConfigs} context value.
- *
- * @example
- * const { settingsOpen, changeSettings } = useAppContext();
- */
-export const useAppContext = () => useContext(AppContext);
