@@ -1,6 +1,5 @@
 import { createFoodBridge } from '@/lib/api/FoodBridge';
 import { loadCalender } from '@/lib/api/GenericStorage';
-import { createQuoteBridge, QuoteBridge } from '@/lib/api/QuoteBridge';
 import { createSleepBridge } from '@/lib/api/SleepBridge';
 import { createStepBridge } from '@/lib/api/StepBridge';
 import { createWaterBridge } from '@/lib/api/WaterBridge';
@@ -86,8 +85,6 @@ export async function getGoalCalender(startDate: Date, endDate: Date) {
 export const waterBridge = register(createWaterBridge());
 export const stressBridge = register(createStressBridge());
 
-/**{@link QuoteBridge}*/
-export const quoteBridge: QuoteBridge = createQuoteBridge();
 export const stepsBridge = register(createStepBridge());
 export const sleepBridge = register(createSleepBridge());
 export const foodBridge = register(createFoodBridge());
