@@ -19,7 +19,13 @@ export interface calendarCell {
 
 const weekdays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
-/** TODO (Dorus-vda): docstring, make sure to explain the @returns */
+/**
+ * Calendar widget for usage in the stats popup.
+ * Displays reached goals using colored boxes.
+ * Shows day per month and can switch to past months
+ *
+ * @returns a widget that contains the calendar and the reached goals displayed within it.
+ */
 export default function CalendarOverview() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
