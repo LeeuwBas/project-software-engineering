@@ -82,7 +82,7 @@ export default function App() {
       <TourProvider
         stepsOrder={['pet', 'menu-button', 'stats-button', 'settings-button', 'final']}
         backdropOpacity={0.6}
-        config={{ tooltipStyles: { backgroundColor: 'transparent' } }}>
+        config={{ preventInteraction: true, tooltipStyles: { backgroundColor: 'transparent' } }}>
         <TutorialStarter />
         {/** Homepage component container: {@link Topbar}, {@link PetHome}, {@link Quotes}, {@link Toolbar} */}
         <LinearGradient
