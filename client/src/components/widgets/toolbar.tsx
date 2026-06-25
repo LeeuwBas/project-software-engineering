@@ -14,9 +14,12 @@ import StatsIcon from '@assets/icons/toolbar_icons/stats.svg';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { renderMenuStep, renderSettingsStep, renderStatsStep } from '@/components/tutorial/tutorial-steps';
+import {
+  renderMenuStep,
+  renderSettingsStep,
+  renderStatsStep,
+} from '@/components/tutorial/tutorial-steps';
 import { TourZone, useTour } from 'react-native-lumen';
-
 /**
  * The toolbar on the bottom of the homepage containing buttons for each main popup
  */
@@ -124,7 +127,10 @@ export default function Toolbar() {
       {/* The toolbar */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
         {/* Stats button */}
-        <TourZone stepKey="stats-button" description="This is where you can see your stats." renderCustomCard={renderStatsStep}>
+        <TourZone
+          stepKey="stats-button"
+          description="This is where you can see your stats."
+          renderCustomCard={renderStatsStep}>
           <Pressable
             disabled={menuOpen || settingsOpen || stressMenuOpen}
             className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
@@ -134,7 +140,11 @@ export default function Toolbar() {
         </TourZone>
 
         {/* Menu button */}
-        <TourZone stepKey="menu-button" description="This is where you log all your habits." renderCustomCard={renderMenuStep} style={{ position: 'absolute', top: -25 }}>
+        <TourZone
+          stepKey="menu-button"
+          description="This is where you log all your habits."
+          renderCustomCard={renderMenuStep}
+          style={{ position: 'absolute', top: -25 }}>
           <NotchedBox
             className={`transition-opacity duration-200 ${tourActive ? '' : 'shadow-block'} ${
               statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
@@ -158,7 +168,10 @@ export default function Toolbar() {
         </TourZone>
 
         {/* Settings button */}
-        <TourZone stepKey="settings-button" description="And here you'll find all of your settings." renderCustomCard={renderSettingsStep}>
+        <TourZone
+          stepKey="settings-button"
+          description="And here you'll find all of your settings."
+          renderCustomCard={renderSettingsStep}>
           <Pressable
             disabled={statsOpen || menuOpen || stressMenuOpen}
             className={`p-2 transition-opacity  duration-200 ${statsOpen || menuOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
