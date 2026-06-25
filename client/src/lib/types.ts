@@ -22,7 +22,7 @@ import { useWater, waterDefault } from './api/WaterBridge';
 import useStepValue from './GetSteps';
 
 // Number of available pets
-export const NUM_PETS = 4;
+export const NUM_PETS = 5;
 
 /**
  * Global popup state for the app, distributed via {@link useAppContext}.
