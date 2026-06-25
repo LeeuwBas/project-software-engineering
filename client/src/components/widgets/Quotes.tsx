@@ -1,5 +1,6 @@
 import { AppText } from '@/components/AppText';
 import PixelBubble from '@/components/quotes/PixelBubble';
+import { useAppContext } from '@/lib/AppContext';
 import { QuoteBridge, useQuote } from '@/lib/quotes/QuoteBridge';
 import { useColorScheme } from 'nativewind';
 import { ReactNode } from 'react';
@@ -22,6 +23,7 @@ export default function Quotes({
   petHomeLayout: LayoutRectangle;
   topBarLayout: LayoutRectangle;
 }) {
+  useAppContext();
   /**{@link QuoteBridge}*/
   const quote = useQuote();
 
