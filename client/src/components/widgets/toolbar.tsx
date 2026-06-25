@@ -1,4 +1,8 @@
+import { NotchedBox } from '@/components/ui/notched-box';
+import StressMenu from '@/components/widgets//StressMenu';
 import Menu from '@/components/widgets/Menu';
+import Settings from '@/components/widgets/Settings';
+import Stats from '@/components/widgets/Stats';
 import { useAppContext } from '@/lib/AppContext';
 import { foodBridge, sleepBridge, stepsBridge, waterBridge } from '@/lib/api/APIBridge';
 import { cancelWaterNotification, setWaterNotifaction } from '@/lib/notificationSetter';
@@ -11,12 +15,10 @@ import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AttachStep } from 'react-native-spotlight-tour';
-import { NotchedBox } from '../ui/notched-box';
-import Settings from './Settings';
-import Stats from './Stats';
-import StressMenu from './StressMenu';
 
-/** TODO (ZJWeng, Dorus-vda, buenk): docstring */
+/**
+ * The toolbar on the bottom of the homepage containing buttons for each main popup
+ */
 export default function Toolbar() {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
@@ -33,6 +35,7 @@ export default function Toolbar() {
     goaledModules.map((module) => [module.id, module.bridge.useGoal() ?? 0])
   );
 
+  // App context variables containing state of popups
   const {
     statsOpen,
     menuOpen,
@@ -45,35 +48,33 @@ export default function Toolbar() {
     sendStress,
   } = useAppContext();
 
+  // All draft values to be used in the menu popup
   const [draftWater, setDraftWater] = useState(moduleValues.water);
   const [draftFood, setDraftFood] = useState(moduleValues.food);
   const [draftSleep, setDraftSleep] = useState(moduleValues.sleep);
   const [draftGoals, setDraftGoals] = useState<Record<string, number>>(goals);
 
-  async function closeMenu() {
+  // What to do when the menu button is pressed
+  async function menuButton() {
     if (menuOpen || stressMenuOpen) {
-      (await waterBridge.set(draftWater),
-        await foodBridge.set(draftFood),
-        await sleepBridge.set(draftSleep),
-        // await Promise.allSettled([ // TODO (Dorus-vda): is this needed?
+      // Save values
+      await waterBridge.set(draftWater);
+      await foodBridge.set(draftFood);
+      await sleepBridge.set(draftSleep);
 
-        // await goaledModules.map(async (module) => {
-        //     await module.bridge.setGoal(draftGoals[module.id]);
-        //     console.log('Save ' + module.id + ' goal: ' + draftGoals[module.id]);
-        // });
-
-        await foodBridge.setGoal(draftGoals['food']));
+      // Save goals
+      await foodBridge.setGoal(draftGoals['food']);
       await stepsBridge.setGoal(draftGoals['steps']);
       await waterBridge.setGoal(draftGoals['water']);
 
+      // Set notification if water goal is not reached
       if (draftWater >= draftGoals['water']) {
         cancelWaterNotification();
       } else {
         setWaterNotifaction();
       }
 
-      // ]);
-
+      // Close menu
       if (menuOpen) changeMenu();
       if (stressMenuOpen) changeStressMenu();
     } else {
@@ -93,6 +94,7 @@ export default function Toolbar() {
 
   return (
     <View className="relative left-0 right-0 z-20 mt-auto w-full items-center">
+      {/* Popups */}
       <Stats />
       <StressMenu />
       <Menu
@@ -112,8 +114,9 @@ export default function Toolbar() {
       />
       <Settings />
 
-      {/* The toolbar itself TODO: (ZJWeng): add more comments explaing the structure, above and below this plz */}
+      {/* The toolbar */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
+        {/* Stats button */}
         <AttachStep index={2}>
           <Pressable
             disabled={menuOpen || settingsOpen || stressMenuOpen}
@@ -123,6 +126,7 @@ export default function Toolbar() {
           </Pressable>
         </AttachStep>
 
+        {/* Menu button */}
         <AttachStep index={1} style={{ position: 'absolute', top: -25 }}>
           <NotchedBox
             className={`shadow-block transition-opacity duration-200 ${
@@ -137,7 +141,7 @@ export default function Toolbar() {
                 if (stressMenuOpen) {
                   await sendStress();
                 }
-                closeMenu();
+                menuButton();
               }}>
               {(menuOpen || stressMenuOpen) && <CheckIcon width={50} height={50} color={'white'} />}
 
@@ -146,6 +150,7 @@ export default function Toolbar() {
           </NotchedBox>
         </AttachStep>
 
+        {/* Settings button */}
         <AttachStep index={3}>
           <Pressable
             disabled={statsOpen || menuOpen || stressMenuOpen}

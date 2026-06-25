@@ -1,7 +1,7 @@
-import { View } from 'react-native';
 import { AppText } from '@/components/AppText';
-import { Input } from '@/components/ui/input';
 import { CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { View } from 'react-native';
 
 type ChangeNameProps = {
   petName: string;
@@ -11,6 +11,15 @@ type ChangeNameProps = {
   errors?: Record<string, string[] | null>;
 };
 
+/** UI element with fields to change names of both user and pet.
+ * @param petName Current string value of pet's name.
+ * @param setPetName Callback function to update pet's name.
+ * @param userName Current string value of username.
+ * @param setUserName Callback function to update username.
+ * @param errors Optional object containing error arrays for the fields for pet and username.
+ *
+ * @returns JSX element
+ */
 export function ChangeName({
   petName,
   setPetName,

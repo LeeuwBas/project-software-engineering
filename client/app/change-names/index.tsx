@@ -8,15 +8,27 @@ import { useNameManagement } from '@/lib/useNameManagement';
 import { router } from 'expo-router';
 import { getPetName, getUserName } from '@/lib/settings';
 import { ImageBackground } from 'expo-image';
+import { useColorScheme } from 'nativewind';
 
 type Props = {
   onNext?: () => void;
   onBack?: () => void;
 };
 
+/**
+ * Name changing widget for the onboarding process.
+ * Serves as an interface for a user to save their names.
+ *
+ * @param {Props} onNext -
+ *  Function to handle in-page routing to the next step of onboarding
+ * @param {Props} onBack -
+ *  Function to handle in-page routing to the previous step of onboarding
+ * @return {React.JSX.Element} Name changing widget
+ */
 export default function ChangeNames({ onNext, onBack }: Props) {
   const currentUserName = getUserName();
   const currentPetName = getPetName();
+  const { colorScheme } = useColorScheme();
 
   const { petName, setPetName, userName, setUserName, errors, validateAndSave } = useNameManagement(
     currentPetName,
@@ -33,7 +45,11 @@ export default function ChangeNames({ onNext, onBack }: Props) {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <KeyboardProvider>

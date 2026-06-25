@@ -4,9 +4,8 @@ import { NotchedBox } from '../ui/notched-box';
 
 /**
  * Horizontal progress bar for a goaled statistic
- * @param module Goaled module of which the progress bar is shown.
  *
- * @returns The progress bar
+ * @param module Goaled module of which the progress bar is shown.
  */
 export default function Bar({ module }: { module: GoaledModule }) {
   const value = module.useValue() ?? 0;
@@ -16,11 +15,13 @@ export default function Bar({ module }: { module: GoaledModule }) {
     <View className="w-1/2">
       <View className="flex-row justify-center gap-1">
         <module.icon />
+        {/* Bar box */}
         <NotchedBox
           fillClassName="bg-background"
           borderStyle={{ backgroundColor: module.borderColor }}
           className="flex-1">
           <View className="absolute inset-1 flex-row overflow-hidden">
+            {/* Fill in */}
             <View
               className="mt-auto h-full"
               style={{

@@ -53,18 +53,18 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
-  // TODO (LeeuwBas): explain
+  // Initialize api manager, settings, and make sure caches get invalidated after midnight.
   useEffect(() => {
     initializeApiManager().then();
     loadSettings().then();
     scheduleCacheFlush();
   }, []);
-  // TODO (ZJWeng): comment
+
   const triggerBackup = async () => {
     await syncServer(true);
   };
 
-  // TODO (ZJWeng): comment
+  // Close any open popups
   function closePopup() {
     if (menuOpen) changeMenu();
     if (settingsOpen) changeSettings();
