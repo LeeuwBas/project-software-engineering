@@ -1,25 +1,31 @@
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.generics import CreateAPIView
+
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter,
-    OpenApiResponse,
-    inline_serializer,
-)
-from drf_spectacular.types import OpenApiTypes
+from .schemas import SETTINGS_GET_SCHEMA, SETTINGS_POST_SCHEMA
 
 from .serializers import UserSerializer
 from .permissions import IsSelf
 
 User = get_user_model()
+
+"""
+Cheatsheet of the endpoints defined in this file. For descriptions on functionality
+or extended descriptions on the parameters, check the documentation at the actual functions.
+
+/users/settings
+    get:
+        returns the b64 string containing all settings.
+
+    post:
+        data: b64 encoded string of all settings.
+"""
 
 class UserViewSet(
     mixins.CreateModelMixin,
@@ -28,7 +34,9 @@ class UserViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """TODO (LeeuwBas): docstring (see statistics/views.py for example)"""
+    """
+    A user view that allows for users to be viewed, created and updated.
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -44,40 +52,21 @@ class UserViewSet(
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
 
+
 class SettingsView(APIView):
-    """TODO (david kramer): docstring (see statistics/views.py for example)"""
     permission_classes = [IsAuthenticated, IsSelf]
 
-    @extend_schema(
-        summary="Gets all active settings for the user",
-        description="""Gets all active settings for the user""",
-        responses={200: OpenApiResponse(description="the base64 settings")},
-    )
+    @SETTINGS_GET_SCHEMA
     def get(self, request):
-        return Response({"settings": request.user.settings}, 200)
+        return Response({"settings": request.user.settings}, HTTP_200_OK)
 
-    @extend_schema(
-        summary="Replaces the new active user settings",
-        description="Replaces the new active user settings",
-        request={
-            "application/json": {
-                "type": "object",
-                "properties": {
-                    "settings": {
-                        "type": "string",
-                        "description": "Base 64 string of the settings."
-                    }
-                },
-            }
-        },
-        responses={200: "ok"}
-    )
+    @SETTINGS_POST_SCHEMA
     def post(self, request):
         settings = request.data.get("settings", None)
 
         if settings is None:
-            return Response("Bad input", 400)
+            return Response("Invalid input", HTTP_400_BAD_REQUEST)
 
         request.user.settings = settings
         request.user.save()
-        return Response("ok", 200)
+        return Response("ok", HTTP_200_OK)

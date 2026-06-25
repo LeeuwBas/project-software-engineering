@@ -5,7 +5,11 @@ const REFRESH_TOKEN = 'refresh_token';
 const LOGIN_ID = 'login_id';
 const LOGIN_EMAIL = 'login_email';
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * A secure token storage to store authentication credentials.
+ * This includes some information about the current login,
+ * such that we can keep caches when the same use logs in on the same device twice.
+ */
 export const tokenStorage = {
     getAccessToken: () => SecureStore.getItemAsync(ACCESS_TOKEN),
     getRefreshToken: () => SecureStore.getItemAsync(REFRESH_TOKEN),

@@ -1,12 +1,12 @@
+import { AppText } from '@/components/AppText';
 import { getGoalCalender } from '@/lib/api/APIBridge';
 import { getActiveModules } from '@/lib/settings';
 import { ModuleDefinition, MODULES } from '@/lib/types';
-import { ArrowBigLeft, ArrowBigRight } from 'lucide-react-native';
+import ChevronLeft from '@assets/icons/toolbar_icons/chevron_left.svg';
+import ChevronRight from '@assets/icons/toolbar_icons/chevron_right.svg';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
-import { AttachStep } from 'react-native-spotlight-tour';
-import { AppText } from '../AppText';
 
 export interface calendarCell {
   id: string;
@@ -27,6 +27,7 @@ export default function CalendarOverview() {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
   const today = useMemo(() => new Date(), []);
+  const [loading, setLoading] = useState(false);
 
   const [calendarData, updateCalendarData] = useState<any[]>([]);
 
@@ -120,15 +121,18 @@ export default function CalendarOverview() {
         console.error('Failed to fetch calendar:', error);
       }
     };
-
-    fetchCalendarData();
+    fetchCalendarData().finally(() => setLoading(false));
   }, [rangeStart, rangeEnd]);
 
   const toPrevMonth = () => {
+    if (loading) return;
+    setLoading(true);
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
   };
 
   const toNextMonth = () => {
+    if (loading) return;
+    setLoading(true);
     setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
   };
 
@@ -138,8 +142,8 @@ export default function CalendarOverview() {
     <View>
       {/* Month/year displaty with arrow buttons */}
       <View className="mb-6 flex-row items-center gap-x-4 self-center">
-        <Pressable onPress={toPrevMonth} hitSlop={12}>
-          <ArrowBigLeft size={24} color={iconColor} />
+        <Pressable onPress={toPrevMonth} hitSlop={12} disabled={loading}>
+          <ChevronLeft width={24} height={24} color={iconColor} />
         </Pressable>
 
         <AppText className="text-2xl font-bold">
@@ -148,8 +152,8 @@ export default function CalendarOverview() {
 
         <View style={{ width: 24 }}>
           {!(month === today.getMonth() && year === today.getFullYear()) && (
-            <Pressable onPress={toNextMonth} hitSlop={12}>
-              <ArrowBigRight size={24} color={iconColor} />
+            <Pressable onPress={toNextMonth} hitSlop={12} disabled={loading}>
+              <ChevronRight width={24} height={24} color={iconColor} />
             </Pressable>
           )}
         </View>
@@ -177,7 +181,9 @@ export default function CalendarOverview() {
                   ${item.active ? 'border-border' : item.hidden ? 'border-transparent opacity-0' : 'opacity-40'}
                   ${item.currentDay && 'border-primary-foreground'}
                   ${calendarData[index]?.stress === 2 ? 'bg-[#b41b21]/30' : calendarData[index]?.stress === 1 ? 'bg-[#FFFF00]/30' : calendarData[index]?.stress === 0 ? 'bg-[#22a022]/30' : ''} `}>
-            <AppText className="self-end text-sm font-bold">{item.value || 'Placeholder'}</AppText>
+            <AppText className="m-1 mt-0 self-end text-sm font-bold">
+              {item.value || 'Placeholder'}
+            </AppText>
             {!item.hidden && (
               <View className="flex-row flex-wrap gap-1 self-start p-0.5">
                 {activeCalendarModules.map(

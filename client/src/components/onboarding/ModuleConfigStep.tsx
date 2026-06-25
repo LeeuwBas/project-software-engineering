@@ -9,7 +9,16 @@ import { useColorScheme } from 'nativewind';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Module configuration widget for the onboarding process.
+ * Serves as an interface for a user to save their module goals.
+ *
+ * @param {Props} onNext -
+ *  Function to handle in-page routing to the next step of onboarding
+ * @param {Props} onBack -
+ *  Function to handle in-page routing to the previous step of onboarding
+ * @return {React.JSX.Element} Module configuration widget
+ */
 export default function ModuleConfigStep({
   onNext,
   onBack,
@@ -58,13 +67,12 @@ export default function ModuleConfigStep({
     });
   }
 
-  function saveGoals() {
-    initializeApiManager().then(() => {
-      const promises: Promise<any>[] = [];
+  async function saveGoals() {
+    await initializeApiManager().then(async () => {
       for (const module of activeGoaledModules) {
         const bridge = module.bridge;
 
-        bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
+        await bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
       }
     });
 
@@ -75,7 +83,7 @@ export default function ModuleConfigStep({
     <View className="flex-1">
       <View style={{ flex: 0.3 }} />
 
-      <Card className="mx-4 border-border bg-background/80 shadow-none">
+      <Card className="mx-4 shadow-none">
         <CardHeader>
           <CardTitle className="text-center text-xl">
             <AppText className="font-bold">Set Your Daily Goals</AppText>

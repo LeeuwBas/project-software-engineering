@@ -1,6 +1,7 @@
 import { scheduleNotification } from './notificationScheduler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
+import { getUserName } from '@/lib/settings';
 
 const waterLastStorageKey = 'water_last_schedule_date';
 const waterIdStorageKey = 'water_last_notification_id';
@@ -25,10 +26,16 @@ export async function setWaterNotifaction() {
             }
         }
 
+        const userName = getUserName();
+
         const scheduleDate = new Date();
         scheduleDate.setHours(18, 0, 0, 0);
 
-        const id = await scheduleNotification(scheduleDate, 'Water', 'Time for a glass of water!');
+        const id = await scheduleNotification(
+            scheduleDate,
+            'Water time!',
+            `Hey ${userName}! Time for a glass of water!`
+        );
         await AsyncStorage.setItem(waterLastStorageKey, scheduleDate.toISOString());
         await AsyncStorage.setItem(waterIdStorageKey, id);
     } catch (error) {
@@ -71,12 +78,14 @@ export async function setSleepNotification() {
             }
         }
 
+        const userName = getUserName();
+
         const scheduleDate = new Date();
         scheduleDate.setHours(22, 0, 0, 0);
 
         await scheduleNotification(
             scheduleDate,
-            'Bedtime',
+            `Hi ${userName}!`,
             'Sleep is self-care too. Start winding down for bedtime'
         );
         await AsyncStorage.setItem(sleepLastStorageKey, scheduleDate.toISOString());
@@ -105,12 +114,14 @@ export async function setMorningNotification() {
             }
         }
 
+        const userName = getUserName();
+
         const scheduleDate = tomorrow;
         scheduleDate.setHours(10, 0, 0, 0);
 
         await scheduleNotification(
             scheduleDate,
-            'Good Morning!',
+            `Good Morning ${userName}!`,
             'I hope you slept well! Good luck today!'
         );
         await AsyncStorage.setItem(morningLastStorageKey, scheduleDate.toISOString());

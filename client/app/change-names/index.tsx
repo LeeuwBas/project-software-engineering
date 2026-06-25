@@ -14,7 +14,17 @@ type Props = {
   onBack?: () => void;
 };
 
-export default function PetNamingStep({ onNext, onBack }: Props) {
+/**
+ * Name changing widget for the onboarding process.
+ * Serves as an interface for a user to save their names.
+ *
+ * @param {Props} onNext -
+ *  Function to handle in-page routing to the next step of onboarding
+ * @param {Props} onBack -
+ *  Function to handle in-page routing to the previous step of onboarding
+ * @return {React.JSX.Element} Name changing widget
+ */
+export default function ChangeNames({ onNext, onBack }: Props) {
   const currentUserName = getUserName();
   const currentPetName = getPetName();
 

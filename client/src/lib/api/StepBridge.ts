@@ -16,16 +16,25 @@ export interface StepBridge extends GoaledStatisticBridge {}
 const stepState = createNewState();
 const stepGoalState = createNewState();
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * A react hook for the current steps value.
+ */
 export function useSteps() {
     return useValue(stepState);
 }
 
-/** TODO (LeeuwBas): docstring */
+export const stepsDefault: number = 5000;
+
+/**
+ * @returns return a newly set up steps bridge.
+ */
 export function createStepBridge(): LoadableBridge<StepBridge> {
     return {
         load: () =>
-            Promise.all([loadZustand(stepState, 'steps'), loadGoalZustand(stepGoalState, 'steps')]),
+            Promise.all([
+                loadZustand(stepState, 'steps'),
+                loadGoalZustand(stepGoalState, 'steps', stepsDefault),
+            ]),
         useCurrent: () => useSteps(),
         set: (value) => setZustand(stepState, 'steps', Math.max(value, 0)),
         getBarChart: async (bins, daysPerBin, endDate) => {
@@ -35,7 +44,7 @@ export function createStepBridge(): LoadableBridge<StepBridge> {
             );
         },
         getSummary: async (start, end) => await getStatisticSummary('steps', start, end),
-        getGoal: async (date) => (await getGoals('steps', date)) ?? 0,
+        getGoal: async (date) => (await getGoals('steps', date)) ?? stepsDefault,
         setGoal: (value) => setGoalZustand(stepGoalState, 'steps', value),
         useGoal: () => useValue(stepGoalState),
     };

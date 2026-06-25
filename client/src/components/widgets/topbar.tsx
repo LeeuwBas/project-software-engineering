@@ -2,12 +2,11 @@ import { AppText } from '@/components/AppText';
 import Bar from '@/components/widgets/Bar';
 import Weather from '@/components/widgets/Weather';
 import { getActiveModules } from '@/lib/settings';
-import { BarType, GoaledModule, MODULES } from '@/lib/types';
+import { GoaledModule, MODULES } from '@/lib/types';
 import { View } from 'react-native';
 
 /**
  * The view on top of the homepage. Contains the weather, day of the week, and bars for active goaled modules.
- * @returns the top view
  */
 export default function Topbar() {
   const date = new Date();
@@ -17,16 +16,6 @@ export default function Topbar() {
     (module): module is GoaledModule => getActiveModules()[module.id] && 'goalConfig' in module
   );
 
-  // Parameters for each module bar
-  const bars: BarType[] = activeGoaledModules.map((module) => ({
-    id: module.id,
-    icon: module.icon,
-    value: module.useValue() ?? 0,
-    goal: module.bridge.useGoal() ?? 0,
-    color: module.color,
-    borderColor: module.borderColor,
-  }));
-
   return (
     <View className="flex-row content-start">
       <View className="w-1/2 flex-row gap-2">
@@ -35,8 +24,8 @@ export default function Topbar() {
       </View>
 
       <View className="w-full flex-col gap-2">
-        {bars.map((bar) => (
-          <Bar {...bar} key={bar.id} />
+        {activeGoaledModules.map((module) => (
+          <Bar module={module} key={module.id} />
         ))}
       </View>
     </View>

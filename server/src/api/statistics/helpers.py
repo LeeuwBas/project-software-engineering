@@ -1,7 +1,7 @@
 from django.utils import timezone
-from django.db.models import Sum, Max, Min, Avg, F, Count
+from django.db.models import Sum, Max, Min, Count
 
-from datetime import timedelta, datetime, date
+from datetime import timedelta, datetime
 
 from .models import Stats, Goals
 

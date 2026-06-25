@@ -1,4 +1,6 @@
-/** TODO (LeeuwBas): docstring */
+/**
+ * All functions/variables available in the backend related to authentication.
+ */
 type AuthService = {
     accessToken: string | null;
     refreshToken: string | null;
@@ -8,7 +10,9 @@ type AuthService = {
     signOut: () => Promise<void>;
 };
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * The current backend authentication service,
+ */
 export const internalAuth: AuthService = {
     accessToken: null,
     refreshToken: null,

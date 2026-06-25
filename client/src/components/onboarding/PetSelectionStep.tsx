@@ -1,23 +1,30 @@
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/ui/button';
 import { PetSelector } from '@/components/widgets/PetSelector';
-import { getPetID, setPetID } from '@/lib/settings';
+import { getPetID, initSettings, setPetID } from '@/lib/settings';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-/** TODO (AlexAugustijn): docstring */
+/**
+ * Pet selection widget for the onboarding process.
+ * Serves as an interface for a user to save their desired pet.
+ *
+ * @param {Props} onNext -
+ *  Function to handle in-page routing to the next step of onboarding
+ * @return {React.JSX.Element} Pet selection widget
+ */
 export function PetSelectionStep({ onNext }: { onNext: () => void }) {
   const router = useRouter();
   const pet = getPetID() ?? 0;
   const [draftPet, setDraftPet] = useState(pet);
 
-  // TODO (AlexAugustijn): explain
+  useEffect(() => initSettings(), []);
+
   function confirm() {
     setPetID(draftPet);
     onNext();
   }
-  // TODO (AlexAugustijn): explain general layout
   return (
     <View className="flex-col gap-12">
       <PetSelector currentPet={draftPet} onPetChange={setDraftPet} />
