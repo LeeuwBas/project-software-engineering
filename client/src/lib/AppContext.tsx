@@ -3,15 +3,6 @@ import { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext<PopupConfigs>(null!);
 
-/**
- * Function for using the app context, which contain popup state functions
- * for opening and closing popups {@link PopupConfigs}
- * Also contains state of sendStress function that is called when stress is submitted.
- *
- * @returns popup and sendStress state functions
- */
-export const useAppContext = () => useContext(AppContext);
-
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
