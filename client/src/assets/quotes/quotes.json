@@ -40,7 +40,7 @@
         "Water sounds refreshing right now.",
         "Hi <USERNAME>, This is a reminder to drink a glass of water.",
         "It's been a while since your last drink.",
-        "You have not logged any water yet today, <USERNAME>. A glass of water is a good next step."
+        "<USERNAME>, you have not logged any water yet today. A glass of water is a good next step."
       ],
       "Sunny": [
         "It's nice weather outside, have you had some water yet?",
@@ -109,7 +109,7 @@
         "You have been sitting for a long time <USERNAME>, moving your legs for a short time helps your blood circulation.",
         "It is time for a short walk, let's get those legs moving!",
         "Walking can reduce stress, even a short walk can help.",
-        "Would you like to go for a short walk, <USERNAME>?",
+        "<USERNAME>, would you like to go for a short walk?",
         "A short walk might feel nice right now.",
         "How about a little walk to get your legs moving?",
         "How would you feel about going for a slow walk for a few minutes?",
@@ -127,10 +127,10 @@
         "Keep going, some extra steps will bring you even closer!",
         "You have done some walking today. A short walk could help you get closer to your goal.",
         "Nice movement today, <USERNAME>! A few more steps might bring you closer.",
-        "You are making progress. How about a little walk?",
+        "You're making progress <USERNAME>. How about a little walk?",
         "A short walk now could help finish your movement goal.",
         "You are part way there. A few extra steps may help.",
-        "Your steps are looking good. A small walk could add a nice boost.",
+        "Your steps are looking good <USERNAME>. A small walk could add a nice boost.",
         "You have already moved today. A little walk might keep the progress going.",
         "Your movement goal is getting closer. How about a short walk?",
         "A few more minutes of walking could help you reach your goal.",
@@ -138,7 +138,7 @@
       ],
       "Sunny": [
         "You are close to your movement goal, let's catch some sun!",
-        "Let's go outside. You're almost at your movement goal",
+        "Let's go outside <USERNAME>. You're almost at your movement goal",
         "It's nice weather outside, let's go for a walk."
       ]
     },
@@ -260,7 +260,7 @@
         "A little food might help your energy.",
         "Something simple to eat might feel good.",
         "Your meal count is low today. Maybe a snack would help.",
-        "Hi <USERNAME>, A small bite can be a good start.",
+        "Hi <USERNAME>, a small bite can be a good start.",
         "Food can help your body feel more steady.",
         "How about something easy to eat?",
         "A snack break might be nice.",
