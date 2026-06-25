@@ -3,8 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { getUserName } from '@/lib/settings';
 
-const userName = getUserName();
-
 const waterLastStorageKey = 'water_last_schedule_date';
 const waterIdStorageKey = 'water_last_notification_id';
 
@@ -27,6 +25,8 @@ export async function setWaterNotifaction() {
                 return;
             }
         }
+
+        const userName = getUserName();
 
         const scheduleDate = new Date();
         scheduleDate.setHours(18, 0, 0, 0);
@@ -78,6 +78,8 @@ export async function setSleepNotification() {
             }
         }
 
+        const userName = getUserName();
+
         const scheduleDate = new Date();
         scheduleDate.setHours(22, 0, 0, 0);
 
@@ -111,6 +113,8 @@ export async function setMorningNotification() {
                 return;
             }
         }
+
+        const userName = getUserName();
 
         const scheduleDate = tomorrow;
         scheduleDate.setHours(10, 0, 0, 0);
