@@ -15,6 +15,12 @@ export interface WeatherData {
 export async function getWeatherStatus(): Promise<WeatherData | null> {
     const api_key = process.env.EXPO_PUBLIC_WEATHER_API_KEY;
 
+    // No API key configured: skip the location request and weather fetch entirely.
+    if (!api_key) {
+        console.warn('Weather unavailable: EXPO_PUBLIC_WEATHER_API_KEY is not set');
+        return null;
+    }
+
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'denied') return null;
 
