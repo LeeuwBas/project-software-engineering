@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { type ReactNode } from 'react';
 import { View } from 'react-native';
-import { TourStep } from 'react-native-spotlight-tour';
+import { type CardProps } from 'react-native-lumen';
 
 export function renderPetStep(props: CardProps) {
   return (
@@ -54,9 +54,7 @@ function StepCard({
   isLast,
 }: CardProps & {
   children: ReactNode;
-  stop: () => void;
   stop_position?: 'top' | 'bottom';
-  final: boolean;
 }) {
   const buttons = (
     <View className="flex w-full flex-row items-center justify-center gap-2">

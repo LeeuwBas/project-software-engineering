@@ -165,7 +165,7 @@ export default function Toolbar() {
             onPress={() => changeSettings()}>
             <ProfileIcon width={28} height={28} color={iconColor} />
           </Pressable>
-        </AttachStep>
+        </TourZone>
       </View>
     </View>
   );

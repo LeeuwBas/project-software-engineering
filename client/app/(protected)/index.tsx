@@ -1,4 +1,4 @@
-import { createTutorialSteps } from '@/components/tutorial/tutorial-steps';
+import { renderFinalStep, renderPetStep } from '@/components/tutorial/tutorial-steps';
 import PetHome from '@/components/widgets/PetHome';
 import Quotes from '@/components/widgets/Quotes';
 import Toolbar from '@/components/widgets/toolbar';
@@ -11,10 +11,10 @@ import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AttachStep, SpotlightTourProvider, useSpotlightTour } from 'react-native-spotlight-tour';
+import { TourProvider, TourZone, useTour } from 'react-native-lumen';
 
 export default function App() {
   const {
