@@ -52,7 +52,7 @@ export default function Stats() {
   return (
     <View
       pointerEvents={statsOpen ? 'auto' : 'none'}
-      className={`absolute -top-8 h-[35rem] w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
+      className={`absolute -top-8 w-full items-center transition-opacity duration-200 ${statsOpen ? 'opacity-100' : 'opacity-0'}`}>
       <View className="bottom-full w-[90%] items-center">
         {/* Labels */}
         <View className="absolute -top-12 w-full flex-row gap-1">
