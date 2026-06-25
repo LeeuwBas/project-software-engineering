@@ -75,24 +75,14 @@ export default function App() {
   const [petHomeLayout, setPetHomeLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [topBarLayout, setTopBarLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
-  // TODO (buenk): comment
-  const mySteps = useMemo(() => createTutorialSteps(), []);
-  /* TODO (buenk): summary of the structure, like what the SafeAreaView, SpotlightTourProvider, and LinearGradient 
+  /* TODO (buenk): summary of the structure, like what the SafeAreaView, TourProvider, and LinearGradient
   are for/ what they contain.*/
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <SpotlightTourProvider
-        steps={mySteps}
-        overlayColor="black"
-        overlayOpacity={0.6}
-        onBackdropPress="continue"
-        onStop={closePopup}
-        motion="fade"
-        placement="bottom"
-        offset={8}
-        flip
-        shift
-        shape="rectangle">
+      <TourProvider
+        stepsOrder={['pet', 'menu-button', 'stats-button', 'settings-button', 'final']}
+        backdropOpacity={0.6}
+        config={{ tooltipStyles: { backgroundColor: 'transparent' } }}>
         <TutorialStarter />
         {/** Homepage component container: {@link Topbar}, {@link PetHome}, {@link Quotes}, {@link Toolbar} */}
         <LinearGradient
@@ -122,11 +112,11 @@ export default function App() {
                   (e) => setPetHomeLayout(e.nativeEvent.layout)
                 }>
                 {/* TODO (buenk): what are these? */}
-                <AttachStep index={0} fill>
-                  <AttachStep index={4} fill>
+                <TourZone stepKey="pet" description="Welcome to VirtuoPet! This is your new virtual pet!" renderCustomCard={renderPetStep}>
+                  <TourZone stepKey="final" description="Thank you for following the tutorial!" renderCustomCard={renderFinalStep}>
                     <PetHome />
-                  </AttachStep>
-                </AttachStep>
+                  </TourZone>
+                </TourZone>
               </View>
             </View>
             <Quotes petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
@@ -143,7 +133,7 @@ export default function App() {
 
           <Toolbar />
         </LinearGradient>
-      </SpotlightTourProvider>
+      </TourProvider>
     </SafeAreaView>
   );
 }
@@ -151,9 +141,20 @@ export default function App() {
 // TODO (buenk): comment, but also this component really should be moved to a new component file alongside mySteps
 // and the SpotlightTourProvider
 function TutorialStarter() {
-  const { start } = useSpotlightTour();
-  const { menuOpen, statsOpen, settingsOpen } = useAppContext();
+  const { start, currentStep } = useTour();
+  const { menuOpen, statsOpen, settingsOpen, changeMenu, changeSettings, changeStats, stressMenuOpen, changeStressMenu } = useAppContext();
   const { done, setTutorialDone } = useTutorial();
+  const prevStep = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (prevStep.current !== null && currentStep === null) {
+      if (menuOpen) changeMenu();
+      if (settingsOpen) changeSettings();
+      if (statsOpen) changeStats();
+      if (stressMenuOpen) changeStressMenu();
+    }
+    prevStep.current = currentStep;
+  }, [currentStep]);
 
   useEffect(() => {
     if (done === false && !menuOpen && !statsOpen && !settingsOpen) {

@@ -14,7 +14,8 @@ import StatsIcon from '@assets/icons/toolbar_icons/stats.svg';
 import { useColorScheme } from 'nativewind';
 import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { AttachStep } from 'react-native-spotlight-tour';
+import { renderMenuStep, renderSettingsStep, renderStatsStep } from '@/components/tutorial/tutorial-steps';
+import { TourZone, useTour } from 'react-native-lumen';
 
 /**
  * The toolbar on the bottom of the homepage containing buttons for each main popup
@@ -22,6 +23,11 @@ import { AttachStep } from 'react-native-spotlight-tour';
 export default function Toolbar() {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
+
+  // While a tutorial step is active, drop the toolbar's elevated stacking
+  // (z-20) so the tour overlay can darken the toolbaar.
+  const { currentStep } = useTour();
+  const tourActive = currentStep !== null;
 
   const moduleValues: Record<string, number> = Object.fromEntries(
     MODULES.map((module) => [module.id, module.useValue() ?? 0])
@@ -93,7 +99,8 @@ export default function Toolbar() {
   }, [menuOpen]);
 
   return (
-    <View className="relative left-0 right-0 z-20 mt-auto w-full items-center">
+    <View
+      className={`relative left-0 right-0 mt-auto w-full items-center ${tourActive ? '' : 'z-20'}`}>
       {/* Popups */}
       <Stats />
       <StressMenu />
@@ -117,19 +124,19 @@ export default function Toolbar() {
       {/* The toolbar */}
       <View className="flex w-full flex-row justify-center gap-44 border-t-4 border-border bg-card p-1">
         {/* Stats button */}
-        <AttachStep index={2}>
+        <TourZone stepKey="stats-button" description="This is where you can see your stats." renderCustomCard={renderStatsStep}>
           <Pressable
             disabled={menuOpen || settingsOpen || stressMenuOpen}
             className={`p-2 transition-opacity duration-200 ${menuOpen || settingsOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
             onPress={() => changeStats()}>
             <StatsIcon width={28} height={28} color={iconColor} />
           </Pressable>
-        </AttachStep>
+        </TourZone>
 
         {/* Menu button */}
-        <AttachStep index={1} style={{ position: 'absolute', top: -25 }}>
+        <TourZone stepKey="menu-button" description="This is where you log all your habits." renderCustomCard={renderMenuStep} style={{ position: 'absolute', top: -25 }}>
           <NotchedBox
-            className={`shadow-block transition-opacity duration-200 ${
+            className={`transition-opacity duration-200 ${tourActive ? '' : 'shadow-block'} ${
               statsOpen || settingsOpen ? 'opacity-0' : 'opacity-100'
             }`}
             fillClassName="bg-primary"
@@ -148,10 +155,10 @@ export default function Toolbar() {
               {!menuOpen && !stressMenuOpen && <PlusIcon width={50} height={50} color={'white'} />}
             </Pressable>
           </NotchedBox>
-        </AttachStep>
+        </TourZone>
 
         {/* Settings button */}
-        <AttachStep index={3}>
+        <TourZone stepKey="settings-button" description="And here you'll find all of your settings." renderCustomCard={renderSettingsStep}>
           <Pressable
             disabled={statsOpen || menuOpen || stressMenuOpen}
             className={`p-2 transition-opacity  duration-200 ${statsOpen || menuOpen || stressMenuOpen ? 'opacity-0' : 'opacity-100'}`}
