@@ -28,8 +28,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return <AppContext.Provider value={popup}>{children}</AppContext.Provider>;
 }
 
-/** TODO (buenk, ZJWeng, hfgieter) docstring, also can we put this above the function since it's the default export?
- * This one is pretty important, also {@link PopupConfigs} in it. Make sure both docstrings for this and PopupConfigs
- * are well made, they're pretty important.
+/**
+ * Hook for accessing the global popup state provided by {@link AppProvider}.
+ *
+ * Returns a {@link PopupConfigs} object with open/close state and toggle
+ * callback funcs for every overlay in the app.
+ * Must be called as a child of {@link AppProvider}.
+ *
+ * @returns The current {@link PopupConfigs} context value.
+ *
+ * @example
+ * const { settingsOpen, changeSettings } = useAppContext();
  */
 export const useAppContext = () => useContext(AppContext);

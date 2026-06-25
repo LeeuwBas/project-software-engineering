@@ -24,7 +24,14 @@ import useStepValue from './GetSteps';
 // Number of available pets
 export const NUM_PETS = 4;
 
-// state of popups and functions to open/close them.
+/**
+ * Global popup state for the app, distributed via {@link useAppContext}.
+ *
+ * Each overlay has an `*Open` boolean and a `change*` toggle callback.
+ * `popupOpen` is `true` whenever any single overlay is open, useful for
+ * suppressing background interactions. `sendStress` / `setSendStress` let
+ * child components register and invoke the stress-entry action imperatively.
+ */
 export interface PopupConfigs {
     popupOpen: boolean;
     menuOpen: boolean;

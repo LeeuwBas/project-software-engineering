@@ -17,7 +17,7 @@ import Stats from './Stats';
 import StressMenu from './StressMenu';
 
 /** TODO (ZJWeng, Dorus-vda, buenk): docstring */
-export default function Toolbar({}: {}) {
+export default function Toolbar() {
   const { colorScheme } = useColorScheme();
   const iconColor = colorScheme === 'dark' ? '#f2f2f2' : '#555555';
 
