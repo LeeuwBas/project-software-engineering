@@ -1,9 +1,11 @@
-import { getAPI } from '@/lib/api/ApiManager';
 import generateQuoteRequest from '@/lib/quotes/generateQuoteRequest';
 import getJsonQuote from '@/lib/quotes/getJsonQuote';
+import { EnabledModules } from '@/lib/storage';
 import { useSyncExternalStore } from 'react';
 
 const DEFAULT_QUOTE_DURATION_MS: number = 5000;
+
+export const quoteBridge: QuoteBridge = createQuoteBridge();
 
 // Subsciber/publisher model to store what quote is displayed currently
 let currentQuote: string | null = null;
@@ -24,7 +26,7 @@ export function useQuote(): string | null {
 
 /**
  * @property {@link quote} readonly useState value that stores the current quote or null.
- * @function {@link requestQuote} request a quote from the backend, sets quote when the request returns.
+ * @function {@link requestQuote} request a quote based on goals met, sets quote when the request returns.
  * @functoin {@link setQuote} manually set the quote.
  * @function {@link removeQuote} sets quote to null.
  */
@@ -43,7 +45,7 @@ export interface QuoteBridge {
      * @param durationMs duration that the quote should display if not dismissed, defaults to
      * DEFAULT_QUOTE_DURATION_MS.
      */
-    requestQuote: () => void;
+    requestQuote: (activeModules: EnabledModules) => void;
     /**
      * Manually set the quote.
      * @param quote string to set {@link quote} to.
@@ -58,10 +60,9 @@ export interface QuoteBridge {
 }
 
 /**
- * Import from APIBridge, don't call this.
  * @returns the {@link QuoteBridge} that functions as the interface for getting quotes for the whole app.
  */
-export function createQuoteBridge(): QuoteBridge {
+function createQuoteBridge(): QuoteBridge {
     const clearTimer = () => {
         if (timer) {
             clearTimeout(timer);
@@ -82,21 +83,12 @@ export function createQuoteBridge(): QuoteBridge {
         }
     };
 
-    const requestQuote = async () => {
-        const req = await generateQuoteRequest();
+    const requestQuote = async (activeModules: EnabledModules) => {
+        const req = await generateQuoteRequest(activeModules);
         if (req === null) return;
-        let data = { quote: getJsonQuote(req) };
-
-        if (!data?.quote) {
-            console.log('Requesting quote from the server! This should never happen!');
-            data = await getAPI(
-                `/api/get-quote/?action=${encodeURIComponent(req.action)}` +
-                    `&level=${encodeURIComponent(req.level)}` +
-                    `&context=${encodeURIComponent(req.context)}`
-            );
-        }
-        if (!data?.quote) return;
-        setQuote(data?.quote);
+        let quote = getJsonQuote(req);
+        if (!quote) return;
+        setQuote(quote);
     };
 
     const removeQuote = () => {

@@ -67,13 +67,12 @@ export default function ModuleConfigStep({
     });
   }
 
-  function saveGoals() {
-    initializeApiManager().then(() => {
-      const promises: Promise<any>[] = [];
+  async function saveGoals() {
+    await initializeApiManager().then(async () => {
       for (const module of activeGoaledModules) {
         const bridge = module.bridge;
 
-        bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
+        await bridge.setGoal(goals[module.id] ?? module.goalConfig.defaultGoal);
       }
     });
 
