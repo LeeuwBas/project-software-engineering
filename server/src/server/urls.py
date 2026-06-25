@@ -28,7 +28,6 @@ from api.statistics.views import (
     GoalBulkView,
     StatBulkView,
 )
-from api.quotes.views import RequestQuote
 
 from api.authentication.views import UserViewSet, SettingsView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -41,7 +40,6 @@ router.register(r"users", UserViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path("api/get-quote/", RequestQuote.as_view(), name="RequestQuote"),
     path("users/settings", SettingsView.as_view(), name="settingsView"),
     path("api/goals/<str:goal_date>", GoalManageView.as_view(), name="goal_endpoint"),
     path("api/goals/bulk/", GoalBulkView.as_view(), name="goal_bulk_endpoint"),

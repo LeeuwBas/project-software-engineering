@@ -1,18 +1,26 @@
-import { getCurrentGoal, getStat } from '@/lib/storage';
+import { EnabledModules, getCurrentGoal, getStat } from '@/lib/storage';
 import { getWeatherStatus, WeatherData } from '@/lib/weather';
 
 // 15 minute cache so repeated quote requests dont hammer the weather api
-let _weatherCache: { data: WeatherData | null; timestamp: number } | null = null;
+let _weatherCache: {
+    data: WeatherData | null;
+    promise: Promise<WeatherData | null> | null;
+    timestamp: number;
+    resolved: boolean;
+} | null = null;
+
 const WEATHER_POLLING = 15 * 60 * 1000;
+
+const DEFAULT_QUOTE = { action: 'Standard', level: 'Standard', context: 'Standard' };
 
 /**
  * Determines which quote to request based on today's stats, goals, and weather.
  * @returns `{ action, level, context }` to pass to the quote API, or `null` if a
  * request cannot be made (missing data, no valid stats).
  */
-export default async function generateQuoteRequest() {
+export default async function generateQuoteRequest(activeModules: EnabledModules) {
     const snap = await getTodaysSnapshot();
-    if (snap === null) return null;
+    if (snap === null) return DEFAULT_QUOTE;
     const { currentStats, currentGoals } = snap;
 
     const {
@@ -33,35 +41,38 @@ export default async function generateQuoteRequest() {
 
     const goodWeather: boolean = await isGoodWeather();
 
-    // Low, Medium, High boundaries
+    // Low, Medium, High boundaries. make sure the names match module ids
     const floors = {
         water: { med: 0.45, high: 0.99 },
         sleep: { med: 0.33, high: 0.66 },
         steps: { med: 0.33, high: 0.99 },
-        stress: { med: 0.33, high: 0.66, invert: true }, // high stays good
+        stress: { med: 1, high: 2 },
         food: { med: 0.45, high: 0.99 },
     };
 
     // calculate if the progress toward the goal is low, med, or high, or null if there is no goal
-    const getLevel = (
-        current: number | null,
-        goal: number | null,
-        floors: { med: number; high: number; invert?: boolean }
-    ): string | null => {
+    const getLevel = (current: number | null, goal: number | null, id: string): string | null => {
+        const { med, high } = floors[id as keyof typeof floors];
+
+        if (!activeModules[id as keyof EnabledModules]) return null;
         if (current === null || goal === 0 || goal === null) return null;
+        if (id == 'stress') {
+            if (current < med) return 'Low';
+            if (current < high) return 'Medium';
+            return 'High';
+        }
         let ratio = current / goal;
-        if (floors.invert ?? false) ratio = 1 - ratio;
-        if (ratio < floors.med) return 'Low';
-        if (ratio < floors.high) return 'Medium';
+        if (ratio < med) return 'Low';
+        if (ratio < high) return 'Medium';
         return 'High';
     };
 
     const stats = [
-        { action: 'Water', level: getLevel(waterNow, waterGoal, floors.water) },
-        { action: 'Walk', level: getLevel(stepsNow, stepsGoal, floors.steps) },
-        { action: 'Sleep', level: getLevel(sleepNow, sleepGoal, floors.sleep) },
-        { action: 'Eat', level: getLevel(foodNow, foodGoal, floors.food) },
-        { action: 'Stress', level: getLevel(stressNow, stressGoal, floors.stress) },
+        { action: 'Water', level: getLevel(waterNow, waterGoal, 'water') },
+        { action: 'Walk', level: getLevel(stepsNow, stepsGoal, 'steps') },
+        { action: 'Sleep', level: getLevel(sleepNow, sleepGoal, 'sleep') },
+        { action: 'Eat', level: getLevel(foodNow, foodGoal, 'food') },
+        { action: 'Stress', level: getLevel(stressNow, stressGoal, 'stress') },
     ];
 
     // filter out stats with no goal
@@ -76,7 +87,7 @@ export default async function generateQuoteRequest() {
         worstLevel === undefined ? [] : nonNullStats.filter((stat) => stat.level === worstLevel);
     if (validStats.length === 0) {
         console.log('no valid stats found');
-        return null;
+        return DEFAULT_QUOTE;
     }
 
     // pick a random goal among the ones with the least progress.
@@ -101,6 +112,7 @@ export default async function generateQuoteRequest() {
 
     const action = worst.action;
     const level = worst.level;
+
     return { action, level, context };
 }
 
@@ -123,11 +135,34 @@ async function getTodaysSnapshot() {
 
 // true if weather is clear or lightly cloudy
 // caches the result for 15 minutes before re-fetching
-async function isGoodWeather(): Promise<boolean> {
-    const now = Date.now();
-    if (_weatherCache === null || now - _weatherCache.timestamp >= WEATHER_POLLING) {
-        _weatherCache = { data: await getWeatherStatus(), timestamp: now };
+function _fetchWeather() {
+    const cache = {
+        data: _weatherCache?.data ?? null,
+        promise: null as Promise<WeatherData | null> | null,
+        timestamp: Date.now(),
+        resolved: false,
+    };
+    cache.promise = getWeatherStatus();
+    cache.promise.then((data) => {
+        cache.data = data;
+        cache.resolved = true;
+    });
+    _weatherCache = cache;
+}
+
+function isGoodWeather(): boolean {
+    if (_weatherCache === null || _weatherCache.promise === null) {
+        _fetchWeather();
+        return false;
     }
-    if (!_weatherCache.data) return false;
-    return _weatherCache.data.id >= 800 && _weatherCache.data.id <= 802;
+
+    const elapsed = Date.now() - _weatherCache.timestamp;
+    const stale = _weatherCache.resolved
+        ? elapsed >= WEATHER_POLLING // 15 min, only once we have data
+        : elapsed >= 30_000; // 30s, only while still waiting
+
+    if (stale) _fetchWeather();
+
+    const data = _weatherCache.data;
+    return !!data && data.id >= 800 && data.id <= 802;
 }
