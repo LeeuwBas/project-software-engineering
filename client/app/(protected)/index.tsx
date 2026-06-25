@@ -5,7 +5,7 @@ import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useAppContext } from '@/lib/AppContext';
-import { loadSettings } from '@/lib/settings';
+import { loadSettings, useTutorial } from '@/lib/settings';
 import { syncServer } from '@/lib/StorageSync';
 import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TourProvider, TourZone, useTour } from 'react-native-lumen';
+import TutorialStarter from '@/components/tutorial/TutorialStarter';
 
 /**
  * Home screen of the app. This component combines the main layout components
@@ -120,8 +121,14 @@ export default function App() {
                 }>
                 {/* These <TourZone> components represent steps within the
                     spotlight tutorial. */}
-                <TourZone stepKey="pet" description="Welcome to VirtuoPet! This is your new virtual pet!" renderCustomCard={renderPetStep}>
-                  <TourZone stepKey="final" description="Thank you for following the tutorial!" renderCustomCard={renderFinalStep}>
+                <TourZone
+                  stepKey="pet"
+                  description="Welcome to VirtuoPet! This is your new virtual pet!"
+                  renderCustomCard={renderPetStep}>
+                  <TourZone
+                    stepKey="final"
+                    description="Thank you for following the tutorial!"
+                    renderCustomCard={renderFinalStep}>
                     <PetHome />
                   </TourZone>
                 </TourZone>
