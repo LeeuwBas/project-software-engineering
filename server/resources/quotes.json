@@ -1,4 +1,29 @@
 {
+  "Standard": {
+    "Standard": {
+      "Standard": [
+        "One step at a time",
+        "Every day is a good oppertunity to build good habits",
+        "Keep going, you're doing great",
+        "Today is going amazing!",
+        "Today is a good day!",
+        "You're building healthy habits",
+        "You're doing great; tiny wins and good vibes",
+        "Level up: self-care",
+        "You're going strong",
+        "Healthy choices count",
+        "A little progress is still progress.",
+        "You are allowed to take things at your own pace.",
+        "Take a moment to appreciate your progress",
+        "Today's self-care can be simple.",
+        "Hope you're having a good day.",
+        "Small acts of self-care can make a difference",
+        "Little moments of self-care add up",
+        "Small steps are still steps forward!",
+        "Take things at your own pace today."
+      ]
+    }
+  },
   "Water": {
     "Low": {
       "Standard": [
@@ -6,10 +31,10 @@
         "Have you had any water today?",
         "Would you like a glass of water?",
         "How about a drink of water?",
-        "It's a good time for some water.",
-        "A glass of water looks tasty.",
-        "I'm a bit dehydrated, I can use a glass of water.",
-        "I can use a glass of water.",
+        "Maybe a good time for some water!",
+        "A glass of water sounds good right now.",
+        "I'm a bit dehydrated, I could use a glass of water.",
+        "I could use a glass of water.",
         "I'm parched, I could use some water.",
         "A drink would do me good.",
         "Water sounds refreshing right now.",
@@ -21,7 +46,7 @@
         "It's nice weather outside, have you had some water yet?",
         "It's so sunny outside, let's get something to drink!",
         "Sunny days can make you thirsty, how about a drink?",
-        "People need more water on hot days, how about it? Have you had enough?",
+        "People need more water on hot days. Have you had enough today?",
         "Sun and sweat make me thirsty, I'd love a glass of water.",
         "Sunny weather and water go well together, have you had anything to drink?",
         "It might be a good moment for a water break.",
@@ -83,14 +108,14 @@
       "Standard": [
         "You have been sitting for a long time, moving your legs for a short time helps your blood circulation.",
         "It is time for a short walk, let's get those legs moving!",
-        "Walking lowers stress, a short walk is enough.",
+        "Walking can reduce stress, even a short walk can help.",
         "Would you like to go for a short walk?",
         "A short walk might feel nice right now.",
         "How about a little walk to get your legs moving?",
         "How would you feel about going for a slow walk for a few minutes?",
         "A little walk around the room could be enough.",
         "Would a short walk outside feel good?",
-        "A small walk may help your body feel more awake.",
+        "A short walk may help your body feel more awake.",
         "Your step count is low today. A short walk might help.",
         "A quick walk could be a nice break from sitting.",
         "Tiny walk, tiny win! How about a few steps?"
@@ -113,7 +138,7 @@
       ],
       "Sunny": [
         "You are close to your movement goal, let's catch some sun!",
-        "Let's go outside, your movement goal is almost reached!",
+        "Let's go outside. You're almost at your movement goal",
         "It's nice weather outside, let's go for a walk."
       ]
     },
@@ -203,9 +228,9 @@
     "High": {
       "Standard": [
         "Your stress level is high. You can stop your current task and find a quiet space to reset.",
-        "High stress is detected. You do not need to push through right now.",
+        "Your stress level looks high today. You do not need to push through right now.",
         "It seems you are stressed. Try taking things a little easier.",
-        "You are highly stressed. Taking some time for yourself may help.",
+        "You're a little stressed! Taking some time for yourself may help.",
         "Take a deep breath and give yourself a moment.",
         "Your stress level is high. A short walk might help you calm down.",
         "Your stress level looks high. A quiet break might help.",
@@ -247,7 +272,7 @@
       "Standard": [
         "A small snack will help keep your energy stable.",
         "Your meal logs look steady. Keep it going!",
-        "Great job! You are halfway through your meals today!",
+        "Great job! You're halfway to your meal goal today!",
         "A light meal or a protein-rich snack would fit perfectly here.",
         "You have had some meals today. Nice progress.",
         "You are part way through your meals for today.",
@@ -263,7 +288,7 @@
     "High": {
       "Standard": [
         "Nutritional goals met! You have given your body the fuel it needs today.",
-        "All meals are logged. Your body is nourished.",
+        "All meals are logged. Your body has the fuel it needs today.",
         "Well-fed and full of energy. You are completely on track with your meals.",
         "You've given your body exactly what it needs. Goal achieved!",
         "Meal goal reached. Nice work today!",
