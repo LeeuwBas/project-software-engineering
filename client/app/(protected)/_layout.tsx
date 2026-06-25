@@ -9,7 +9,7 @@ import { getActiveModules } from '@/lib/settings';
 import { Slot } from 'expo-router';
 import { useEffect } from 'react';
 
-// TODO (LeeuwBas) docstring
+// TODO (buenk) docstring
 export default function AppLayout() {
   const activeModules = getActiveModules();
   console.log(activeModules);

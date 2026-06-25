@@ -6,7 +6,7 @@ import { formatDate } from '@/lib/utils';
 /**
  * Loads a period of three months from the server to local storage, such that a cache is present.
  *
- * @param includeGoals Weather goals should be loaded too.
+ * @param includeGoals Whether goals should be loaded too.
  */
 export async function loadServer(includeGoals: boolean) {
     if (internalAuth.accessToken === null || internalAuth.isGuest) {
@@ -41,7 +41,7 @@ async function loadStats(goals: boolean = false) {
 /**
  * Sends all local unsynced data to the server. in order to synchronize.
  *
- * @param includeGoals Weather goals should be synced too.
+ * @param includeGoals Whether goals should be synced too.
  */
 export async function syncServer(includeGoals: boolean) {
     if (internalAuth.accessToken === null || internalAuth.isGuest) {

@@ -48,7 +48,7 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
-  // TODO (LeeuwBas): explain
+  // Initialize api manager, settings, and make sure caches get invalidated after midnight.
   useEffect(() => {
     initializeApiManager().then();
     loadSettings().then();

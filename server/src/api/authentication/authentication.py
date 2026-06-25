@@ -4,7 +4,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class IDMarkedRefreshToken(RefreshToken):
-    """TODO (LeeuwBas): docstring"""
+    """
+    A Refresh token that also contains a login id, to identify the most recent session
+    """
     @classmethod
     def for_user(cls, user):
         token = super().for_user(user)
@@ -13,7 +15,10 @@ class IDMarkedRefreshToken(RefreshToken):
 
 
 class MarkedJWTAuthentication(JWTAuthentication):
-    """TODO (LeeuwBas): docstring"""
+    """
+    An authenticated token, that validates tokens based on the token id.
+    This makes sure that there can only be one token active at a time.
+    """
     def get_user(self, validated_token):
         user = super().get_user(validated_token)
 
