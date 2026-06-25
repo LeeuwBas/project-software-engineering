@@ -7,11 +7,19 @@ import { createWaterBridge } from '@/lib/api/WaterBridge';
 import { StatisticsSummary } from '@/lib/storage';
 import { createStressBridge } from './StressBridge';
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * A (bridge) type that can be loaded. This type adds the load method in an
+ * abstract manner, such that the actual bridge type does not contain the load method anymore.
+ */
 export type LoadableBridge<T> = T & Loadable;
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * Represents a type that can be loaded.
+ */
 export interface Loadable {
+    /**
+     * load the current instance of the interface.
+     */
     load: () => Promise<any>;
 }
 
@@ -36,10 +44,16 @@ export interface GoaledStatisticBridge extends StatisticBridge {
     useGoal: () => number | null;
 }
 
-// TODO (LeeuwBas): explain
+// All registered loadables, which can be easily loaded when neccesary
 const loaders: Loadable[] = [];
 let initPromise: Promise<void> | null = null;
 
+/**
+ * Register a new loadable bridge for loading,
+ * and return the barebones bridge without the loading method present.
+ *
+ * @param module The {@link LoadableBridge} to register for loading.
+ */
 function register<T>(module: LoadableBridge<T>): T {
     loaders.push(module);
     return module;

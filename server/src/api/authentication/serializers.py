@@ -10,7 +10,9 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """TODO (LeeuwBas): docstring"""
+    """
+    A user serializer, that returns the relevant information about
+    """
     password = serializers.CharField(write_only=True, required=True, min_length=8)
 
     class Meta:
@@ -23,7 +25,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class SingleSessionTokenObtainPairSerializer(TokenObtainPairSerializer):
-    """TODO (LeeuwBas): docstring"""
+    """
+    A serializer that serializes the login tokens on request.
+    """
     token_class = IDMarkedRefreshToken
     def validate(self, attrs):
         data = super().validate(attrs)
@@ -45,7 +49,10 @@ class SingleSessionTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class SingleSessionTokenRefreshSerializer(TokenRefreshSerializer):
-    """TODO (LeeuwBas): docstring"""
+    """
+    A single session refresh token serializer,
+    that serializes tokens when refreshing.
+    """
     token_class = IDMarkedRefreshToken
 
     def validate(self, attrs):
