@@ -16,7 +16,9 @@ export interface StepBridge extends GoaledStatisticBridge {}
 const stepState = createNewState();
 const stepGoalState = createNewState();
 
-/** TODO (LeeuwBas): docstring */
+/**
+ * A react hook for the current steps value.
+ */
 export function useSteps() {
     return useValue(stepState);
 }

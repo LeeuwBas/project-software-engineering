@@ -5,7 +5,7 @@ import { internalAuth } from '@/lib/auth/AuthService';
  * Sends a GET request to the given API endpoint, authenticated with the current session.
  *
  * @param endpoint The endpoint to send a GET request to.
- * @param authenticate Weather or not the request should use authentication.
+ * @param authenticate Whether or not the request should use authentication.
  * @returns the response json, or null if the network is offline or the user is not authenticated.
  * @throws Error when the request fails by any other means. (For example a 405 method not allowed).
  */
@@ -72,7 +72,7 @@ export async function postAPI(endpoint: string, json: any, authenticate: boolean
  *
  * @param endpoint The API endpoint to call, e.g. "/users/me/"
  * @param init The request object, same as fetch().
- * @param authenticate Weather the request should be authenticated or not.
+ * @param authenticate Whether the request should be authenticated or not.
  * @param recurse_unauthenticated If a new token should be requested when it has expired.
  * @return the response of the server, or null if the network is offline or the user is not authenticated.
  */
@@ -82,11 +82,11 @@ export async function queryApi(
     authenticate: boolean = true,
     recurse_unauthenticated: boolean = true
 ): Promise<Response | null> {
-    // TODO (LeeuwBas): maybe a few more comments in this function
     const auth = internalAuth;
     const ENDPOINT = `${API_ENDPOINT}${endpoint}`;
 
-    if (authenticate && (auth.isLoading || !auth.accessToken)) {
+    // We wont try an authenticated request while unauthenticated.
+    if (authenticate && (auth.isLoading || auth.isGuest || !auth.accessToken)) {
         console.log(
             `Attempted authenticated request while unauthenticated (loading=${auth.isLoading},guest=${auth.isGuest})`
         );
@@ -95,11 +95,12 @@ export async function queryApi(
 
     let res: Response;
     try {
+        // Add authorization bearer when authenticated
         const request = authenticate
             ? {
                   ...init,
                   headers: {
-                      Authorization: `Bearer ${auth?.accessToken}`,
+                      Authorization: `Bearer ${auth.accessToken}`,
                       ...init.headers,
                   },
               }
@@ -116,6 +117,7 @@ export async function queryApi(
         return null;
     }
 
+    // Authenticated request returned unauthenticated, session expired.
     if (authenticate && res.status === 401) {
         if (!recurse_unauthenticated) {
             // Do not try to re-authenticate
@@ -125,13 +127,16 @@ export async function queryApi(
         }
 
         try {
+            // Attempt to renew session
             await auth.renewToken();
         } catch (err) {
+            // When we cant renew our session, we log out.
             console.log(err);
             await auth.signOut();
             return null;
         }
 
+        // Attempt once more to perform the request with a renewed session.
         console.log(`Recurse-authenticating ${endpoint}`);
         return queryApi(endpoint, init, authenticate, false);
     }
