@@ -10,11 +10,11 @@ const GUEST_MODE = 'guest';
 
 type Auth = {
   /**
-   * Weather the current user is authenticated
+   * Whether the current user is authenticated
    */
   isAuthenticated: boolean;
   /**
-   * Weather the authentication is still loading.
+   * Whether the authentication is still loading.
    */
   isLoading: boolean;
   /**

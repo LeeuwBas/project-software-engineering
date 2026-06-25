@@ -516,7 +516,7 @@ export async function setStat<K extends keyof StatLine>(
  * This can be used to load values from external sources
  *
  * @param bulk The bulk data object. By Date (key) and then a statLine (value).
- * @param goals Weather this is a goal (true) or a statistic (false).
+ * @param goals Whether this is a goal (true) or a statistic (false).
  */
 export async function setStatBulk(bulk: any, goals: boolean = false) {
     if (!bulk) {
@@ -577,7 +577,7 @@ export async function insertStat<K extends keyof StatLine>(
  * Mark some stat and date such that it should be synced to the server at the next sync moment.
  *
  * @param statName The stat to mark as sync required
- * @param isGoal Weather the stat to be synced is a goal
+ * @param isGoal Whether the stat to be synced is a goal
  * @param date The date to mark the stat as sync required.
  */
 export async function markSyncRequired<K extends keyof StatLine>(

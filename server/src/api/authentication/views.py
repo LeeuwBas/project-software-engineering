@@ -34,7 +34,9 @@ class UserViewSet(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """TODO (LeeuwBas): docstring (see statistics/views.py for example)"""
+    """
+    A user view that allows for users to be viewed, created and updated.
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
