@@ -8,6 +8,7 @@ import { PetSelectionStep } from '@/components/onboarding/PetSelectionStep';
 
 import { ImageBackground } from 'expo-image';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { useColorScheme } from 'nativewind';
 
 /**
  * Owns the onboarding page,
@@ -17,6 +18,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
  */
 export default function Onboarding() {
   const { step, nextStep, previousStep, goToStep } = useOnboarding();
+  const { colorScheme } = useColorScheme();
 
   let currentStep;
 
@@ -46,7 +48,11 @@ export default function Onboarding() {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <SafeAreaProvider>

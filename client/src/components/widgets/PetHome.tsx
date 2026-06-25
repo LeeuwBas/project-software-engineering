@@ -1,11 +1,10 @@
 import { Animation } from '@/components/animations/renderer';
 import { AnimationName, ANIMATIONS } from '@/lib/animations/library';
-import { quoteBridge } from '@/lib/api/APIBridge';
 import { useFood } from '@/lib/api/FoodBridge';
-import { useQuote } from '@/lib/api/QuoteBridge';
 import { useSleep } from '@/lib/api/SleepBridge';
 import { useWater } from '@/lib/api/WaterBridge';
-import { getPetID } from '@/lib/settings';
+import { quoteBridge, useQuote } from '@/lib/quotes/QuoteBridge';
+import { getActiveModules, getPetID } from '@/lib/settings';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -121,6 +120,8 @@ export default function PetHome({ className = '', ...props }: { className?: stri
     return () => clearTimeout(timer);
   }, [currentAnim, idleAnim, animIteration]);
 
+  const activeModules = getActiveModules();
+
   return (
     <View className={className} {...props}>
       <Pressable
@@ -128,7 +129,7 @@ export default function PetHome({ className = '', ...props }: { className?: stri
         onPress={() => {
           currentAnim === idleAnim ? setCurrentAnim(blinkAnim) : setCurrentAnim(idleAnim);
           setAnimIteration(1);
-          quote ? quoteBridge.removeQuote() : quoteBridge.requestQuote();
+          quote ? quoteBridge.removeQuote() : quoteBridge.requestQuote(activeModules);
         }}>
         <View pointerEvents="box-none">
           <Animation animation={currentAnim} scale={9} iteration_count={animIteration} />
