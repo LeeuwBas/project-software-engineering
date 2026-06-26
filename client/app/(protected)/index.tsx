@@ -1,20 +1,20 @@
-import { createTutorialSteps } from '@/components/tutorial/tutorial-steps';
+import { renderFinalStep, renderPetStep } from '@/components/tutorial/tutorial-steps';
 import PetHome from '@/components/widgets/PetHome';
 import Quotes from '@/components/widgets/Quotes';
 import Toolbar from '@/components/widgets/toolbar';
 import Topbar from '@/components/widgets/topbar';
 import { initializeApiManager } from '@/lib/api/APIBridge';
 import { useAppContext } from '@/lib/AppContext';
-import { loadSettings } from '@/lib/settings';
+import { loadSettings, useTutorial } from '@/lib/settings';
 import { syncServer } from '@/lib/StorageSync';
 import { flushCache, nextTimer, scheduleCacheFlush } from '@/lib/timers';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from 'nativewind';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AttachStep, SpotlightTourProvider } from 'react-native-spotlight-tour';
+import { TourProvider, TourZone, useTour } from 'react-native-lumen';
 import TutorialStarter from '@/components/tutorial/TutorialStarter';
 
 /**
@@ -80,26 +80,14 @@ export default function App() {
   const [petHomeLayout, setPetHomeLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [topBarLayout, setTopBarLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
 
-  // Memoize tutorial steps because they are expensive to compute
-  // and they might be reused upon tutorial restart.
-  const mySteps = useMemo(() => createTutorialSteps(), []);
-
+  /* TODO (buenk): summary of the structure, like what the SafeAreaView, TourProvider, and LinearGradient
+  are for/ what they contain.*/
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* This provider wraps the entire homepage to facilitate the spotlight
-          tutorial */}
-      <SpotlightTourProvider
-        steps={mySteps}
-        overlayColor="black"
-        overlayOpacity={0.6}
-        onBackdropPress="continue"
-        onStop={closePopup}
-        motion="fade"
-        placement="bottom"
-        offset={8}
-        flip
-        shift
-        shape="rectangle">
+      <TourProvider
+        stepsOrder={['pet', 'menu-button', 'stats-button', 'settings-button', 'final']}
+        backdropOpacity={0.6}
+        config={{ preventInteraction: true, tooltipStyles: { backgroundColor: 'transparent' } }}>
         <TutorialStarter />
         {/** Homepage component container: {@link Topbar}, {@link PetHome}, {@link Quotes}, {@link Toolbar} */}
 
@@ -131,13 +119,19 @@ export default function App() {
                   /* Used to determine where the top of the PetHome is, since flex-grow-0 shrinks to fit */
                   (e) => setPetHomeLayout(e.nativeEvent.layout)
                 }>
-                {/* These <AttachStep> components represent steps within the
+                {/* These <TourZone> components represent steps within the
                     spotlight tutorial. */}
-                <AttachStep index={0} fill>
-                  <AttachStep index={4} fill>
+                <TourZone
+                  stepKey="pet"
+                  description="Welcome to VirtuoPet! This is your new virtual pet!"
+                  renderCustomCard={renderPetStep}>
+                  <TourZone
+                    stepKey="final"
+                    description="Thank you for following the tutorial!"
+                    renderCustomCard={renderFinalStep}>
                     <PetHome />
-                  </AttachStep>
-                </AttachStep>
+                  </TourZone>
+                </TourZone>
               </View>
             </View>
             <Quotes petHomeLayout={petHomeLayout} topBarLayout={topBarLayout} />
@@ -154,7 +148,7 @@ export default function App() {
 
           <Toolbar />
         </LinearGradient>
-      </SpotlightTourProvider>
+      </TourProvider>
     </SafeAreaView>
   );
 }
