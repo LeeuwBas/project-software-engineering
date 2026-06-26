@@ -53,6 +53,8 @@ To run/test the server you must:
 - To run the server locally, run `python src/manage.py runserver`
 - To run the unittests, run `python src/manage.py test api`
 
+For more detailed build instructions, please refer to the [wiki](https://github.com/LeeuwBas/project-software-engineering/wiki/Development-Environment-Setup)
+
 ---
 
 <p align="center">🔍︎ <a href="https://github.com/LeeuwBas/project-software-engineering/wiki">Wiki</a> · 🛠️ <a href="Credits">Credits</a> · 🐛 <a href="https://github.com/LeeuwBas/project-software-engineering/issues">Report an Issue</a></p>
