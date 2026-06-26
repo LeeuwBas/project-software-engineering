@@ -2,6 +2,7 @@ import Blob from '@assets/pets/blob/blob.svg';
 import Bober from '@assets/pets/bober/BOBER.svg';
 import Frog from '@assets/pets/frog/frog.svg';
 import Onigiri from '@assets/pets/onigiri/onigiri.svg';
+import Chickie from '@assets/pets/chickie/chickie.svg';
 import { View } from 'react-native';
 
 /**
@@ -22,6 +23,8 @@ export default function Pet({ className = '', id, ...props }: { className?: stri
         return <Blob width={'100%'} height={200} />;
       case 3:
         return <Bober width={'100%'} height={200} />;
+      case 4:
+        return <Chickie width={'100%'} height={200} />;
       default:
         console.error('Unknown pet id: ' + id);
     }

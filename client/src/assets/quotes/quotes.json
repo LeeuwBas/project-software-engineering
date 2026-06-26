@@ -2,19 +2,19 @@
   "Standard": {
     "Standard": {
       "Standard": [
-        "One step at a time",
+        "One step at a time, <USERNAME>",
         "Every day is a good oppertunity to build good habits",
-        "Keep going, you're doing great",
+        "Keep going <USERNAME>, you're doing great",
         "Today is going amazing!",
         "Today is a good day!",
         "You're building healthy habits",
-        "You're doing great, tiny wins and good vibes",
+        "You're doing great <USERNAME>, tiny wins and good vibes",
         "Level up: self-care",
-        "You're going strong",
+        "You're going strong, <USERNAME>",
         "Healthy choices count",
         "A little progress is still progress.",
         "You are allowed to take things at your own pace.",
-        "Take a moment to appreciate your progress",
+        "Take a moment to appreciate your progress, <USERNAME>",
         "Today's self-care can be simple.",
         "Hope you're having a good day.",
         "Small acts of self-care can make a difference",
@@ -29,7 +29,7 @@
       "Standard": [
         "Have you had anything to drink?",
         "Have you had any water today?",
-        "Would you like a glass of water?",
+        "Would you like a glass of water, <USERNAME>?",
         "How about a drink of water?",
         "Maybe a good time for some water!",
         "A glass of water sounds good right now.",
@@ -38,9 +38,9 @@
         "I'm parched, I could use some water.",
         "A drink would do me good.",
         "Water sounds refreshing right now.",
-        "This is a reminder to drink a glass of water.",
+        "Hi <USERNAME>, This is a reminder to drink a glass of water.",
         "It's been a while since your last drink.",
-        "You have not logged any water yet today. A glass of water is a good next step."
+        "<USERNAME>, you have not logged any water yet today. A glass of water is a good next step."
       ],
       "Sunny": [
         "It's nice weather outside, have you had some water yet?",
@@ -49,22 +49,22 @@
         "People need more water on hot days. Have you had enough today?",
         "Sun and sweat make me thirsty, I'd love a glass of water.",
         "Sunny weather and water go well together, have you had anything to drink?",
-        "It might be a good moment for a water break.",
+        "Hey <USERNAME>, it might be a good moment for a water break.",
         "A cold drink sounds nice on a sunny day.",
         "It is warm today. A drink may help you feel more comfortable.",
         "The sun is doing its best today. A little water break might be nice.",
         "Bright skies, happy vibes, and maybe a glass of water?"
       ],
       "Exercise": [
-        "You walked a lot! Remember to drink!",
+        "You walked a lot <USERNAME>! Remember to drink!",
         "A glass of water might be helpful after all that movement!",
         "A drink after exercise might be refreshing!",
         "Movement uses up water. It is time to refill your glass.",
-        "You have been active today, don't forget to replace the fluids you lost.",
+        "You have been active today <USERNAME>, don't forget to replace the fluids you lost.",
         "Great work moving around, now let's take a water break.",
         "Your body worked hard today, a glass of water would help.",
         "Activity increases your water needs, time to drink something.",
-        "That was a lot of movement. How about some water?",
+        "That was a lot of movement, <USERNAME>. How about some water?",
         "Your body has been busy today. A drink might feel good.",
         "After moving around, a few sips of water can be refreshing.",
         "Big walk energy! Maybe it is time for a little water refill."
@@ -75,11 +75,11 @@
         "You did a good job drinking water.",
         "You are part way to your water goal.",
         "You are halfway to your water goal for today.",
-        "Keep on drinking, you are almost there.",
+        "Keep on drinking <USERNAME>, you are almost there.",
         "Half a gallon a day keeps the kidney stones away.",
-        "Good progress, you are almost there, keep on drinking.",
+        "Good progress <USERNAME>, you are almost there, keep on drinking.",
         "Keep going, another glass will bring you even closer!",
-        "Nice work! Your body appreciated the water.",
+        "Nice work <USERNAME>! Your body appreciated the water.",
         "You are building a healthy hydration habit.",
         "You have had a good amount of water today.",
         "Nice progress. A little more water later might feel good.",
@@ -88,14 +88,14 @@
     },
     "High": {
       "Standard": [
-        "You're looking hydrated!",
+        "Wow <USERNAME>, you're looking hydrated!",
         "Good job staying hydrated!",
         "WOW! You reached your water goal.",
         "Water goal completed, excellent job maintaining your physical health today!",
         "Water goal completed, you did a great job!",
         "Hydration goal achieved, fantastic work!",
         "Your water intake is looking great today.",
-        "Nice work. You reached your water goal today!",
+        "Nice work <USERNAME>. You reached your water goal today!",
         "Your hydration is looking strong today.",
         "Splash-tastic! Your water goal is complete.",
         "Your water meter is full. Great job!",
@@ -106,15 +106,15 @@
   "Walk": {
     "Low": {
       "Standard": [
-        "You have been sitting for a long time, moving your legs for a short time helps your blood circulation.",
+        "You have been sitting for a long time <USERNAME>, moving your legs for a short time helps your blood circulation.",
         "It is time for a short walk, let's get those legs moving!",
         "Walking can reduce stress, even a short walk can help.",
-        "Would you like to go for a short walk?",
+        "<USERNAME>, would you like to go for a short walk?",
         "A short walk might feel nice right now.",
         "How about a little walk to get your legs moving?",
         "How would you feel about going for a slow walk for a few minutes?",
         "A little walk around the room could be enough.",
-        "Would a short walk outside feel good?",
+        "Hey <USERNAME>, would a short walk outside feel good?",
         "A short walk may help your body feel more awake.",
         "Your step count is low today. A short walk might help.",
         "A quick walk could be a nice break from sitting.",
@@ -126,19 +126,19 @@
         "You are close to your movement goal! A short walk will get you there.",
         "Keep going, some extra steps will bring you even closer!",
         "You have done some walking today. A short walk could help you get closer to your goal.",
-        "Nice movement today. A few more steps might bring you closer.",
-        "You are making progress. How about a little walk?",
+        "Nice movement today, <USERNAME>! A few more steps might bring you closer.",
+        "You're making progress <USERNAME>. How about a little walk?",
         "A short walk now could help finish your movement goal.",
         "You are part way there. A few extra steps may help.",
-        "Your steps are looking good. A small walk could add a nice boost.",
+        "Your steps are looking good <USERNAME>. A small walk could add a nice boost.",
         "You have already moved today. A little walk might keep the progress going.",
         "Your movement goal is getting closer. How about a short walk?",
         "A few more minutes of walking could help you reach your goal.",
-        "Almost there! A little walk might be enough."
+        "Almost there <USERNAME>! A little walk might be enough."
       ],
       "Sunny": [
         "You are close to your movement goal, let's catch some sun!",
-        "Let's go outside. You're almost at your movement goal",
+        "Let's go outside <USERNAME>. You're almost at your movement goal",
         "It's nice weather outside, let's go for a walk."
       ]
     },
@@ -150,10 +150,10 @@
         "Great job. You reached your step goal today!",
         "Your step goal is complete. Nice work!",
         "Big step energy! You did it!",
-        "Your legs did a lot today. Well done!",
+        "Your legs did a lot today. Well done <USERNAME>!",
         "Step goal achieved. That is excellent progress.",
         "You walked enough to reach your goal today.",
-        "Nice walking today. Your movement goal is complete!",
+        "Nice walking today, <USERNAME>. Your movement goal is complete!",
         "Your step count is looking great today.",
         "Goal reached! Your steps are full for today.",
         "Walk goal complete. Time for a happy little victory dance!"
@@ -183,9 +183,9 @@
         "Your sleep was stable last night.",
         "You reached your sleep goal.",
         "You slept well.",
-        "I hope you are well rested.",
+        "Ji <USERNAME>, I hope you are well rested.",
         "Full sleep cycle completed!",
-        "Well rested? Let's get this day started.",
+        "Well rested, <USERNAME>? Let's get this day started.",
         "Your sleep duration was stable last night.",
         "You got a good amount of sleep."
       ]
@@ -198,23 +198,23 @@
         "Nice to see that your mind is calm today.",
         "Enjoy this moment of balance.",
         "Your stress level looks low today. That is nice to see.",
-        "Your mind seems calm today. Good job checking in.",
+        "Hi <USERNAME>, your mind seems calm today. Good job checking in.",
         "This looks like a calm moment. You can enjoy it.",
         "Your stress level is looking comfortable today.",
         "Nice, today seems to have some calm space.",
         "Your stress check-in looks peaceful today.",
         "Calm day energy. That is a good feeling.",
         "Your mind seems to have some peace today.",
-        "It looks like you are having a calmer moment.",
+        "It looks like you are having a calmer moment, <USERNAME>.",
         "Low stress logged. That is something to appreciate."
       ]
     },
     "Medium": {
       "Standard": [
-        "Your stress level is rising. Consider a two-minute breathing break.",
+        "Your stress level is rising, <USERNAME>. Consider a two-minute breathing break.",
         "You're feeling some tension. It might help to reduce sensory input.",
         "Your stress level is in the middle today. A small pause might feel good.",
-        "You may be feeling some tension. A quiet moment could help.",
+        "Hey <USERNAME>, you may be feeling some tension. A quiet moment could help.",
         "Your stress check-in shows some pressure. A short break might be nice.",
         "Things may feel a bit heavier today. You can take it one step at a time.",
         "Your mind might be carrying extra noise today. A calm space could feel helpful.",
@@ -228,7 +228,7 @@
     "High": {
       "Standard": [
         "Your stress level is high. You can stop your current task and find a quiet space to reset.",
-        "Your stress level looks high today. You do not need to push through right now.",
+        "Hey <USERNAME>, your stress level looks high today. You do not need to push through right now.",
         "It seems you are stressed. Try taking things a little easier.",
         "You're a little stressed! Taking some time for yourself may help.",
         "Take a deep breath and give yourself a moment.",
@@ -237,7 +237,7 @@
         "Things may feel like a lot right now. You can pause for a moment.",
         "Your stress check-in is high. A safe, quiet space might feel better.",
         "This might be a good moment to lower noise, light, or other sensory input.",
-        "You do not have to push through everything right now.",
+        "You do not have to push through everything right now, <USERNAME>.",
         "A short reset might help: sit down, breathe slowly, and reduce noise if you can.",
         "Your body may need a calmer space right now.",
         "A few minutes away from the current task might help.",
@@ -253,14 +253,14 @@
         "Your body needs some food.",
         "Maybe it is time to eat.",
         "It is time for a boost. Let's eat something.",
-        "Listen to your hunger cues.",
+        "Listen to your hunger cues, <USERNAME>.",
         "Your focus and energy start with what you eat. What's on the menu?",
         "Have you had something to eat today?",
-        "Would you like a small snack or meal?",
+        "Would you like a small snack or meal, <USERNAME>?",
         "A little food might help your energy.",
         "Something simple to eat might feel good.",
         "Your meal count is low today. Maybe a snack would help.",
-        "A small bite can be a good start.",
+        "Hi <USERNAME>, a small bite can be a good start.",
         "Food can help your body feel more steady.",
         "How about something easy to eat?",
         "A snack break might be nice.",
@@ -270,12 +270,12 @@
     "Medium": {
       "Standard": [
         "A small snack will help keep your energy stable.",
-        "Your meal logs look steady. Keep it going!",
+        "Your meal logs look steady, <USERNAME>. Keep it going!",
         "Great job! You're halfway to your meal goal today!",
         "A light meal or a protein-rich snack would fit perfectly here.",
         "You have had some meals today. Nice progress.",
         "You are part way through your meals for today.",
-        "A small snack later might help keep your energy steady.",
+        "Psst <USERNAME>, a small snack later might help keep your energy steady.",
         "You have made a good start with meals today.",
         "Your body has had some fuel today. Nice work.",
         "You are doing well with meals today.",
@@ -287,10 +287,10 @@
     "High": {
       "Standard": [
         "Nutritional goals met! You have given your body the fuel it needs today.",
-        "All meals are logged. Your body has the fuel it needs today.",
+        "All meals are logged, <USERNAME>. Your body has the fuel it needs today.",
         "Well-fed and full of energy. You are completely on track with your meals.",
         "You've given your body exactly what it needs. Goal achieved!",
-        "Meal goal reached. Nice work today!",
+        "Meal goal reached. Nice work today <USERNAME>!",
         "Your meals are logged for today. Great job!",
         "Food goal achieved. That is good to see.",
         "You completed your meal goal today.",
@@ -299,7 +299,7 @@
         "You reached your meal goal. Well done!",
         "Meals completed for today. Nice work!",
         "Your food log looks complete today.",
-        "Goal reached. Thanks for checking in with your meals today."
+        "Goal reached, <USERNAME>. Thanks for checking in with your meals today."
       ]
     }
   }

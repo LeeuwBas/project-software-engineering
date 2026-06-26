@@ -8,6 +8,7 @@ import { useNameManagement } from '@/lib/useNameManagement';
 import { router } from 'expo-router';
 import { getPetName, getUserName } from '@/lib/settings';
 import { ImageBackground } from 'expo-image';
+import { useColorScheme } from 'nativewind';
 
 type Props = {
   onNext?: () => void;
@@ -27,6 +28,7 @@ type Props = {
 export default function ChangeNames({ onNext, onBack }: Props) {
   const currentUserName = getUserName();
   const currentPetName = getPetName();
+  const { colorScheme } = useColorScheme();
 
   const { petName, setPetName, userName, setUserName, errors, validateAndSave } = useNameManagement(
     currentPetName,
@@ -43,7 +45,11 @@ export default function ChangeNames({ onNext, onBack }: Props) {
 
   return (
     <ImageBackground
-      source={require('@assets/background_login.png')}
+      source={
+        colorScheme === 'dark'
+          ? require('@assets/dark_bg.png')
+          : require('@assets/background_login.png')
+      }
       contentFit="cover"
       style={{ flex: 1 }}>
       <KeyboardProvider>

@@ -12,17 +12,22 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 
-/** TODO (buenk): docstring, and some comments throughout, explaining each section */
+/**
+ * Popup settings panel anchored above the opening trigger.
+ *
+ * Renders a card of action buttons that can expand.
+ * Visibility and pointer events are driven by `settingsOpen` from
+ * useAppContext. The panel fades in/out via NativeWind opacity
+ * transitions.
+ *
+ * @returns An absolute-positioned <View> containing the settings card.
+ */
 export default function Settings() {
   const { resetTutorial } = useTutorial();
   const { settingsOpen, changeSettings } = useAppContext();
   const auth = useAuth();
   const router = useRouter();
   const { colorScheme, toggleColorScheme } = useColorScheme();
-
-  // if (!settingsOpen) {
-  //   return;
-  // }
 
   type SettingItem = {
     label: string;

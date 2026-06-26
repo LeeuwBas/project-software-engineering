@@ -213,6 +213,55 @@ export const ANIMATIONS = {
         fps: 8,
         source: require('@assets/pets/bober/BOBER_eating.png'),
     },
+
+    // chickie assets
+    chickie_blink: {
+        width: 64,
+        height: 64,
+        frameCount: 4,
+        fps: 8,
+        source: require('@assets/pets/chickie/chickie_blink.png'),
+    },
+
+    chickie_breath_happy: {
+        width: 64,
+        height: 64,
+        frameCount: 40,
+        fps: 8,
+        source: require('@assets/pets/chickie/chickie_breath_happy.png'),
+    },
+
+    chickie_breath_neutral: {
+        width: 64,
+        height: 64,
+        frameCount: 40,
+        fps: 8,
+        source: require('@assets/pets/chickie/chickie_breath_neutral.png'),
+    },
+
+    chickie_sleeping: {
+        width: 64,
+        height: 64,
+        frameCount: 40,
+        fps: 8,
+        source: require('@assets/pets/chickie/chickie_sleeping.png'),
+    },
+
+    chickie_drinking: {
+        width: 64,
+        height: 64,
+        frameCount: 59,
+        fps: 8,
+        source: require('@assets/pets/chickie/chickie_drinking.png'),
+    },
+
+    chickie_eating: {
+        width: 64,
+        height: 64,
+        frameCount: 42,
+        fps: 8,
+        source: require('@assets/pets/chickie/chickie_eating.png'),
+    },
 } satisfies Record<string, AnimationMetaData>;
 
 export type AnimationName = keyof typeof ANIMATIONS;

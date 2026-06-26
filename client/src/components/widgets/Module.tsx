@@ -7,6 +7,7 @@ import { Minus, Plus } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
+import Bar from './Bar';
 
 const MAX_WATER = 25;
 const MAX_FOOD = 12;

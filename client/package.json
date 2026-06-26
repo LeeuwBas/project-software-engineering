@@ -13,7 +13,6 @@
   "dependencies": {
     "@expo/metro-runtime": "^6.1.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
-    "@react-native-community/slider": "^5.2.0",
     "@rn-primitives/accordion": "^1.4.0",
     "@rn-primitives/alert-dialog": "^1.4.0",
     "@rn-primitives/aspect-ratio": "^1.4.0",
@@ -67,6 +66,7 @@
     "react-native-gifted-charts": "^1.4.77",
     "react-native-health-connect": "^3.5.3",
     "react-native-keyboard-controller": "^1.18.5",
+    "react-native-lumen": "^1.1.5",
     "react-native-reanimated": "4.1.7",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",

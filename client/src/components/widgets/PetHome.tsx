@@ -27,6 +27,8 @@ export default function PetHome({ className = '', ...props }: { className?: stri
         return 'blob';
       case 3:
         return 'bober';
+      case 4:
+        return 'chickie';
       default:
         console.error('Unknown pet id');
     }
