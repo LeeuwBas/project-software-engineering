@@ -31,6 +31,28 @@ Check out the wiki's homepage for an introduction to the project, or jump right 
 
 - [Style Guide](https://github.com/LeeuwBas/project-software-engineering/wiki/Style-Guide)
 
+### Contributing:
+In order to contributing, please open a Pull request ot the dev branch.
+
+### Testing
+
+In order to build the app you must:
+- Clone the repository
+- cd into `client/`
+- install dependencies with `pnpm install`
+- Optionally create and configure a .env file
+- Run the app with expo go using `pnpm expo start`
+- To use a dev build, instead run `pnpm expo run:android` with an emulator installed or an android device connected via USB
+
+To run/test the server you must:
+- Clone the repository
+- cd into `server/`
+- install dependencies with `pip install -r requirements.txt`
+- Optionally create and configure a .env file
+- Create the database with `python src/manage.py migrate`
+- To run the server locally, run `python src/manage.py runserver`
+- To run the unittests, run `python src/manage.py test api`
+
 ---
 
 <p align="center">🔍︎ <a href="https://github.com/LeeuwBas/project-software-engineering/wiki">Wiki</a> · 🛠️ <a href="Credits">Credits</a> · 🐛 <a href="https://github.com/LeeuwBas/project-software-engineering/issues">Report an Issue</a></p>
