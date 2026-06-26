@@ -32,7 +32,7 @@ Check out the wiki's homepage for an introduction to the project, or jump right 
 - [Style Guide](https://github.com/LeeuwBas/project-software-engineering/wiki/Style-Guide)
 
 ### Contributing:
-In order to contributing, please open a Pull request ot the dev branch.
+To contribute, please open a pull request to the dev branch.
 
 ### Testing
 
@@ -51,7 +51,7 @@ To run/test the server you must:
 - Optionally create and configure a .env file
 - Create the database with `python src/manage.py migrate`
 - To run the server locally, run `python src/manage.py runserver`
-- To run the unittests, run `python src/manage.py test api`
+- To run the unit tests, run `python src/manage.py test api`
 
 For more detailed build instructions, please refer to the [wiki](https://github.com/LeeuwBas/project-software-engineering/wiki/Development-Environment-Setup)
 
