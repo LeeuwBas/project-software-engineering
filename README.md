@@ -31,6 +31,6 @@ Check out the wiki's homepage for an introduction to the project, or jump right 
 
 - [Style Guide](https://github.com/LeeuwBas/project-software-engineering/wiki/Style-Guide)
 
-## [Credits](https://github.com/LeeuwBas/project-software-engineering/wiki/Credits)
+---
 
-<p align="center">📦 <a href="https://github.com/LeeuwBas/project-software-engineering">Repo</a> · 🛠️ <a href="Credits">Credits</a> · 📄 <a href="https://github.com/LeeuwBas/project-software-engineering/blob/main/LICENSE">License (MIT)</a> · 🐛 <a href="https://github.com/LeeuwBas/project-software-engineering/issues">Report an Issue</a></p>
+<p align="center">🔍︎ <a href="https://github.com/LeeuwBas/project-software-engineering/wiki">Wiki</a> · 🛠️ <a href="Credits">Credits</a> · 📄 <a href="https://github.com/LeeuwBas/project-software-engineering/blob/main/LICENSE">License (MIT)</a> · 🐛 <a href="https://github.com/LeeuwBas/project-software-engineering/issues">Report an Issue</a></p>
